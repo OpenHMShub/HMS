@@ -1,0 +1,746 @@
+{
+  "custom": {
+    "B_Active": true,
+    "B_BedData": {
+      "$": [
+        "ds",
+        192,
+        1616722709358
+      ],
+      "$columns": [
+        {
+          "data": [],
+          "name": "bedId",
+          "type": "Integer"
+        },
+        {
+          "data": [],
+          "name": "participantId",
+          "type": "Integer"
+        },
+        {
+          "data": [],
+          "name": "bedState",
+          "type": "Integer"
+        },
+        {
+          "data": [],
+          "name": "dateStart",
+          "type": "Date"
+        },
+        {
+          "data": [],
+          "name": "facilityId",
+          "type": "Integer"
+        },
+        {
+          "data": [],
+          "name": "roomId",
+          "type": "Integer"
+        },
+        {
+          "data": [],
+          "name": "facilityName",
+          "type": "String"
+        },
+        {
+          "data": [],
+          "name": "roomName",
+          "type": "String"
+        },
+        {
+          "data": [],
+          "name": "bedName",
+          "type": "String"
+        },
+        {
+          "data": [],
+          "name": "bedNameNo",
+          "type": "Integer"
+        },
+        {
+          "data": [],
+          "name": "participantName",
+          "type": "String"
+        }
+      ]
+    },
+    "B_BedName": " 1",
+    "B_BedStatus": "value",
+    "B_Date": "11/18/20",
+    "B_Empty": true,
+    "B_Occ": false,
+    "B_Occupant": "Jessie Harris",
+    "B_Res": false,
+    "T_Active": true,
+    "T_BedData": {
+      "$": [
+        "ds",
+        192,
+        1616722681988
+      ],
+      "$columns": [
+        {
+          "data": [],
+          "name": "bedId",
+          "type": "Integer"
+        },
+        {
+          "data": [],
+          "name": "participantId",
+          "type": "Integer"
+        },
+        {
+          "data": [],
+          "name": "bedState",
+          "type": "Integer"
+        },
+        {
+          "data": [],
+          "name": "dateStart",
+          "type": "Date"
+        },
+        {
+          "data": [],
+          "name": "facilityId",
+          "type": "Integer"
+        },
+        {
+          "data": [],
+          "name": "roomId",
+          "type": "Integer"
+        },
+        {
+          "data": [],
+          "name": "facilityName",
+          "type": "String"
+        },
+        {
+          "data": [],
+          "name": "roomName",
+          "type": "String"
+        },
+        {
+          "data": [],
+          "name": "bedName",
+          "type": "String"
+        },
+        {
+          "data": [],
+          "name": "bedNameNo",
+          "type": "Integer"
+        },
+        {
+          "data": [],
+          "name": "participantName",
+          "type": "String"
+        }
+      ]
+    },
+    "T_BedName": " 1",
+    "T_BedStatus": "value",
+    "T_Date": "11/14/20",
+    "T_Empty": true,
+    "T_Occ": false,
+    "T_Occupant": "Jessica Smith",
+    "T_Res": false
+  },
+  "params": {
+    "BedID_1": "",
+    "BedID_2": ""
+  },
+  "propConfig": {
+    "custom.B_Active": {
+      "persistent": true
+    },
+    "custom.B_BedData": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "BedId": "{view.params.BedID_2}"
+          },
+          "queryPath": "Shelter/Room Layout/qryBedData_Sync"
+        },
+        "type": "query"
+      },
+      "persistent": true
+    },
+    "custom.B_BedName": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "BedId": "{view.params.BedID_2}"
+          },
+          "queryPath": "Shelter/Room Layout/qryBedNameById",
+          "returnFormat": "scalar"
+        },
+        "transforms": [
+          {
+            "expression": "right({value},len({value})-lastIndexOf({value},\" \"))",
+            "type": "expression"
+          }
+        ],
+        "type": "query"
+      },
+      "persistent": true
+    },
+    "custom.B_BedStatus": {
+      "persistent": true
+    },
+    "custom.B_Date": {
+      "binding": {
+        "config": {
+          "expression": "{view.custom.B_BedData}[6]"
+        },
+        "transforms": [
+          {
+            "formatType": "datetime",
+            "formatValue": {
+              "date": "short"
+            },
+            "type": "format"
+          }
+        ],
+        "type": "expr"
+      },
+      "persistent": true
+    },
+    "custom.B_Empty": {
+      "binding": {
+        "config": {
+          "expression": "!{view.custom.B_Occ} \u0026\u0026 !{view.custom.B_Res}"
+        },
+        "type": "expr"
+      },
+      "persistent": true
+    },
+    "custom.B_Occ": {
+      "binding": {
+        "config": {
+          "expression": "if({view.custom.B_BedData}[2]\u003d2,true,false)"
+        },
+        "type": "expr"
+      },
+      "persistent": true
+    },
+    "custom.B_Occupant": {
+      "binding": {
+        "config": {
+          "expression": "{view.custom.B_BedData}[9]"
+        },
+        "type": "expr"
+      },
+      "persistent": true
+    },
+    "custom.B_Res": {
+      "persistent": true
+    },
+    "custom.T_Active": {
+      "persistent": true
+    },
+    "custom.T_BedData": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "BedId": "{view.params.BedID_1}"
+          },
+          "queryPath": "Shelter/Room Layout/qryBedData_Sync"
+        },
+        "type": "query"
+      },
+      "persistent": true
+    },
+    "custom.T_BedName": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "BedId": "{view.params.BedID_1}"
+          },
+          "queryPath": "Shelter/Room Layout/qryBedNameById",
+          "returnFormat": "scalar"
+        },
+        "transforms": [
+          {
+            "expression": "right({value},len({value})-lastIndexOf({value},\" \"))",
+            "type": "expression"
+          }
+        ],
+        "type": "query"
+      },
+      "persistent": true
+    },
+    "custom.T_BedStatus": {
+      "persistent": true
+    },
+    "custom.T_Date": {
+      "binding": {
+        "config": {
+          "expression": "{view.custom.T_BedData}[6]"
+        },
+        "transforms": [
+          {
+            "formatType": "datetime",
+            "formatValue": {
+              "date": "short"
+            },
+            "type": "format"
+          }
+        ],
+        "type": "expr"
+      },
+      "persistent": true
+    },
+    "custom.T_Empty": {
+      "binding": {
+        "config": {
+          "expression": "!{view.custom.T_Occ} \u0026\u0026 !{view.custom.T_Res}"
+        },
+        "type": "expr"
+      },
+      "persistent": true
+    },
+    "custom.T_Occ": {
+      "binding": {
+        "config": {
+          "expression": "if({view.custom.T_BedData}[2]\u003d2,true,false)"
+        },
+        "type": "expr"
+      },
+      "persistent": true
+    },
+    "custom.T_Occupant": {
+      "binding": {
+        "config": {
+          "expression": "{view.custom.T_BedData}[9]"
+        },
+        "type": "expr"
+      },
+      "persistent": true
+    },
+    "custom.T_Res": {
+      "binding": {
+        "config": {
+          "expression": "if({view.custom.T_BedData}[2]\u003d1,true,false)"
+        },
+        "type": "expr"
+      },
+      "persistent": true
+    },
+    "params.BedID_1": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.BedID_2": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 258,
+      "width": 280
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "Vertical (bottom open)"
+        },
+        "position": {
+          "height": 0.698,
+          "width": 0.4286,
+          "x": 0.5432,
+          "y": 0.2546
+        },
+        "props": {
+          "fit": {
+            "mode": "percent"
+          },
+          "source": "/system/images/SVGs/BedIcons/Vertical (bottom open).svg"
+        },
+        "type": "ia.display.image"
+      },
+      {
+        "meta": {
+          "name": "btmLblDate"
+        },
+        "position": {
+          "height": 0.098,
+          "width": 0.3696,
+          "x": 0.5629,
+          "y": 0.8113
+        },
+        "propConfig": {
+          "meta.visible": {
+            "binding": {
+              "config": {
+                "expression": "if({view.custom.B_Empty}, false, true)"
+              },
+              "type": "expr"
+            }
+          },
+          "props.style.classes": {
+            "binding": {
+              "config": {
+                "expression": "if({view.custom.B_Occ},\"Labels/Label_Text_Occ\",\"Labels/Label_Text_Res\")"
+              },
+              "type": "expr"
+            }
+          },
+          "props.text": {
+            "binding": {
+              "config": {
+                "path": "view.custom.B_Date"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "style": {
+            "textAlign": "right"
+          }
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "events": {
+          "dom": {
+            "onClick": {
+              "config": {
+                "script": "\tself.view.params.selectedPartic \u003d self.view.custom.OccupantID\n\tid \u003d \"PreviewParticipant\" \n\tparams \u003d {\"participantID\":self.view.custom.OccupantID}\n\tsystem.perspective.openDock(id,params \u003d params)"
+              },
+              "scope": "G",
+              "type": "script"
+            }
+          }
+        },
+        "meta": {
+          "name": "topLblOccupant"
+        },
+        "position": {
+          "height": 0.1078,
+          "width": 0.7355,
+          "x": 0.0602,
+          "y": 0.1509
+        },
+        "propConfig": {
+          "meta.visible": {
+            "binding": {
+              "config": {
+                "expression": "if({view.custom.T_Empty}, false, true)"
+              },
+              "type": "expr"
+            }
+          },
+          "props.style.classes": {
+            "binding": {
+              "config": {
+                "expression": "if({view.custom.T_Occ},\"Labels/Label_Text_Occ\",\"Labels/Label_Text_Res\")"
+              },
+              "type": "expr"
+            }
+          },
+          "props.text": {
+            "binding": {
+              "config": {
+                "path": "view.custom.T_Occupant"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "style": {}
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "meta": {
+          "name": "Vertical (top open)"
+        },
+        "position": {
+          "height": 0.6667,
+          "width": 0.4607,
+          "x": 0.0141,
+          "y": 0.0512
+        },
+        "props": {
+          "fit": {
+            "mode": "percent"
+          },
+          "source": "/system/images/SVGs/BedIcons/Vertical (top open).svg"
+        },
+        "type": "ia.display.image"
+      },
+      {
+        "meta": {
+          "name": "topLblBedNo"
+        },
+        "position": {
+          "height": 0.1087,
+          "rotate": {
+            "anchor": "61% 50%"
+          },
+          "width": 0.1143,
+          "x": 0.2955,
+          "y": 0.5948
+        },
+        "propConfig": {
+          "props.text": {
+            "binding": {
+              "config": {
+                "path": "view.custom.T_BedName"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "style": {
+            "classes": "Labels/Label_BedNbr",
+            "textAlign": "end"
+          }
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "meta": {
+          "name": "topLblDate"
+        },
+        "position": {
+          "height": 0.1078,
+          "width": 0.3696,
+          "x": 0.0602,
+          "y": 0.236
+        },
+        "propConfig": {
+          "meta.visible": {
+            "binding": {
+              "config": {
+                "expression": "if({view.custom.T_Empty}, false, true)"
+              },
+              "type": "expr"
+            }
+          },
+          "props.style.classes": {
+            "binding": {
+              "config": {
+                "expression": "if({view.custom.T_Occ},\"Labels/Label_Text_Occ\",\"Labels/Label_Text_Res\")"
+              },
+              "type": "expr"
+            }
+          },
+          "props.text": {
+            "binding": {
+              "config": {
+                "path": "view.custom.T_Date"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "style": {}
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "meta": {
+          "name": "btmLblBedNo"
+        },
+        "position": {
+          "height": 0.1087,
+          "width": 0.1107,
+          "x": 0.5842,
+          "y": 0.8383
+        },
+        "propConfig": {
+          "props.text": {
+            "binding": {
+              "config": {
+                "path": "view.custom.B_BedName"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "style": {
+            "classes": "Labels/Label_BedNbr",
+            "textAlign": "start"
+          }
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "events": {
+          "dom": {
+            "onClick": {
+              "config": {
+                "script": "\tself.view.params.selectedPartic \u003d self.view.custom.OccupantID\n\tid \u003d \"PreviewParticipant\" \n\tparams \u003d {\"participantID\":self.view.custom.OccupantID}\n\tsystem.perspective.openDock(id,params \u003d params)"
+              },
+              "scope": "G",
+              "type": "script"
+            }
+          }
+        },
+        "meta": {
+          "name": "btmLblOccupant"
+        },
+        "position": {
+          "height": 0.1046,
+          "width": 0.7355,
+          "x": 0.197,
+          "y": 0.7226
+        },
+        "propConfig": {
+          "meta.visible": {
+            "binding": {
+              "config": {
+                "expression": "if({view.custom.B_Empty}, false, true)"
+              },
+              "type": "expr"
+            }
+          },
+          "props.style.classes": {
+            "binding": {
+              "config": {
+                "expression": "if({view.custom.B_Occ},\"Labels/Label_Text_Occ\",\"Labels/Label_Text_Res\")"
+              },
+              "type": "expr"
+            }
+          },
+          "props.text": {
+            "binding": {
+              "config": {
+                "path": "view.custom.B_Occupant"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "style": {
+            "textAlign": "right"
+          }
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "meta": {
+          "name": "btmLblBedStatus"
+        },
+        "position": {
+          "height": 0.1046,
+          "width": 0.308,
+          "x": 0.1178,
+          "y": 0.056
+        },
+        "propConfig": {
+          "props.style.classes": {
+            "binding": {
+              "config": {
+                "path": "this.props.text"
+              },
+              "transforms": [
+                {
+                  "fallback": "Labels/Label_Clear_Empty",
+                  "inputType": "scalar",
+                  "mappings": [
+                    {
+                      "input": "Reserved",
+                      "output": "Labels/Label_Grey_Reserved"
+                    },
+                    {
+                      "input": "Occupied",
+                      "output": "Labels/Label_Teal_Occupied"
+                    }
+                  ],
+                  "outputType": "style-list",
+                  "type": "map"
+                }
+              ],
+              "type": "property"
+            }
+          },
+          "props.text": {
+            "binding": {
+              "config": {
+                "expression": "if({view.custom.B_Occ},\"Occupied\",\r\nif({view.custom.B_Res}, \"Reserved\",\"Empty\"))\r\n"
+              },
+              "type": "expr"
+            }
+          }
+        },
+        "props": {
+          "style": {}
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "meta": {
+          "name": "topLblBedStatus"
+        },
+        "position": {
+          "height": 0.1046,
+          "width": 0.3333,
+          "x": 0.611,
+          "y": 0.2591
+        },
+        "propConfig": {
+          "props.style.classes": {
+            "binding": {
+              "config": {
+                "path": "this.props.text"
+              },
+              "transforms": [
+                {
+                  "fallback": "Labels/Label_Clear_Empty",
+                  "inputType": "scalar",
+                  "mappings": [
+                    {
+                      "input": "Reserved",
+                      "output": "Labels/Label_Grey_Reserved"
+                    },
+                    {
+                      "input": "Occupied",
+                      "output": "Labels/Label_Teal_Occupied"
+                    }
+                  ],
+                  "outputType": "style-list",
+                  "type": "map"
+                }
+              ],
+              "type": "property"
+            }
+          },
+          "props.text": {
+            "binding": {
+              "config": {
+                "expression": "if({view.custom.B_Occ},\"Occupied\",\r\nif({view.custom.B_Res}, \"Reserved\",\"Empty\"))\r\n"
+              },
+              "type": "expr"
+            }
+          }
+        },
+        "props": {
+          "style": {}
+        },
+        "type": "ia.display.label"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "aspectRatio": "280:255",
+      "mode": "percent",
+      "style": {
+        "classes": "Background/Default"
+      }
+    },
+    "type": "ia.container.coord"
+  }
+}

@@ -1,0 +1,157 @@
+{
+  "custom": {},
+  "events": {
+    "system": {
+      "onStartup": {
+        "config": {
+          "script": "\tsystem.perspective.print(\"On Input_new Startup setting From and To date\")\n\tself.session.custom.dateRangeFromDate \u003d system.date.now()\n\tself.session.custom.dateRangeToDate \u003d system.date.now()"
+        },
+        "enabled": false,
+        "scope": "G",
+        "type": "script"
+      }
+    }
+  },
+  "params": {
+    "beginDate": "value",
+    "endDate": "value",
+    "selectedBeginDate": "04/27/2023 03:38",
+    "selectedEndDate": "04/28/2023 23:59"
+  },
+  "propConfig": {
+    "params.beginDate": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.endDate": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.selectedBeginDate": {
+      "binding": {
+        "config": {
+          "path": "session.custom.dateRangeFromDate"
+        },
+        "transforms": [
+          {
+            "code": "#\tUTCOffset \u003d self.session.props.device.timezone.utcOffset\n#\tdatePerTimeZone \u003d system.date.addMinutes(value,int(UTCOffset*60))\n\tdatePerTimeZone \u003d value\n\tFinalDate \u003d system.date.format(datePerTimeZone, \u0027MM/dd/yyyy HH:mm\u0027)\n\treturn FinalDate",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      },
+      "onChange": {
+        "enabled": null,
+        "script": "\tsystem.perspective.print(\"selected from \u003d \"+currentValue.value)"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.selectedEndDate": {
+      "binding": {
+        "config": {
+          "path": "session.custom.dateRangeToDate"
+        },
+        "transforms": [
+          {
+            "code": "#\tUTCOffset \u003d self.session.props.device.timezone.utcOffset\n#\tdatePerTimeZone \u003d system.date.addMinutes(value,int(UTCOffset*60))\n\tdatePerTimeZone \u003d value\n\tFinalDate \u003d system.date.format(datePerTimeZone, \u0027MM/dd/yyyy HH:mm\u0027)\n\treturn FinalDate",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      },
+      "onChange": {
+        "enabled": null,
+        "script": "\tsystem.perspective.print(\"selected to \u003d \"+currentValue.value)"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 60,
+      "width": 806
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "Start Date"
+        },
+        "position": {
+          "basis": "320px"
+        },
+        "propConfig": {
+          "props.params.date": {
+            "binding": {
+              "config": {
+                "path": "view.params.beginDate"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "text": "Reservation Created"
+          },
+          "path": "Shelter/Reservation/Cards/New Reservation/StartDateSelection",
+          "style": {
+            "classes": "InputCards/InputCard"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "End Date"
+        },
+        "position": {
+          "basis": "320px"
+        },
+        "propConfig": {
+          "props.params.date": {
+            "binding": {
+              "config": {
+                "path": "view.params.endDate"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "text": "Length of Reservation"
+          },
+          "path": "Shelter/Reservation/Cards/New Reservation/EndDateSelection",
+          "style": {
+            "classes": "InputCards/InputCard"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Placeholder"
+        },
+        "position": {
+          "basis": "320px",
+          "grow": 1
+        },
+        "props": {
+          "path": "Shelter/Reservation/Cards/New Reservation/Placeholder",
+          "style": {
+            "classes": "InputCards/InputCard"
+          }
+        },
+        "type": "ia.display.view"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "type": "ia.container.flex"
+  }
+}

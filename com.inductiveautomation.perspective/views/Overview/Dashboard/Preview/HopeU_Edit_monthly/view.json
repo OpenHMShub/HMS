@@ -1,0 +1,384 @@
+{
+  "custom": {
+    "sql_data": {
+      "$": [
+        "ds",
+        192,
+        1678789363320
+      ],
+      "$columns": [
+        {
+          "data": [
+            1
+          ],
+          "name": "id",
+          "type": "Integer"
+        },
+        {
+          "data": [
+            "December"
+          ],
+          "name": "month",
+          "type": "String"
+        },
+        {
+          "data": [
+            2022
+          ],
+          "name": "year",
+          "type": "Integer"
+        },
+        {
+          "data": [
+            1669874400000
+          ],
+          "name": "startDate",
+          "type": "Date"
+        },
+        {
+          "data": [
+            24
+          ],
+          "name": "stateID",
+          "type": "Integer"
+        },
+        {
+          "data": [
+            27
+          ],
+          "name": "bithCertificate",
+          "type": "Integer"
+        },
+        {
+          "data": [
+            6
+          ],
+          "name": "travlersAid",
+          "type": "Integer"
+        },
+        {
+          "data": [
+            24
+          ],
+          "name": "legalClinic",
+          "type": "Integer"
+        },
+        {
+          "data": [
+            11
+          ],
+          "name": "vaccineClinic",
+          "type": "Integer"
+        },
+        {
+          "data": [
+            1
+          ],
+          "name": "housedESG",
+          "type": "Integer"
+        },
+        {
+          "data": [
+            55
+          ],
+          "name": "busPassesTotal",
+          "type": "Integer"
+        },
+        {
+          "data": [
+            null
+          ],
+          "name": "day_31",
+          "type": "Integer"
+        },
+        {
+          "data": [
+            null
+          ],
+          "name": "day_7",
+          "type": "Integer"
+        },
+        {
+          "data": [
+            null
+          ],
+          "name": "all_Day",
+          "type": "Integer"
+        },
+        {
+          "data": [
+            null
+          ],
+          "name": "ride_1",
+          "type": "Integer"
+        }
+      ]
+    }
+  },
+  "params": {
+    "checked": false,
+    "id": 1
+  },
+  "propConfig": {
+    "custom.sql_data": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "id": "{view.params.id}"
+          },
+          "queryPath": "Overview/Get_HopeUMonthly_FromID"
+        },
+        "type": "query"
+      },
+      "onChange": {
+        "enabled": null,
+        "script": "\tdataset \u003d self.custom.sql_data\n\tsystem.perspective.print(dataset)\n\tself.getChild(\"root\").getChild(\"Row_1\").getChild(\"Embed_VaccineClinic\").props.params.textValue \u003d dataset.getValueAt(0,\u0027vaccineClinic\u0027) if dataset.getValueAt(0,\u0027vaccineClinic\u0027) !\u003d None else \u0027\u0027"
+      },
+      "persistent": true
+    },
+    "params.id": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 1213,
+      "width": 600
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "children": [
+          {
+            "meta": {
+              "name": "Label"
+            },
+            "position": {
+              "basis": "39px",
+              "display": false,
+              "shrink": 0
+            },
+            "props": {
+              "style": {
+                "classes": "Text/Add_TextArea",
+                "marginLeft": "27px"
+              },
+              "text": "Month:"
+            },
+            "type": "ia.display.label"
+          },
+          {
+            "meta": {
+              "name": "Label_0"
+            },
+            "position": {
+              "basis": "373px",
+              "shrink": 0
+            },
+            "propConfig": {
+              "props.text": {
+                "binding": {
+                  "config": {
+                    "path": "view.custom.sql_data"
+                  },
+                  "transforms": [
+                    {
+                      "code": "\tDate \u003d str(value.getValueAt(0,\u0027month\u0027)) + \u0027 \u0027 + str(value.getValueAt(0,\u0027year\u0027))\n\treturn Date",
+                      "type": "script"
+                    }
+                  ],
+                  "type": "property"
+                }
+              }
+            },
+            "props": {
+              "style": {
+                "classes": "Text/Add_TextArea",
+                "marginLeft": "27px"
+              }
+            },
+            "type": "ia.display.label"
+          }
+        ],
+        "meta": {
+          "name": "Date"
+        },
+        "position": {
+          "basis": "40px"
+        },
+        "props": {
+          "style": {
+            "marginTop": "20px"
+          }
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "children": [
+          {
+            "meta": {
+              "name": "Embed_VaccineClinic"
+            },
+            "position": {
+              "basis": "250px"
+            },
+            "props": {
+              "params": {
+                "text": 90,
+                "textLabel": "Vaccine Clinic",
+                "textValue": 11
+              },
+              "path": "1_TEMPLATES/60px/top/TextInputSearch",
+              "style": {
+                "marginBottom": "2px",
+                "marginLeft": "25px",
+                "marginTop": "2px"
+              }
+            },
+            "type": "ia.display.view"
+          }
+        ],
+        "meta": {
+          "name": "Row_1"
+        },
+        "position": {
+          "basis": "60px"
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "children": [
+          {
+            "events": {
+              "dom": {
+                "onClick": {
+                  "config": {
+                    "script": "\tdataset \u003d self.view.custom.sql_data\n\tself.parent.parent.getChild(\"Row_1\").getChild(\"Embed_VaccineClinic\").props.params.textValue \u003d dataset.getValueAt(0,\u0027vaccineClinic\u0027)"
+                  },
+                  "scope": "G",
+                  "type": "script"
+                }
+              }
+            },
+            "meta": {
+              "name": "Button Clear"
+            },
+            "position": {
+              "basis": "120px"
+            },
+            "props": {
+              "style": {
+                "classes": "Buttons/Delete",
+                "marginBottom": "15px",
+                "marginLeft": "26px",
+                "marginRight": "20px",
+                "marginTop": "15px"
+              },
+              "text": "Clear"
+            },
+            "type": "ia.input.button"
+          },
+          {
+            "events": {
+              "dom": {
+                "onClick": {
+                  "config": {
+                    "script": "\tvaccineClinic \u003d self.parent.parent.getChild(\"Row_1\").getChild(\"Embed_VaccineClinic\").props.params.textValue\n\t\n\tdataset \u003d self.view.custom.sql_data\n\tvaccineClinic_SQL \u003d dataset.getValueAt(0,\u0027vaccineClinic\u0027)\n\t\n\tIsUpdated \u003d False\n\tif vaccineClinic_SQL !\u003d vaccineClinic:\n\t\tIsUpdated \u003d True\n\tsystem.perspective.print(\u0027IsUpdated: \u0027+str(IsUpdated))\n\t\n\tif IsUpdated \u003d\u003d True:\n\t\tid \u003d dataset.getValueAt(0,\u0027id\u0027)\n\t\tif vaccineClinic \u003d\u003d \u0027\u0027:\n\t\t\tvaccineClinic \u003d None\n\t\tupdateQuery \u003d \u0027\u0027\u0027\n\t\t\t\t\t\tUPDATE \n\t\t\t\t\t\t\tparticipant.HopeUDashboardMonthlyData\n\t\t\t\t\t\tSET\n\t\t\t\t\t       [vaccineClinic] \u003d ?\n\t\t\t\t\t  \tWHERE [id] \u003d ?\n\t\t\t\t\t\u0027\u0027\u0027\n\t\t\n\t\tsystem.db.runPrepUpdate(updateQuery, [vaccineClinic, id])\n\t\tself.getSibling(\"Label\").showMessage(\u0027Update success !\u0027)\n\t\tsystem.perspective.closeDock(\u0027PreviewHopeUMonthly\u0027)\n\t\tsystem.perspective.sendMessage(\"HopeUMonthly_updated\", payload \u003d {}, scope \u003d \"page\")\n\t\t"
+                  },
+                  "scope": "G",
+                  "type": "script"
+                }
+              }
+            },
+            "meta": {
+              "name": "Button Create"
+            },
+            "position": {
+              "basis": "120px",
+              "display": "True"
+            },
+            "props": {
+              "style": {
+                "classes": "Buttons/Main",
+                "marginBottom": "15px",
+                "marginLeft": "20px",
+                "marginRight": "20px",
+                "marginTop": "15px"
+              },
+              "text": "Update"
+            },
+            "type": "ia.input.button"
+          },
+          {
+            "meta": {
+              "name": "Label",
+              "visible": false
+            },
+            "position": {
+              "basis": "50px",
+              "grow": 1
+            },
+            "props": {
+              "style": {
+                "classes": "Text/Error_Message"
+              },
+              "text": "Update success !"
+            },
+            "scripts": {
+              "customMethods": [
+                {
+                  "name": "showMessage",
+                  "params": [
+                    "message"
+                  ],
+                  "script": "\timport time\n\t#system.perspective.print(message)\n\tself.props.text \u003d message\n\tself.meta.visible \u003d True\n\ttime.sleep(1)\n\tself.meta.visible \u003d False\n\t"
+                }
+              ],
+              "extensionFunctions": null,
+              "messageHandlers": []
+            },
+            "type": "ia.display.label"
+          }
+        ],
+        "meta": {
+          "name": "root Actions"
+        },
+        "position": {
+          "basis": "65px",
+          "shrink": 0
+        },
+        "props": {
+          "style": {
+            "marginTop": "0px"
+          }
+        },
+        "type": "ia.container.flex"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column",
+      "style": {
+        "classes": "Background/Default"
+      }
+    },
+    "scripts": {
+      "customMethods": [],
+      "extensionFunctions": null,
+      "messageHandlers": [
+        {
+          "messageType": "HopeUMonthly_updated",
+          "pageScope": true,
+          "script": "\t# implement your handler here\n\tself.view.refreshBinding(\u0027custom.sql_data\u0027)",
+          "sessionScope": false,
+          "viewScope": false
+        }
+      ]
+    },
+    "type": "ia.container.flex"
+  }
+}

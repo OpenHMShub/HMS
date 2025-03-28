@@ -1,0 +1,272 @@
+{
+  "custom": {},
+  "params": {
+    "selectedYear": "2022-2023"
+  },
+  "propConfig": {
+    "params.selectedYear": {
+      "binding": {
+        "config": {
+          "path": "/root/Year.props.params.selectedValue"
+        },
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 30,
+      "width": 1817
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "Month"
+        },
+        "position": {
+          "basis": "180px",
+          "display": false,
+          "shrink": 0
+        },
+        "props": {
+          "params": {
+            "options": {
+              "$": [
+                "ds",
+                192,
+                1677132025093
+              ],
+              "$columns": [
+                {
+                  "data": [
+                    1,
+                    2,
+                    3,
+                    4,
+                    5,
+                    6,
+                    7,
+                    8,
+                    9,
+                    10,
+                    11,
+                    12
+                  ],
+                  "name": "id",
+                  "type": "Integer"
+                },
+                {
+                  "data": [
+                    "January",
+                    "February",
+                    "March",
+                    "April",
+                    "May",
+                    "June",
+                    "July",
+                    "August",
+                    "September",
+                    "October",
+                    "November",
+                    "December"
+                  ],
+                  "name": "month",
+                  "type": "String"
+                }
+              ]
+            },
+            "placeholder": "Month",
+            "selectedValue": 3
+          },
+          "path": "Overview/Dashboard/Templates/SingleDropDown"
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Year"
+        },
+        "position": {
+          "basis": "180px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.options": {
+            "binding": {
+              "config": {
+                "queryPath": "WinterShelterGlobal/Filters/getSeasons"
+              },
+              "transforms": [
+                {
+                  "code": "\tcurrentMonth \u003d system.date.getMonth(system.date.now())\n\tcurrentYear \u003d system.date.getYear(system.date.now())\n\tpreviousYear \u003d currentYear - 1\n\tnextYear \u003d currentYear + 1\n\tcurrentSeason \u003d \"\"\n\t\n\tif currentMonth \u003c 6:\n\t\tcurrentSeason \u003d str(previousYear) + \"-\" + str(currentYear)\n\telse:\n\t\tcurrentSeason \u003d str(currentYear) + \"-\" + str(nextYear)\n\n\theader \u003d [\u0027ID\u0027,\u0027Year\u0027]\n\tYearList \u003d []\n\tdataset \u003d value\n\tfor i in range(0,dataset.getRowCount()):\n\t\tseason \u003d dataset.getValueAt(i,\u0027season\u0027)\n\n\t\tif int(season.split(\u0027-\u0027)[0]) \u003c\u003d int(currentYear):\n#\t\t\t\tYearList.append([i+1,season.split(\u0027-\u0027)[1]])\n\t\t\t\tYearList.append([season,season])\n\tFinalDataset \u003d system.dataset.toDataSet(header, YearList)\n\treturn FinalDataset\n\t",
+                  "type": "script"
+                }
+              ],
+              "type": "query"
+            }
+          },
+          "props.params.selectedValue": {
+            "binding": {
+              "config": {
+                "expression": "toBoolean(1)"
+              },
+              "transforms": [
+                {
+                  "code": "\tcurrentMonth \u003d system.date.getMonth(system.date.now())\n\tcurrentYear \u003d system.date.getYear(system.date.now())\n\tpreviousYear \u003d currentYear - 1\n\tnextYear \u003d currentYear + 1\n\tcurrentSeason \u003d \"\"\n\t\n\tif currentMonth \u003c 6:\n\t\tcurrentSeason \u003d str(previousYear) + \"-\" + str(currentYear)\n\telse:\n\t\tcurrentSeason \u003d str(currentYear) + \"-\" + str(nextYear)\n\treturn currentSeason",
+                  "type": "script"
+                }
+              ],
+              "type": "expr"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "placeholder": "Year"
+          },
+          "path": "Overview/Dashboard/Templates/SingleDropDown",
+          "style": {
+            "marginLeft": "15px"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "toExcel"
+        },
+        "position": {
+          "basis": "30px",
+          "shrink": 0
+        },
+        "props": {
+          "params": {
+            "dataset": {
+              "$": [
+                "ds",
+                192,
+                1676353315991
+              ],
+              "$columns": [
+                {
+                  "data": [],
+                  "name": "id",
+                  "type": "Integer"
+                }
+              ]
+            },
+            "defaultFilePrefix": "toExcel"
+          },
+          "path": "1_TEMPLATES/Tables/TableToExcel",
+          "style": {
+            "marginLeft": "10px"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "toPDF"
+        },
+        "position": {
+          "basis": "30px",
+          "shrink": 0
+        },
+        "props": {
+          "params": {
+            "dataset": {
+              "$": [
+                "ds",
+                192,
+                1676352706357
+              ],
+              "$columns": [
+                {
+                  "data": [],
+                  "name": "id",
+                  "type": "Integer"
+                }
+              ]
+            },
+            "defaultFilePrefix": "Participants"
+          },
+          "path": "1_TEMPLATES/Tables/TableToPDF"
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "DateTimeInput"
+        },
+        "position": {
+          "basis": "189px",
+          "display": false
+        },
+        "props": {
+          "formattedValue": "Mar 27, 2023 12:00 PM",
+          "modalStyle": {
+            "classes": "DateTime/Date_Purple"
+          },
+          "placeholder": "Select last date of month",
+          "style": {
+            "classes": "DateTime/Add_Date",
+            "marginLeft": "60px"
+          },
+          "value": {
+            "$": [
+              "ts",
+              0,
+              1679987528932
+            ],
+            "$ts": 1679936400000
+          }
+        },
+        "type": "ia.input.date-time-input"
+      },
+      {
+        "events": {
+          "dom": {
+            "onClick": {
+              "config": {
+                "script": "\t## insert records for year\n\ttoday \u003d self.getSibling(\"DateTimeInput\").props.value\n\tyear \u003d system.date.getYear(today)\n\tfiscalYear \u003d str(year) + \u0027-\u0027 + str(year+1)\n\tResidential_YearAdd.Add_YearlyData(fiscalYear)\n\tsystem.perspective.print(\u0027Records Inserted for Fiscal Year \u003d \u0027 + str(fiscalYear))"
+              },
+              "scope": "G",
+              "type": "script"
+            }
+          }
+        },
+        "meta": {
+          "name": "Button"
+        },
+        "position": {
+          "basis": "100px",
+          "display": false
+        },
+        "props": {
+          "image": {
+            "position": "center"
+          },
+          "style": {
+            "classes": "Buttons/Btn_Orange_Active",
+            "marginLeft": "20px"
+          },
+          "text": "Add Year"
+        },
+        "type": "ia.input.button"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "style": {
+        "classes": "Filter/Header_Text"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

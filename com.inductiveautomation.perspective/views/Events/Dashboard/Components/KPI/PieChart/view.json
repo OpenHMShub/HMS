@@ -1,0 +1,346 @@
+{
+  "custom": {
+    "eventID": 2,
+    "nrAttendees": {
+      "new": 3,
+      "repeat": 0,
+      "sum": 3
+    }
+  },
+  "params": {
+    "instanceID": 2
+  },
+  "propConfig": {
+    "custom.eventID": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "instanceID": "{view.params.instanceID}"
+          },
+          "queryPath": "Calendar/EventInstance/GetEventInstanceByID"
+        },
+        "transforms": [
+          {
+            "code": "\treturn value.getValueAt(0,\"parentEventID\")",
+            "type": "script"
+          }
+        ],
+        "type": "query"
+      },
+      "persistent": true
+    },
+    "custom.nrAttendees": {
+      "binding": {
+        "config": {
+          "path": "view.params.instanceID"
+        },
+        "transforms": [
+          {
+            "code": "\tnew \u003d 0\n\trepeat \u003d 0 \n\t\n\t## facilitators\n\tinstanceFacilitator \u003d system.db.runNamedQuery(\"Calendar/Event Instance People/GetInstanceFacilitators\", {\u0027instanceID\u0027 : self.params.instanceID})\n\tfor y in range(instanceFacilitator.getRowCount()) :\n\t\tfacilitators \u003d system.db.runNamedQuery(\"Calendar/Event Instances Attendees/GetInstanceFacilitatorsByID\", {\u0027eventID\u0027 : self.custom.eventID, \u0027facilitatorID\u0027: instanceFacilitator.getValueAt(y,\"facilitatorID\")})\n\t\tfor x in range(facilitators.getRowCount()) :\n\t\t\tif facilitators.getValueAt(x,\"instanceID\") \u003d\u003d self.params.instanceID :\n\t\t\t\ttry:\n\t\t\t\t\tfacilitators.getValueAt(x-1,\"instanceID\")\n\t\t\t\t\trepeat +\u003d1\n\t\t\t\texcept:\n\t\t\t\t\tnew +\u003d 1\n\t\t\t\tbreak\n\t\n\t## staff\n\tinstanceStaff \u003d system.db.runNamedQuery(\"Calendar/Event Instance People/GetInstanceStaff\", {\u0027instanceID\u0027 : self.params.instanceID})\n\tfor y in range(instanceStaff.getRowCount()):\n\t\tstaff \u003d system.db.runNamedQuery(\"Calendar/Event Instances Attendees/GetInstanceStaffByID\",  {\u0027eventID\u0027 : self.custom.eventID, \u0027staffID\u0027: instanceStaff.getValueAt(y,\"staffID\")})\n\t\tfor x in range(staff.getRowCount()):\n\t\t\tif staff.getValueAt(x,\"instanceID\") \u003d\u003d self.params.instanceID :\n\t\t\t\ttry:\n\t\t\t\t\tstaff.getValueAt(x-1,\"instanceID\")\n\t\t\t\t\trepeat+\u003d1\n\t\t\t\texcept: \n\t\t\t\t\tnew +\u003d1\n\t\t\t\tbreak\n\t\n\t\n\t## volunteers\n\tinstanceVolunteer \u003d system.db.runNamedQuery(\"Calendar/Event Instance People/GetInstanceVolunteers\", {\u0027eventInstanceID\u0027 : self.params.instanceID})\n\tfor y in range(instanceVolunteer.getRowCount()):\n\t\tvolunteer \u003d system.db.runNamedQuery(\"Calendar/Event Instances Attendees/GetInstanceVolunteerByID\", {\u0027eventID\u0027 : self.custom.eventID, \u0027volunteerID\u0027 : instanceVolunteer.getValueAt(y,\"volunteerID\")})\n\t\tfor x in range(volunteer.getRowCount()):\n\t\t\tif volunteer.getValueAt(x,\"instanceID\") \u003d\u003d self.params.instanceID :\n\t\t\t\ttry:\n\t\t\t\t\tvolunteer.getValueAt(x-1,\"instanceID\")\n\t\t\t\t\trepeat +\u003d1 \n\t\t\t\texcept:\n\t\t\t\t\tnew +\u003d1\n\t\t\t\tbreak\n\n\n\n\n\tret \u003d {\u0027sum\u0027 : repeat + new,\u0027repeat\u0027: repeat,\u0027new\u0027: new}\n\treturn ret",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      },
+      "persistent": true
+    },
+    "params.instanceID": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 422,
+      "width": 341
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "children": [
+          {
+            "meta": {
+              "name": "SimpleGauge"
+            },
+            "position": {
+              "grow": 1
+            },
+            "propConfig": {
+              "props.maxValue": {
+                "binding": {
+                  "config": {
+                    "path": "view.custom.nrAttendees.sum"
+                  },
+                  "type": "property"
+                }
+              },
+              "props.value": {
+                "binding": {
+                  "config": {
+                    "path": "view.custom.nrAttendees.new"
+                  },
+                  "type": "property"
+                }
+              }
+            },
+            "props": {
+              "arc": {
+                "color": "#0c4e8b",
+                "cornerRadius": 50,
+                "width": 10
+              },
+              "arcBackground": {
+                "color": "#54A4EF"
+              },
+              "label": {
+                "visible": false
+              },
+              "startAngle": 0,
+              "style": {
+                "classes": []
+              }
+            },
+            "type": "ia.chart.simple-gauge"
+          }
+        ],
+        "meta": {
+          "name": "Chart"
+        },
+        "position": {
+          "height": 0.9135,
+          "width": 1
+        },
+        "props": {
+          "direction": "column"
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "children": [
+          {
+            "meta": {
+              "name": "Label"
+            },
+            "position": {
+              "basis": "50px",
+              "grow": 1
+            },
+            "propConfig": {
+              "props.text": {
+                "binding": {
+                  "config": {
+                    "path": "view.custom.nrAttendees.sum"
+                  },
+                  "type": "property"
+                }
+              }
+            },
+            "props": {
+              "style": {
+                "fontSize": 30,
+                "textAlign": "center"
+              }
+            },
+            "type": "ia.display.label"
+          },
+          {
+            "meta": {
+              "name": "Label_0"
+            },
+            "position": {
+              "basis": "32px"
+            },
+            "props": {
+              "style": {
+                "textAlign": "center"
+              },
+              "text": "Attendees"
+            },
+            "type": "ia.display.label"
+          }
+        ],
+        "meta": {
+          "name": "Number Attendees"
+        },
+        "position": {
+          "height": 0.2,
+          "width": 1,
+          "x": -0.0029,
+          "y": 0.3662
+        },
+        "props": {
+          "direction": "column",
+          "style": {
+            "classes": "Event/Event_Text",
+            "overflow": "hidden"
+          }
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "meta": {
+                  "name": "Number"
+                },
+                "propConfig": {
+                  "props.text": {
+                    "binding": {
+                      "config": {
+                        "path": "view.custom.nrAttendees.new"
+                      },
+                      "type": "property"
+                    }
+                  }
+                },
+                "type": "ia.display.label"
+              },
+              {
+                "meta": {
+                  "name": "Icon"
+                },
+                "position": {
+                  "basis": "15px"
+                },
+                "props": {
+                  "color": "#0c4e8b",
+                  "path": "material/brightness_1",
+                  "style": {
+                    "marginLeft": 5
+                  }
+                },
+                "type": "ia.display.icon"
+              },
+              {
+                "meta": {
+                  "name": "Label"
+                },
+                "props": {
+                  "style": {
+                    "marginLeft": 5
+                  },
+                  "text": "new"
+                },
+                "type": "ia.display.label"
+              }
+            ],
+            "meta": {
+              "name": "FlexContainer"
+            },
+            "position": {
+              "basis": 200
+            },
+            "props": {
+              "alignItems": "center",
+              "justify": "center",
+              "style": {
+                "classes": "Event/Event_SubTitle"
+              }
+            },
+            "type": "ia.container.flex"
+          },
+          {
+            "children": [
+              {
+                "meta": {
+                  "name": "Number"
+                },
+                "propConfig": {
+                  "props.text": {
+                    "binding": {
+                      "config": {
+                        "path": "view.custom.nrAttendees.repeat"
+                      },
+                      "type": "property"
+                    }
+                  }
+                },
+                "type": "ia.display.label"
+              },
+              {
+                "meta": {
+                  "name": "Icon"
+                },
+                "position": {
+                  "basis": "15px"
+                },
+                "props": {
+                  "color": "#54A4EF",
+                  "path": "material/brightness_1",
+                  "style": {
+                    "marginLeft": 5
+                  }
+                },
+                "type": "ia.display.icon"
+              },
+              {
+                "meta": {
+                  "name": "Label"
+                },
+                "props": {
+                  "style": {
+                    "marginLeft": 5
+                  },
+                  "text": "Repeat"
+                },
+                "type": "ia.display.label"
+              }
+            ],
+            "meta": {
+              "name": "FlexContainer_0"
+            },
+            "position": {
+              "basis": "200px"
+            },
+            "props": {
+              "alignItems": "center",
+              "justify": "center",
+              "style": {
+                "classes": "Event/Event_SubTitle"
+              }
+            },
+            "type": "ia.container.flex"
+          }
+        ],
+        "meta": {
+          "name": "Number newrepeat"
+        },
+        "position": {
+          "height": 0.1,
+          "width": 1,
+          "y": 0.8
+        },
+        "props": {
+          "justify": "space-between"
+        },
+        "type": "ia.container.flex"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "mode": "percent",
+      "style": {
+        "overflow": "hidden"
+      }
+    },
+    "scripts": {
+      "customMethods": [],
+      "extensionFunctions": null,
+      "messageHandlers": [
+        {
+          "messageType": "refreshPeople",
+          "pageScope": false,
+          "script": "\t# implement your handler here\n\tself.view.refreshBinding(\"custom.nrAttendees\")",
+          "sessionScope": true,
+          "viewScope": false
+        }
+      ]
+    },
+    "type": "ia.container.coord"
+  }
+}

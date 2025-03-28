@@ -1,0 +1,1729 @@
+{
+  "custom": {
+    "EventData": null,
+    "endDateCalender": null,
+    "key": "value",
+    "nextEvent": " ",
+    "previousEvent": {
+      "scheduleId": -1,
+      "startDate": null
+    },
+    "sql_data": {
+      "$": [
+        "ds",
+        192,
+        1710326025240
+      ],
+      "$columns": [
+        {
+          "data": [],
+          "name": "id",
+          "type": "Integer"
+        },
+        {
+          "data": [],
+          "name": "categoryId",
+          "type": "Integer"
+        },
+        {
+          "data": [],
+          "name": "category",
+          "type": "String"
+        },
+        {
+          "data": [],
+          "name": "name",
+          "type": "String"
+        },
+        {
+          "data": [],
+          "name": "startsOn",
+          "type": "Date"
+        },
+        {
+          "data": [],
+          "name": "endsOn",
+          "type": "Date"
+        },
+        {
+          "data": [],
+          "name": "allDayEvent",
+          "type": "Boolean"
+        },
+        {
+          "data": [],
+          "name": "description",
+          "type": "String"
+        },
+        {
+          "data": [],
+          "name": "repeatFrequencyTypeId",
+          "type": "Integer"
+        },
+        {
+          "data": [],
+          "name": "dateSelectionPattern",
+          "type": "Integer"
+        },
+        {
+          "data": [],
+          "name": "dateSelectionDays",
+          "type": "String"
+        },
+        {
+          "data": [],
+          "name": "timeCreated",
+          "type": "Date"
+        },
+        {
+          "data": [],
+          "name": "timeRetired",
+          "type": "Date"
+        },
+        {
+          "data": [],
+          "name": "points",
+          "type": "Integer"
+        },
+        {
+          "data": [],
+          "name": "facilitatorEmployeeId",
+          "type": "Integer"
+        },
+        {
+          "data": [],
+          "name": "facilitatorHumanId",
+          "type": "String"
+        },
+        {
+          "data": [],
+          "name": "attendeeCategories",
+          "type": "String"
+        },
+        {
+          "data": [],
+          "name": "attendeeCategoryNames",
+          "type": "String"
+        },
+        {
+          "data": [],
+          "name": "facilitator",
+          "type": "String"
+        },
+        {
+          "data": [],
+          "name": "IsEventRepeat",
+          "type": "Boolean"
+        },
+        {
+          "data": [],
+          "name": "repeatDateUntil",
+          "type": "Date"
+        },
+        {
+          "data": [],
+          "name": "scheduledWeekdays",
+          "type": "Short"
+        },
+        {
+          "data": [],
+          "name": "duration_hours",
+          "type": "Integer"
+        },
+        {
+          "data": [],
+          "name": "locationId",
+          "type": "Integer"
+        },
+        {
+          "data": [],
+          "name": "location",
+          "type": "String"
+        },
+        {
+          "data": [],
+          "name": "eventLastOccurance",
+          "type": "Date"
+        }
+      ]
+    }
+  },
+  "params": {
+    "eventId": -1
+  },
+  "propConfig": {
+    "custom.EventData": {
+      "binding": {
+        "config": {
+          "path": "view.params.eventId"
+        },
+        "transforms": [
+          {
+            "code": "\tIsUpdate \u003d True\n\tif IsUpdate \u003d\u003d True:\n\t\teventId \u003d self.params.eventId\n\t\tparameter \u003d {\u0027eventId\u0027:eventId}\n\t\tresult \u003d system.db.runNamedQuery(\u0027Event/ParticipantEvents/Detail/Get_Events_ByEventID\u0027,parameter)\n\t\tif result.getValueAt(0,\u0027dateSelectionDays\u0027) !\u003d None and result.getValueAt(0,\u0027dateSelectionDays\u0027) !\u003d \u0027\u0027 and result.getValueAt(0,\u0027dateSelectionDays\u0027) !\u003d \u0027None\u0027:\n\t\t\tdateSelectionDays \u003d (result.getValueAt(0,\u0027dateSelectionDays\u0027)).replace(\u0027[\u0027,\u0027\u0027)\n\t\t\tdateSelectionDays \u003d dateSelectionDays.replace(\u0027]\u0027,\u0027\u0027)\n\t\t\tlist \u003d dateSelectionDays.split(\u0027,\u0027)\n\t\telse:\n\t\t\tlist \u003d []\n\t\tdateSelectionDays \u003d []\n\t\tif len(list)\u003e0:\n\t\t\tfor k in range(0,len(list)):\n\t\t\t\tday \u003d list[k]\n\t\t\t\tif day !\u003d None and day !\u003d \u0027\u0027:\n\t\t\t\t\tdateSelectionDays.append(int(day))\n\t\tif result.getRowCount() \u003e 0:\n\t\t\tEventInfo \u003d{\n\t\t\t\t\t\t\u0027id\u0027:result.getValueAt(0,\u0027id\u0027),\n\t\t\t\t\t\t\u0027categoryId\u0027:result.getValueAt(0,\u0027categoryId\u0027),\n\t\t\t\t\t\t\u0027category\u0027:result.getValueAt(0,\u0027category\u0027),\n\t\t\t\t\t\t\u0027name\u0027:result.getValueAt(0,\u0027name\u0027),\n\t\t\t\t\t\t\u0027startsOn\u0027:result.getValueAt(0,\u0027startsOn\u0027),\n\t\t\t\t\t\t\u0027endsOn\u0027:result.getValueAt(0,\u0027endsOn\u0027),\n\t\t\t\t\t\t\u0027allDayEvent\u0027:result.getValueAt(0,\u0027allDayEvent\u0027),\n\t\t\t\t\t\t\u0027description\u0027:result.getValueAt(0,\u0027description\u0027),\n\t\t\t\t\t\t\u0027repeatFrequencyTypeId\u0027:result.getValueAt(0,\u0027repeatFrequencyTypeId\u0027),\n\t\t\t\t\t\t\u0027dateSelectionPattern\u0027:result.getValueAt(0,\u0027dateSelectionPattern\u0027),\n\t\t\t\t\t\t\u0027dateSelectionDays\u0027:dateSelectionDays,\n\t\t\t\t\t\t\u0027timeCreated\u0027:result.getValueAt(0,\u0027timeCreated\u0027),\n\t\t\t\t\t\t\u0027timeRetired\u0027:result.getValueAt(0,\u0027timeRetired\u0027),\n\t\t\t\t\t\t\u0027points\u0027:result.getValueAt(0,\u0027points\u0027),\n\t\t\t\t\t\t\u0027facilitatorEmployeeId\u0027:result.getValueAt(0,\u0027facilitatorEmployeeId\u0027),\n\t\t\t\t\t\t\u0027IsEventRepeat\u0027:result.getValueAt(0,\u0027IsEventRepeat\u0027),\n\t\t\t\t\t\t\u0027repeatDateUntil\u0027:result.getValueAt(0,\u0027repeatDateUntil\u0027)\n\t\t\t\t\t\t,\u0027scheduledWeekdays\u0027:result.getValueAt(0,\u0027scheduledWeekdays\u0027)\n\t\t\t\t\t\t,\u0027duration_hours\u0027:result.getValueAt(0,\u0027duration_hours\u0027)\n\t\t\t\t\t\t,\u0027locationId\u0027:result.getValueAt(0,\u0027locationId\u0027)\n\t\t\t\t\t\t,\u0027facilitator\u0027: result.getValueAt(0,\u0027facilitator\u0027)\n\t\t\t\t\t\t,\u0027eventLastOccurance\u0027:result.getValueAt(0,\u0027eventLastOccurance\u0027)\n\t\t\t\t\t\t}\n#\t\t\t# set week days \n#\t\t\tself.custom.weekdays \u003d dateSelectionDays\n\t\t\t# add locations\n#\t\t\tdataset \u003d system.db.runNamedQuery(\"Event/ParticipantEvents/Detail/Get_SelectedLocations_ForEvent\",{\u0027EventId\u0027:self.params.event_id})\n#\t\t\tlocations \u003d []\n#\t\t\tif dataset.getRowCount() \u003e 0:\n#\t\t\t\tfor i in range(0,dataset.getRowCount()):\n#\t\t\t\t\tlocation \u003d dataset.getValueAt(i,\u0027locationId\u0027)\n#\t\t\t\t\tlocations.append(location)\n#\t\t\tself.custom.Locations \u003d locations\n\t\telse:\n\t\t\tEventInfo \u003d{\n\t\t\t\t\t\t\u0027id\u0027:None,\n\t\t\t\t\t\t\u0027categoryId\u0027:None,\n\t\t\t\t\t\t\u0027category\u0027:None,\n\t\t\t\t\t\t\u0027name\u0027:None,\n\t\t\t\t\t\t\u0027startsOn\u0027:system.date.now(),\n\t\t\t\t\t\t\u0027endsOn\u0027: system.date.addDays(system.date.now(), 1),\n\t\t\t\t\t\t\u0027allDayEvent\u0027:None,\n\t\t\t\t\t\t\u0027description\u0027:\u0027\u0027,\n\t\t\t\t\t\t\u0027repeateFrequencyTypeId\u0027:None,\n\t\t\t\t\t\t\u0027dateSelectionPattern\u0027:None,\n\t\t\t\t\t\t\u0027dateSelectionDays\u0027:None,\n\t\t\t\t\t\t\u0027timeCreated\u0027:None,\n\t\t\t\t\t\t\u0027timeRetired\u0027:None,\n\t\t\t\t\t\t\u0027points\u0027:None,\n\t\t\t\t\t\t\u0027facilitatorEmployeeId\u0027:None,\n\t\t\t\t\t\t\u0027IsEventRepeat\u0027:None,\n\t\t\t\t\t\t\u0027repeatDateUntil\u0027:None\n\t\t\t\t\t\t,\u0027scheduledWeekdays\u0027:None\n\t\t\t\t\t\t,\u0027duration_hours\u0027:1\n\t\t\t\t\t\t,\u0027locationId\u0027:None\n\t\t\t\t\t\t,\u0027facilitator\u0027:None\n\t\t\t\t\t\t}\n#\t\t\tself.custom.Locations \u003d []\n#\t\t\t# set week days \n#\t\t\tself.custom.weekdays \u003d []\n\telse:\n\t\tEventInfo \u003d{\n\t\t\t\t\t\u0027id\u0027:None,\n\t\t\t\t\t\u0027categoryId\u0027:None,\n\t\t\t\t\t\u0027category\u0027:None,\n\t\t\t\t\t\u0027name\u0027:None,\n\t\t\t\t\t\u0027startsOn\u0027:system.date.now(),\n\t\t\t\t\t\u0027endsOn\u0027: system.date.addDays(system.date.now(), 1),\n\t\t\t\t\t\u0027allDayEvent\u0027:None,\n\t\t\t\t\t\u0027description\u0027:\u0027\u0027,\n\t\t\t\t\t\u0027repeateFrequencyTypeId\u0027:None,\n\t\t\t\t\t\u0027dateSelectionPattern\u0027:None,\n\t\t\t\t\t\u0027dateSelectionDays\u0027:None,\n\t\t\t\t\t\u0027timeCreated\u0027:None,\n\t\t\t\t\t\u0027timeRetired\u0027:None,\n\t\t\t\t\t\u0027points\u0027:None,\n\t\t\t\t\t\u0027facilitatorEmployeeId\u0027:None,\n\t\t\t\t\t\u0027IsEventRepeat\u0027:None,\n\t\t\t\t\t\u0027repeatDateUntil\u0027:None\n\t\t\t\t\t,\u0027scheduledWeekdays\u0027:None\n\t\t\t\t\t,\u0027duration_hours\u0027:1\n\t\t\t\t\t,\u0027locationId\u0027:None\n\t\t\t\t\t,\u0027facilitator\u0027:None\n\t\t\t\t\t}\n#\t\tself.custom.Locations \u003d []\n#\t\t# set week days \n#\t\tself.custom.weekdays \u003d []\n\treturn EventInfo",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      },
+      "persistent": true
+    },
+    "custom.key": {
+      "persistent": true
+    },
+    "custom.nextEvent": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "eventId": "{view.params.eventId}"
+          },
+          "queryPath": "Event/ParticipantEvents/Preview/GetNextEvent"
+        },
+        "transforms": [
+          {
+            "code": "\tnextDate \u003d \u0027 \u0027\n\t\n\tif value is not None and value.getRowCount() \u003e 0:\n\t\tnextDate \u003d value.getValueAt(0, \u0027nextDate\u0027)\n\treturn nextDate",
+            "type": "script"
+          }
+        ],
+        "type": "query"
+      },
+      "persistent": true
+    },
+    "custom.pattern": {
+      "binding": {
+        "config": {
+          "bidirectional": true,
+          "path": "view.custom.EventData.dateSelectionPattern"
+        },
+        "type": "property"
+      }
+    },
+    "custom.previousEvent": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "eventId": "{view.params.eventId}"
+          },
+          "queryPath": "Event/ParticipantEvents/Preview/GetPreviousEvent"
+        },
+        "transforms": [
+          {
+            "code": "\tprevDateData \u003d {\u0027startDate\u0027: None,\u0027scheduleId\u0027:-1}\n\tif value is not None and value.getRowCount() \u003e 0:\n\t\tprevDateData[\u0027startDate\u0027] \u003d value.getValueAt(0,\u0027prevDate\u0027)\n\t\tprevDateData[\u0027scheduleId\u0027] \u003d value.getValueAt(0,\u0027scheduleId\u0027)\n\treturn prevDateData\n",
+            "type": "script"
+          }
+        ],
+        "type": "query"
+      },
+      "persistent": true
+    },
+    "custom.schedule": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "eventId": "{view.params.eventId}"
+          },
+          "queryPath": "Event/ParticipantEvents/Registration/Get_ScheduledEvents"
+        },
+        "transforms": [
+          {
+            "code": "\tdataset \u003d value\n\tschedule \u003d []\n\tduration \u003d 0\n\tif dataset.getRowCount() \u003e 0:\n\t\tfor i in range(0,dataset.getRowCount()):\n\t\t\tstartDate \u003d dataset.getValueAt(i,\u0027startsOn\u0027)\n\t\t\tendDate \u003d dataset.getValueAt(i,\u0027endsOn\u0027)\n\t\t\tscheduleId \u003d dataset.getValueAt(i,\u0027scheduleId\u0027)\n\t\t\t###\n\t\t\tdayOfYear \u003d system.date.getDayOfYear(startDate)\n\t\t\tif dayOfYear not in schedule:\n\t\t\t\tschedule.append({\u0027dayOfYear\u0027:dayOfYear, \u0027startDate\u0027:startDate, \u0027scheduleId\u0027:scheduleId})\n\t\t\t###\n\t\t\tduration \u003d system.date.daysBetween(startDate, endDate)\n#\t\t\twhile startDate \u003c endDate:\n#\t\t\t\tdayOfYear \u003d system.date.getDayOfYear(startDate)\n#\t\t\t\tif dayOfYear not in schedule:\n#\t\t\t\t\tschedule.append(dayOfYear)\n#\t\t\t\tstartDate \u003d system.date.addDays(startDate, 1)\n\tself.getChild(\"root\").getChild(\"Schedule_Flex\").getChild(\"Calendar\").getChild(\"Table\").props.params.duration \u003d duration\n\treturn schedule",
+            "type": "script"
+          }
+        ],
+        "type": "query"
+      }
+    },
+    "custom.sql_data": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "eventId": "{view.params.eventId}"
+          },
+          "queryPath": "Event/ParticipantEvents/Detail/Get_Events_ByEventID"
+        },
+        "type": "query"
+      },
+      "persistent": true
+    },
+    "custom.weekdays": {
+      "binding": {
+        "config": {
+          "path": "view.custom.EventData.dateSelectionDays"
+        },
+        "type": "property"
+      }
+    },
+    "params.eventId": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 1560,
+      "width": 264
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "CardHeader"
+        },
+        "position": {
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.data": {
+            "binding": {
+              "config": {
+                "parameters": {
+                  "locationId": "{view.params.locationId}",
+                  "seasonId": "{parent.custom.seasonId}"
+                },
+                "queryPath": "WinterShelterGlobal/Registration/RegistrationDetail"
+              },
+              "type": "query"
+            }
+          },
+          "props.params.Text": {
+            "binding": {
+              "config": {
+                "path": "view.custom.sql_data"
+              },
+              "transforms": [
+                {
+                  "code": "\tif value is None or value.getRowCount() \u003d\u003d 0:\n\t\treturn \u0027\u0027\n\telse:\n\t\titem \u003d value.getValueAt(0,\u0027name\u0027)\n\t\tif item is None:\n\t\t\treturn \u0027\u0027\n\t\telse:\n\t\t\treturn item",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          },
+          "props.params.eventId": {
+            "binding": {
+              "config": {
+                "path": "view.params.eventId"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "path": "Events/ParticipantEvents/Preview/Cards/Information/Header",
+          "style": {
+            "overflow": "hidden"
+          },
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Registration_Date"
+        },
+        "position": {
+          "display": false,
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.Info": {
+            "binding": {
+              "config": {
+                "path": "view.custom.sql_data"
+              },
+              "transforms": [
+                {
+                  "code": "\titem \u003d value.getValueAt(0,\u0027timeCreated\u0027)\n\tif item is None:\n\t\treturn \u0027\u0027\n\telse:\n\t\treturn item",
+                  "type": "script"
+                },
+                {
+                  "formatType": "datetime",
+                  "formatValue": {
+                    "date": "medium"
+                  },
+                  "type": "format"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "Description": "Registration"
+          },
+          "path": "Participants/Detail/Cards/Personal/AboutLabel",
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Starts_On"
+        },
+        "position": {
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.Info": {
+            "binding": {
+              "config": {
+                "path": "view.custom.sql_data"
+              },
+              "transforms": [
+                {
+                  "code": "\tif value is None or value.getRowCount() \u003d\u003d 0:\n\t\treturn \u0027\u0027\n\telse:\n\t\titem \u003d value.getValueAt(0,\u0027startsOn\u0027)\n\t\tif item is None:\n\t\t\treturn \u0027\u0027\n\t\telse:\n\t\t\treturn system.date.format(item,\u0027MMM dd, yyyy\u0027)\n\t\t",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "Description": "Starts On"
+          },
+          "path": "Participants/Detail/Cards/Personal/AboutLabel",
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Ends_On"
+        },
+        "position": {
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.Info": {
+            "binding": {
+              "config": {
+                "path": "view.custom.sql_data"
+              },
+              "transforms": [
+                {
+                  "code": "\tif value is None or value.getRowCount() \u003d\u003d 0:\n\t\treturn \u0027\u0027\n\telse:\n\t\trepetUntilDate \u003d value.getValueAt(0,\u0027eventLastOccurance\u0027)\n\t\tif repetUntilDate is None:\n\t\t\titem \u003d value.getValueAt(0,\u0027endsOn\u0027)\n\t\telse:\n\t\t\titem \u003d repetUntilDate\n\t\tif item is None:\n\t\t\treturn \u0027\u0027\n\t\telse:\n\t\t\treturn system.date.format(item,\u0027MMM dd, yyyy\u0027)",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "Description": "Ends On"
+          },
+          "path": "Participants/Detail/Cards/Personal/AboutLabel",
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "All_day"
+        },
+        "position": {
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.Info": {
+            "binding": {
+              "config": {
+                "path": "view.custom.sql_data"
+              },
+              "transforms": [
+                {
+                  "code": "\titem \u003d value.getValueAt(0,\u0027allDayEvent\u0027)\n\tif item is None:\n\t\treturn \u0027No\u0027\n\telse:\n\t\tif item \u003d\u003d True:\n\t\t\treturn \u0027Yes\u0027\n\t\telse:\n\t\t\treturn \u0027No\u0027\n\t\t",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "Description": "All Day"
+          },
+          "path": "Participants/Detail/Cards/Personal/AboutLabel",
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Duration"
+        },
+        "position": {
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.Info": {
+            "binding": {
+              "config": {
+                "path": "view.custom.sql_data"
+              },
+              "transforms": [
+                {
+                  "code": "\titem \u003d value.getValueAt(0,\u0027duration_hours\u0027)\n\tif item is None:\n\t\treturn 0\n\telse:\n\t\treturn item\n\t\t",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "Description": "Duration"
+          },
+          "path": "Participants/Detail/Cards/Personal/AboutLabel",
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "category"
+        },
+        "position": {
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.Info": {
+            "binding": {
+              "config": {
+                "path": "view.custom.sql_data"
+              },
+              "transforms": [
+                {
+                  "code": "\titem \u003d value.getValueAt(0,\u0027category\u0027)\n\tif item is None:\n\t\treturn \u0027\u0027\n\telse:\n\t\treturn item",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "Description": "Category"
+          },
+          "path": "Participants/Detail/Cards/Personal/AboutLabel",
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "attendee"
+        },
+        "position": {
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.Info": {
+            "binding": {
+              "config": {
+                "path": "view.custom.sql_data"
+              },
+              "transforms": [
+                {
+                  "code": "\titem \u003d value.getValueAt(0,\u0027attendeeCategoryNames\u0027)\n\tif item is None:\n\t\treturn \u0027\u0027\n\telse:\n\t\treturn item",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "Description": "Attendee"
+          },
+          "path": "Participants/Detail/Cards/Personal/AboutLabel",
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "points"
+        },
+        "position": {
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.Info": {
+            "binding": {
+              "config": {
+                "path": "view.custom.sql_data"
+              },
+              "transforms": [
+                {
+                  "code": "\titem \u003d value.getValueAt(0,\u0027points\u0027)\n\tif item is None:\n\t\treturn \u0027\u0027\n\telse:\n\t\treturn item",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "Description": "Points"
+          },
+          "path": "Participants/Detail/Cards/Personal/AboutLabel",
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "facilitator"
+        },
+        "position": {
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.Info": {
+            "binding": {
+              "config": {
+                "path": "view.custom.sql_data"
+              },
+              "transforms": [
+                {
+                  "code": "\titem \u003d value.getValueAt(0,\u0027facilitator\u0027)\n\tif item is None:\n\t\treturn \u0027\u0027\n\telse:\n\t\treturn item",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "Description": "Facilitator"
+          },
+          "path": "Participants/Detail/Cards/Personal/AboutLabel",
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Locations"
+        },
+        "position": {
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.Info": {
+            "binding": {
+              "config": {
+                "path": "view.custom.sql_data"
+              },
+              "transforms": [
+                {
+                  "code": "\titem \u003d value.getValueAt(0,\u0027Location\u0027)\n\tif item is None:\n\t\treturn \u0027\u0027\n\telse:\n\t\treturn item",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "Description": "Location"
+          },
+          "path": "Participants/Detail/Cards/Personal/AboutLabel",
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "description"
+        },
+        "position": {
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.Info": {
+            "binding": {
+              "config": {
+                "path": "view.custom.sql_data"
+              },
+              "transforms": [
+                {
+                  "code": "\titem \u003d value.getValueAt(0,\u0027description\u0027)\n\tif item is None:\n\t\treturn \u0027\u0027\n\telse:\n\t\treturn item",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "Description": "Description"
+          },
+          "path": "Participants/Detail/Cards/Personal/AboutLabel",
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "meta": {
+                  "name": "Label"
+                },
+                "position": {
+                  "basis": "97px",
+                  "shrink": 0
+                },
+                "props": {
+                  "style": {
+                    "color": "#9db8d1",
+                    "fontFamily": "Proxima NovaC Medium",
+                    "fontSize": "15px"
+                  },
+                  "text": "Date Selection"
+                },
+                "type": "ia.display.label"
+              },
+              {
+                "meta": {
+                  "name": "Label_0"
+                },
+                "position": {
+                  "basis": "50px",
+                  "display": false
+                },
+                "props": {
+                  "style": {
+                    "color": "#D80000"
+                  },
+                  "text": "*"
+                },
+                "type": "ia.display.label"
+              }
+            ],
+            "meta": {
+              "name": "Date Selection"
+            },
+            "position": {
+              "basis": "25px",
+              "display": false,
+              "shrink": 0
+            },
+            "props": {
+              "style": {
+                "marginBottom": "10px",
+                "marginTop": "10px"
+              }
+            },
+            "type": "ia.container.flex"
+          },
+          {
+            "children": [
+              {
+                "meta": {
+                  "name": "SelectionInput"
+                },
+                "position": {
+                  "basis": "167px",
+                  "shrink": 0
+                },
+                "propConfig": {
+                  "props.params.SelectedValue": {
+                    "binding": {
+                      "config": {
+                        "bidirectional": true,
+                        "path": "view.custom.pattern"
+                      },
+                      "type": "property"
+                    },
+                    "onChange": {
+                      "enabled": null,
+                      "script": "\tself.view.custom.weekdays \u003d []"
+                    }
+                  }
+                },
+                "props": {
+                  "params": {
+                    "Options": [
+                      {
+                        "label": "Every...",
+                        "value": 1
+                      },
+                      {
+                        "label": "Every other...",
+                        "value": 2
+                      },
+                      {
+                        "label": "Every 1st...",
+                        "value": 3
+                      },
+                      {
+                        "label": "Every 2nd...",
+                        "value": 4
+                      },
+                      {
+                        "label": "Every 3rd...",
+                        "value": 5
+                      },
+                      {
+                        "label": "Every 4th...",
+                        "value": 6
+                      },
+                      {
+                        "label": "Every 5th...",
+                        "value": 7
+                      }
+                    ],
+                    "Text": "Date Select",
+                    "hasHeader": false,
+                    "placeholder": "Every..."
+                  },
+                  "path": "WinterShelterGlobal/Registration/Cards/SelectionInput",
+                  "style": {
+                    "marginRight": "20px"
+                  }
+                },
+                "type": "ia.display.view"
+              },
+              {
+                "events": {
+                  "component": {
+                    "onActionPerformed": {
+                      "config": {
+                        "script": "\tself.view.params.schedule \u003d []\n\tself.view.custom.weekdays \u003d []\n\tself.view.custom.pattern \u003d None"
+                      },
+                      "scope": "G",
+                      "type": "script"
+                    }
+                  }
+                },
+                "meta": {
+                  "name": "Button"
+                },
+                "position": {
+                  "basis": "80px",
+                  "display": false
+                },
+                "props": {
+                  "primary": false,
+                  "style": {
+                    "classes": "Buttons/Secondary"
+                  },
+                  "text": "Reset"
+                },
+                "type": "ia.input.button"
+              }
+            ],
+            "meta": {
+              "name": "DateSelect"
+            },
+            "position": {
+              "basis": "25px",
+              "display": false,
+              "shrink": 0
+            },
+            "props": {
+              "style": {
+                "marginLeft": "20px",
+                "overflow": "visible"
+              }
+            },
+            "type": "ia.container.flex"
+          },
+          {
+            "children": [
+              {
+                "custom": {
+                  "value": 1
+                },
+                "meta": {
+                  "name": "Sun"
+                },
+                "position": {
+                  "shrink": 0
+                },
+                "propConfig": {
+                  "props.selected": {
+                    "binding": {
+                      "config": {
+                        "expression": "indexOf({view.custom.weekdays},{this.custom.value})\u003e-1"
+                      },
+                      "enabled": false,
+                      "type": "expr"
+                    },
+                    "onChange": {
+                      "enabled": null,
+                      "script": "\tif currentValue.value:\n\t\tif self.custom.value not in self.view.custom.weekdays:\n\t\t\tself.view.custom.weekdays.append(self.custom.value)\n\t\t\tsystem.perspective.print(\"Selected\")\n\telse:\n\t\tif self.custom.value in self.view.custom.weekdays:\n\t\t\tself.view.custom.weekdays.remove(self.custom.value)\n\t\t\tsystem.perspective.print(\"Not Selected\")"
+                    }
+                  }
+                },
+                "props": {
+                  "checkedIcon": {
+                    "color": {
+                      "enabled": "#0066FF"
+                    },
+                    "path": "material/radio_button_checked"
+                  },
+                  "indeterminateIcon": {
+                    "path": "material/radio_button_checked"
+                  },
+                  "style": {
+                    "paddingRight": "20px"
+                  },
+                  "text": "Sun",
+                  "uncheckedIcon": {
+                    "color": {
+                      "enabled": "#9db8d1"
+                    },
+                    "path": "material/radio_button_unchecked"
+                  }
+                },
+                "type": "ia.input.checkbox"
+              },
+              {
+                "custom": {
+                  "value": 2
+                },
+                "meta": {
+                  "name": "Mon"
+                },
+                "position": {
+                  "shrink": 0
+                },
+                "propConfig": {
+                  "props.selected": {
+                    "binding": {
+                      "config": {
+                        "expression": "indexOf({view.custom.weekdays},{this.custom.value})\u003e-1"
+                      },
+                      "enabled": false,
+                      "type": "expr"
+                    },
+                    "onChange": {
+                      "enabled": null,
+                      "script": "\tif currentValue.value:\n\t\tif self.custom.value not in self.view.custom.weekdays:\n\t\t\tself.view.custom.weekdays.append(self.custom.value)\n\telse:\n\t\tif self.custom.value in self.view.custom.weekdays:\n\t\t\tself.view.custom.weekdays.remove(self.custom.value)"
+                    }
+                  }
+                },
+                "props": {
+                  "checkedIcon": {
+                    "color": {
+                      "enabled": "#0066FF"
+                    },
+                    "path": "material/radio_button_checked"
+                  },
+                  "indeterminateIcon": {
+                    "path": "material/radio_button_checked"
+                  },
+                  "style": {
+                    "paddingRight": "20px"
+                  },
+                  "text": "Mon",
+                  "uncheckedIcon": {
+                    "color": {
+                      "enabled": "#9db8d1"
+                    },
+                    "path": "material/radio_button_unchecked"
+                  }
+                },
+                "type": "ia.input.checkbox"
+              },
+              {
+                "custom": {
+                  "value": 3
+                },
+                "meta": {
+                  "name": "Tue"
+                },
+                "position": {
+                  "shrink": 0
+                },
+                "propConfig": {
+                  "props.selected": {
+                    "binding": {
+                      "config": {
+                        "expression": "indexOf({view.custom.weekdays},{this.custom.value})\u003e-1"
+                      },
+                      "enabled": false,
+                      "type": "expr"
+                    },
+                    "onChange": {
+                      "enabled": null,
+                      "script": "\tif currentValue.value:\n\t\tif self.custom.value not in self.view.custom.weekdays:\n\t\t\tself.view.custom.weekdays.append(self.custom.value)\n\telse:\n\t\tif self.custom.value in self.view.custom.weekdays:\n\t\t\tself.view.custom.weekdays.remove(self.custom.value)"
+                    }
+                  }
+                },
+                "props": {
+                  "checkedIcon": {
+                    "color": {
+                      "enabled": "#0066FF"
+                    },
+                    "path": "material/radio_button_checked"
+                  },
+                  "indeterminateIcon": {
+                    "path": "material/radio_button_checked"
+                  },
+                  "style": {
+                    "paddingRight": "20px"
+                  },
+                  "text": "Tue",
+                  "uncheckedIcon": {
+                    "color": {
+                      "enabled": "#9db8d1"
+                    },
+                    "path": "material/radio_button_unchecked"
+                  }
+                },
+                "type": "ia.input.checkbox"
+              },
+              {
+                "custom": {
+                  "value": 4
+                },
+                "meta": {
+                  "name": "Wed"
+                },
+                "position": {
+                  "shrink": 0
+                },
+                "propConfig": {
+                  "props.selected": {
+                    "binding": {
+                      "config": {
+                        "expression": "indexOf({view.custom.weekdays},{this.custom.value})\u003e-1"
+                      },
+                      "enabled": false,
+                      "type": "expr"
+                    },
+                    "onChange": {
+                      "enabled": null,
+                      "script": "\tif currentValue.value:\n\t\tif self.custom.value not in self.view.custom.weekdays:\n\t\t\tself.view.custom.weekdays.append(self.custom.value)\n\telse:\n\t\tif self.custom.value in self.view.custom.weekdays:\n\t\t\tself.view.custom.weekdays.remove(self.custom.value)"
+                    }
+                  }
+                },
+                "props": {
+                  "checkedIcon": {
+                    "color": {
+                      "enabled": "#0066FF"
+                    },
+                    "path": "material/radio_button_checked"
+                  },
+                  "indeterminateIcon": {
+                    "path": "material/radio_button_checked"
+                  },
+                  "style": {
+                    "paddingRight": "20px"
+                  },
+                  "text": "Wed",
+                  "uncheckedIcon": {
+                    "color": {
+                      "enabled": "#9db8d1"
+                    },
+                    "path": "material/radio_button_unchecked"
+                  }
+                },
+                "type": "ia.input.checkbox"
+              },
+              {
+                "custom": {
+                  "value": 5
+                },
+                "meta": {
+                  "name": "Thur"
+                },
+                "position": {
+                  "shrink": 0
+                },
+                "propConfig": {
+                  "props.selected": {
+                    "binding": {
+                      "config": {
+                        "expression": "indexOf({view.custom.weekdays},{this.custom.value})\u003e-1"
+                      },
+                      "enabled": false,
+                      "type": "expr"
+                    },
+                    "onChange": {
+                      "enabled": null,
+                      "script": "\tif currentValue.value:\n\t\tif self.custom.value not in self.view.custom.weekdays:\n\t\t\tself.view.custom.weekdays.append(self.custom.value)\n\telse:\n\t\tif self.custom.value in self.view.custom.weekdays:\n\t\t\tself.view.custom.weekdays.remove(self.custom.value)"
+                    }
+                  }
+                },
+                "props": {
+                  "checkedIcon": {
+                    "color": {
+                      "enabled": "#0066FF"
+                    },
+                    "path": "material/radio_button_checked"
+                  },
+                  "indeterminateIcon": {
+                    "path": "material/radio_button_checked"
+                  },
+                  "style": {
+                    "paddingRight": "20px"
+                  },
+                  "text": "Thur",
+                  "uncheckedIcon": {
+                    "color": {
+                      "enabled": "#9db8d1"
+                    },
+                    "path": "material/radio_button_unchecked"
+                  }
+                },
+                "type": "ia.input.checkbox"
+              },
+              {
+                "custom": {
+                  "value": 6
+                },
+                "meta": {
+                  "name": "Fri"
+                },
+                "position": {
+                  "shrink": 0
+                },
+                "propConfig": {
+                  "props.selected": {
+                    "binding": {
+                      "config": {
+                        "expression": "indexOf({view.custom.weekdays},{this.custom.value})\u003e-1"
+                      },
+                      "enabled": false,
+                      "type": "expr"
+                    },
+                    "onChange": {
+                      "enabled": null,
+                      "script": "\tif currentValue.value:\n\t\tif self.custom.value not in self.view.custom.weekdays:\n\t\t\tself.view.custom.weekdays.append(self.custom.value)\n\telse:\n\t\tif self.custom.value in self.view.custom.weekdays:\n\t\t\tself.view.custom.weekdays.remove(self.custom.value)"
+                    }
+                  }
+                },
+                "props": {
+                  "checkedIcon": {
+                    "color": {
+                      "enabled": "#0066FF"
+                    },
+                    "path": "material/radio_button_checked"
+                  },
+                  "indeterminateIcon": {
+                    "path": "material/radio_button_checked"
+                  },
+                  "style": {
+                    "paddingRight": "20px"
+                  },
+                  "text": "Fri",
+                  "uncheckedIcon": {
+                    "color": {
+                      "enabled": "#9db8d1"
+                    },
+                    "path": "material/radio_button_unchecked"
+                  }
+                },
+                "type": "ia.input.checkbox"
+              },
+              {
+                "custom": {
+                  "value": 7
+                },
+                "meta": {
+                  "name": "Sat"
+                },
+                "position": {
+                  "shrink": 0
+                },
+                "propConfig": {
+                  "props.selected": {
+                    "binding": {
+                      "config": {
+                        "expression": "indexOf({view.custom.weekdays},{this.custom.value})\u003e-1"
+                      },
+                      "enabled": false,
+                      "type": "expr"
+                    },
+                    "onChange": {
+                      "enabled": null,
+                      "script": "\tif currentValue.value:\n\t\tif self.custom.value not in self.view.custom.weekdays:\n\t\t\tself.view.custom.weekdays.append(self.custom.value)\n\telse:\n\t\tif self.custom.value in self.view.custom.weekdays:\n\t\t\tself.view.custom.weekdays.remove(self.custom.value)"
+                    }
+                  }
+                },
+                "props": {
+                  "checkedIcon": {
+                    "color": {
+                      "enabled": "#0066FF"
+                    },
+                    "path": "material/radio_button_checked"
+                  },
+                  "indeterminateIcon": {
+                    "path": "material/radio_button_checked"
+                  },
+                  "style": {
+                    "paddingRight": "20px"
+                  },
+                  "text": "Sat",
+                  "uncheckedIcon": {
+                    "color": {
+                      "enabled": "#9db8d1"
+                    },
+                    "path": "material/radio_button_unchecked"
+                  }
+                },
+                "type": "ia.input.checkbox"
+              }
+            ],
+            "meta": {
+              "name": "Weeknights"
+            },
+            "position": {
+              "basis": "40px",
+              "display": false,
+              "shrink": 0
+            },
+            "props": {
+              "style": {
+                "classes": "Text/Add_HeaderText",
+                "marginLeft": "20px",
+                "overflow": "visible"
+              }
+            },
+            "type": "ia.container.flex"
+          },
+          {
+            "children": [
+              {
+                "meta": {
+                  "name": "Ends_On"
+                },
+                "position": {
+                  "basis": "60%",
+                  "shrink": 0
+                },
+                "propConfig": {
+                  "props.params.date": {
+                    "binding": {
+                      "config": {
+                        "path": "view.custom.EventData.repeatDateUntil"
+                      },
+                      "type": "property"
+                    },
+                    "onChange": {
+                      "enabled": null,
+                      "script": "\tself.view.custom.endDateCalender \u003d currentValue.value"
+                    }
+                  }
+                },
+                "props": {
+                  "params": {
+                    "maxDate": null,
+                    "minDate": null,
+                    "text": "Repeat Until"
+                  },
+                  "path": "Events/ParticipantEvents/Registration/Dashboard/Cards/DateInput",
+                  "style": {
+                    "marginTop": "5px"
+                  },
+                  "useDefaultViewHeight": true
+                },
+                "type": "ia.display.view"
+              }
+            ],
+            "meta": {
+              "name": "EndDate"
+            },
+            "position": {
+              "basis": "60px",
+              "display": false
+            },
+            "props": {
+              "style": {
+                "marginLeft": "20px",
+                "marginRight": "20px"
+              }
+            },
+            "type": "ia.container.flex"
+          },
+          {
+            "children": [
+              {
+                "meta": {
+                  "name": "Label"
+                },
+                "position": {
+                  "shrink": 0
+                },
+                "props": {
+                  "style": {
+                    "color": "#9db8d1",
+                    "fontFamily": "Proxima NovaC Medium",
+                    "fontSize": "15px"
+                  },
+                  "text": "Serve Calendar"
+                },
+                "type": "ia.display.label"
+              },
+              {
+                "meta": {
+                  "name": "Label_0"
+                },
+                "position": {
+                  "basis": "50px",
+                  "display": false
+                },
+                "props": {
+                  "style": {
+                    "color": "#D80000"
+                  },
+                  "text": "*"
+                },
+                "type": "ia.display.label"
+              }
+            ],
+            "meta": {
+              "name": "Serve Calendar"
+            },
+            "position": {
+              "basis": "25px",
+              "shrink": 0
+            },
+            "props": {
+              "style": {
+                "marginLeft": "20px",
+                "marginTop": "10px"
+              }
+            },
+            "type": "ia.container.flex"
+          },
+          {
+            "meta": {
+              "name": "Click Once Label_0"
+            },
+            "position": {
+              "basis": "25px",
+              "display": false,
+              "shrink": 0
+            },
+            "props": {
+              "style": {
+                "borderBottomWidth": "1px",
+                "classes": "Text/Add_HeaderText",
+                "paddingLeft": "20px"
+              },
+              "text": "Modify your selection by choosing additional days or removing days.",
+              "textStyle": {
+                "fontSize": 15
+              }
+            },
+            "type": "ia.display.label"
+          },
+          {
+            "children": [
+              {
+                "meta": {
+                  "name": "Table"
+                },
+                "position": {
+                  "basis": "300px",
+                  "grow": 1
+                },
+                "propConfig": {
+                  "props.params.daysHosting": {
+                    "binding": {
+                      "config": {
+                        "path": "view.custom.schedule"
+                      },
+                      "transforms": [
+                        {
+                          "code": "#\treturn [ x[\u0027dayOfYear\u0027] for x in value] \n\treturn [ system.date.setTime(x[\u0027startDate\u0027], 00, 00, 00) for x in value]",
+                          "type": "script"
+                        }
+                      ],
+                      "type": "property"
+                    }
+                  },
+                  "props.params.endDate": {
+                    "binding": {
+                      "config": {
+                        "path": "view.custom.endDateCalender"
+                      },
+                      "transforms": [
+                        {
+                          "code": "\tif value !\u003d None and value !\u003d \u0027\u0027:\n\t\treturn value\n\telse:\n\t\tsql_data \u003d self.view.custom.sql_data\n\t\treturn sql_data.getValueAt(0,\u0027endsOn\u0027)",
+                          "type": "script"
+                        }
+                      ],
+                      "type": "property"
+                    }
+                  },
+                  "props.params.nights": {
+                    "binding": {
+                      "config": {
+                        "path": "view.custom.EventData.scheduledWeekdays"
+                      },
+                      "type": "property"
+                    }
+                  },
+                  "props.params.startDate": {
+                    "binding": {
+                      "config": {
+                        "path": "view.custom.EventData.startsOn"
+                      },
+                      "type": "property"
+                    }
+                  }
+                },
+                "props": {
+                  "params": {
+                    "EndYear": 0,
+                    "StartYear": 0,
+                    "duration": 0,
+                    "enabled": true
+                  },
+                  "path": "Events/ParticipantEvents/Registration/Dashboard/Cards/Calendar/Table_Events"
+                },
+                "type": "ia.display.view"
+              },
+              {
+                "children": [
+                  {
+                    "meta": {
+                      "name": "hosting"
+                    },
+                    "position": {
+                      "basis": "30px",
+                      "display": false,
+                      "shrink": 0
+                    },
+                    "props": {
+                      "checkedIcon": {
+                        "path": "material/circle"
+                      },
+                      "enabled": false,
+                      "style": {
+                        "classes": "Text/Add_HeaderText"
+                      },
+                      "text": "hosting",
+                      "uncheckedIcon": {
+                        "color": {
+                          "disabled": "#0066FF",
+                          "enabled": "#0066FF"
+                        },
+                        "path": "material/fiber_manual_record",
+                        "style": {
+                          "fontSize": "16px"
+                        }
+                      }
+                    },
+                    "type": "ia.input.checkbox"
+                  },
+                  {
+                    "meta": {
+                      "name": "Checkbox_2"
+                    },
+                    "position": {
+                      "basis": "30px",
+                      "display": false,
+                      "shrink": 0
+                    },
+                    "props": {
+                      "checkedIcon": {
+                        "path": "material/circle"
+                      },
+                      "enabled": false,
+                      "style": {
+                        "classes": "Text/Add_HeaderText"
+                      },
+                      "text": "most needed",
+                      "uncheckedIcon": {
+                        "color": {
+                          "disabled": "#00FF66",
+                          "enabled": "#00FF66"
+                        },
+                        "path": "material/radio_button_unchecked",
+                        "style": {
+                          "fontSize": "16px"
+                        }
+                      }
+                    },
+                    "type": "ia.input.checkbox"
+                  },
+                  {
+                    "meta": {
+                      "name": "Checkbox"
+                    },
+                    "position": {
+                      "basis": "30px",
+                      "display": false,
+                      "shrink": 0
+                    },
+                    "props": {
+                      "checkedIcon": {
+                        "path": "material/circle_filled"
+                      },
+                      "enabled": false,
+                      "style": {
+                        "classes": "Text/Add_HeaderText",
+                        "overflow": "visible"
+                      },
+                      "text": "not in season",
+                      "uncheckedIcon": {
+                        "color": {
+                          "disabled": "#dddddd",
+                          "enabled": "#dddddd"
+                        },
+                        "path": "material/fiber_manual_record",
+                        "style": {
+                          "fontSize": "16px"
+                        }
+                      }
+                    },
+                    "type": "ia.input.checkbox"
+                  },
+                  {
+                    "meta": {
+                      "name": "cancelled"
+                    },
+                    "position": {
+                      "basis": "30px",
+                      "display": false,
+                      "shrink": 0
+                    },
+                    "props": {
+                      "checkedIcon": {
+                        "path": "material/circle"
+                      },
+                      "enabled": false,
+                      "style": {
+                        "classes": "Text/Add_HeaderText"
+                      },
+                      "text": "cancelled",
+                      "uncheckedIcon": {
+                        "color": {
+                          "disabled": "#FF0000",
+                          "enabled": "#FF0000"
+                        },
+                        "path": "material/radio_button_unchecked",
+                        "style": {
+                          "fontSize": "16px"
+                        }
+                      }
+                    },
+                    "type": "ia.input.checkbox"
+                  }
+                ],
+                "meta": {
+                  "name": "FlexContainer"
+                },
+                "position": {
+                  "basis": "100px",
+                  "grow": 1
+                },
+                "props": {
+                  "direction": "column",
+                  "justify": "center"
+                },
+                "type": "ia.container.flex"
+              }
+            ],
+            "meta": {
+              "name": "Calendar"
+            },
+            "position": {
+              "basis": "220px",
+              "grow": 1,
+              "shrink": 0
+            },
+            "props": {
+              "style": {
+                "marginLeft": "20px"
+              }
+            },
+            "type": "ia.container.flex"
+          }
+        ],
+        "meta": {
+          "name": "Schedule_Flex"
+        },
+        "position": {
+          "basis": "280px"
+        },
+        "props": {
+          "direction": "column",
+          "style": {
+            "borderBottomColor": "#D5D5D5",
+            "borderBottomStyle": "solid",
+            "borderBottomWidth": "1px",
+            "borderTopColor": "#D5D5D5",
+            "borderTopStyle": "solid",
+            "borderTopWidth": "1px",
+            "marginLeft": "20px",
+            "marginRight": "20px"
+          }
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "meta": {
+          "name": "Next Event"
+        },
+        "position": {
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.Info": {
+            "binding": {
+              "config": {
+                "path": "view.custom.nextEvent"
+              },
+              "transforms": [
+                {
+                  "code": "\tif value is not None and value !\u003d \u0027\u0027 and value !\u003d \u0027 \u0027:\n\t\treturn system.date.format(value,\u0027MMM dd, yyyy\u0027)\n\telse:\n\t\treturn \u0027\u0027",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "Description": "Next Event"
+          },
+          "path": "Participants/Detail/Cards/Personal/AboutLabel",
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "children": [
+          {
+            "meta": {
+              "name": "Label_0"
+            },
+            "position": {
+              "basis": "37px"
+            },
+            "props": {
+              "style": {
+                "classes": "Text/About_Description_Left",
+                "marginLeft": "18px"
+              },
+              "text": "Prev Event"
+            },
+            "type": "ia.display.label"
+          },
+          {
+            "meta": {
+              "name": "Label"
+            },
+            "position": {
+              "basis": "37px"
+            },
+            "propConfig": {
+              "props.text": {
+                "binding": {
+                  "config": {
+                    "path": "view.custom.previousEvent.startDate"
+                  },
+                  "transforms": [
+                    {
+                      "code": "\tif value is not None and value !\u003d \u0027\u0027 and value !\u003d \u0027 \u0027:\n\t\treturn system.date.format(value,\u0027MMM dd, yyyy\u0027)\n\telse:\n\t\treturn \u0027\u0027",
+                      "type": "script"
+                    }
+                  ],
+                  "type": "property"
+                }
+              }
+            },
+            "props": {
+              "style": {
+                "classes": "Text/About_Info_Left",
+                "marginLeft": "18px"
+              }
+            },
+            "type": "ia.display.label"
+          },
+          {
+            "meta": {
+              "name": "PreveEvent_Participants"
+            },
+            "position": {
+              "basis": "320px"
+            },
+            "propConfig": {
+              "props.params.scheduleId": {
+                "binding": {
+                  "config": {
+                    "path": "view.custom.previousEvent.scheduleId"
+                  },
+                  "type": "property"
+                }
+              }
+            },
+            "props": {
+              "path": "Events/ParticipantEvents/Preview/Cards/Preview_ParticipantsList"
+            },
+            "type": "ia.display.view"
+          }
+        ],
+        "meta": {
+          "name": "PrevEvent"
+        },
+        "position": {
+          "basis": "280px"
+        },
+        "props": {
+          "direction": "column",
+          "style": {
+            "borderBottomColor": "#D5D5D5",
+            "borderBottomStyle": "solid",
+            "borderBottomWidth": "1px",
+            "borderTopColor": "#D5D5D5",
+            "borderTopStyle": "solid",
+            "borderTopWidth": "1px",
+            "marginLeft": "20px",
+            "marginRight": "20px"
+          }
+        },
+        "type": "ia.container.flex"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column",
+      "style": {
+        "classes": "Background/Default",
+        "overflow": "hidden",
+        "overflowY": "hidden"
+      }
+    },
+    "scripts": {
+      "customMethods": [],
+      "extensionFunctions": null,
+      "messageHandlers": [
+        {
+          "messageType": "RefreshAboutPanel",
+          "pageScope": true,
+          "script": "\t# implement your handler here\n\tself.refreshBinding(\u0027custom.Information\u0027)",
+          "sessionScope": true,
+          "viewScope": true
+        }
+      ]
+    },
+    "type": "ia.container.flex"
+  }
+}

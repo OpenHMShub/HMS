@@ -1,0 +1,291 @@
+{
+  "custom": {},
+  "params": {
+    "first_name": "first",
+    "human_id": 1351,
+    "last_name": "last",
+    "referral_provider_id": "",
+    "referral_status_id": "",
+    "referral_type_id": ""
+  },
+  "propConfig": {
+    "params.first_name": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.human_id": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.last_name": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.referral_provider_id": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.referral_status_id": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.referral_type_id": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 170,
+      "width": 300
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "EmbeddedView Header"
+        },
+        "position": {
+          "basis": "25px",
+          "shrink": 0
+        },
+        "props": {
+          "params": {
+            "Text": "Copy Human"
+          },
+          "path": "Shelter/Reservation/Cards/New Reservation/ReservationHeader"
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "children": [
+          {
+            "meta": {
+              "name": "lblHeader"
+            },
+            "position": {
+              "basis": "100%"
+            },
+            "propConfig": {
+              "props.text": {
+                "binding": {
+                  "config": {
+                    "expression": "\u0027Add \u0027 + {view.params.first_name} + \u0027 \u0027 + {view.params.last_name} + \u0027 To Participants?\u0027"
+                  },
+                  "type": "expr"
+                }
+              }
+            },
+            "props": {
+              "style": {
+                "classes": "Text/Error_Message",
+                "textAlign": "center"
+              }
+            },
+            "type": "ia.display.label"
+          }
+        ],
+        "meta": {
+          "name": "header"
+        },
+        "position": {
+          "basis": "70px",
+          "shrink": 0
+        },
+        "props": {
+          "style": {
+            "borderTopColor": "#9db8d1",
+            "borderTopStyle": "solid",
+            "borderTopWidth": "1px",
+            "classes": "Background/Default",
+            "marginLeft": "10px",
+            "marginRight": "10px",
+            "marginTop": "5px",
+            "paddingTop": "5px"
+          }
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "children": [
+          {
+            "meta": {
+              "name": "filler"
+            },
+            "position": {
+              "basis": "1px",
+              "grow": 1
+            },
+            "type": "ia.display.label"
+          },
+          {
+            "events": {
+              "dom": {
+                "onClick": {
+                  "config": {
+                    "script": "\tsystem.perspective.closePopup(\u0027pop_participants_copy_human\u0027)"
+                  },
+                  "scope": "G",
+                  "type": "script"
+                }
+              }
+            },
+            "meta": {
+              "name": "btnCancel"
+            },
+            "position": {
+              "basis": "100px",
+              "shrink": 0
+            },
+            "props": {
+              "image": {
+                "height": 30,
+                "width": 50
+              },
+              "style": {
+                "classes": "Buttons/Secondary",
+                "margin": "5px"
+              },
+              "text": "No"
+            },
+            "type": "ia.input.button"
+          },
+          {
+            "meta": {
+              "name": "filler1"
+            },
+            "position": {
+              "basis": "1px",
+              "grow": 1
+            },
+            "type": "ia.display.label"
+          },
+          {
+            "events": {
+              "dom": {
+                "onClick": {
+                  "config": {
+                    "script": "\timport traceback\n\ttry:\n\t\tproject \u003d \"RITI\"\n\t\t#Declare variables\n\t\t\n\t\tuser_name \u003d self.session.props.auth.user.userName\n\t\thuman_id \u003d self.view.params.human_id\n\t\treferral_provider_id \u003d self.view.params.referral_provider_id\n\t\treferral_status_id \u003d self.view.params.referral_status_id\n\t\treferral_type_id \u003d self.view.params.referral_type_id\n\t\t\n\t\t## Check if parameters are filled in correctly \n\t\tif None in [human_id]:\n\t\t\tvalid \u003d False\n\t\t\tsystem.perspective.print(\u0027Null Error\u0027)\n\t\telif int(human_id) \u003c 0:\n\t\t\tvalid \u003d False\n\t\t\tsystem.perspective.print(\u0027Human ID Error\u0027)\n\t\telse:\n\t\t\tvalid \u003d True\n\t\t\tsystem.perspective.print(\u0027Data Valid\u0027)\n\t\t### Create transaction\n\t\ttransactionFailed \u003d False\n\t\ttxId \u003d system.db.beginTransaction(timeout\u003d5000)\n\t\ttry:\n\t\t\t#Insert the new participant data\n\t\t\tpath \u003d \"Participants/Registration/InsertCopyParticipant\"\n\t\t\tparameters \u003d {\"human_id\":human_id}\n\t\t\tparticipant_id \u003d system.db.runNamedQuery(project\u003dproject,path\u003dpath,parameters\u003dparameters, tx\u003dtxId, getKey\u003dTrue)\n\t\texcept:\n\t\t\ttransactionFailed \u003d True\n\t\t### Check if an error occured rollback the transaction\n\t\tif transactionFailed:\n\t\t\tsystem.db.rollbackTransaction(txId)\n\t\t\tself.parent.parent.getChild(\"FlexContainer\").getChild(\"Label\").showMessage(\"Something went wrong while saving data. Please try again.\")\n\t\t\tsystem.perspective.print(\u0027Transaction Failed\u0027)\n\t\t\tRefresh \u003d 0\n\t\t### Otherwise commit \n\t\telse:\n\t\t\t system.db.commitTransaction(txId)\n\t\t### Always close the transaction\t\n\t\tsystem.db.closeTransaction(txId)\t\n\t\tif not transactionFailed:\n\t\t\t#\n\t\t\t#Enroll in the Hope University and Guest House programs\n\t\t\tparticipants.autoEnroll(participant_id)\n\t\t\t#Close the dock\n\t\t\tsystem.perspective.sendMessage(\"ResetSearch\", payload\u003d{}, scope\u003d\"session\")\n\t\t\tsystem.perspective.sendMessage(\"ResetRegistration\", payload\u003d{}, scope\u003d\"session\")\n\t\t\tsystem.perspective.closeDock(\u0027RegisterParticipant\u0027)\n\t\t\tsystem.perspective.closePopup(\u0027pop_participants_copy_human\u0027)\n\t\t\t#Go to the detail view\n\t\t\ttab_id \u003d 10\n\t\t\tsystem.perspective.navigate(\"Participants/Detail/\" + str(participant_id) + \"/\" + str(tab_id))\n\texcept:\n\t\tlogger \u003d system.util.getLogger(\"Participants PopupCopyHuman buttonYes\")\n\t\tmsg \u003d traceback.format_exc()\n\t\tlogger.error(msg)"
+                  },
+                  "scope": "G",
+                  "type": "script"
+                }
+              }
+            },
+            "meta": {
+              "name": "btnApply"
+            },
+            "position": {
+              "basis": "100px",
+              "shrink": 0
+            },
+            "props": {
+              "style": {
+                "classes": "Buttons/Main",
+                "marginBottom": "5px",
+                "marginLeft": "5px",
+                "marginTop": "5px"
+              },
+              "text": "Yes",
+              "textStyle": {
+                "color": "#FFFFFF"
+              }
+            },
+            "type": "ia.input.button"
+          },
+          {
+            "meta": {
+              "name": "filler_0"
+            },
+            "position": {
+              "basis": "1px",
+              "grow": 1
+            },
+            "type": "ia.display.label"
+          }
+        ],
+        "meta": {
+          "name": "footer"
+        },
+        "position": {
+          "basis": "51px",
+          "shrink": 0
+        },
+        "props": {
+          "justify": "center",
+          "style": {
+            "borderTopColor": "#9db8d1",
+            "borderTopStyle": "solid",
+            "borderTopWidth": "1px",
+            "classes": "Background/Default",
+            "marginLeft": "10px",
+            "marginRight": "10px",
+            "marginTop": "5px",
+            "paddingTop": "5px"
+          }
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "children": [
+          {
+            "meta": {
+              "name": "Label",
+              "visible": false
+            },
+            "position": {
+              "basis": "360px",
+              "shrink": 0
+            },
+            "props": {
+              "style": {
+                "classes": "Text/Error_Message",
+                "textAlign": "center"
+              },
+              "text": "Something went wrong while saving data. Please try again."
+            },
+            "scripts": {
+              "customMethods": [
+                {
+                  "name": "showMessage",
+                  "params": [
+                    "message"
+                  ],
+                  "script": "\timport time\n\tself.props.text \u003d message\n\tself.meta.visible \u003d True\n\ttime.sleep(5)\n\tself.meta.visible \u003d False\n\t"
+                }
+              ],
+              "extensionFunctions": null,
+              "messageHandlers": []
+            },
+            "type": "ia.display.label"
+          }
+        ],
+        "meta": {
+          "name": "FlexContainer"
+        },
+        "position": {
+          "basis": "30px",
+          "display": false,
+          "shrink": 0
+        },
+        "props": {
+          "style": {
+            "classes": "Background/Default"
+          }
+        },
+        "type": "ia.container.flex"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column",
+      "style": {
+        "classes": "Background/Default"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

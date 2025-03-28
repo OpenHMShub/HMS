@@ -1,0 +1,746 @@
+{
+  "custom": {
+    "RegistrationData": null
+  },
+  "params": {
+    "Function": 1,
+    "addr": "",
+    "provId": 59,
+    "providerName": ""
+  },
+  "propConfig": {
+    "custom.RegistrationData": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "provID": "{view.params.provId}"
+          },
+          "queryPath": "Provider/Registration/Get Single Registration",
+          "returnFormat": "json"
+        },
+        "transforms": [
+          {
+            "code": "\tif len(value):\n\t\treturn value\n\telse:\n\t\treturn [{\n\t\t  \"id\": -1,\n\t\t  \"providerName\": self.params.providerName,\n\t\t  \"street\": self.params.addr,\n\t\t  \"city\":\"\",\n\t\t  \"state\":\"\",\n\t\t  \"zipCode\":\"\",\n\t\t  \"phone\": \"\",\n\t\t  \"email\": \"\",\n\t\t  \"website\":\"\",\n\t\t  \"contactName\": \"\",\n\t\t  \"contactPhone\": \"\",\n\t\t  \"locationDescription\": \"\",\n\t\t  \"providerType\": \"\",\n\t\t  \"timeCreated\": None,\n\t\t  \"timeRetired\": None,\n\t\t  \"provId\": -1\n\t\t}]\n\t\t\n",
+            "type": "script"
+          }
+        ],
+        "type": "query"
+      },
+      "persistent": true
+    },
+    "params.Function": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.addr": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.provId": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.providerName": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 900,
+      "width": 600
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "EmbeddedView"
+        },
+        "position": {
+          "shrink": 0
+        },
+        "props": {
+          "path": "Providers/Registration/Cards/RegistrationHeader",
+          "useDefaultViewHeight": true
+        },
+        "scripts": {
+          "customMethods": [],
+          "extensionFunctions": null,
+          "messageHandlers": [
+            {
+              "messageType": "ResetRegistration",
+              "pageScope": true,
+              "script": "\tself.parent.getChild(\"FlexContainer Basic\").getChild(\"FlexContainer Left\").getChild(\"ProviderName\").props.params.inputText \u003d \"\"\n\tself.parent.getChild(\"FlexContainer Basic\").getChild(\"FlexContainer Left\").getChild(\"Address\").props.params.inputText \u003d \"\"\n\tself.parent.getChild(\"FlexContainer Basic\").getChild(\"FlexContainer Left\").getChild(\"State\").props.params.inputText \u003d \"\"\n\tself.parent.getChild(\"FlexContainer Basic\").getChild(\"FlexContainer Left\").getChild(\"Zip\").props.params.inputText \u003d \"\"\n\t\n\tself.parent.getChild(\"FlexContainer Basic\").getChild(\"FlexContainer Right\").getChild(\"LocationDesc\").props.params.inputText \u003d \"\"\n\t\n\tself.parent.getChild(\"FlexContainer Contact\").getChild(\"FlexContainer Left\").getChild(\"Phone\").props.params.inputText \u003d \"\"\n\tself.parent.getChild(\"FlexContainer Contact\").getChild(\"FlexContainer Left\").getChild(\"Email\").props.params.inputText \u003d \"\"\n\t\n\tself.parent.getChild(\"FlexContainer Contact\").getChild(\"FlexContainer Right\").getChild(\"ContactName\").props.params.inputText \u003d \"\"\n\tself.parent.getChild(\"FlexContainer Contact\").getChild(\"FlexContainer Right\").getChild(\"ContactPhone\").props.params.inputText \u003d \"\"\n\tself.view.params.provId \u003d 0\n\t",
+              "sessionScope": true,
+              "viewScope": true
+            }
+          ]
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "meta": {
+                  "name": "ProviderName"
+                },
+                "position": {
+                  "shrink": 0
+                },
+                "propConfig": {
+                  "props.params.inputText": {
+                    "binding": {
+                      "config": {
+                        "expression": "{view.custom.RegistrationData[0].providerName}"
+                      },
+                      "type": "expr"
+                    }
+                  }
+                },
+                "props": {
+                  "params": {
+                    "text": "Provider Name*"
+                  },
+                  "path": "Providers/Registration/Cards/TextInput",
+                  "style": {
+                    "marginTop": "5px"
+                  },
+                  "useDefaultViewHeight": true
+                },
+                "type": "ia.display.view"
+              },
+              {
+                "meta": {
+                  "name": "Address"
+                },
+                "position": {
+                  "shrink": 0
+                },
+                "propConfig": {
+                  "props.params.inputText": {
+                    "binding": {
+                      "config": {
+                        "expression": "{view.custom.RegistrationData[0].street}"
+                      },
+                      "type": "expr"
+                    }
+                  }
+                },
+                "props": {
+                  "params": {
+                    "text": "Address*"
+                  },
+                  "path": "Providers/Registration/Cards/TextInput",
+                  "style": {
+                    "marginTop": "5px"
+                  },
+                  "useDefaultViewHeight": true
+                },
+                "type": "ia.display.view"
+              },
+              {
+                "meta": {
+                  "name": "City"
+                },
+                "propConfig": {
+                  "props.params.inputText": {
+                    "binding": {
+                      "config": {
+                        "expression": "{view.custom.RegistrationData[0].city}"
+                      },
+                      "type": "expr"
+                    }
+                  }
+                },
+                "props": {
+                  "params": {
+                    "text": "City"
+                  },
+                  "path": "Providers/Registration/Cards/TextInput",
+                  "style": {
+                    "marginTop": "5px"
+                  },
+                  "useDefaultViewHeight": true
+                },
+                "type": "ia.display.view"
+              },
+              {
+                "meta": {
+                  "name": "State"
+                },
+                "position": {
+                  "shrink": 0
+                },
+                "propConfig": {
+                  "props.params.inputText": {
+                    "binding": {
+                      "config": {
+                        "expression": "{view.custom.RegistrationData[0].state}"
+                      },
+                      "type": "expr"
+                    }
+                  }
+                },
+                "props": {
+                  "params": {
+                    "text": "State"
+                  },
+                  "path": "Providers/Registration/Cards/TextInput",
+                  "style": {
+                    "marginTop": "5px"
+                  },
+                  "useDefaultViewHeight": true
+                },
+                "type": "ia.display.view"
+              },
+              {
+                "meta": {
+                  "name": "Zip"
+                },
+                "position": {
+                  "shrink": 0
+                },
+                "propConfig": {
+                  "props.params.inputText": {
+                    "binding": {
+                      "config": {
+                        "expression": "{view.custom.RegistrationData[0].zipCode}"
+                      },
+                      "type": "expr"
+                    }
+                  }
+                },
+                "props": {
+                  "params": {
+                    "text": "Zip Code"
+                  },
+                  "path": "Participants/Registration/Cards/TextInput",
+                  "style": {
+                    "marginTop": "5px"
+                  },
+                  "useDefaultViewHeight": true
+                },
+                "type": "ia.display.view"
+              }
+            ],
+            "meta": {
+              "name": "FlexContainer Left"
+            },
+            "position": {
+              "basis": "200px",
+              "grow": 1
+            },
+            "props": {
+              "direction": "column",
+              "style": {
+                "paddingLeft": "25px",
+                "paddingRight": "20px"
+              }
+            },
+            "type": "ia.container.flex"
+          },
+          {
+            "children": [
+              {
+                "meta": {
+                  "name": "ProviderType"
+                },
+                "propConfig": {
+                  "props.params.Options": {
+                    "binding": {
+                      "config": {
+                        "queryPath": "Provider/Registration/GetProviderType"
+                      },
+                      "type": "query"
+                    }
+                  },
+                  "props.params.SelectedValue": {
+                    "binding": {
+                      "config": {
+                        "path": "view.custom.RegistrationData[0].providerType"
+                      },
+                      "transforms": [
+                        {
+                          "code": "\trValue \u003d [value]\n\treturn value",
+                          "type": "script"
+                        }
+                      ],
+                      "type": "property"
+                    }
+                  }
+                },
+                "props": {
+                  "params": {
+                    "Text": "Provider Type",
+                    "selectedValue": null
+                  },
+                  "path": "Providers/Registration/Cards/SelectionInput",
+                  "style": {
+                    "marginTop": "5px"
+                  },
+                  "useDefaultViewHeight": true
+                },
+                "type": "ia.display.view"
+              },
+              {
+                "meta": {
+                  "name": "LocationDesc"
+                },
+                "position": {
+                  "shrink": 0
+                },
+                "propConfig": {
+                  "props.params.inputText": {
+                    "binding": {
+                      "config": {
+                        "expression": "{view.custom.RegistrationData[0].locationDescription}"
+                      },
+                      "type": "expr"
+                    }
+                  }
+                },
+                "props": {
+                  "params": {
+                    "text": "Location Description"
+                  },
+                  "path": "Providers/Registration/Cards/TextInput",
+                  "style": {
+                    "marginTop": "5px"
+                  },
+                  "useDefaultViewHeight": true
+                },
+                "type": "ia.display.view"
+              }
+            ],
+            "meta": {
+              "name": "FlexContainer Right"
+            },
+            "position": {
+              "basis": "200px",
+              "grow": 1
+            },
+            "props": {
+              "direction": "column",
+              "style": {
+                "paddingLeft": "15px",
+                "paddingRight": "30px"
+              }
+            },
+            "type": "ia.container.flex"
+          }
+        ],
+        "meta": {
+          "name": "FlexContainer Basic"
+        },
+        "position": {
+          "shrink": 0
+        },
+        "props": {
+          "style": {
+            "borderBottomColor": "#e6e6e6",
+            "borderBottomStyle": "solid",
+            "borderBottomWidth": 1,
+            "paddingBottom": "20px",
+            "paddingTop": "5px"
+          }
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "meta": {
+                  "name": "Phone"
+                },
+                "position": {
+                  "shrink": 0
+                },
+                "propConfig": {
+                  "props.params.inputText": {
+                    "binding": {
+                      "config": {
+                        "expression": "{view.custom.RegistrationData[0].phone}"
+                      },
+                      "transforms": [
+                        {
+                          "expression": "if(len({value}) \u003e 0,\nconcat(\"(\",left({value},3),\") \",substring({value},4,7),\"\",substring({value},7,len({value}))),\n\"\")",
+                          "type": "expression"
+                        }
+                      ],
+                      "type": "expr"
+                    }
+                  }
+                },
+                "props": {
+                  "params": {
+                    "text": "Provider Phone"
+                  },
+                  "path": "Participants/Registration/Cards/TextInput",
+                  "style": {
+                    "marginTop": "5px"
+                  },
+                  "useDefaultViewHeight": true
+                },
+                "type": "ia.display.view"
+              },
+              {
+                "meta": {
+                  "name": "Email"
+                },
+                "position": {
+                  "shrink": 0
+                },
+                "propConfig": {
+                  "props.params.inputText": {
+                    "binding": {
+                      "config": {
+                        "expression": "{view.custom.RegistrationData[0].email}"
+                      },
+                      "type": "expr"
+                    }
+                  }
+                },
+                "props": {
+                  "params": {
+                    "text": "Email Address"
+                  },
+                  "path": "Participants/Registration/Cards/TextInput",
+                  "style": {
+                    "marginTop": "5px"
+                  },
+                  "useDefaultViewHeight": true
+                },
+                "type": "ia.display.view"
+              },
+              {
+                "meta": {
+                  "name": "Website"
+                },
+                "position": {
+                  "basis": "320px"
+                },
+                "propConfig": {
+                  "props.params.inputText": {
+                    "binding": {
+                      "config": {
+                        "expression": "{view.custom.RegistrationData[0].website}"
+                      },
+                      "type": "expr"
+                    }
+                  }
+                },
+                "props": {
+                  "params": {
+                    "text": "Website"
+                  },
+                  "path": "Participants/Registration/Cards/TextInput",
+                  "style": {
+                    "marginTop": "5px"
+                  },
+                  "useDefaultViewHeight": true
+                },
+                "type": "ia.display.view"
+              }
+            ],
+            "meta": {
+              "name": "FlexContainer Left"
+            },
+            "position": {
+              "basis": "200px",
+              "grow": 1
+            },
+            "props": {
+              "direction": "column",
+              "style": {
+                "paddingLeft": "25px",
+                "paddingRight": "20px"
+              }
+            },
+            "type": "ia.container.flex"
+          },
+          {
+            "children": [
+              {
+                "meta": {
+                  "name": "ContactName"
+                },
+                "position": {
+                  "shrink": 0
+                },
+                "propConfig": {
+                  "props.params.inputText": {
+                    "binding": {
+                      "config": {
+                        "path": "view.custom.RegistrationData[0].contactName"
+                      },
+                      "type": "property"
+                    }
+                  }
+                },
+                "props": {
+                  "params": {
+                    "text": "Contact Name"
+                  },
+                  "path": "Participants/Registration/Cards/TextInput",
+                  "style": {
+                    "marginTop": "5px"
+                  },
+                  "useDefaultViewHeight": true
+                },
+                "type": "ia.display.view"
+              },
+              {
+                "meta": {
+                  "name": "ContactPhone"
+                },
+                "position": {
+                  "shrink": 0
+                },
+                "propConfig": {
+                  "props.params.inputText": {
+                    "binding": {
+                      "config": {
+                        "expression": "{view.custom.RegistrationData[0].contactPhone}"
+                      },
+                      "transforms": [
+                        {
+                          "expression": "if(len({value}) \u003e 0,\nconcat(\"(\",left({value},3),\") \",substring({value},4,7),\"-\",substring({value},8,len({value}))),\n\"\")",
+                          "type": "expression"
+                        }
+                      ],
+                      "type": "expr"
+                    }
+                  }
+                },
+                "props": {
+                  "params": {
+                    "text": "Contact Phone"
+                  },
+                  "path": "Participants/Registration/Cards/TextInput",
+                  "style": {
+                    "marginTop": "5px"
+                  },
+                  "useDefaultViewHeight": true
+                },
+                "type": "ia.display.view"
+              }
+            ],
+            "meta": {
+              "name": "FlexContainer Right"
+            },
+            "position": {
+              "basis": "200px",
+              "grow": 1
+            },
+            "props": {
+              "direction": "column",
+              "style": {
+                "paddingLeft": "15px",
+                "paddingRight": "30px"
+              }
+            },
+            "type": "ia.container.flex"
+          }
+        ],
+        "meta": {
+          "name": "FlexContainer Contact"
+        },
+        "position": {
+          "basis": "221px",
+          "shrink": 0
+        },
+        "props": {
+          "style": {
+            "borderBottomColor": "#e6e6e6",
+            "borderBottomStyle": "solid",
+            "borderBottomWidth": 1,
+            "paddingBottom": "20px",
+            "paddingTop": "5px"
+          }
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "children": [
+          {
+            "meta": {
+              "name": "FlexContainer Left"
+            },
+            "position": {
+              "basis": "200px",
+              "grow": 1
+            },
+            "props": {
+              "direction": "column",
+              "style": {
+                "paddingLeft": "25px",
+                "paddingRight": "20px"
+              }
+            },
+            "type": "ia.container.flex"
+          },
+          {
+            "meta": {
+              "name": "FlexContainer Right"
+            },
+            "position": {
+              "basis": "200px",
+              "grow": 1
+            },
+            "props": {
+              "direction": "column",
+              "style": {
+                "paddingLeft": "15px",
+                "paddingRight": "30px"
+              }
+            },
+            "type": "ia.container.flex"
+          }
+        ],
+        "meta": {
+          "name": "FlexContainer Extra"
+        },
+        "position": {
+          "shrink": 0
+        },
+        "props": {
+          "style": {
+            "borderBottomColor": "#e6e6e6",
+            "borderBottomStyle": "solid",
+            "borderBottomWidth": 1,
+            "paddingBottom": "20px",
+            "paddingTop": "5px"
+          }
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "children": [
+          {
+            "events": {
+              "component": {
+                "onActionPerformed": {
+                  "config": {
+                    "script": "\timport re\n\tproject \u003d \"RITI\"\n\t### Declare parameters \n\tproviderId \u003d self.view.params.provId\n\tfunction \u003d self.view.params.Function\n\t\n\tproviderName \u003d self.parent.parent.getChild(\"FlexContainer Basic\").getChild(\"FlexContainer Left\").getChild(\"ProviderName\").props.params.inputText\n\taddr \u003d self.parent.parent.getChild(\"FlexContainer Basic\").getChild(\"FlexContainer Left\").getChild(\"Address\").props.params.inputText\n\tstate \u003d self.parent.parent.getChild(\"FlexContainer Basic\").getChild(\"FlexContainer Left\").getChild(\"State\").props.params.inputText\n\tcity \u003d self.parent.parent.getChild(\"FlexContainer Basic\").getChild(\"FlexContainer Left\").getChild(\"City\").props.params.inputText\n\tzip \u003d self.parent.parent.getChild(\"FlexContainer Basic\").getChild(\"FlexContainer Left\").getChild(\"Zip\").props.params.inputText\n\t\n\tlocDesc \u003d self.parent.parent.getChild(\"FlexContainer Basic\").getChild(\"FlexContainer Right\").getChild(\"LocationDesc\").props.params.inputText\n\tprovType \u003d self.parent.parent.getChild(\"FlexContainer Basic\").getChild(\"FlexContainer Right\").getChild(\"ProviderType\").props.params.SelectedValue\n\t\n\t\n\temail \u003d self.parent.parent.getChild(\"FlexContainer Contact\").getChild(\"FlexContainer Left\").getChild(\"Email\").props.params.inputText\n\tphone \u003d self.parent.parent.getChild(\"FlexContainer Contact\").getChild(\"FlexContainer Left\").getChild(\"Phone\").props.params.inputText\n\t\n\t\t\n\tcontactName \u003d self.parent.parent.getChild(\"FlexContainer Contact\").getChild(\"FlexContainer Right\").getChild(\"ContactName\").props.params.inputText\n\tcontactPhone \u003d self.parent.parent.getChild(\"FlexContainer Contact\").getChild(\"FlexContainer Right\").getChild(\"ContactPhone\").props.params.inputText\n\twebsite \u003d self.parent.parent.getChild(\"FlexContainer Contact\").getChild(\"FlexContainer Left\").getChild(\"Website\").props.params.inputText\n\t\n\t\n\t## Check if parameters are filled in correctly \n\tif None in [state,zip]:\n\t\tvalid \u003d False\n\telif providerName.strip() \u003d\u003d \"\":\n\t\tvalid \u003d False\n\telif addr.strip() \u003d\u003d \"\":\n\t\tvalid \u003d False\n\telse:\n\t\tvalid \u003d True\n\t## Convert Phone number to numeric value only\n\tphone \u003d phone.replace(\u0027(\u0027,\u0027\u0027)\n\tphone \u003d phone.replace(\u0027)\u0027,\u0027\u0027)\n\tphone \u003d phone.replace(\u0027-\u0027,\u0027\u0027)\n\tphone \u003d phone.replace(\u0027 \u0027,\u0027\u0027)\n\tcontactPhone \u003d contactPhone.replace(\u0027(\u0027,\u0027\u0027)\n\tcontactPhone \u003d contactPhone.replace(\u0027)\u0027,\u0027\u0027)\n\tcontactPhone \u003d contactPhone.replace(\u0027-\u0027,\u0027\u0027)\n\tcontactPhone \u003d contactPhone.replace(\u0027 \u0027,\u0027\u0027)\t\n\t\n\t### Check if data is valid otherwise show error message.\n\tif valid:\n\t\t\n\t\t\t\n\t\tif valid:\n#\t\t\ttry:\n\t\t\t### Check if the user is creating new data\n\t\t\tif int(function) \u003d\u003d 0:\n\t\t\t\t### Create transaction\n\t\t\t\ttransactionFailed \u003d False\n\t\t\t\ttxId \u003d system.db.beginTransaction(timeout\u003d15000)\n\t\t\t\t\t\n\t\t\t\ttry:\n\t\t\t\t\t\n\t\t\t\t\torgId\u003d0\n\t\t\t\t\tid \u003d system.db.runNamedQuery(project\u003dproject,path\u003d\"Provider/Registration/Insert New Organization\",parameters \u003d{\"providerName\":providerName}, tx\u003dtxId, getKey\u003dTrue)\n#\t\t\t\t\tself.view.custom.key \u003d id.getValueAt(0,0)\n\t\t\t\t\tpath \u003d \"Provider/Registration/Insert New Provider\"\n\t\t\t\t\t#self.getSibling(\"Label\").showMessage(id)\n\t\t\t\t\tparameters \u003d {\"providerName\":providerName,\n\t\t\t\t\t\t\t\t\t\t\"addr\":addr,\n\t\t\t\t\t\t\t\t\t\t\"locationDesc\":locDesc,\n\t\t\t\t\t\t\t\t\t\t\"phone\":phone,\n\t\t\t\t\t\t\t\t\t\t\"email\":email,\n\t\t\t\t\t\t\t\t\t\t\"city\":city,\n\t\t\t\t\t\t\t\t\t\t\"state\":state,\n\t\t\t\t\t\t\t\t\t\t\"zip\":zip,\n\t\t\t\t\t\t\t\t\t\t\"contactName\":contactName,\n\t\t\t\t\t\t\t\t\t\t\"contactPhone\":contactPhone,\n\t\t\t\t\t\t\t\t\t\t\"nationalProvID\":\u0027\u0027,\n\t\t\t\t\t\t\t\t\t\t\"providerTypeId\":provType,\n\t\t\t\t\t\t\t\t\t\t\"organizationID\":id,\n\t\t\t\t\t\t\t\t\t\t\"website\":website\n\t\t\t\t\t\t\t\t\t\t}\n\t\t\t\t\tRefresh \u003d system.db.runNamedQuery(project\u003dproject,path\u003dpath,parameters\u003dparameters, tx\u003dtxId, getKey\u003dTrue)\n\t\t\t\t\t\n\t\t\t\t\t\n\t\t\t\t\t#refresh \u003d system.db.runNamedQuery(project\u003dproject,path\u003d\"Provider/Registration/Update ProviderID\",parameters \u003d{\u0027organizationID\u0027:id}, tx\u003dtxId, getKey\u003dTrue)\n\t\t\t\t\t\n\t\t\t\texcept:\n\t\t\t\t\ttransactionFailed \u003d True\n\t\t\t\t\n\t\t\t\t### Check if an error occured rollback the transaction\n\t\t\t\tif transactionFailed:\n\t\t\t\t\tsystem.db.rollbackTransaction(txId)\n\t\t\t\t\tself.getSibling(\"Label\").showMessage(\"Something went wrong while saving data. Please try again.\")\n\t\t\t\t\tRefresh \u003d 0\n\t\t\t\t### Otherwise commit \n\t\t\t\telse:\n\t\t\t\t \tsystem.db.commitTransaction(txId)\n\t\t\t\t\tself.view.params.provId \u003d -1\n\t\t\t\t\tsystem.perspective.closeDock(\"RegisterProvider\")\n\t\t\t\t### Always close the transaction\t\n\t\t\t\tsystem.db.closeTransaction(txId)\n\t\t\t\t\n\t\t\t##### Check if the user is editing existing data\n\t\t\telif int(function) \u003d\u003d 1:\n\t\t\t\tproviderId \u003d self.view.custom.RegistrationData[0].organizationId\n\t\t\t\t### Create transaction\n\t\t\t\ttransactionFailed \u003d False\n\t\t\t\ttxId \u003d system.db.beginTransaction(timeout\u003d5000)\n\t\t\t\tif valid:\n\t\t\t\t\tpath \u003d \"Provider/Registration/Update Provider\"\n\t\t\t\t\tparameters \u003d {\"providerName\":providerName,\n\t\t\t\t\t\t\t\t\t\t\"provId\":providerId,\n\t\t\t\t\t\t\t\t\t\t\"street\":addr,\n\t\t\t\t\t\t\t\t\t\t\"locationDesc\":locDesc,\n\t\t\t\t\t\t\t\t\t\t\"phone\":phone,\n\t\t\t\t\t\t\t\t\t\t\"email\":email,\n\t\t\t\t\t\t\t\t\t\t\"city\":city,\n\t\t\t\t\t\t\t\t\t\t\"state\":state,\n\t\t\t\t\t\t\t\t\t\t\"zip\":zip,\n\t\t\t\t\t\t\t\t\t\t\"contactName\":contactName,\n\t\t\t\t\t\t\t\t\t\t\"contactPhone\":contactPhone,\n\t\t\t\t\t\t\t\t\t\t\"nationalProvID\":\u0027\u0027,\n\t\t\t\t\t\t\t\t\t\t\"providerTypeId\":provType,\n\t\t\t\t\t\t\t\t\t\t\"website\":website}\n\t\t\t\t\tRefresh \u003d system.db.runNamedQuery(project\u003dproject,path\u003dpath,parameters\u003dparameters)\n\t\t\t\t\t\n\t\t\t\telse:\n\t\t\t\t\ttransactionFailed \u003d True\n\t\t\t\t\n\t\t\t\t### Check if an error occured rollback the transaction\n\t\t\t\tif transactionFailed:\n\t\t\t\t\tsystem.db.rollbackTransaction(txId)\n\t\t\t\t\tself.getSibling(\"Label\").showMessage(\"Something went wrong while saving data. Please try again.\")\n\t\t\t\t\tRefresh \u003d 0\n\t\t\t\t### Otherwise commit \n\t\t\t\telse:\n\t\t\t\t \tsystem.db.commitTransaction(txId)\n\t\t\t\t\tself.view.params.provId \u003d -1\n\t\t\t\t\tsystem.perspective.closeDock(\"RegisterProvider\")\n\t\t\t\t\tsystem.perspective.sendMessage(\"ResetSearch\", payload\u003d{}, scope\u003d\"session\")\n\t\t\t\t\tsystem.perspective.sendMessage(\"ResetRegistration\", payload\u003d{}, scope\u003d\"session\")\n\t\t\t\t### Always close the transaction\t\n\t\t\t\tsystem.db.closeTransaction(txId)\n\t\t\t\t\n\t\t\t##### The view is openend with a value in the Function parameter that isn\u0027t recognized\n\t\t\telse:\n\t\t\t\tself.getSibling(\"Label\").showMessage(\"Something went wrong while saving data. Please try again.\")\n\t\t\t\tRefresh \u003d 0\n\t\t\t\t\n\t\t\t##### Refresh the table\n\t\t\tif Refresh:\t\n\t\t\t\tsystem.perspective.sendMessage(messageType\u003d\"refreshProviders\", payload\u003d{}, scope\u003d\"session\")\n\t#\t\texcept:\n\t#\t\t\tself.getSibling(\"Label\").showMessage(\"Something went wrong while saving data. Please try again.\")\n\t\telse:\n\t\t\tself.getSibling(\"Label\").showMessage(\"Please enter a valid info before saving\")\t\n\telse:\n\t\tself.getSibling(\"Label\").showMessage(\"Please fill in all the mandatory fields correctly before saving.\")"
+                  },
+                  "scope": "G",
+                  "type": "script"
+                }
+              }
+            },
+            "meta": {
+              "name": "Button Save"
+            },
+            "position": {
+              "basis": "120px",
+              "shrink": 0
+            },
+            "props": {
+              "style": {
+                "classes": "Buttons/Main",
+                "marginBottom": "15px",
+                "marginLeft": "20px",
+                "marginRight": "20px",
+                "marginTop": "15px"
+              },
+              "text": "Save"
+            },
+            "type": "ia.input.button"
+          },
+          {
+            "events": {
+              "component": {
+                "onActionPerformed": [
+                  {
+                    "config": {
+                      "script": "\tsystem.perspective.sendMessage(\"ResetSearch\", payload\u003d{}, scope\u003d\"session\")\n\tsystem.perspective.sendMessage(\"ResetRegistration\", payload\u003d{}, scope\u003d\"session\")\n\t\n\t"
+                    },
+                    "scope": "G",
+                    "type": "script"
+                  },
+                  {
+                    "config": {
+                      "id": "RegisterProvider",
+                      "type": "close"
+                    },
+                    "scope": "C",
+                    "type": "dock"
+                  }
+                ]
+              }
+            },
+            "meta": {
+              "name": "Button Cancel"
+            },
+            "position": {
+              "basis": "120px",
+              "shrink": 0
+            },
+            "props": {
+              "style": {
+                "classes": "Buttons/Secondary_Orange",
+                "marginBottom": "15px",
+                "marginTop": "15px"
+              },
+              "text": "Cancel"
+            },
+            "type": "ia.input.button"
+          },
+          {
+            "meta": {
+              "name": "Label",
+              "visible": false
+            },
+            "position": {
+              "basis": "50px",
+              "grow": 1
+            },
+            "props": {
+              "style": {
+                "classes": "Text/Error_Message"
+              },
+              "text": 213
+            },
+            "scripts": {
+              "customMethods": [
+                {
+                  "name": "showMessage",
+                  "params": [
+                    "message"
+                  ],
+                  "script": "\timport time\n\tself.props.text \u003d message\n\tself.meta.visible \u003d True\n\ttime.sleep(5)\n\tself.meta.visible \u003d False\n\t"
+                }
+              ],
+              "extensionFunctions": null,
+              "messageHandlers": []
+            },
+            "type": "ia.display.label"
+          }
+        ],
+        "meta": {
+          "name": "FlexContainer"
+        },
+        "position": {
+          "basis": "65px",
+          "shrink": 0
+        },
+        "type": "ia.container.flex"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column",
+      "style": {
+        "classes": "Background/Default"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

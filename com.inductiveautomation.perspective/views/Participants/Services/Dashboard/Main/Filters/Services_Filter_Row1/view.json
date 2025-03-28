@@ -1,0 +1,279 @@
+{
+  "custom": {},
+  "params": {
+    "activity_range": 90,
+    "type": [
+      {
+        "label": "Yes",
+        "value": 1
+      },
+      {
+        "label": "No",
+        "value": 0
+      }
+    ]
+  },
+  "propConfig": {
+    "params.activity_range": {
+      "binding": {
+        "config": {
+          "path": "/root/ActivityRange.props.params.selection"
+        },
+        "transforms": [
+          {
+            "code": "\tif value \u003d\u003d 0 or value \u003d\u003d None:\n\t\treturn 36500\n\telse:\n\t\treturn value",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.type": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 30,
+      "width": 1817
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "ActivityRange"
+        },
+        "position": {
+          "basis": "150px",
+          "shrink": 0
+        },
+        "props": {
+          "params": {
+            "placeholder": "Activity Range",
+            "selection": 90,
+            "selection_in": 90
+          },
+          "path": "1_TEMPLATES/Filtering/Conditionals/Conditional_SingleDropDown_NoClear_ActivityRange",
+          "style": {
+            "classes": "Filter/Filter_Container"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "serviceDate"
+        },
+        "position": {
+          "basis": "180px",
+          "shrink": 0
+        },
+        "props": {
+          "params": {
+            "column_name": "serviceDate",
+            "filter": "servicesDashboard",
+            "key": "serviceDate",
+            "placeholder": "Date Range",
+            "searchType": "dateRange"
+          },
+          "path": "1_TEMPLATES/Filtering/Session/DateRangePicker",
+          "style": {
+            "classes": "Filter/Filter_Container"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "HMIS"
+        },
+        "position": {
+          "basis": "150px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.options": {
+            "binding": {
+              "config": {
+                "path": "view.params.type"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "column_name": "HMIS",
+            "filter": "servicesDashboard",
+            "key": "HMIS",
+            "placeholder": "HMIS",
+            "searchType": "equals"
+          },
+          "path": "1_TEMPLATES/Filtering/Session/SingleDropDown",
+          "style": {
+            "classes": "Filter/Filter_Container"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Employee"
+        },
+        "position": {
+          "basis": "600px",
+          "grow": 1
+        },
+        "propConfig": {
+          "props.params.options": {
+            "binding": {
+              "config": {
+                "queryPath": "Filter/EmployeeDropdownList"
+              },
+              "type": "query"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "column_name": "employeeId",
+            "filter": "servicesDashboard",
+            "key": "employeeId",
+            "placeholder": "Entered By",
+            "searchType": "equals"
+          },
+          "path": "1_TEMPLATES/Filtering/Session/MultiDropDown",
+          "style": {
+            "classes": "Filter/Filter_Container"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Programs"
+        },
+        "position": {
+          "basis": "600px",
+          "grow": 1
+        },
+        "propConfig": {
+          "props.params.options": {
+            "binding": {
+              "config": {
+                "queryPath": "Participants/ProgramDropdownListBatch"
+              },
+              "type": "query"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "column_name": "programId",
+            "filter": "servicesDashboard",
+            "key": "programId",
+            "placeholder": "(All Programs)",
+            "searchType": "equals"
+          },
+          "path": "1_TEMPLATES/Filtering/Session/MultiDropDown",
+          "style": {
+            "classes": "Filter/Filter_Container"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "ServiceLocation"
+        },
+        "position": {
+          "basis": "600px",
+          "grow": 1
+        },
+        "propConfig": {
+          "props.params.options": {
+            "binding": {
+              "config": {
+                "queryPath": "Participants/Services/GetServiceLocations"
+              },
+              "type": "query"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "column_name": "ServiceLocationId",
+            "filter": "servicesDashboard",
+            "key": "ServiceLocationId",
+            "placeholder": "(All Service Locations)",
+            "searchType": "equals"
+          },
+          "path": "1_TEMPLATES/Filtering/Session/MultiDropDown",
+          "style": {
+            "classes": "Filter/Filter_Container"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Services"
+        },
+        "position": {
+          "basis": "600px",
+          "grow": 1
+        },
+        "propConfig": {
+          "props.params.options": {
+            "binding": {
+              "config": {
+                "queryPath": "Participants/ServiceDropdownListAll"
+              },
+              "type": "query"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "column_name": "serviceId",
+            "filter": "servicesDashboard",
+            "key": "serviceId",
+            "placeholder": "(All Services)",
+            "searchType": "equals"
+          },
+          "path": "1_TEMPLATES/Filtering/Session/MultiDropDown",
+          "style": {
+            "classes": "Filter/Filter_Container"
+          }
+        },
+        "type": "ia.display.view"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "style": {
+        "classes": "Filter/Header_Text"
+      }
+    },
+    "scripts": {
+      "customMethods": [],
+      "extensionFunctions": null,
+      "messageHandlers": [
+        {
+          "messageType": "ParticipantDashboardAgeRange",
+          "pageScope": true,
+          "script": "\timport traceback\n\ttry:\n\t\t#Get the min and max age from the message payload\n\t\tself.view.params.min_age \u003d payload[\u0027min\u0027]\n\t\tself.view.params.max_age \u003d payload[\u0027max\u0027]\n\t\t#Calculate the date of birth range\n\t\ttoday \u003d system.date.now()\n\t\tdob_min \u003d -1 * int(self.view.params.max_age)\n\t\tdob_max \u003d -1 * int(self.view.params.min_age )\n\t\tself.view.params.dob_start \u003d system.date.addYears(today,dob_min)\n\t\tself.view.params.dob_end \u003d system.date.addYears(today,dob_max)\n\texcept:\n\t\tlogger \u003d system.util.getLogger(\"Participants_Filter ParticipantDashboardAgeRange Message\")\n\t\tmsg \u003d traceback.format_exc()\n\t\tlogger.error(msg)",
+          "sessionScope": true,
+          "viewScope": true
+        }
+      ]
+    },
+    "type": "ia.container.flex"
+  }
+}

@@ -1,0 +1,61 @@
+{
+  "custom": {},
+  "params": {},
+  "props": {
+    "defaultSize": {
+      "height": 39
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "events": {
+          "component": {
+            "onActionPerformed": {
+              "config": {
+                "script": "\tsystem.perspective.sendMessage(\"eventDetails\", payload \u003d {\"id\": self.props.value}, scope \u003d \"session\")\n\t"
+              },
+              "scope": "G",
+              "type": "script"
+            }
+          }
+        },
+        "meta": {
+          "name": "Dropdown"
+        },
+        "position": {
+          "basis": "36px"
+        },
+        "propConfig": {
+          "props.options": {
+            "binding": {
+              "config": {
+                "queryPath": "Calendar/EventInstance/searchInstances"
+              },
+              "transforms": [
+                {
+                  "code": "\titems \u003d []\n\n\tfor x in range(value.getRowCount()) :\n\t\tname \u003d value.getValueAt(x,\"title\")\n\t\tdate \u003d value.getValueAt(x,\"startDate\")\n\t\titems.append({\u0027label\u0027 : name + \" ,\" + str(date), \u0027value\u0027 : value.getValueAt(x,\"instanceID\")})\n\t\n\treturn items",
+                  "type": "script"
+                }
+              ],
+              "type": "query"
+            }
+          }
+        },
+        "props": {
+          "style": {
+            "classes": "Event/Event_Searchbar"
+          }
+        },
+        "type": "ia.input.dropdown"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column"
+    },
+    "type": "ia.container.flex"
+  }
+}

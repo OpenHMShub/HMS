@@ -1,0 +1,407 @@
+{
+  "custom": {},
+  "params": {
+    "selected_id": 0
+  },
+  "propConfig": {
+    "params.dob_day": {
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.dob_month": {
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.dob_year": {
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.first_name": {
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.last_name": {
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.middle_name": {
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.nick_name": {
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.race_id": {
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.search_active": {
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.search_selection": {
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.selectedId": {
+      "binding": {
+        "config": {
+          "path": "/root/Table.props.selection.data[0].participantId"
+        },
+        "transforms": [
+          {
+            "expression": "if(isGood({value}), {value}, -1)",
+            "type": "expression"
+          }
+        ],
+        "type": "property"
+      },
+      "paramDirection": "output"
+    },
+    "params.selected_first_name": {
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.selected_last_name": {
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.selected_middle_name": {
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.ssn": {
+      "paramDirection": "output",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "width": 600
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "Header"
+        },
+        "position": {
+          "basis": "25px",
+          "shrink": 0
+        },
+        "props": {
+          "params": {
+            "Text": "Staff Assignments"
+          },
+          "path": "1_TEMPLATES/Header/Header",
+          "style": {
+            "borderTopLeftRadius": "8px",
+            "borderTopRightRadius": "8px",
+            "marginBottom": "10px"
+          },
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Table"
+        },
+        "position": {
+          "basis": "594px",
+          "grow": 1
+        },
+        "propConfig": {
+          "custom.sql_data": {
+            "binding": {
+              "config": {
+                "queryPath": "Participants/Assignments/GetStaffAssignments"
+              },
+              "type": "query"
+            }
+          },
+          "props.data": {
+            "binding": {
+              "config": {
+                "path": "this.custom.sql_data"
+              },
+              "type": "property"
+            }
+          },
+          "props.selection.style.backgroundColor": {
+            "binding": {
+              "config": {
+                "path": "this.props.selection.selectedRow"
+              },
+              "transforms": [
+                {
+                  "code": "\tif value is None or value \u003d\u003d -1:\n\t\treturn \u0027#FFFFFF00\u0027\n\telse:\n\t\treturn \u0027#9af4eb4d\u0027",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "cells": {
+            "style": {
+              "classes": "Table/Cell_Detail_NoBG"
+            }
+          },
+          "columns": [
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "id",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header_Detail Background/Default"
+                },
+                "title": " "
+              },
+              "justify": "auto",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "view",
+              "resizable": false,
+              "sort": "none",
+              "sortable": false,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal_Detail"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "1_TEMPLATES/Placeholder",
+              "visible": true,
+              "width": 30
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "employee_name",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header_Detail Background/Default"
+                },
+                "title": "Name"
+              },
+              "justify": "auto",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "auto",
+              "resizable": false,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": false,
+              "style": {
+                "classes": "Table/Column_Normal_Detail"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 200
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "no_of_active_assignments",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header_Detail Background/Default"
+                },
+                "title": "Active Assignments"
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal_Detail"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 150
+            }
+          ],
+          "rows": {
+            "highlight": {
+              "color": "#ccffff"
+            },
+            "striped": {
+              "color": {
+                "even": "#000000",
+                "odd": "#F9F9F9"
+              },
+              "enabled": false
+            },
+            "style": {
+              "cursor": "pointer",
+              "marginLeft": "7px"
+            }
+          },
+          "style": {
+            "classes": "Background/Default"
+          }
+        },
+        "type": "ia.display.table"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column",
+      "style": {
+        "classes": "Background/Default"
+      }
+    },
+    "scripts": {
+      "customMethods": [],
+      "extensionFunctions": null,
+      "messageHandlers": [
+        {
+          "messageType": "staffAssigned",
+          "pageScope": true,
+          "script": "\t# implement your handler here\n\tself.getChild(\"Table\").refreshBinding(\"custom.sql_data\")",
+          "sessionScope": true,
+          "viewScope": false
+        }
+      ]
+    },
+    "type": "ia.container.flex"
+  }
+}

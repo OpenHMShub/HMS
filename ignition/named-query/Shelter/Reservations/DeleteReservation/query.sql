@@ -1,0 +1,1 @@
+UPDATE lodging.Reservation SET timeRetired = CURRENT_TIMESTAMP WHERE id = :reservationId

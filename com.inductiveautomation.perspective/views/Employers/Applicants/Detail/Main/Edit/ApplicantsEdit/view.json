@@ -1,0 +1,359 @@
+{
+  "custom": {
+    "objDataOut": {
+      "applicantStatusId": 35,
+      "appliedComment": "",
+      "appliedDate": {
+        "$": [
+          "ts",
+          192,
+          1624978369469
+        ],
+        "$ts": 1610622000000
+      },
+      "hiredComment": "",
+      "hiredDate": null,
+      "hiredState": null,
+      "interviewedComment": "",
+      "interviewedDate": {
+        "$": [
+          "ts",
+          192,
+          1624978369469
+        ],
+        "$ts": 1610794800000
+      },
+      "participantId": 3206,
+      "position": "fdgdsg",
+      "timeCreated": {
+        "$": [
+          "ts",
+          192,
+          1624978369469
+        ],
+        "$ts": 1611863817400
+      },
+      "timeRetired": null
+    },
+    "toUpdateDelete": false
+  },
+  "params": {
+    "applicantStatusId": 0,
+    "employerId": 0
+  },
+  "propConfig": {
+    "custom.objDataOut": {
+      "persistent": true
+    },
+    "custom.toUpdateDelete": {
+      "persistent": true
+    },
+    "params.applicantStatusId": {
+      "onChange": {
+        "enabled": null,
+        "script": "\troot \u003d self.getChild(\"root\")\n\troot.setComponentsDb(currentValue.value)\n\tif currentValue.value:\n\t\tself.custom.toUpdateDelete \u003d True\n\telse:\n\t\tself.custom.toUpdateDelete \u003d False"
+      },
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.employerId": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 260,
+      "width": 1043
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "emvHeader"
+        },
+        "position": {
+          "basis": "25px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.Text": {
+            "binding": {
+              "config": {
+                "expression": "if(isNull({view.params.applicantStatusId}) || {view.params.applicantStatusId} \u003d -1,\u0027New Applicant\u0027,\u0027Edit Applicant\u0027)"
+              },
+              "type": "expr"
+            }
+          }
+        },
+        "props": {
+          "path": "Employers/Templates/Header"
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "emvRow1"
+        },
+        "position": {
+          "grow": 1,
+          "shrink": 0
+        },
+        "props": {
+          "params": {
+            "objDataIn": {},
+            "objDataOut": {
+              "appliedComment": "",
+              "appliedDate": null,
+              "hiredComment": "",
+              "hiredDate": null,
+              "hiredState": null,
+              "interviewedComment": "",
+              "interviewedDate": null,
+              "participantId": null,
+              "position": ""
+            }
+          },
+          "path": "Employers/Applicants/Detail/Main/Edit/Row1",
+          "style": {
+            "marginLeft": 10
+          },
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "children": [
+          {
+            "events": {
+              "component": {
+                "onActionPerformed": {
+                  "config": {
+                    "script": "\troot \u003d self.view.getChild(\"root\")\n\t\n\tself.view.custom.toUpdateDelete \u003d False\n\troot.clearInputs()\n\t\n\tpayload \u003d {\u0027selectedRow\u0027: None}\n\tsystem.perspective.sendMessage(\u0027mhSetProps\u0027,payload)\n\t"
+                  },
+                  "scope": "G",
+                  "type": "script"
+                }
+              }
+            },
+            "meta": {
+              "name": "button_new"
+            },
+            "position": {
+              "basis": "120px",
+              "shrink": 0
+            },
+            "propConfig": {
+              "position.display": {
+                "binding": {
+                  "config": {
+                    "expression": "{session.custom.isWSManager} || {session.custom.isManager} || {session.custom.isAdministrator} || {session.custom.isSupportCoordinator} || {session.custom.isWSSupportCoordinator}"
+                  },
+                  "type": "expr"
+                }
+              }
+            },
+            "props": {
+              "style": {
+                "classes": "Buttons/Secondary",
+                "marginBottom": "5px",
+                "marginLeft": "20px",
+                "marginTop": "5px"
+              },
+              "text": "New Applicant"
+            },
+            "type": "ia.input.button"
+          },
+          {
+            "events": {
+              "component": {
+                "onActionPerformed": {
+                  "config": {
+                    "script": "\tapplicantStatusId \u003d self.view.params.applicantStatusId\n\troot \u003d self.view.getChild(\"root\")\n\tlbl \u003d self.getSibling(\"Label\")\n\n\tvalidationMsg \u003d root.getValidationMessage()\n\t#ystem.perspective.print((\u0027validationMsg\u0027,validationMsg,self.view.custom.toUpdateDelete))\n\tif validationMsg:\n\t\tlbl.showMessage(validationMsg)\n\t\treturn\n\t\n\ttry:\n\t\tif self.view.custom.toUpdateDelete:\n\t\t\tapplicantStatusIdUpdated \u003d root.updateDb(applicantStatusId)\n\t\telse:\n\t\t\tapplicantStatusIdInserted \u003d root.insertDb()\n\texcept:\n\t\tlbl.showMessage(\"Something went wrong while saving data. Please try again.\")\n\t\traise\n\t\n\tpayload \u003d {\u0027employerId\u0027:self.view.params.employerId}\n\t\n\tsystem.perspective.sendMessage(\u0027mhByCondition\u0027,payload)\n\troot.clearInputs()\n\t"
+                  },
+                  "scope": "G",
+                  "type": "script"
+                }
+              }
+            },
+            "meta": {
+              "name": "button_save"
+            },
+            "position": {
+              "basis": "120px",
+              "shrink": 0
+            },
+            "propConfig": {
+              "position.display": {
+                "binding": {
+                  "config": {
+                    "expression": "{session.custom.isWSManager} || {session.custom.isManager} || {session.custom.isAdministrator} || {session.custom.isSupportCoordinator} || {session.custom.isWSSupportCoordinator}"
+                  },
+                  "type": "expr"
+                }
+              },
+              "props.text": {
+                "binding": {
+                  "config": {
+                    "expression": "if({view.custom.toUpdateDelete},\u0027Update Applicant\u0027,\u0027Save Applicant\u0027)"
+                  },
+                  "type": "expr"
+                }
+              }
+            },
+            "props": {
+              "style": {
+                "classes": "Buttons/Main",
+                "marginBottom": "5px",
+                "marginLeft": "10px",
+                "marginTop": "5px"
+              }
+            },
+            "type": "ia.input.button"
+          },
+          {
+            "events": {
+              "component": {
+                "onActionPerformed": {
+                  "config": {
+                    "script": "\tapplicantStatusId \u003d self.view.params.applicantStatusId\n\troot \u003d self.view.getChild(\"root\")\n\tlbl \u003d self.getSibling(\"Label\")\n\t\n\ttry:\n\t\tapplicantStatusIdDeleted \u003d root.retireDb(applicantStatusId)\n\texcept:\n\t\tlbl.showMessage(\"Something went wrong while retiring data. Please try again.\")\n\t\n\tpayload \u003d {\u0027employerId\u0027:self.view.params.employerId}\n\tsystem.perspective.sendMessage(\u0027mhByCondition\u0027,payload)\n\t"
+                  },
+                  "scope": "G",
+                  "type": "script"
+                }
+              }
+            },
+            "meta": {
+              "name": "button_delete"
+            },
+            "position": {
+              "basis": "120px",
+              "shrink": 0
+            },
+            "propConfig": {
+              "position.display": {
+                "binding": {
+                  "config": {
+                    "expression": "{view.custom.toUpdateDelete} \u0026\u0026 {session.custom.isAdministrator}"
+                  },
+                  "type": "expr"
+                }
+              }
+            },
+            "props": {
+              "style": {
+                "classes": "Buttons/Delete",
+                "marginBottom": "5px",
+                "marginLeft": "10px",
+                "marginTop": "5px"
+              },
+              "text": "Delete Applicant"
+            },
+            "type": "ia.input.button"
+          },
+          {
+            "meta": {
+              "name": "Label",
+              "visible": false
+            },
+            "position": {
+              "basis": "50px",
+              "grow": 1
+            },
+            "props": {
+              "style": {
+                "classes": "Text/Error_Message"
+              },
+              "text": "Employer is mandatory!"
+            },
+            "scripts": {
+              "customMethods": [
+                {
+                  "name": "showMessage",
+                  "params": [
+                    "message"
+                  ],
+                  "script": "\timport time\n\tself.props.text \u003d message\n\tself.meta.visible \u003d True\n\ttime.sleep(5)\n\tself.meta.visible \u003d False\n\t"
+                }
+              ],
+              "extensionFunctions": null,
+              "messageHandlers": []
+            },
+            "type": "ia.display.label"
+          }
+        ],
+        "meta": {
+          "name": "root Actions"
+        },
+        "position": {
+          "basis": "50px",
+          "shrink": 0
+        },
+        "props": {
+          "style": {
+            "borderTopColor": "#9db8d1",
+            "borderTopStyle": "solid",
+            "borderTopWidth": "1px",
+            "classes": "Background/Default",
+            "marginTop": "5px",
+            "paddingTop": "5px"
+          }
+        },
+        "type": "ia.container.flex"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column",
+      "style": {
+        "classes": "Background/Default"
+      }
+    },
+    "scripts": {
+      "customMethods": [
+        {
+          "name": "insertDb",
+          "params": [],
+          "script": "\tquery \u003d \"\"\"\nINSERT INTO [organization].[ApplicantStatus]\n\t\t   ([employerId]\n\t\t   ,[participantId]\n\t\t   ,[position]\n\t\t   ,[appliedDate]\n\t\t   ,[interviewedDate]\n\t\t   ,[hiredDate]\n\t\t   ,[hiredState]\n\t\t   ,[appliedComment]\n\t\t   ,[interviewedComment]\n\t\t   ,[hiredComment]\n\t\t   ,[timeCreated]\n\t\t   ,[timeRetired])\n VALUES\n\t   (?,?,?,?,?,?,?,?,?,?,?,?)\n\t\"\"\"\n\n\temvRow1 \u003d self.getChild(\"emvRow1\")\n\t\n\targNames \u003d [ \n\t\t \u0027employerId\u0027\n\t\t,\u0027participantId\u0027\n\t\t,\u0027position\u0027\n\t\t,\u0027appliedDate\u0027\n\t\t,\u0027interviewedDate\u0027\n\t\t,\u0027hiredDate\u0027\n\t\t,\u0027hiredState\u0027\n\t\t,\u0027appliedComment\u0027\n\t\t,\u0027interviewedComment\u0027\n\t\t,\u0027hiredComment\u0027\n\t\t,\u0027timeCreated\u0027\n\t\t,\u0027timeRetired\u0027\n\t]\n\t\n\targs \u003d []\n\t\n\tfor key in argNames:\n\t\tif key \u003d\u003d \u0027employerId\u0027:\n\t\t\targs.append(self.view.params.employerId)\n\t\telif key \u003d\u003d \u0027timeCreated\u0027:\n\t\t\targs.append(system.date.now())\n\t\telif key \u003d\u003d \u0027timeRetired\u0027:\n\t\t\targs.append(None)\n\t\telse:\n\t\t\tval \u003d emvRow1.props.params.objDataOut.get(key)\n\t\t\targs.append(val)\n\t\n\tapplicantStatusId \u003d system.db.runPrepUpdate(query, args, \u0027RITIOps\u0027, getKey\u003d1)\n\t\n\treturn applicantStatusId"
+        },
+        {
+          "name": "setComponentsDb",
+          "params": [
+            "applicantStatusId"
+          ],
+          "script": "\t\n\temvRow1 \u003d self.getChild(\"emvRow1\")\n\tquery \u003d \"\"\"\nSELECT\n\t [id] AS [applicantStatusId]\n\t,[employerId]\n\t,[participantId]\n\t,[position]\n\t,[appliedDate]\n\t,[interviewedDate]\n\t,[hiredDate]\n\t,[hiredState]\n\t,[appliedComment]\n\t,[interviewedComment]\n\t,[hiredComment]\n\t,[timeCreated]\n\t,[timeRetired]\nFROM [organization].[ApplicantStatus]\nWHERE [id] \u003d ?\n\"\"\"\n\n\tif isinstance(applicantStatusId, (int, long)) and applicantStatusId \u003e\u003d 0:\n\t\tresult \u003d system.db.runPrepQuery(query, [applicantStatusId], \u0027RITIOps\u0027)\n\t\tcolNames \u003d system.dataset.getColumnHeaders(result)\n\t\tif result.rowCount \u003d\u003d 1:\n\t\t\temvRow1.props.params.objDataIn \u003d {col:result[0][col] for col in colNames} if result.rowCount \u003d\u003d 1 else None\n\t\telse:\n\t\t\temvRow1.props.params.objDataIn \u003d {}\n\n\telse:\n\t\temvRow1.props.params.objDataIn \u003d {}\n\n\n"
+        },
+        {
+          "name": "updateDb",
+          "params": [
+            "applicantStatusId"
+          ],
+          "script": "\t\n\tquery \u003d \"\"\"\nUPDATE [organization].[ApplicantStatus]\nSET \n\t [participantId] \u003d ?\n\t,[position] \u003d ?\n\t,[appliedDate] \u003d ?\n\t,[interviewedDate] \u003d ?\n\t,[hiredDate] \u003d ?\n\t,[hiredState] \u003d ?\n\t,[appliedComment] \u003d ?\n\t,[interviewedComment] \u003d ?\n\t,[hiredComment] \u003d ?\n\t,[timeCreated] \u003d ?\nWHERE [id] \u003d ?\n\t\"\"\"\n\t\n\temvRow1 \u003d self.getChild(\"emvRow1\")\n\t\n\targNames \u003d [ \n\t\t \u0027participantId\u0027\n\t\t,\u0027position\u0027\n\t\t,\u0027appliedDate\u0027\n\t\t,\u0027interviewedDate\u0027\n\t\t,\u0027hiredDate\u0027\n\t\t,\u0027hiredState\u0027\n\t\t,\u0027appliedComment\u0027\n\t\t,\u0027interviewedComment\u0027\n\t\t,\u0027hiredComment\u0027\n\t\t,\u0027timeCreated\u0027\n\t\t,\u0027id\u0027\n\t]\n\n\targs \u003d []\n\t\n\tfor key in argNames:\n\t\tif key \u003d\u003d \u0027timeCreated\u0027:\n\t\t\targs.append(system.date.now())\n\t\telif key \u003d\u003d \u0027id\u0027:\n\t\t\targs.append(applicantStatusId)\n\t\telse:\n\t\t\tval \u003d emvRow1.props.params.objDataOut.get(key)\n\t\t\targs.append(val)\n\t\n\t_applicantStatusId \u003d system.db.runPrepUpdate(query, args, \u0027RITIOps\u0027, getKey\u003d1)\n\n\treturn _applicantStatusId"
+        },
+        {
+          "name": "retireDb",
+          "params": [
+            "applicantStatusId"
+          ],
+          "script": "\tquery \u003d \"\"\"\nUPDATE [organization].[ApplicantStatus]\n\t\tSET [timeRetired] \u003d ?\n\tWHERE [id] \u003d ?\n\"\"\"\n\n\ttimeRetired \u003d system.date.now()\n\t\n\targs \u003d [timeRetired, applicantStatusId]\n\t\n\t_applicantStatusId \u003d system.db.runPrepUpdate(query, args, \u0027RITIOps\u0027, getKey \u003d 1)\n\t\n\treturn _applicantStatusId"
+        },
+        {
+          "name": "getValidationMessage",
+          "params": [],
+          "script": "\t\n\n\temvRow1 \u003d self.getChild(\"emvRow1\")\n\t\n\temployerId \u003d self.view.params.employerId\n\tparticipantId \u003d emvRow1.props.params.objDataOut.participantId\n\tposition \u003d emvRow1.props.params.objDataOut.position\n\thiredDate \u003d  emvRow1.props.params.objDataOut.hiredDate\n\thiredState \u003d emvRow1.props.params.objDataOut.hiredState\n\t\n\tif employerId is None:\n\t\tvalidationMsg \u003d \"Employer is mandatory!\"\n\telif participantId is None:\n\t\tvalidationMsg \u003d \"Participant is mandatory!\"\n\telif position is None or position.strip() \u003d\u003d \u0027\u0027:\n\t\tvalidationMsg \u003d \"Position is mandatory\"\t\n\telif hiredState \u003d\u003d True and  hiredDate is None:\n\t\tvalidationMsg \u003d \"Hired date is mandatory because hired state is selected!\"\t\n\telse:\n\t\tvalidationMsg \u003d \u0027\u0027\n\t\t\n\t#ystem.perspective.print((\u0027validationMsg: \u0027, validationMsg))\n\treturn validationMsg\t\t\n\n"
+        },
+        {
+          "name": "clearInputs",
+          "params": [],
+          "script": "\temvRow1 \u003d self.getChild(\"emvRow1\")\n\temvRow1.props.params.objDataIn \u003d {} if emvRow1.props.params.objDataIn is None else None\n\n\n\t"
+        }
+      ],
+      "extensionFunctions": null,
+      "messageHandlers": []
+    },
+    "type": "ia.container.flex"
+  }
+}

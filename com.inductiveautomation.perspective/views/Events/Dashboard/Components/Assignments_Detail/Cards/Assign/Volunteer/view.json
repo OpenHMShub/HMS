@@ -1,0 +1,112 @@
+{
+  "custom": {},
+  "params": {
+    "groupId": null
+  },
+  "propConfig": {
+    "params.groupId": {
+      "binding": {
+        "config": {
+          "bidirectional": true,
+          "path": "/root/EmbeddedViewGroup.props.params.SelectedValue"
+        },
+        "type": "property"
+      },
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.volunteerId": {
+      "binding": {
+        "config": {
+          "bidirectional": true,
+          "path": "/root/EmbeddedViewVolunteer.props.params.SelectedValue"
+        },
+        "type": "property"
+      },
+      "paramDirection": "inout"
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 50,
+      "width": 600
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "EmbeddedViewVolunteer"
+        },
+        "position": {
+          "basis": "320px",
+          "grow": 1
+        },
+        "propConfig": {
+          "props.params.Options": {
+            "binding": {
+              "config": {
+                "queryPath": "Volunteers/Volunteers/VolunteersSelectionOptions",
+                "returnFormat": "json"
+              },
+              "type": "query"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "SelectedValue": null,
+            "Text": "Volunteer"
+          },
+          "path": "Volunteers/Registration/Cards/SelectionInput"
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "EmbeddedViewGroup"
+        },
+        "position": {
+          "basis": "320px",
+          "grow": 1
+        },
+        "propConfig": {
+          "props.params.Options": {
+            "binding": {
+              "config": {
+                "queryPath": "Volunteers/Group/GroupsSelectionOptions",
+                "returnFormat": "json"
+              },
+              "type": "query"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "SelectedValue": null,
+            "Text": "Group"
+          },
+          "path": "Volunteers/Registration/Cards/SelectionInput"
+        },
+        "type": "ia.display.view"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "scripts": {
+      "customMethods": [],
+      "extensionFunctions": null,
+      "messageHandlers": [
+        {
+          "messageType": "reservationselected",
+          "pageScope": true,
+          "script": "\t# implement your handler here\n\t#payload \u003d {\u0027reservationId\u0027:reservationId, \u0027bedId\u0027:bedId, \u0027participantId\u0027:participantId, \u0027roomId\u0027:roomId\n\tif (self.getChild(\"EmbeddedView Facility\").position.display ):\n\t\tself.getChild(\"EmbeddedView Facility\").props.params.SelectedValue \u003d int(payload[\u0027facilityId\u0027])\n\tself.view.params.reservationId \u003d payload[\u0027reservationId\u0027]\n\tself.getChild(\"EmbeddedView Participant\").props.params.SelectedValue \u003d int(payload[\u0027participantId\u0027])\n\tself.getChild(\"EmbeddedView Room\").props.params.SelectedValue \u003d int(payload[\u0027roomId\u0027])\n\tself.getChild(\"EmbeddedView Bed\").props.params.SelectedValue \u003d int(payload[\u0027bedId\u0027])",
+          "sessionScope": true,
+          "viewScope": true
+        }
+      ]
+    },
+    "type": "ia.container.flex"
+  }
+}

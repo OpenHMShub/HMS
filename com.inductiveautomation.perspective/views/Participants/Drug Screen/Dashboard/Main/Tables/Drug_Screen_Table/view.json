@@ -1,0 +1,1389 @@
+{
+  "custom": {},
+  "params": {
+    "activity_range": 365
+  },
+  "propConfig": {
+    "params.activity_range": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 713,
+      "width": 1095
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "Label"
+        },
+        "position": {
+          "basis": "32px",
+          "display": false
+        },
+        "propConfig": {
+          "props.text": {
+            "binding": {
+              "config": {
+                "path": "../Table.props.data"
+              },
+              "transforms": [
+                {
+                  "code": "\tif value \u003d\u003d None:\n\t\t\toutput \u003d \u0027No Rows\u0027\n\telif value.getRowCount() \u003d\u003d 0:\n\t\toutput \u003d \u0027No Rows\u0027\n\telse:\n\t\toutput \u003d str(value.getRowCount()) + \u0027 Rows\u0027\n\treturn output",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "style": {
+            "classes": "Background/Alternative Text/Error_Message"
+          }
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "events": {
+          "component": {
+            "onRowClick": {
+              "config": {
+                "script": "\timport traceback\n\ttry:\n\t\tselectedColumn \u003d self.props.selection.selectedColumn\n\t\tparticipantID \u003d self.props.data.getValueAt(event.row,\u0027participantId\u0027)\n\t\tisActive \u003d self.props.data.getValueAt(event.row,\u0027isActive\u0027)\n\t\tsystem.perspective.print(selectedColumn)\n\t\t#system.perspective.print(participantID)\n\t\tif selectedColumn \u003d\u003d \"participantId\": \n\t\t\t#Display the detail screen\n\t\t\t#system.perspective.print(\u0027Participant Detail\u0027)\n\t\t\ttab_id \u003d 70\n\t\t\tif isActive \u003d\u003d 1:\n\t\t\t\tsystem.perspective.navigate(\"Participants/Detail/\" + str(participantID) + \"/\" + str(tab_id))\n\t\t#elif selectedColumn \u003d\u003d \"Options\":\n\t\telif selectedColumn \u003d\u003d \"id\":\n\t\t\tid \u003d \"PreviewParticipant\" \n\t\t\tparams \u003d {\"participantID\":participantID,\u0027isActive\u0027:isActive}\n\t\t\tsystem.perspective.openDock(id\u003did,params\u003dparams)\n\t\telse:\n\t\t\tpass\n\texcept:\n\t\tlogger \u003d system.util.getLogger(\"Participants DrugScreen Dashboard Table OnRowClick\")\n\t\tmsg \u003d traceback.format_exc()\n\t\tlogger.error(msg)"
+              },
+              "scope": "G",
+              "type": "script"
+            }
+          }
+        },
+        "meta": {
+          "name": "Table"
+        },
+        "position": {
+          "basis": "100%"
+        },
+        "propConfig": {
+          "custom.sqlData": {
+            "access": "PRIVATE",
+            "binding": {
+              "config": {
+                "parameters": {
+                  "activity_range": "{view.params.activity_range}",
+                  "administeredById": "{session.custom.filters.drugScreenDashboard.administeredById.where}",
+                  "drugScreenResonId": "{session.custom.filters.drugScreenDashboard.drugScreenReasonId.where}",
+                  "drugScreenTypeId": "{session.custom.filters.drugScreenDashboard.drugScreenTypeId.where}",
+                  "firstname": "{session.custom.filters.drugScreenDashboard.FirstName.where}",
+                  "lastname": "{session.custom.filters.drugScreenDashboard.LastName.where}",
+                  "middlename": "{session.custom.filters.drugScreenDashboard.MiddleName.where}",
+                  "nickname": "{session.custom.filters.drugScreenDashboard.NickName.where}",
+                  "passed": "{session.custom.filters.drugScreenDashboard.passed.where}",
+                  "search": "{session.custom.filters.drugScreenDashboard.Search.where}",
+                  "testDate": "{session.custom.filters.drugScreenDashboard.testDate.where}",
+                  "veteran": "{session.custom.filters.drugScreenDashboard.Veteran.where}"
+                },
+                "queryPath": "Participants/DrugScreen/DrugScreenDashboardSelect"
+              },
+              "type": "query"
+            },
+            "onChange": {
+              "enabled": null,
+              "script": "\timport traceback\n\t\n\ttry:\n\t\tdataset \u003d currentValue.value\n\t\t\n\t\tif dataset \u003d\u003d None:\n\t\t\t#system.perspective.sendMessage(\"newParticipantsReferralsMonthly\", payload \u003d {\"newParticipantsReferralsMonthly\": 0}, scope \u003d \"page\")\n\t\t\treturn\n\t\t\n\t\t#Get selected participants\n\t\tidlist \u003d []\n\t\tuniqueCount \u003d 0\n\t\tpassCount \u003d 0\n\t\tnumRows \u003d dataset.getRowCount()\n\t\tfor\ti in range(numRows):\n\t\t\tparticipantID \u003d str(dataset.getValueAt(i, \"participantId\"))\n\t\t\tif participantID not in idlist:\n\t\t\t\tuniqueCount +\u003d 1\n\t\t\tif dataset.getValueAt(i, \"passed\"):\n\t\t\t\tpassCount +\u003d 1\n\t\t\tidlist.append(participantID)\n\t\tif (numRows \u003e 0):\n\t\t\tpctPass \u003d 100 * passCount / numRows\n\t\telse:\n\t\t\tpctPass \u003d 0\n\t\t\t\n\t\tstrIdList \u003d \u0027,\u0027.join(idlist)\n\t\tparams \u003d {\"IdList\": strIdList}\n\n\t\t#KPI3 Interviews Monthly\n\t\tresult3 \u003d system.db.runNamedQuery(\"Participants/DrugScreen/KPI/DrugScreensMonthly\", params)\n\t\tMonthCount \u003d 6\n\t\tdrugScreenMonthly \u003d []\n\t\tnow \u003d system.date.now()\n\t\tfor i in reversed(range(MonthCount)):\n\t\t\timonthago \u003d system.date.addMonths(now, -i)\n\t\t\tcmonthago \u003d system.date.addMonths(imonthago, 1)\n\t\t\tmonth \u003d system.date.getMonth(imonthago) + 1\n\t\t\tdateMonth \u003d system.date.getMonth(imonthago)\n\t\t\tdateYear \u003d system.date.getYear(imonthago)\n\t\t\tdate \u003d system.date.getDate(dateYear, dateMonth, 01)\n\t\t\tdatetime \u003d system.date.setTime(date, 00, 00, 00)\n\t\t\tappend_item \u003d {\"time\": system.date.format(datetime, \"M/d/yyyy\") , \"Participants\": 0}\n\t\t\tresultMonths \u003d 0\n\t\t\tresultPassed \u003d 0\n\t\t\tfor row in range(result3.getRowCount()):\n\t\t\t\tresultMonth \u003d result3.getValueAt(row, \"passed_month\")\n\t\t\t\tif month \u003d\u003d resultMonth:\n\t\t\t\t\tif bool(result3.getValueAt(row, \"passed\")):\n\t\t\t\t\t\tresultPassed +\u003d 1\n\t\t\t\t\tresultMonths +\u003d 1\n\t\t\t\n\t\t\tif resultMonths \u003e 0:\n\t\t\t\tpassedPct \u003d 100 * resultPassed / resultMonths\n\t\t\telse:\n\t\t\t\tpassedPct \u003d 0\n\t\t\tappend_item[\"Participants\"] \u003d passedPct\n\t\t\tdrugScreenMonthly.append(append_item)\n\n\t\t\t#Update Applicants Per Month KPIs\n\t\t\tsystem.perspective.sendMessage(\"drugScreenUpdate\", payload \u003d {\"drugScreenMonthly\": drugScreenMonthly, \"drugScreenCnt\": numRows, \"uniqueCount\": uniqueCount, \"pctPass\": pctPass}, scope \u003d \"page\")\n\t\t\t\t\n\texcept:\n\t\tlogger \u003d system.util.getLogger(\"Participants Referral Dashboard Table custom.SQLData KPI\")\n\t\tmsg \u003d traceback.format_exc()\n\t\tlogger.error(msg)"
+            }
+          },
+          "props.data": {
+            "binding": {
+              "config": {
+                "path": "this.custom.sqlData"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "cells": {
+            "style": {
+              "classes": "Table/Cell_Dashboard_NoBG"
+            }
+          },
+          "columns": [
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "id",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header"
+                },
+                "title": " "
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "view",
+              "resizable": false,
+              "sort": "none",
+              "sortable": false,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {
+                "rowData": {
+                  "ID": "value"
+                }
+              },
+              "viewPath": "1_TEMPLATES/Tables/TableOptions",
+              "visible": true,
+              "width": 35
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "participantId",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header"
+                },
+                "title": " "
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "view",
+              "resizable": false,
+              "sort": "none",
+              "sortable": false,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {
+                "rowData": {
+                  "ID": "value",
+                  "isActive": "value"
+                }
+              },
+              "viewPath": "1_TEMPLATES/Tables/TableDetail",
+              "visible": true,
+              "width": 25
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "name",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header",
+                  "color": "#0C4E8B",
+                  "fontFamily": "Proxima Nova ExCn Light",
+                  "fontSize": "20px"
+                },
+                "title": "Name"
+              },
+              "justify": "auto",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": true,
+              "style": {
+                "color": "#0c4e85",
+                "cursor": "pointer",
+                "fontFamily": "Proxima Nova ExCn Medium",
+                "text-align": "left"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 240
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "nickName",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header"
+                },
+                "title": "Nickname"
+              },
+              "justify": "auto",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 240
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "ssn",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header"
+                },
+                "title": "SSN"
+              },
+              "justify": "auto",
+              "number": "value",
+              "numberFormat": "00.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 120
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "testDate",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": "Test Date"
+              },
+              "justify": "auto",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "date",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 120
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "administeredByName",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header"
+                },
+                "title": "Administered By"
+              },
+              "justify": "auto",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 160
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "DrugScreenReasonName",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header"
+                },
+                "title": "Reason"
+              },
+              "justify": "auto",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 160
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "drugScreenTypeName",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header"
+                },
+                "title": "Test Type"
+              },
+              "justify": "auto",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 120
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "passed",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header"
+                },
+                "title": "Pass"
+              },
+              "justify": "auto",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "view",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "1_TEMPLATES/Tables/TableBoolean",
+              "visible": true,
+              "width": 100
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "comments",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header"
+                },
+                "title": "Comments"
+              },
+              "justify": "auto",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": false,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 240
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "veteranId",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header"
+                },
+                "title": "veteranId"
+              },
+              "justify": "auto",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": false,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": false,
+              "width": 240
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "veteran",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header"
+                },
+                "title": "veteran"
+              },
+              "justify": "auto",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": false,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": false,
+              "width": 240
+            }
+          ],
+          "data_1": {
+            "$": [
+              "ds",
+              192,
+              1653150052325
+            ],
+            "$columns": [
+              {
+                "data": [
+                  56,
+                  57,
+                  55,
+                  54,
+                  53,
+                  52
+                ],
+                "name": "id",
+                "type": "Integer"
+              },
+              {
+                "data": [
+                  4739,
+                  4739,
+                  4768,
+                  4740,
+                  133,
+                  4768
+                ],
+                "name": "participantId",
+                "type": "Integer"
+              },
+              {
+                "data": [
+                  "***-**-6789",
+                  "***-**-6789",
+                  "***-**-6789",
+                  "***-**-6789",
+                  "***-**-6789",
+                  "***-**-6789"
+                ],
+                "name": "ssn",
+                "type": "String"
+              },
+              {
+                "data": [
+                  "Abraham  Lincoln",
+                  "Abraham  Lincoln",
+                  "Samuel L Jackson",
+                  "Bob  Hope",
+                  "Sam Joseph Fulks",
+                  "Samuel L Jackson"
+                ],
+                "name": "name",
+                "type": "String"
+              },
+              {
+                "data": [
+                  "Abraham",
+                  "Abraham",
+                  "Samuel",
+                  "Bob",
+                  "Sam",
+                  "Samuel"
+                ],
+                "name": "firstName",
+                "type": "String"
+              },
+              {
+                "data": [
+                  "",
+                  "",
+                  "L",
+                  "",
+                  "Joseph",
+                  "L"
+                ],
+                "name": "middleName",
+                "type": "String"
+              },
+              {
+                "data": [
+                  "Lincoln",
+                  "Lincoln",
+                  "Jackson",
+                  "Hope",
+                  "Fulks",
+                  "Jackson"
+                ],
+                "name": "lastName",
+                "type": "String"
+              },
+              {
+                "data": [
+                  "",
+                  "",
+                  "",
+                  "",
+                  "Fulks, Sam Joseph",
+                  ""
+                ],
+                "name": "nickName",
+                "type": "String"
+              },
+              {
+                "data": [
+                  1652245200000,
+                  1652245200000,
+                  1639634400000,
+                  1634965200000,
+                  1627794000000,
+                  1627794000000
+                ],
+                "name": "testDate",
+                "type": "Date"
+              },
+              {
+                "data": [
+                  1652245200000,
+                  1652245200000,
+                  1639893600000,
+                  1634965200000,
+                  1627794000000,
+                  1627794000000
+                ],
+                "name": "entryDate",
+                "type": "Date"
+              },
+              {
+                "data": [
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1
+                ],
+                "name": "drugScreenReasonId",
+                "type": "Integer"
+              },
+              {
+                "data": [
+                  "Random",
+                  "Random",
+                  "Random",
+                  "Random",
+                  "Random",
+                  "Random"
+                ],
+                "name": "DrugScreenReasonName",
+                "type": "String"
+              },
+              {
+                "data": [
+                  3,
+                  0,
+                  3,
+                  3,
+                  3,
+                  3
+                ],
+                "name": "drugScreenTypeId",
+                "type": "Integer"
+              },
+              {
+                "data": [
+                  "Both",
+                  "Breathayzer",
+                  "Both",
+                  "Both",
+                  "Both",
+                  "Both"
+                ],
+                "name": "drugScreenTypeName",
+                "type": "String"
+              },
+              {
+                "data": [
+                  true,
+                  false,
+                  true,
+                  true,
+                  false,
+                  true
+                ],
+                "name": "passed",
+                "type": "Boolean"
+              },
+              {
+                "data": [
+                  "",
+                  "",
+                  "He\u0027s clean",
+                  "",
+                  "High BAC",
+                  "Clean"
+                ],
+                "name": "comments",
+                "type": "String"
+              },
+              {
+                "data": [
+                  1,
+                  3,
+                  3,
+                  2,
+                  2,
+                  3
+                ],
+                "name": "enteredById",
+                "type": "Integer"
+              },
+              {
+                "data": [
+                  "Martina Condron",
+                  "Amanda Jones",
+                  "Amanda Jones",
+                  "Kelly Muldoon",
+                  "Kelly Muldoon",
+                  "Amanda Jones"
+                ],
+                "name": "enteredByName",
+                "type": "String"
+              },
+              {
+                "data": [
+                  2,
+                  3,
+                  2,
+                  0,
+                  2,
+                  3
+                ],
+                "name": "administerdById",
+                "type": "Integer"
+              },
+              {
+                "data": [
+                  "Kelly Muldoon",
+                  "Amanda Jones",
+                  "Kelly Muldoon",
+                  "Staff Employee",
+                  "Kelly Muldoon",
+                  "Amanda Jones"
+                ],
+                "name": "administeredByName",
+                "type": "String"
+              }
+            ]
+          },
+          "headerGroups": [
+            [
+              {
+                "align": "center",
+                "justify": "left",
+                "span": 1,
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              {
+                "align": "center",
+                "justify": "left",
+                "span": 1,
+                "style": {
+                  "background-origin": "content-box",
+                  "background-size": "15px",
+                  "backgroundImage": "url(\"/system/images/SVGs/Arrow (Menu).svg\")",
+                  "backgroundPosition": "right center",
+                  "backgroundRepeat": "no-repeat",
+                  "classes": "",
+                  "color": "#0d80e3",
+                  "wordWrap": "break-word"
+                },
+                "title": "Name"
+              },
+              {
+                "align": "center",
+                "justify": "left",
+                "span": 1,
+                "style": {
+                  "background-origin": "content-box",
+                  "background-size": "15px",
+                  "backgroundImage": "url(\"/system/images/SVGs/Arrow (Menu).svg\")",
+                  "backgroundPosition": "right center",
+                  "backgroundRepeat": "no-repeat",
+                  "classes": "",
+                  "color": "#0d80e3",
+                  "wordWrap": "break-word"
+                },
+                "title": "ID"
+              },
+              {
+                "align": "center",
+                "justify": "left",
+                "span": 1,
+                "style": {
+                  "background-origin": "content-box",
+                  "background-size": "15px",
+                  "backgroundImage": "url(\"/system/images/SVGs/Arrow (Menu).svg\")",
+                  "backgroundPosition": "right center",
+                  "backgroundRepeat": "no-repeat",
+                  "classes": "",
+                  "color": "#0d80e3",
+                  "wordWrap": "break-word"
+                },
+                "title": "Birth Date"
+              },
+              {
+                "align": "center",
+                "justify": "left",
+                "span": 1,
+                "style": {
+                  "background-origin": "content-box",
+                  "background-size": "15px",
+                  "backgroundImage": "url(\"/system/images/SVGs/Arrow (Menu).svg\")",
+                  "backgroundPosition": "right center",
+                  "backgroundRepeat": "no-repeat",
+                  "classes": "",
+                  "color": "#0d80e3",
+                  "wordWrap": "break-word"
+                },
+                "title": "Gender"
+              },
+              {
+                "align": "center",
+                "justify": "left",
+                "span": 1,
+                "style": {
+                  "background-origin": "content-box",
+                  "background-size": "15px",
+                  "backgroundImage": "url(\"/system/images/SVGs/Arrow (Menu).svg\")",
+                  "backgroundPosition": "right center",
+                  "backgroundRepeat": "no-repeat",
+                  "classes": "",
+                  "color": "#0d80e3",
+                  "wordWrap": "break-word"
+                },
+                "title": "Intake Date"
+              },
+              {
+                "align": "center",
+                "justify": "left",
+                "span": 1,
+                "style": {
+                  "background-origin": "content-box",
+                  "background-size": "15px",
+                  "backgroundImage": "url(\"/system/images/SVGs/Arrow (Menu).svg\")",
+                  "backgroundPosition": "right center",
+                  "backgroundRepeat": "no-repeat",
+                  "classes": "",
+                  "color": "#0d80e3",
+                  "wordWrap": "break-word"
+                },
+                "title": "Last Action"
+              },
+              {
+                "align": "center",
+                "justify": "left",
+                "span": 1,
+                "style": {
+                  "background-origin": "content-box",
+                  "background-size": "15px",
+                  "backgroundImage": "url(\"/system/images/SVGs/Arrow (Menu).svg\")",
+                  "backgroundPosition": "right center",
+                  "backgroundRepeat": "no-repeat",
+                  "classes": "",
+                  "color": "#0d80e3",
+                  "wordWrap": "break-word"
+                },
+                "title": "Suspension"
+              },
+              {
+                "align": "center",
+                "justify": "left",
+                "span": 1,
+                "style": {
+                  "background-origin": "content-box",
+                  "background-size": "15px",
+                  "backgroundImage": "url(\"/system/images/SVGs/Arrow (Menu).svg\")",
+                  "backgroundPosition": "right center",
+                  "backgroundRepeat": "no-repeat",
+                  "classes": "",
+                  "color": "#0d80e3",
+                  "wordWrap": "break-word"
+                },
+                "title": "Shelter"
+              }
+            ]
+          ],
+          "headerStyle": {
+            "classes": "Table/Column_Header"
+          },
+          "pager": {
+            "initialOption": 100
+          },
+          "rows": {
+            "highlight": {
+              "color": "#ccffff",
+              "enabled": false
+            },
+            "striped": {
+              "enabled": false
+            }
+          },
+          "selection": {
+            "enableColumnSelection": true,
+            "style": {
+              "backgroundColor": "#9af4eb4d"
+            }
+          },
+          "style": {
+            "classes": "Background/Default"
+          }
+        },
+        "scripts": {
+          "customMethods": [],
+          "extensionFunctions": null,
+          "messageHandlers": [
+            {
+              "messageType": "filterHandler",
+              "pageScope": true,
+              "script": "\tfrom datetime import datetime, date\n\t\n\tif(payload[\u0027key\u0027] \u003d\u003d \u0027gender\u0027):\n\t\tcurFilter \u003d str(self.view.params.gender)\n\t\t#If checkbox is checked, we\u0027re adding the payload\n\t\tif(payload[\u0027state\u0027]):\n\t\t\t#If not default, need to do on-purpose SQL injection\n\t\t\tif(curFilter !\u003d \u0027%\u0027):\n\t\t\t\tself.view.params.gender \u003d curFilter + \"%\u0027 OR [humans].[Human].[gender] LIKE \u0027\" + str(payload[\u0027val\u0027]) \n\t\t\t#Else, it\u0027s default, just set the value\n\t\t\telse:\n\t\t\t\tself.view.params.gender \u003d str(payload[\u0027val\u0027])\n\t\t#If checkbox isn\u0027t checked, we\u0027re removing the payload\n\t\telse:\n\t\t\t#If we already have a SQL injection, we need to remove the selected query\n\t\t\tif(\u0027LIKE\u0027 in curFilter):\n\t\t\t\tself.view.params.gender \u003d curFilter.replace(\"%\u0027 OR [humans].[Human].[gender] LIKE \u0027\" + str(payload[\u0027val\u0027]), \u0027\u0027)\n\t\t\t#If no SQL injection, set to default\n\t\t\telse:\n\t\t\t\tself.view.params.gender \u003d \u0027%\u0027\n\telif(payload[\u0027key\u0027] \u003d\u003d \u0027dobRange\u0027):\n\t\tcurStartDate \u003d str(self.view.params.startDOB)\n\t\tcurEndDate \u003d str(self.view.params.endDOB)\n\t\t\n\t\ttoday \u003d datetime.now()\n\t\t#If 55+ is selected, force it to 55-120\n\t\tageRange \u003d payload[\u0027val\u0027].replace(\u0027+\u0027,\u0027-120\u0027)\n\t\tdashPtr \u003d str(ageRange).find(\u0027-\u0027)\n\t\t\n\t\tstartAge \u003d int(ageRange[0:dashPtr])\n\t\tendAge \u003d int(ageRange[dashPtr + 1:])\n\t\t#Start date is now minus end age. End date is now minus start age\n\t\t#I would like to confess I spent 3 entire minutes remembering how dates worked on this part\n\t\tnewStartDOB \u003d today.replace(year \u003d datetime.now().year - endAge)\n\t\tnewEndDOB \u003d today.replace(year \u003d datetime.now().year - startAge)\n\t\t\n\t\t#If checkbox is checked, we\u0027re adding the payload\n\t\tif(payload[\u0027state\u0027]):\n\t\t\t#If not default, need to do on-purpose SQL injection\n\t\t\t#Note, added if not self check because saw weird instance where this happened from clicking too fast\n\t\t\tif(curEndDate !\u003d \"2110-01-01\" and  curEndDate !\u003d newEndDOB.strftime(\"%Y-%m-%d\")):\n\t\t\t\tnewEndQueryStr \u003d curEndDate + \"\u0027 OR [humans].[Human].[dob] BETWEEN \u0027\" + newStartDOB.strftime(\"%Y-%m-%d\") + \"\u0027 AND \u0027\" + newEndDOB.strftime(\"%Y-%m-%d\")\n\t\t\t\tself.view.params.startDOB \u003d curStartDate\n\t\t\t\tself.view.params.endDOB \u003d newEndQueryStr\n\t\t\t#Else, it\u0027s default, just add the range\n\t\t\telse:\n\t\t\t\tself.view.params.startDOB \u003d newStartDOB.strftime(\"%Y-%m-%d\")\n\t\t\t\tself.view.params.endDOB \u003d newEndDOB.strftime(\"%Y-%m-%d\")\n\t\t#If checkbox isn\u0027t checked, we\u0027re removing the payload\n\t\telse:\n\t\t\t#If we already have a SQL injection, we need to remove the selected query\n\t\t\tif(\u0027OR [humans]\u0027 in curEndDate):\n\t\t\t\tself.view.params.endDOB \u003d curEndDate.replace(\"\u0027 OR [humans].[Human].[dob] BETWEEN \u0027\" + newStartDOB.strftime(\"%Y-%m-%d\") + \"\u0027 AND \u0027\" + newEndDOB.strftime(\"%Y-%m-%d\"), \u0027\u0027)\n\t\t\t#If no SQL injection, set to default\n\t\t\telse:\n\t\t\t\tself.view.params.startDOB \u003d \u00271910-01-01\u0027\n\t\t\t\tself.view.params.endDOB \u003d \u00272110-01-01\u0027\n\t#Have to refresh the binding for the query to run again with the new query strings in the view params\n\tself.refreshBinding(\"props.data\")",
+              "sessionScope": true,
+              "viewScope": true
+            }
+          ]
+        },
+        "type": "ia.display.table"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column"
+    },
+    "type": "ia.container.flex"
+  }
+}

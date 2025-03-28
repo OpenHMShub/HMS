@@ -1,0 +1,181 @@
+{
+  "custom": {
+    "data": [
+      {
+        "city": "",
+        "locationName": "",
+        "programs": "No Availibility Entered Yet.",
+        "scheduleBegin": null,
+        "scheduleEnd": null,
+        "state": "",
+        "street": "",
+        "zipCode": null
+      }
+    ]
+  },
+  "params": {
+    "trackID": 847378
+  },
+  "propConfig": {
+    "custom.data": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "trackId": "{view.params.trackID}"
+          },
+          "queryPath": "Participants/Preview/Select Last Shelter",
+          "returnFormat": "json"
+        },
+        "transforms": [
+          {
+            "code": "\tif len(value):\n\t\treturn value\n\telse:\n\t\treturn [{\n\t  \"programs\": \"No Availibility Entered Yet.\",\n\t  \"scheduleBegin\": None,\n\t  \"scheduleEnd\": None,\n\t  \"locationName\": \"\",\n\t  \"street\": \"\",\n\t  \"city\": \"\",\n\t  \"state\": \"\",\n\t  \"zipCode\": None\n\t}]",
+            "type": "script"
+          }
+        ],
+        "type": "query"
+      },
+      "persistent": true
+    },
+    "params.trackID": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 118,
+      "width": 600
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "Label_0"
+        },
+        "position": {
+          "basis": "32px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.text": {
+            "binding": {
+              "config": {
+                "expression": "if({view.custom.data[0].scheduleBegin} !\u003d None, \r\n\tconcat(dateFormat({view.custom.data[0].scheduleBegin},\u0027MMMM d, YYYY h:mm a\u0027),\u0027 - \u0027,dateFormat({view.custom.data[0].scheduleEnd},\u0027MMMM d, YYYY h:mm a\u0027)),\r\n\t{view.custom.data[0].programs})"
+              },
+              "type": "expr"
+            }
+          }
+        },
+        "props": {
+          "style": {
+            "classes": "Text/About_description",
+            "paddingLeft": "20px"
+          }
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "meta": {
+          "name": "Label_1"
+        },
+        "position": {
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.text": {
+            "binding": {
+              "config": {
+                "expression": "if({view.custom.data[0].scheduleBegin} !\u003d None, \r\n\t{view.custom.data[0].programs} +\u0027 in \u0027+{view.custom.data[0].locationName}+\u0027.\u0027,\r\n\t\"\")\r\n"
+              },
+              "type": "expr"
+            }
+          }
+        },
+        "props": {
+          "style": {
+            "classes": "Text/About_info",
+            "paddingLeft": "20px"
+          }
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "meta": {
+          "name": "Label_2"
+        },
+        "propConfig": {
+          "props.text": {
+            "binding": {
+              "config": {
+                "path": "view.custom.data[0].street"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "style": {
+            "classes": "Text/About_info",
+            "paddingLeft": "20px"
+          }
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "meta": {
+          "name": "Label_3"
+        },
+        "propConfig": {
+          "props.text": {
+            "binding": {
+              "config": {
+                "path": "view.custom.data[0].city"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "style": {
+            "classes": "Text/About_info",
+            "paddingLeft": "20px"
+          }
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "meta": {
+          "name": "Label_4"
+        },
+        "propConfig": {
+          "props.text": {
+            "binding": {
+              "config": {
+                "expression": "{view.custom.data[0].state}+\" \"+{view.custom.data[0].zipCode}"
+              },
+              "type": "expr"
+            }
+          }
+        },
+        "props": {
+          "style": {
+            "classes": "Text/About_info",
+            "paddingLeft": "20px"
+          }
+        },
+        "type": "ia.display.label"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column",
+      "style": {
+        "classes": "Background/Default"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

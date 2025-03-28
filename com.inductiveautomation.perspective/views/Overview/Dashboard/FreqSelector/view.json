@@ -1,0 +1,287 @@
+{
+  "custom": {},
+  "params": {
+    "SelectedValue": "once",
+    "interval": 1
+  },
+  "propConfig": {
+    "params.SelectedValue": {
+      "binding": {
+        "config": {
+          "bidirectional": true,
+          "path": "/root/FlexContainer/Dropdown.props.value"
+        },
+        "type": "property"
+      },
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.interval": {
+      "binding": {
+        "config": {
+          "bidirectional": true,
+          "path": "/root/FlexContainer/NumericEntryField.props.value"
+        },
+        "type": "property"
+      },
+      "paramDirection": "inout",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 80,
+      "width": 300
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "Label"
+        },
+        "position": {
+          "basis": "40px",
+          "shrink": 0
+        },
+        "props": {
+          "style": {
+            "classes": "Text/Add_HeaderText"
+          },
+          "text": "Frequency"
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "children": [
+          {
+            "meta": {
+              "name": "Dropdown"
+            },
+            "position": {
+              "basis": "140px"
+            },
+            "propConfig": {
+              "props.value": {
+                "binding": {
+                  "config": {
+                    "expression": "\"once\""
+                  },
+                  "type": "expr"
+                }
+              }
+            },
+            "props": {
+              "dropdownOptionStyle": {
+                "classes": "Text/Add_InfoText"
+              },
+              "options": {
+                "$": [
+                  "ds",
+                  192,
+                  1610831058060
+                ],
+                "$columns": [
+                  {
+                    "data": [
+                      "once",
+                      "hourly",
+                      "daily",
+                      "weekly",
+                      "monthly",
+                      "yearly"
+                    ],
+                    "name": "value",
+                    "type": "String"
+                  },
+                  {
+                    "data": [
+                      "Once",
+                      "Hourly",
+                      "Daily",
+                      "Weekly",
+                      "Monthly",
+                      "Yearly"
+                    ],
+                    "name": "label",
+                    "type": "String"
+                  }
+                ]
+              },
+              "placeholder": {
+                "icon": {
+                  "color": "#0d80e3"
+                },
+                "text": "Select"
+              },
+              "search": {
+                "enabled": false,
+                "matching": "start"
+              },
+              "style": {
+                "classes": "Text/Add_InfoText"
+              }
+            },
+            "type": "ia.input.dropdown"
+          },
+          {
+            "meta": {
+              "name": "Label"
+            },
+            "position": {
+              "basis": "40px"
+            },
+            "propConfig": {
+              "meta.visible": {
+                "binding": {
+                  "config": {
+                    "path": "../NumericEntryField.meta.visible"
+                  },
+                  "type": "property"
+                }
+              }
+            },
+            "props": {
+              "style": {
+                "classes": "Text/Add_InfoText",
+                "textAlign": "right"
+              },
+              "text": "Every"
+            },
+            "type": "ia.display.label"
+          },
+          {
+            "meta": {
+              "name": "NumericEntryField"
+            },
+            "position": {
+              "basis": "80px"
+            },
+            "propConfig": {
+              "meta.visible": {
+                "binding": {
+                  "config": {
+                    "path": "../Dropdown.props.value"
+                  },
+                  "transforms": [
+                    {
+                      "fallback": true,
+                      "inputType": "scalar",
+                      "mappings": [
+                        {
+                          "input": "once",
+                          "output": false
+                        }
+                      ],
+                      "outputType": "scalar",
+                      "type": "map"
+                    }
+                  ],
+                  "type": "property"
+                }
+              }
+            },
+            "props": {
+              "align": "center",
+              "format": "0,0",
+              "inputBounds": {
+                "maximum": 99,
+                "minimum": 0
+              },
+              "style": {
+                "text-align": "center"
+              },
+              "value": 1
+            },
+            "type": "ia.input.numeric-entry-field"
+          },
+          {
+            "meta": {
+              "name": "Label_0"
+            },
+            "position": {
+              "basis": "40px"
+            },
+            "propConfig": {
+              "meta.visible": {
+                "binding": {
+                  "config": {
+                    "path": "../NumericEntryField.meta.visible"
+                  },
+                  "type": "property"
+                }
+              },
+              "props.text": {
+                "binding": {
+                  "config": {
+                    "path": "../Dropdown.props.value"
+                  },
+                  "transforms": [
+                    {
+                      "fallback": "",
+                      "inputType": "scalar",
+                      "mappings": [
+                        {
+                          "input": "daily",
+                          "output": "day(s)"
+                        },
+                        {
+                          "input": "weekly",
+                          "output": "week(s)"
+                        },
+                        {
+                          "input": "monthly",
+                          "output": "month(s)"
+                        },
+                        {
+                          "input": "yearly",
+                          "output": "year(s)"
+                        },
+                        {
+                          "input": "hourly",
+                          "output": "hour(s)"
+                        }
+                      ],
+                      "outputType": "scalar",
+                      "type": "map"
+                    }
+                  ],
+                  "type": "property"
+                }
+              }
+            },
+            "props": {
+              "style": {
+                "classes": "Text/Add_InfoText",
+                "textAlign": "right"
+              }
+            },
+            "type": "ia.display.label"
+          }
+        ],
+        "meta": {
+          "name": "FlexContainer"
+        },
+        "position": {
+          "basis": "40px",
+          "shrink": 0
+        },
+        "props": {
+          "style": {
+            "overflow": "visible"
+          }
+        },
+        "type": "ia.container.flex"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "alignContent": "flex-start",
+      "alignItems": "flex-start",
+      "direction": "column"
+    },
+    "type": "ia.container.flex"
+  }
+}

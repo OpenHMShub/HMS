@@ -1,0 +1,151 @@
+{
+  "custom": {},
+  "params": {
+    "instanceID": 24
+  },
+  "propConfig": {
+    "params.instanceID": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 354,
+      "width": 729
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "children": [
+          {
+            "meta": {
+              "name": "Label"
+            },
+            "position": {
+              "grow": 1
+            },
+            "props": {
+              "style": {
+                "classes": "Event/Event_DateText",
+                "fontSize": 30
+              },
+              "text": "People"
+            },
+            "type": "ia.display.label"
+          },
+          {
+            "meta": {
+              "name": "EmbeddedView"
+            },
+            "position": {
+              "basis": "130px"
+            },
+            "props": {
+              "params": {
+                "key": "People"
+              },
+              "path": "1_TEMPLATES/Filtering/Filters/Search_Bar",
+              "style": {
+                "classes": "Event/Event_Searchbar"
+              },
+              "useDefaultViewHeight": true
+            },
+            "type": "ia.display.view"
+          }
+        ],
+        "meta": {
+          "name": "Title and Search"
+        },
+        "props": {
+          "alignItems": "center"
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "children": [
+          {
+            "meta": {
+              "name": "Host"
+            },
+            "position": {
+              "basis": "320px"
+            },
+            "propConfig": {
+              "props.params.eventID": {
+                "binding": {
+                  "config": {
+                    "path": "view.params.instanceID"
+                  },
+                  "type": "property"
+                }
+              }
+            },
+            "props": {
+              "path": "Events/Dashboard/Components/SelectedEvent/AssignedFacilitators"
+            },
+            "type": "ia.display.view"
+          },
+          {
+            "meta": {
+              "name": "Staff"
+            },
+            "position": {
+              "basis": "320px"
+            },
+            "propConfig": {
+              "props.params.eventID": {
+                "binding": {
+                  "config": {
+                    "expression": "{view.params.instanceID}"
+                  },
+                  "type": "expr"
+                }
+              }
+            },
+            "props": {
+              "path": "Events/Dashboard/Components/SelectedEvent/AssignedStaff"
+            },
+            "type": "ia.display.view"
+          }
+        ],
+        "meta": {
+          "name": "Host and staff"
+        },
+        "position": {
+          "basis": "152px"
+        },
+        "props": {
+          "style": {
+            "borderBottomColor": "#A1BAD2BF",
+            "borderBottomStyle": "solid",
+            "borderBottomWidth": 1,
+            "marginTop": 25
+          }
+        },
+        "type": "ia.container.flex"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column"
+    },
+    "scripts": {
+      "customMethods": [],
+      "extensionFunctions": null,
+      "messageHandlers": [
+        {
+          "messageType": "refreshPeople",
+          "pageScope": false,
+          "script": "\t# implement your handler here\n\tself.getChild(\"Title and Search\").getChild(\"Dropdown\").refreshBinding(\"props.options\")",
+          "sessionScope": true,
+          "viewScope": false
+        }
+      ]
+    },
+    "type": "ia.container.flex"
+  }
+}

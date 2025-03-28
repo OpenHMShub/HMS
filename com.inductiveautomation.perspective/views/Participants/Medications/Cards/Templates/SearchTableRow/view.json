@@ -1,0 +1,452 @@
+{
+  "custom": {
+    "deleteMode": false,
+    "editMode": {
+      "enabled": false
+    },
+    "selected": true
+  },
+  "params": {
+    "rowData": {
+      "id": "value",
+      "name": "value"
+    }
+  },
+  "propConfig": {
+    "custom.deleteMode": {
+      "persistent": true
+    },
+    "custom.editMode": {
+      "persistent": true
+    },
+    "custom.selected": {
+      "persistent": true
+    },
+    "params.rowData": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 30,
+      "width": 500
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "medication"
+        },
+        "position": {
+          "grow": 1
+        },
+        "propConfig": {
+          "position.display": {
+            "binding": {
+              "config": {
+                "expression": "!{view.custom.editMode.enabled}"
+              },
+              "type": "expr"
+            }
+          },
+          "props.text": {
+            "binding": {
+              "config": {
+                "path": "view.params.rowData.name"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "children": [
+          {
+            "custom": {
+              "name": "value"
+            },
+            "meta": {
+              "name": "TextField",
+              "tooltip": {
+                "enabled": true
+              }
+            },
+            "position": {
+              "basis": "30px",
+              "shrink": 0
+            },
+            "propConfig": {
+              "custom.visible": {
+                "binding": {
+                  "config": {
+                    "path": "view.custom.editMode.enabled"
+                  },
+                  "type": "property"
+                },
+                "onChange": {
+                  "enabled": null,
+                  "script": "\timport time\n\tif currentValue.value \u003d\u003d True:\n\t\ttime.sleep(0.25)\n\t\tself.focus()"
+                }
+              },
+              "meta.tooltip.text": {
+                "binding": {
+                  "config": {
+                    "path": "this.props.text"
+                  },
+                  "type": "property"
+                }
+              },
+              "props.text": {
+                "binding": {
+                  "config": {
+                    "path": "view.params.rowData.name"
+                  },
+                  "type": "property"
+                },
+                "onChange": {
+                  "enabled": null,
+                  "script": "\tif currentValue.value !\u003d \u0027\u0027:\n\t\tself.custom.name \u003d currentValue.value"
+                }
+              }
+            },
+            "props": {
+              "deferUpdates": false,
+              "rejectUpdatesWhileFocused": false,
+              "style": {
+                "margin": "2 0"
+              }
+            },
+            "type": "ia.input.text-field"
+          }
+        ],
+        "meta": {
+          "name": "medication_edit"
+        },
+        "position": {
+          "display": false,
+          "grow": 1
+        },
+        "propConfig": {
+          "position.display": {
+            "binding": {
+              "config": {
+                "expression": "{view.custom.editMode.enabled}"
+              },
+              "type": "expr"
+            },
+            "persistent": true
+          }
+        },
+        "props": {
+          "direction": "column",
+          "style": {
+            "classes": "Table/Cell_Detail",
+            "overflow": "hidden",
+            "paddingd": "2px 0px"
+          }
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "events": {
+          "dom": {
+            "onClick": {
+              "config": {
+                "script": "\tself.view.custom.editMode.enabled \u003d True"
+              },
+              "scope": "G",
+              "type": "script"
+            }
+          }
+        },
+        "meta": {
+          "name": "edit"
+        },
+        "position": {
+          "basis": "30px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "position.display": {
+            "binding": {
+              "config": {
+                "expression": "{view.custom.selected}\r\n\u0026\u0026 !{view.custom.editMode.enabled}\r\n\u0026\u0026 !{view.custom.deleteMode}\r\n\u0026\u0026 !{session.custom.isCareCoordinator}"
+              },
+              "type": "expr"
+            },
+            "persistent": true
+          }
+        },
+        "props": {
+          "path": "material/edit",
+          "style": {
+            "classes": "Buttons/Icon"
+          }
+        },
+        "type": "ia.display.icon"
+      },
+      {
+        "events": {
+          "dom": {
+            "onClick": {
+              "config": {
+                "script": "\tself.view.custom.deleteMode \u003d True"
+              },
+              "scope": "G",
+              "type": "script"
+            }
+          }
+        },
+        "meta": {
+          "name": "delete"
+        },
+        "position": {
+          "basis": "30px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "position.display": {
+            "binding": {
+              "config": {
+                "expression": "{view.custom.selected}\r\n\u0026\u0026 !{view.custom.editMode.enabled}\r\n\u0026\u0026 !{view.custom.deleteMode}\r\n\u0026\u0026 !{session.custom.isCareCoordinator}"
+              },
+              "type": "expr"
+            },
+            "persistent": true
+          }
+        },
+        "props": {
+          "path": "material/close",
+          "style": {
+            "classes": "Buttons/Icon"
+          }
+        },
+        "type": "ia.display.icon"
+      },
+      {
+        "children": [
+          {
+            "events": {
+              "dom": {
+                "onClick": {
+                  "config": {
+                    "script": "\timport traceback\n\tlogger \u003d system.util.getLogger(\"ParticipantsMedicationEditAccept\")\n\t\t\t\n\ttry:\n\t\tsystem.perspective.print(\u0027accept\u0027)\n\t\tnq \u003d \u0027Participants/Medications/EditMedication\u0027\n\t\tactor \u003d self.session.props.auth.user.userName\n\t\tname_old \u003d self.view.params.rowData.name\n\t\tname_new \u003d self.parent.parent.getChild(\"medication_edit\").getChild(\"TextField\").custom.name\n\t\t\n\t\tsystem.perspective.print(\u0027old: {}, new: {}\u0027.format(name_old, name_new))\n#\t\tlogger \u003d system.util.getLogger(\"ParticipantsMedicationEditAccept\")\n\t\tmsg \u003d \u0027old: {}, new: {}\u0027.format(name_old, name_new)\n\t\tlogger.info(msg)\n\t\t\n\t\ttry:\n\t\t\tsystem.db.runNamedQuery(path\u003dnq, parameters\u003d{\u0027actor\u0027: actor,\n\t\t\t\t\t\t\t\t\t\t\t     \u0027name_new\u0027: name_new,\n\t\t\t\t\t\t\t\t\t\t\t     \u0027name_old\u0027: name_old}\n\t\t\t\t\t\t    )\n\t\t\tself.view.custom.editMode.enabled \u003d False\n\t\t\tsystem.perspective.sendMessage(\u0027table-refresh\u0027)\n\t\texcept:\n\t\t\tsystem.perspective.sendMessage(\u0027error-editing-medication\u0027)\n#\t\t\tsystem.util.getLogger(\"ParticipantsMedicationEditAccept\")\n\t\t\tmsg \u003d \u0027error-editing-medication\u0027\n\t\t\tlogger.error(msg)\n\texcept:\n#\t\tlogger \u003d system.util.getLogger(\"ParticipantsMedicationEditAccept\")\n\t\tmsg \u003d traceback.format_exc()\n\t\tlogger.error(msg)"
+                  },
+                  "scope": "G",
+                  "type": "script"
+                }
+              }
+            },
+            "meta": {
+              "name": "accept"
+            },
+            "position": {
+              "basis": "30px",
+              "shrink": 0
+            },
+            "propConfig": {
+              "props.style.classes": {
+                "binding": {
+                  "config": {
+                    "expression": "if({.../medication_edit/TextField.props.text} \u003d \u0027\u0027\r\n\t,\u0027Buttons/Icon_Disabled\u0027\r\n\t,\u0027Buttons/Icon\u0027\r\n)"
+                  },
+                  "type": "expr"
+                }
+              }
+            },
+            "props": {
+              "path": "material/check",
+              "style": {
+                "width": "30px"
+              }
+            },
+            "type": "ia.display.icon"
+          },
+          {
+            "events": {
+              "dom": {
+                "onClick": {
+                  "config": {
+                    "script": "\tself.parent.parent.getChild(\"medication_edit\").getChild(\"TextField\").props.text \u003d self.view.params.rowData.name\n\tself.view.custom.editMode.enabled \u003d False"
+                  },
+                  "scope": "G",
+                  "type": "script"
+                }
+              }
+            },
+            "meta": {
+              "name": "reject"
+            },
+            "position": {
+              "basis": "30px",
+              "shrink": 0
+            },
+            "props": {
+              "path": "material/close",
+              "style": {
+                "classes": "Buttons/Icon",
+                "width": "30px"
+              }
+            },
+            "type": "ia.display.icon"
+          }
+        ],
+        "meta": {
+          "name": "editModeActions"
+        },
+        "position": {
+          "display": false,
+          "shrink": 0
+        },
+        "propConfig": {
+          "position.display": {
+            "binding": {
+              "config": {
+                "path": "view.custom.editMode.enabled"
+              },
+              "type": "property"
+            },
+            "persistent": true
+          }
+        },
+        "props": {
+          "style": {
+            "backgroundColor": "#34FF7D",
+            "borderBottomLeftRadius": "20px",
+            "borderBottomRightRadius": "20px",
+            "borderTopLeftRadius": "20px",
+            "borderTopRightRadius": "20px",
+            "gap": 5
+          }
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "children": [
+          {
+            "events": {
+              "dom": {
+                "onClick": {
+                  "config": {
+                    "script": "\tname \u003d self.view.params.rowData.name\n\ttry:\n\t\tsystem.db.runNamedQuery(path\u003d\u0027Participants/Medications/DeleteMedication\u0027,\n\t\t\t\t\t\t\tparameters\u003d{\u0027name\u0027: name}\n\t\t\t\t\t\t\t)\n\t\tsystem.perspective.sendMessage(\u0027table-refresh\u0027)\n\texcept:\n\t\tsystem.perspective.sendMessage(\u0027error-deleting-medication\u0027)"
+                  },
+                  "scope": "G",
+                  "type": "script"
+                }
+              }
+            },
+            "meta": {
+              "name": "accept"
+            },
+            "position": {
+              "basis": "30px",
+              "shrink": 0
+            },
+            "props": {
+              "path": "material/check",
+              "style": {
+                "classes": "Buttons/Icon",
+                "width": "30px"
+              }
+            },
+            "type": "ia.display.icon"
+          },
+          {
+            "events": {
+              "dom": {
+                "onClick": {
+                  "config": {
+                    "script": "\tself.view.custom.deleteMode \u003d False"
+                  },
+                  "scope": "G",
+                  "type": "script"
+                }
+              }
+            },
+            "meta": {
+              "name": "reject"
+            },
+            "position": {
+              "basis": "30px",
+              "shrink": 0
+            },
+            "props": {
+              "path": "material/close",
+              "style": {
+                "classes": "Buttons/Icon",
+                "width": "30px"
+              }
+            },
+            "type": "ia.display.icon"
+          }
+        ],
+        "meta": {
+          "name": "deleteMode"
+        },
+        "position": {
+          "display": false,
+          "shrink": 0
+        },
+        "propConfig": {
+          "position.display": {
+            "binding": {
+              "config": {
+                "path": "view.custom.deleteMode"
+              },
+              "type": "property"
+            },
+            "persistent": true
+          }
+        },
+        "props": {
+          "style": {
+            "backgroundColor": "#FF8A8A",
+            "borderBottomLeftRadius": "20px",
+            "borderBottomRightRadius": "20px",
+            "borderTopLeftRadius": "20px",
+            "borderTopRightRadius": "20px",
+            "gap": 5
+          }
+        },
+        "type": "ia.container.flex"
+      }
+    ],
+    "events": {
+      "dom": {
+        "onBlur": {
+          "config": {
+            "script": "\tsystem.perspective.print(\u0027blur\u0027)\n\tself.view.custom.editMode.enabled \u003d False"
+          },
+          "enabled": false,
+          "scope": "G",
+          "type": "script"
+        }
+      }
+    },
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "style": {
+        "gap": 5
+      }
+    },
+    "scripts": {
+      "customMethods": [],
+      "extensionFunctions": null,
+      "messageHandlers": [
+        {
+          "messageType": "table-update-selected",
+          "pageScope": true,
+          "script": "#\tsystem.perspective.print(\u0027msg-rec {}\u0027.format(self.view.params.rowData.name))\n\tif len(payload[\u0027selection\u0027]) \u003e 0 and \u0027label\u0027 in payload[\u0027selection\u0027][0]:\n\t\tif payload[\u0027selection\u0027][0][\u0027label\u0027] \u003d\u003d self.view.params.rowData.name:\n\t\t\tself.view.custom.selected \u003d True\n\t\telse:\n\t\t\tself.view.custom.selected \u003d False\n\telse:\n\t\tself.view.custom.selected \u003d False",
+          "sessionScope": false,
+          "viewScope": false
+        }
+      ]
+    },
+    "type": "ia.container.flex"
+  }
+}

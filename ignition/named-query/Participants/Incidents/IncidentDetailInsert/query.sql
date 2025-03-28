@@ -1,0 +1,28 @@
+INSERT INTO	participant.IncidentLog
+	(
+	barParticipant,
+	employeeId, 
+ 	incidentDate,  
+  	incidentDescription, 
+   	incidentLocationTypeID,  
+    incidentName, 
+    physicalInjury, 
+    propertyDamage, 
+    timeCreated,
+    participantID,
+    userName 
+	)
+VALUES
+	(
+	:bar_participant,
+	:employee_id,
+	:incident_date,
+	:incident_description,
+	:incident_location,
+	:incident_name,
+	:physical_injury,
+	:property_damage,
+	:time_created,
+	:participant_id,
+	:user_name 
+	)

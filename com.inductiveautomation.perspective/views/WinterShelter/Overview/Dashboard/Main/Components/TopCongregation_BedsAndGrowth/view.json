@@ -1,0 +1,549 @@
+{
+  "custom": {
+    "lastSeasonId": 31,
+    "seasonName": "2019-2020"
+  },
+  "params": {
+    "seasonId": 32
+  },
+  "propConfig": {
+    "custom.lastSeasonId": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "seasonId": "{view.params.seasonId}"
+          },
+          "queryPath": "WinterShelter/Overview/GetLastSeason"
+        },
+        "transforms": [
+          {
+            "code": "\tlastSeasonId \u003d value.getValueAt(0,\u0027id\u0027)\n\treturn lastSeasonId",
+            "type": "script"
+          }
+        ],
+        "type": "query"
+      },
+      "persistent": true
+    },
+    "custom.seasonName": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "id": "{view.params.seasonId}"
+          },
+          "queryPath": "WinterShelterGlobal/Registration/getSeasonBySeasonId"
+        },
+        "transforms": [
+          {
+            "code": "\tseasonName \u003d \"\"\n\tif value is not None and value.getRowCount() \u003e 0 and value.getValueAt(0,0) !\u003d None:\n\t\tseasonName \u003d value.getValueAt(0,0)\n\treturn seasonName",
+            "type": "script"
+          }
+        ],
+        "type": "query"
+      },
+      "persistent": true
+    },
+    "params.seasonId": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 350,
+      "width": 500
+    },
+    "loading": {
+      "mode": "blocking"
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "EmbeddedView Header"
+        },
+        "position": {
+          "basis": "25px",
+          "shrink": 0
+        },
+        "props": {
+          "params": {
+            "Text": "Top Congregation (Beds and Growth)"
+          },
+          "path": "1_globalTEMPLATES/Header/Header"
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "meta": {
+                  "name": "Image"
+                },
+                "position": {
+                  "basis": "20px"
+                },
+                "props": {
+                  "fit": {
+                    "height": 15,
+                    "mode": "absolute",
+                    "width": 15
+                  },
+                  "source": "/system/images/SVGs/Navigation Arrow Box.svg",
+                  "style": {
+                    "marginLeft": "10px",
+                    "marginTop": "10px"
+                  },
+                  "tint": {
+                    "color": "#0D80E3"
+                  }
+                },
+                "type": "ia.display.image"
+              },
+              {
+                "meta": {
+                  "name": "Label"
+                },
+                "position": {
+                  "basis": "50px",
+                  "grow": 1
+                },
+                "props": {
+                  "text": "Registrations Dashboard",
+                  "textStyle": {
+                    "classes": "ActivityCards/Card_TextLight"
+                  }
+                },
+                "type": "ia.display.label"
+              }
+            ],
+            "events": {
+              "dom": {
+                "onClick": {
+                  "config": {
+                    "params": {
+                      "tab_id": "Registrations"
+                    },
+                    "view": "WinterShelter/Dashboard/WinterShelter_Dashboard"
+                  },
+                  "scope": "C",
+                  "type": "nav"
+                }
+              }
+            },
+            "meta": {
+              "name": "labels"
+            },
+            "position": {
+              "basis": "200px",
+              "grow": 1
+            },
+            "type": "ia.container.flex"
+          },
+          {
+            "meta": {
+              "name": "TableToExcel"
+            },
+            "position": {
+              "basis": "35px"
+            },
+            "props": {
+              "params": {
+                "messageType": "WS_TopCongregations"
+              },
+              "path": "1_TEMPLATES/Tables/TableToExcelCustomMessageType"
+            },
+            "type": "ia.display.view"
+          }
+        ],
+        "meta": {
+          "name": "Labels"
+        },
+        "position": {
+          "basis": "35px"
+        },
+        "props": {
+          "style": {
+            "classes": "Background/Default",
+            "overflow": "hidden"
+          }
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "meta": {
+          "name": "Error"
+        },
+        "position": {
+          "basis": "25px",
+          "display": false
+        },
+        "props": {
+          "style": {
+            "classes": "Text/Error_Message"
+          }
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "custom": {
+          "DockID": -1
+        },
+        "events": {
+          "component": {
+            "onRowClick": {
+              "config": {
+                "script": "\tselectedColumn \u003d self.props.selection.selectedColumn\n\tlocationId \u003d event.value[\"locationId\"]\n\n\tif selectedColumn \u003d\u003d \"locationId\": \n\t\tid \u003d \"PreviewCongregation\" \n\t\tparams \u003d {\"locationId\":locationId}\n\t\tif self.custom.DockID !\u003d locationId:\n\t\t\tsystem.perspective.openDock(id\u003did,params\u003dparams)\n\t\t\tpayload \u003d {\"locationId\":locationId}\n\t\t\tsystem.perspective.sendMessage(\"DockUpdate\", payload\u003dpayload, scope \u003d \u0027page\u0027 )\n\t\telse:\n\t\t\tsystem.perspective.toggleDock(id\u003did,params\u003dparams)\n\t\tself.custom.DockID \u003d locationId"
+              },
+              "scope": "G",
+              "type": "script"
+            }
+          }
+        },
+        "meta": {
+          "name": "Table"
+        },
+        "position": {
+          "basis": "200px",
+          "grow": 1
+        },
+        "propConfig": {
+          "props.data": {
+            "binding": {
+              "config": {
+                "parameters": {
+                  "currentSeasonId": "{view.params.seasonId}",
+                  "lastSeasonId": "{view.custom.lastSeasonId}"
+                },
+                "queryPath": "WinterShelter/Overview/GetTopCongregationBedsAndGrowth"
+              },
+              "type": "query"
+            }
+          },
+          "props.filter.text": {
+            "access": "PUBLIC"
+          },
+          "props.selection.style.backgroundColor": {
+            "binding": {
+              "config": {
+                "path": "this.props.selection.selectedRow"
+              },
+              "transforms": [
+                {
+                  "code": "\treturn \"#FFFFFF00\" if value is None or value \u003d\u003d -1 else \"#9AF4EB4D\"",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "cells": {
+            "style": {
+              "classes": "Table/Cell_Dashboard_NoBG"
+            }
+          },
+          "columns": [
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YY",
+              "editable": false,
+              "field": "locationId",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header_Line"
+                },
+                "title": " "
+              },
+              "justify": "left",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "view",
+              "resizable": false,
+              "sort": "none",
+              "sortable": false,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal_Detail"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "1_TEMPLATES/Tables/TableOptions",
+              "visible": true,
+              "width": 30
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "locationName",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header_Line"
+                },
+                "title": "Congregation"
+              },
+              "justify": "left",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": false,
+              "style": {
+                "classes": "Table/Column_Normal_Detail"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 200
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "totalBeds",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "center",
+                "style": {
+                  "classes": "Table/Column_Header_Line"
+                },
+                "title": "Total Beds"
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": false,
+              "style": {
+                "classes": "Table/Column_Normal_Detail"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 120
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "PercentBedGrowth",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "center",
+                "style": {
+                  "classes": "Table/Column_Header_Line"
+                },
+                "title": "Growth %"
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "view",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": false,
+              "style": {
+                "classes": "Table/Column_Normal_Detail"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {
+                "extraText": " %"
+              },
+              "viewPath": "WinterShelterGlobal/Dashboard/Components/Tables/Templates/displayString",
+              "visible": true,
+              "width": 110
+            }
+          ],
+          "headerStyle": {
+            "classes": "Table/Column_Normal"
+          },
+          "pager": {
+            "bottom": false,
+            "initialOption": 100
+          },
+          "rows": {
+            "highlight": {
+              "color": "#ccffff"
+            },
+            "striped": {
+              "enabled": false
+            },
+            "style": {
+              "cursor": "default"
+            }
+          },
+          "style": {
+            "classes": "Background/Default",
+            "cursor": "pointer",
+            "overflowX": "hidden"
+          }
+        },
+        "scripts": {
+          "customMethods": [],
+          "extensionFunctions": null,
+          "messageHandlers": [
+            {
+              "messageType": "WS_TopCongregations",
+              "pageScope": true,
+              "script": "\t# implement your handler here\n\timport traceback\n\ttry:\n\t\t#Send the dataset to Excel\n\t\t\n\t\tfilename \u003d \u0027WinterShelter_Overview_TopCongregations_\u0027 +  self.view.custom.seasonName + \u0027.xls\u0027\n\t\tdataset \u003d self.props.data\n\t\tNewDataSet \u003d []\n\t\theaders \u003d [\"Congregation\",\"Total Beds\",\"Growth%\"]\n#\t\tfor i in range(0,len(dataset)):\n#\t\t\tNewDataSet.append([dataset[i][\u0027name\u0027][\u0027value\u0027],dataset[i][\u0027eventStart\u0027][\u0027value\u0027],dataset[i][\u0027eventEnd\u0027][\u0027value\u0027],dataset[i][\u0027ExitDestination\u0027][\u0027value\u0027],dataset[i][\u0027gender\u0027][\u0027value\u0027],dataset[i][\u0027age\u0027][\u0027value\u0027],dataset[i][\u0027associatedProgram\u0027][\u0027value\u0027],dataset[i][\u0027facilityName\u0027][\u0027value\u0027],dataset[i][\u0027roomName\u0027][\u0027value\u0027],dataset[i][\u0027bedName\u0027][\u0027value\u0027]])\n\t\tfor i in range(dataset.getRowCount()):\n\t\t\tpercentBedGrowth \u003d dataset.getValueAt(i,\u0027percentBedGrowth\u0027)\n\t\t\tif percentBedGrowth is not None:\n\t\t\t\tpercentBedGrowth \u003d str(int(percentBedGrowth)) + \u0027%\u0027\n\t\t\telse:\n\t\t\t\tpercentBedGrowth \u003d \u0027\u0027\n\t\t\tNewDataSet.append([dataset.getValueAt(i,\u0027locationName\u0027),dataset.getValueAt(i,\u0027totalBeds\u0027),percentBedGrowth])\t\n\t\t\t\n\t\tNewDataSet \u003d system.dataset.toDataSet(headers, NewDataSet)\n\t\t\t\n\t\txlFile \u003d system.dataset.toExcel(True,NewDataSet)\n\t\tsystem.perspective.download(filename, xlFile)\n\texcept:   \n\t\tlogger \u003d system.util.getLogger(\"Wintershelter Overview Dashboard TopCongregations tableToExcel\")\n\t\tmsg \u003d traceback.format_exc()\n\t\tlogger.error(msg)",
+              "sessionScope": true,
+              "viewScope": false
+            }
+          ]
+        },
+        "type": "ia.display.table"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column",
+      "style": {
+        "classes": "Background/Alternative"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

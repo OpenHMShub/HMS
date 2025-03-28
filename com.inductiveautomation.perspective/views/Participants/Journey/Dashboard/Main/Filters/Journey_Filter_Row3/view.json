@@ -1,0 +1,237 @@
+{
+  "custom": {},
+  "params": {
+    "allSelection": 0,
+    "viewSelection": "Chronic Homeless"
+  },
+  "propConfig": {
+    "params.allSelection": {
+      "binding": {
+        "config": {
+          "expression": "if({/root/AllSelection.meta.visible} \u003d True, {/root/AllSelection.props.params.selection}, 0)"
+        },
+        "type": "expr"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.viewSelection": {
+      "binding": {
+        "config": {
+          "path": "/root/ChronicHomeless.props.params.selection"
+        },
+        "transforms": [
+          {
+            "fallback": "Chronic Homeless",
+            "inputType": "scalar",
+            "mappings": [
+              {
+                "input": 0,
+                "output": "Chronic Homeless"
+              },
+              {
+                "input": 1,
+                "output": "SO Registry"
+              },
+              {
+                "input": 2,
+                "output": "Programs"
+              },
+              {
+                "input": 3,
+                "output": "Deceased"
+              }
+            ],
+            "outputType": "scalar",
+            "type": "map"
+          }
+        ],
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 30,
+      "width": 1817
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "custom": {
+          "datasetWithSO": {
+            "$": [
+              "ds",
+              192,
+              1697606022914
+            ],
+            "$columns": [
+              {
+                "data": [
+                  0,
+                  1,
+                  2,
+                  3
+                ],
+                "name": "id",
+                "type": "Integer"
+              },
+              {
+                "data": [
+                  "Chronic Homeless",
+                  "SO Registry",
+                  "Programs",
+                  "Deceased"
+                ],
+                "name": "activity_range",
+                "type": "String"
+              }
+            ]
+          },
+          "datasetWithoutSO": {
+            "$": [
+              "ds",
+              192,
+              1697606032725
+            ],
+            "$columns": [
+              {
+                "data": [
+                  0,
+                  2,
+                  3
+                ],
+                "name": "id",
+                "type": "Integer"
+              },
+              {
+                "data": [
+                  "Chronic Homeless",
+                  "Programs",
+                  "Deceased"
+                ],
+                "name": "activity_range",
+                "type": "String"
+              }
+            ]
+          }
+        },
+        "meta": {
+          "name": "ChronicHomeless"
+        },
+        "position": {
+          "basis": "150px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.options": {
+            "binding": {
+              "config": {
+                "expression": "if({session.custom.isAdministrator},{this.custom.datasetWithSO},{this.custom.datasetWithoutSO})"
+              },
+              "type": "expr"
+            }
+          },
+          "props.params.selection": {
+            "onChange": {
+              "enabled": null,
+              "script": "\tself.getSibling(\"AllSelection\").props.params.selection \u003d 0\n\tsystem.perspective.sendMessage(messageType\u003d\"clearFilter\")"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "placeholder": "",
+            "selection": 0
+          },
+          "path": "1_TEMPLATES/Filtering/Conditionals/Conditional_SingleDropDown_NoClear",
+          "style": {
+            "classes": "Filter/Filter_Container"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "AllSelection"
+        },
+        "position": {
+          "basis": "150px"
+        },
+        "propConfig": {
+          "position.display": {
+            "binding": {
+              "config": {
+                "expression": "if({../ChronicHomeless.props.params.selection} \u003d 1 || {../ChronicHomeless.props.params.selection} \u003d 3, False, True)"
+              },
+              "type": "expr"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "options": {
+              "$": [
+                "ds",
+                192,
+                1673845903331
+              ],
+              "$columns": [
+                {
+                  "data": [
+                    0,
+                    1,
+                    2
+                  ],
+                  "name": "id",
+                  "type": "Integer"
+                },
+                {
+                  "data": [
+                    "All",
+                    "Active",
+                    "Inactive"
+                  ],
+                  "name": "activity_range",
+                  "type": "String"
+                }
+              ]
+            },
+            "placeholder": "All",
+            "selection": 0
+          },
+          "path": "1_TEMPLATES/Filtering/Conditionals/Conditional_SingleDropDown_NoClear_TealBlue",
+          "style": {
+            "classes": "Filter/Filter_Container"
+          }
+        },
+        "scripts": {
+          "customMethods": [],
+          "extensionFunctions": null,
+          "messageHandlers": [
+            {
+              "messageType": "clearFilter",
+              "pageScope": true,
+              "script": "\t# implement your handler here\n\tself.props.params.selection \u003d 0",
+              "sessionScope": true,
+              "viewScope": false
+            }
+          ]
+        },
+        "type": "ia.display.view"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "style": {
+        "classes": "Filter/Header_Text"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

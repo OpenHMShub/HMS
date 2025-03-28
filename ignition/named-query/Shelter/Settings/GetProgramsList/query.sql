@@ -1,0 +1,1 @@
+SELECT id, programName FROM interaction.Program WHERE programName IS NOT NULL AND timeRetired IS NULL ORDER BY programName

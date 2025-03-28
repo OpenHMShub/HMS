@@ -1,0 +1,1 @@
+SELECT DISTINCT Gender_Of_Guests FROM shelter.TotalTable

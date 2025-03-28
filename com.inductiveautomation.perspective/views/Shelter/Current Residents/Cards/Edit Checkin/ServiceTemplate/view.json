@@ -1,0 +1,274 @@
+{
+  "custom": {},
+  "params": {
+    "OriginalBedId": -1,
+    "OriginalBedName": "value",
+    "Row": 1,
+    "bedId": -1,
+    "bedName": "value",
+    "endDate": "2020-08-04 00:00:00",
+    "facilityId": 3,
+    "participantId": "value",
+    "reservationId": 0,
+    "roomId": -1,
+    "roomName": "value",
+    "startDate": "2020-08-03 00:00:00"
+  },
+  "propConfig": {
+    "params.OriginalBedId": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.OriginalBedName": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.Row": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.bedId": {
+      "binding": {
+        "config": {
+          "path": "/root/EmbeddedView Bed.props.params.SelectedValue"
+        },
+        "type": "property"
+      },
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.bedName": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.endDate": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.facilityId": {
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.participantId": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.reservationId": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.roomId": {
+      "binding": {
+        "config": {
+          "path": "/root/EmbeddedView Room.props.params.SelectedValue"
+        },
+        "type": "property"
+      },
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.roomName": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.startDate": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 50,
+      "width": 600
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "EmbeddedView Facility"
+        },
+        "position": {
+          "basis": "320px",
+          "grow": 1
+        },
+        "propConfig": {
+          "position.display": {
+            "binding": {
+              "config": {
+                "expression": "{view.params.facilityId} \u003d -2"
+              },
+              "type": "expr"
+            }
+          },
+          "props.params.Options": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.allFacilities"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "SelectedValue": -1,
+            "Text": "Facility"
+          },
+          "path": "Shelter/Reservation/Cards/New Reservation/SelectionInput"
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "EmbeddedView Room"
+        },
+        "position": {
+          "basis": "320px",
+          "grow": 1
+        },
+        "propConfig": {
+          "props.params.Options": {
+            "binding": {
+              "config": {
+                "parameters": {
+                  "facilityId": "{view.params.facilityId}"
+                },
+                "queryPath": "Shelter/RoomAvailability/Rooms",
+                "returnFormat": "dataset"
+              },
+              "type": "query"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "SelectedValue": -1,
+            "Text": "Room"
+          },
+          "path": "Shelter/Reservation/Cards/New Reservation/SelectionInput"
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "EmbeddedView Bed"
+        },
+        "position": {
+          "basis": "320px",
+          "grow": 1
+        },
+        "propConfig": {
+          "props.params.Options": {
+            "binding": {
+              "config": {
+                "parameters": {
+                  "facilityId": "{parent.custom.facilityIdForReservation}",
+                  "roomId": "{../EmbeddedView Room.props.params.SelectedValue}"
+                },
+                "queryPath": "Shelter/RoomAvailability/Beds_NotCheckIn",
+                "returnFormat": "dataset"
+              },
+              "transforms": [
+                {
+                  "code": "\tif value !\u003d None and self.view.params.OriginalBedId !\u003d -1:\n\t\tnewRow \u003d [self.view.params.OriginalBedId, self.view.params.OriginalBedName]\n\t\tvalue \u003d system.dataset.addRow(value, newRow)\n\treturn value",
+                  "type": "script"
+                }
+              ],
+              "type": "query"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "SelectedValue": -1,
+            "Text": "Bed"
+          },
+          "path": "Shelter/Reservation/Cards/New Reservation/SelectionInput"
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Placeholder"
+        },
+        "position": {
+          "basis": "320px",
+          "grow": 1
+        },
+        "props": {
+          "path": "Shelter/Reservation/Cards/New Reservation/Placeholder",
+          "style": {
+            "classes": "InputCards/InputCard_NoBorder"
+          }
+        },
+        "type": "ia.display.view"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "propConfig": {
+      "custom.allFacilities": {
+        "binding": {
+          "config": {
+            "queryPath": "Shelter/Reservations/SelectFacilitiesForReservations"
+          },
+          "type": "query"
+        }
+      },
+      "custom.allParticipants": {
+        "binding": {
+          "config": {
+            "queryPath": "Shelter/Reservations/SelectParticipantsForReservation"
+          },
+          "type": "query"
+        }
+      },
+      "custom.facilitiesForWaitingList": {
+        "binding": {
+          "config": {
+            "parameters": {
+              "waitListName": "{./EmbeddedView WaitingList.props.params.SelectedValue}"
+            },
+            "queryPath": "Shelter/Reservations/SelectFacilitiesForWaitingListForReservations"
+          },
+          "type": "query"
+        }
+      },
+      "custom.facilityIdForReservation": {
+        "binding": {
+          "config": {
+            "expression": "if({view.params.facilityId} !\u003d -2 , {view.params.facilityId}, {./EmbeddedView Facility.props.params.SelectedValue})"
+          },
+          "type": "expr"
+        }
+      },
+      "custom.participantsFromWaitingList": {
+        "binding": {
+          "config": {
+            "parameters": {
+              "waitListName": "{./EmbeddedView WaitingList.props.params.SelectedValue}"
+            },
+            "queryPath": "Shelter/Reservations/SelectParticipantsFromWaitingListForReservation"
+          },
+          "type": "query"
+        }
+      }
+    },
+    "scripts": {
+      "customMethods": [],
+      "extensionFunctions": null,
+      "messageHandlers": [
+        {
+          "messageType": "residentselected",
+          "pageScope": true,
+          "script": "\t# implement your handler here\n\t\n\tself.view.params.bedId \u003d int(payload[\u0027bedId\u0027])\n\tself.view.params.roomId \u003d int(payload[\u0027roomId\u0027])\n\tself.view.custom.participantName \u003d payload[\u0027participantName\u0027]\n\tself.view.params.roomName \u003d payload[\u0027roomName\u0027]\n\tself.view.params.bedName \u003d payload[\u0027bedName\u0027]\n\tself.view.params.facilityId \u003d int(payload[\u0027facilityId\u0027])\n\tif(self.getChild(\"EmbeddedView Facility\").position.display):\n\t\tself.getChild(\"EmbeddedView Facility\").props.params.SelectedValue \u003d self.view.params.facilityId\n\tself.getChild(\"EmbeddedView Room\").props.params.SelectedValue \u003d self.view.params.roomId\n\tself.getChild(\"EmbeddedView Bed\").props.params.SelectedValue \u003d self.view.params.bedId",
+          "sessionScope": true,
+          "viewScope": true
+        }
+      ]
+    },
+    "type": "ia.container.flex"
+  }
+}

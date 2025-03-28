@@ -1,0 +1,3224 @@
+{
+  "custom": {},
+  "params": {
+    "dateBefore12Months": {
+      "$": [
+        "ts",
+        192,
+        1677241604756
+      ],
+      "$ts": 1646114400000
+    },
+    "lastMonth": null,
+    "month": "October",
+    "selectedDate": null,
+    "selection_data": [],
+    "year": 2024
+  },
+  "propConfig": {
+    "params.dateBefore12Months": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.lastMonth": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.month": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.selectedDate": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.selection_data": {
+      "binding": {
+        "config": {
+          "path": "/root/Table.props.selection.data"
+        },
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.year": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 908,
+      "width": 1610
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "Label"
+        },
+        "position": {
+          "basis": "32px",
+          "display": false
+        },
+        "propConfig": {
+          "props.text": {
+            "binding": {
+              "config": {
+                "path": "../Table.props.data"
+              },
+              "transforms": [
+                {
+                  "code": "\tif value \u003d\u003d None:\n\t\t\toutput \u003d \u0027No Rows\u0027\n\telif value.getRowCount() \u003d\u003d 0:\n\t\toutput \u003d \u0027No Rows\u0027\n\telse:\n\t\toutput \u003d str(value.getRowCount()) + \u0027 Rows\u0027\n\treturn output",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "style": {
+            "classes": "Background/Alternative Text/Error_Message"
+          }
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "meta": {
+          "name": "Table"
+        },
+        "position": {
+          "basis": "100%"
+        },
+        "propConfig": {
+          "custom.HopeU_Data": {
+            "binding": {
+              "config": {
+                "path": "this.custom.sql_data"
+              },
+              "transforms": [
+                {
+                  "code": "\tFinalList \u003d []\n\tdataset \u003d value\n\tfor i in range(0,dataset.getRowCount()):\n\t\t## calculate the total values for showers and other fields ## Added by YM on 14-Oct-2024 as per ticket #289.\n\t\tif dataset.getValueAt(i,\u0027showers\u0027) is not None and dataset.getValueAt(i,\u0027showers\u0027) !\u003d \"\":\n\t\t\tshowers \u003d dataset.getValueAt(i,\u0027showers\u0027)\n\t\telse:\n\t\t\tshowers \u003d 0\n\t\t\t\n\t\tif dataset.getValueAt(i,\u0027laundry\u0027) is not None and dataset.getValueAt(i,\u0027laundry\u0027) !\u003d \"\":\n\t\t\tlaundry \u003d dataset.getValueAt(i,\u0027laundry\u0027)\n\t\telse:\n\t\t\tlaundry \u003d 0\n\t\t\n\t\tif dataset.getValueAt(i,\u0027mailCheckRITI\u0027) is not None and dataset.getValueAt(i,\u0027mailCheckRITI\u0027) !\u003d \"\":\n\t\t\tmailCheckRITI \u003d dataset.getValueAt(i,\u0027mailCheckRITI\u0027)\n\t\telse:\n\t\t\tmailCheckRITI \u003d 0\n\t\t\n\t\tif dataset.getValueAt(i,\u0027navigationService\u0027) is not None and dataset.getValueAt(i,\u0027navigationService\u0027) !\u003d \"\":\n\t\t\tnavigationService \u003d dataset.getValueAt(i,\u0027navigationService\u0027)\n\t\telse:\n\t\t\tnavigationService \u003d 0\n\t\t\n\t\tif dataset.getValueAt(i,\u0027laundryMissed\u0027) is not None and dataset.getValueAt(i,\u0027laundryMissed\u0027) !\u003d \"\":\n\t\t\tlaundryMissed \u003d dataset.getValueAt(i,\u0027laundryMissed\u0027)\n\t\telse:\n\t\t\tlaundryMissed \u003d 0\n\t\t\t\n\t\tif dataset.getValueAt(i,\u0027mailMissed\u0027) is not None and dataset.getValueAt(i,\u0027mailMissed\u0027) !\u003d \"\":\t\n\t\t\tmailMissed \u003d dataset.getValueAt(i,\u0027mailMissed\u0027)\n\t\telse:\n\t\t\tmailMissed \u003d 0\n\t\t\t\n\t\t\n\t\tif dataset.getValueAt(i,\u0027showersMissed\u0027) is not None and dataset.getValueAt(i,\u0027showersMissed\u0027) !\u003d \"\":\n\t\t\tshowersMissed \u003d dataset.getValueAt(i,\u0027showersMissed\u0027)\n\t\telse:\n\t\t\tshowersMissed \u003d 0\n\t\t\n\t\tif dataset.getValueAt(i,\u0027phoneComputerAccessMissed\u0027) is not None and dataset.getValueAt(i,\u0027phoneComputerAccessMissed\u0027) !\u003d \"\":\t\n\t\t\tphoneComputerAccessMissed \u003d dataset.getValueAt(i,\u0027phoneComputerAccessMissed\u0027)\n\t\telse:\n\t\t\tphoneComputerAccessMissed \u003d 0\n\t\t\n\t\tshowersTotal \u003d showers + showersMissed\n\t\tlaundryTotal \u003d laundry + laundryMissed\n\t\tmailsTotal \u003d mailCheckRITI + mailMissed\n\t\tnavigationServiceTotal \u003d navigationService + phoneComputerAccessMissed\n\t\t\n\t\t\n\t\t\n\t\trow \u003d {}\n\t\trow[\u0027id\u0027] \u003d {\u0027value\u0027: dataset.getValueAt(i,\u0027id\u0027), \u0027style\u0027: {}}\n\t\trow[\u0027month\u0027] \u003d {\u0027value\u0027: dataset.getValueAt(i,\u0027month\u0027), \u0027style\u0027: {}}\n\t\trow[\u0027day\u0027] \u003d {\u0027value\u0027: dataset.getValueAt(i,\u0027day\u0027), \u0027style\u0027: {}}\n\t\trow[\u0027year\u0027] \u003d {\u0027value\u0027: dataset.getValueAt(i,\u0027year\u0027), \u0027style\u0027: {}}\n\t\trow[\u0027Date\u0027] \u003d {\u0027value\u0027: dataset.getValueAt(i,\u0027Date\u0027), \u0027style\u0027: {}}\n\t\trow[\u0027showers\u0027] \u003d{\u0027value\u0027:  showersTotal, \u0027style\u0027: {}}\n\t\trow[\u0027laundry\u0027] \u003d {\u0027value\u0027: laundryTotal, \u0027style\u0027: {}}\n\t\trow[\u0027mailCheckRITI\u0027] \u003d {\u0027value\u0027: mailsTotal, \u0027style\u0027: {}}\n\t\trow[\u0027navigationService\u0027] \u003d {\u0027value\u0027: navigationServiceTotal, \u0027style\u0027: {}}\n\t\trow[\u0027noOfClasses\u0027] \u003d {\u0027value\u0027: dataset.getValueAt(i,\u0027noOfClasses\u0027), \u0027style\u0027: {}}\n\t\trow[\u0027classAttendance\u0027] \u003d {\u0027value\u0027: dataset.getValueAt(i,\u0027classAttendance\u0027), \u0027style\u0027: {}}\n\t\trow[\u0027inPersonStore\u0027] \u003d {\u0027value\u0027: dataset.getValueAt(i,\u0027inPersonStore\u0027), \u0027style\u0027: {}}\n\t\trow[\u0027footClinic\u0027] \u003d {\u0027value\u0027: dataset.getValueAt(i,\u0027footClinic\u0027), \u0027style\u0027: {}}\n\t\trow[\u0027isClosed\u0027] \u003d {\u0027value\u0027: dataset.getValueAt(i,\u0027isClosed\u0027), \u0027style\u0027: {}}\n\t\trow[\u0027isWeekend\u0027] \u003d {\u0027value\u0027: dataset.getValueAt(i,\u0027isWeekend\u0027), \u0027style\u0027: {}}\n\t\trow[\u0027edit\u0027] \u003d {\u0027value\u0027: dataset.getValueAt(i,\u0027edit\u0027), \u0027style\u0027: {}}\n\t\trow[\u0027notes\u0027] \u003d {\u0027value\u0027: dataset.getValueAt(i,\u0027notes\u0027), \u0027style\u0027: {}}\n\t\trow[\u0027laundryMissed\u0027] \u003d {\u0027value\u0027: dataset.getValueAt(i,\u0027laundryMissed\u0027), \u0027style\u0027: {}}\n\t\trow[\u0027mailMissed\u0027] \u003d {\u0027value\u0027: dataset.getValueAt(i,\u0027mailMissed\u0027), \u0027style\u0027: {}}\n\t\trow[\u0027showersMissed\u0027] \u003d {\u0027value\u0027: dataset.getValueAt(i,\u0027showersMissed\u0027), \u0027style\u0027: {}}\n\t\trow[\u0027phoneComputerAccessMissed\u0027] \u003d {\u0027value\u0027: dataset.getValueAt(i,\u0027phoneComputerAccessMissed\u0027), \u0027style\u0027: {}}\n\t\t\n\t\tif dataset.getValueAt(i,\u0027Date\u0027) in [\u0027Average\u0027,\u0027Last Month\u0027,\u0027Last Year\u0027,\u0027Total\u0027]:\n\t\t\t\t\t\n\t\t\t\t\trow[\u0027generalPopLunch\u0027] \u003d {\u0027value\u0027: dataset.getValueAt(i,\u0027generalPopLunch\u0027), \u0027style\u0027: {}}#\"borderStyle\": \"solid\",\"borderColor\": \"#D5D5D5\", \"borderWidth\": \"0.01px\"}}\n\t\t\t\t\trow[\u0027cafeMWF\u0027] \u003d {\u0027value\u0027: dataset.getValueAt(i,\u0027cafeMWF\u0027), \u0027style\u0027: {}}#\"borderStyle\": \"solid\",\"borderColor\": \"#D5D5D5\", \"borderWidth\": \"0.01px\"}}\n\t\t\t\t\t\n\t\t\t\t\trow[\u0027snackPacks\u0027] \u003d {\u0027value\u0027: dataset.getValueAt(i,\u0027snackPacks\u0027), \u0027style\u0027: {}}#\"borderStyle\": \"solid\",\"borderColor\": \"#D5D5D5\", \"borderWidth\": \"0.01px\"}}\n\t\t\t\t\trow[\u0027morningCensus\u0027] \u003d {\u0027value\u0027: dataset.getValueAt(i,\u0027morningCensus\u0027), \u0027style\u0027: {}}#\"borderStyle\": \"solid\",\"borderColor\": \"#D5D5D5\", \"borderWidth\": \"0.01px\"}}\n\t\t\t\t\trow[\u0027dayCensus\u0027] \u003d {\u0027value\u0027: dataset.getValueAt(i,\u0027dayCensus\u0027), \u0027style\u0027: {}}#\"borderStyle\": \"solid\",\"borderColor\": \"#D5D5D5\", \"borderWidth\": \"0.01px\"}}\n\t\t\t\t\trow[\u0027morningNews\u0027] \u003d {\u0027value\u0027: dataset.getValueAt(i,\u0027morningNews\u0027), \u0027style\u0027: {}}#\"borderStyle\": \"solid\",\"borderColor\": \"#D5D5D5\", \"borderWidth\": \"0.01px\"}}\n\t\t\t\t\trow[\u0027notes\u0027] \u003d {\u0027value\u0027: dataset.getValueAt(i,\u0027notes\u0027), \u0027style\u0027: {}}#\"borderStyle\": \"solid\",\"borderColor\": \"#D5D5D5\", \"borderWidth\": \"0.01px\"}}\n\t\t\t\t\trow[\u0027recuperativeCareFull\u0027] \u003d {\u0027value\u0027: dataset.getValueAt(i,\u0027recuperativeCareFull\u0027), \u0027style\u0027: {}}\n\t\telse:\n\t\t\t## for all rows other than top rows , add as Y or N for recuperativeCareFull\n\t\t\tif dataset.getValueAt(i,\u0027recuperativeCareFull\u0027) \u003d\u003d 1:\n\t\t\t\trow[\u0027recuperativeCareFull\u0027] \u003d {\u0027value\u0027: \u0027Y\u0027, \u0027style\u0027: {}}\n\t\t\telse:\n\t\t\t\trow[\u0027recuperativeCareFull\u0027] \u003d {\u0027value\u0027: \u0027N\u0027, \u0027style\u0027: {}}\n\t\t\t\n\t\t\t## for rows other than top rows show in different color in case we have manual entries\n\t\t\tif showersMissed \u003e 0:\n\t\t\t\trow[\u0027showers\u0027] \u003d{\u0027value\u0027:  showersTotal, \u0027style\u0027: {\u0027color\u0027:\u0027#FF7A59\u0027}} ## show in #FF7A59 color when there are manual entries\n\t\t\t\n\t\t\tif laundryMissed \u003e 0:\n\t\t\t\trow[\u0027laundry\u0027] \u003d {\u0027value\u0027: laundryTotal, \u0027style\u0027: {\u0027color\u0027:\u0027#FF7A59\u0027}}\n\t\t\t\t\t\n\t\t\tif mailMissed \u003e 0:\n\t\t\t\trow[\u0027mailCheckRITI\u0027] \u003d {\u0027value\u0027: mailsTotal, \u0027style\u0027: {\u0027color\u0027:\u0027#FF7A59\u0027}}\n\t\t\t\n\t\t\tif phoneComputerAccessMissed \u003e 0:\n\t\t\t\trow[\u0027navigationService\u0027] \u003d {\u0027value\u0027: navigationServiceTotal, \u0027style\u0027: {\u0027color\u0027:\u0027#FF7A59\u0027}}\n\t\t\t\n\t\t\tif dataset.getValueAt(i,\u0027isWeekend\u0027)!\u003d1 and dataset.getValueAt(i,\u0027isClosed\u0027)!\u003d1 and (system.date.addSeconds(dataset.getValueAt(i,\u0027originalDate\u0027), (23*60+59)*60+59) \u003c system.date.now()): #(system.date.format(dataset.getValueAt(i,\u0027originalDate\u0027),\u0027MM-dd-yyyy\u0027) \u003c system.date.format(system.date.now(),\u0027MM-dd-yyyy\u0027)):\n\t\t\t\t\n\t\t\t\t\t\n\t\t\t\tif dataset.getValueAt(i,\u0027generalPopLunch\u0027) !\u003d None:\n\t\t\t\t\trow[\u0027generalPopLunch\u0027] \u003d {\u0027value\u0027: dataset.getValueAt(i,\u0027generalPopLunch\u0027), \u0027style\u0027: {\"background\": \"#9af4eb4d\"}}#blue\n\t\t\t\telse:\t\n\t\t\t\t\trow[\u0027generalPopLunch\u0027] \u003d {\u0027value\u0027: dataset.getValueAt(i,\u0027generalPopLunch\u0027), \u0027style\u0027: {\"background\": \"#fcece8\"}}#orange\n\t\t\t\t\n\t\t\t\tif dataset.getValueAt(i,\u0027cafeMWF\u0027) !\u003d None:\n\t\t\t\t\trow[\u0027cafeMWF\u0027] \u003d {\u0027value\u0027: dataset.getValueAt(i,\u0027cafeMWF\u0027), \u0027style\u0027: {\"background\": \"#9af4eb4d\"}}\n\t\t\t\telse:\n\t\t\t\t\trow[\u0027cafeMWF\u0027] \u003d {\u0027value\u0027: dataset.getValueAt(i,\u0027cafeMWF\u0027), \u0027style\u0027: {\"background\": \"#fcece8\"}}\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\tif dataset.getValueAt(i,\u0027snackPacks\u0027) !\u003d None:\n\t\t\t\t\trow[\u0027snackPacks\u0027] \u003d {\u0027value\u0027: dataset.getValueAt(i,\u0027snackPacks\u0027), \u0027style\u0027: {\"background\": \"#9af4eb4d\"}}\n\t\t\t\telse:\n\t\t\t\t\trow[\u0027snackPacks\u0027] \u003d {\u0027value\u0027: dataset.getValueAt(i,\u0027snackPacks\u0027), \u0027style\u0027: {\"background\": \"#fcece8\"}}\n\t\t\t\t\n\t\t\t\tif dataset.getValueAt(i,\u0027morningCensus\u0027) !\u003d None:\n\t\t\t\t\trow[\u0027morningCensus\u0027] \u003d {\u0027value\u0027: dataset.getValueAt(i,\u0027morningCensus\u0027), \u0027style\u0027: {\"background\": \"#9af4eb4d\"}}\n\t\t\t\telse:\n\t\t\t\t\trow[\u0027morningCensus\u0027] \u003d {\u0027value\u0027: dataset.getValueAt(i,\u0027morningCensus\u0027), \u0027style\u0027: {\"background\": \"#fcece8\"}}\n\t\t\t\t\n\t\t\t\tif dataset.getValueAt(i,\u0027dayCensus\u0027) !\u003d None:\n\t\t\t\t\trow[\u0027dayCensus\u0027] \u003d {\u0027value\u0027: dataset.getValueAt(i,\u0027dayCensus\u0027), \u0027style\u0027: {\"background\": \"#9af4eb4d\"}}\n\t\t\t\telse:\n\t\t\t\t\trow[\u0027dayCensus\u0027] \u003d {\u0027value\u0027: dataset.getValueAt(i,\u0027dayCensus\u0027), \u0027style\u0027: {\"background\": \"#fcece8\"}}\n\t\t\t\t\t\n\t\t\t\tif dataset.getValueAt(i,\u0027morningNews\u0027) !\u003d None:\n\t\t\t\t\trow[\u0027morningNews\u0027] \u003d {\u0027value\u0027: dataset.getValueAt(i,\u0027morningNews\u0027), \u0027style\u0027: {\"background\": \"#9af4eb4d\"}}\n\t\t\t\telse:\n\t\t\t\t\trow[\u0027morningNews\u0027] \u003d {\u0027value\u0027: dataset.getValueAt(i,\u0027morningNews\u0027), \u0027style\u0027: {\"background\": \"#fcece8\"}}\n\t\t\t\t\t\n#\t\t\t\tif dataset.getValueAt(i,\u0027notes\u0027) !\u003d None:\n#\t\t\t\t\trow[\u0027notes\u0027] \u003d {\u0027value\u0027: dataset.getValueAt(i,\u0027notes\u0027), \u0027style\u0027: {\"borderStyle\": \"solid\",\"borderColor\": \"#16a5bd\",\"borderWidth\": \"1px\"}}\n#\t\t\t\telse:\n#\t\t\t\t\trow[\u0027notes\u0027] \u003d {\u0027value\u0027: dataset.getValueAt(i,\u0027notes\u0027), \u0027style\u0027: {\"borderStyle\": \"solid\",\"borderWidth\": \"1px\", \"borderColor\": \"#FF7a59\"}}\n\t\t\telse:\n\t\t\t\t\n\t\t\t\trow[\u0027generalPopLunch\u0027] \u003d {\u0027value\u0027: dataset.getValueAt(i,\u0027generalPopLunch\u0027), \u0027style\u0027: {\"background\": \"#9af4eb4d\"}}\n\t\t\t\trow[\u0027cafeMWF\u0027] \u003d {\u0027value\u0027: dataset.getValueAt(i,\u0027cafeMWF\u0027), \u0027style\u0027: {\"background\": \"#9af4eb4d\"}}\n\t\t\t\t\n\t\t\t\trow[\u0027snackPacks\u0027] \u003d {\u0027value\u0027: dataset.getValueAt(i,\u0027snackPacks\u0027), \u0027style\u0027: {\"background\": \"#9af4eb4d\"}}\n\t\t\t\trow[\u0027morningCensus\u0027] \u003d {\u0027value\u0027: dataset.getValueAt(i,\u0027morningCensus\u0027), \u0027style\u0027: {\"background\": \"#9af4eb4d\"}}\n\t\t\t\trow[\u0027dayCensus\u0027] \u003d {\u0027value\u0027: dataset.getValueAt(i,\u0027dayCensus\u0027), \u0027style\u0027: {\"background\": \"#9af4eb4d\"}}\n\t\t\t\trow[\u0027morningNews\u0027] \u003d {\u0027value\u0027: dataset.getValueAt(i,\u0027morningNews\u0027), \u0027style\u0027: {\"background\": \"#9af4eb4d\"}}\n#\t\t\t\trow[\u0027notes\u0027] \u003d {\u0027value\u0027: dataset.getValueAt(i,\u0027notes\u0027), \u0027style\u0027: {\"borderStyle\": \"solid\",\"borderColor\": \"#16a5bd\",\"borderWidth\": \"1px\"}}\n\t\t\n\t\tFinalList.append(row)\n\treturn FinalList",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          },
+          "custom.sql_data": {
+            "binding": {
+              "config": {
+                "parameters": {
+                  "dateBefore12Months": "{view.params.dateBefore12Months}",
+                  "lastMonth": "{view.params.lastMonth}",
+                  "month": "{view.params.month}",
+                  "selectedDate": "{view.params.selectedDate}",
+                  "year": "{view.params.year}"
+                },
+                "queryPath": "Overview/Get_HopeU_Table",
+                "returnFormat": "dataset"
+              },
+              "type": "query"
+            }
+          },
+          "props.data": {
+            "binding": {
+              "config": {
+                "path": "this.custom.HopeU_Data"
+              },
+              "transforms": [
+                {
+                  "code": "\tif len(value) \u003e 4:\n#\tif value.getRowCount() \u003e 4:\n\t\treturn value\n\telse:\n\t\treturn []",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "cells": {
+            "allowEditOn": "single-click",
+            "style": {
+              "borderLeftColor": "#D5D5D5",
+              "borderLeftStyle": "solid",
+              "borderLeftWidth": "0.1px",
+              "borderTopColor": "#D5D5D5",
+              "borderTopStyle": "solid",
+              "borderTopWidth": "0.1px"
+            }
+          },
+          "columns": [
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "edit",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": "month"
+              },
+              "header": {
+                "align": "center",
+                "justify": "center",
+                "style": {
+                  "classes": "Table/Column_Header"
+                },
+                "title": " "
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "view",
+              "resizable": false,
+              "sort": "none",
+              "sortable": false,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal",
+                "paddingLeft": "10px"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {
+                "preview": "PreviewHopeU",
+                "rowData": {
+                  "id": {
+                    "value": "value"
+                  }
+                }
+              },
+              "viewPath": "Overview/Dashboard/Templates/EditButton",
+              "visible": true,
+              "width": 50
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "id",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header",
+                  "color": "#0C4E8B",
+                  "fontFamily": "Proxima Nova ExCn Light",
+                  "fontSize": "20px"
+                },
+                "title": "id"
+              },
+              "justify": "auto",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": true,
+              "style": {
+                "color": "#0c4e85",
+                "cursor": "pointer",
+                "fontFamily": "Proxima Nova ExCn Medium",
+                "text-align": "left"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": false,
+              "width": 30
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "month",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": "month"
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header"
+                },
+                "title": "month"
+              },
+              "justify": "auto",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": false,
+              "width": 80
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "day",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": "month"
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header"
+                },
+                "title": "day"
+              },
+              "justify": "auto",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": false,
+              "width": 50
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "year",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": "month"
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header"
+                },
+                "title": "year"
+              },
+              "justify": "auto",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": false,
+              "width": 60
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "Date",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": "month"
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header"
+                },
+                "title": " "
+              },
+              "justify": "right",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": false,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal",
+                "paddingRight": "5px"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 90
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "generalPopLunch",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": "month"
+              },
+              "header": {
+                "align": "center",
+                "justify": "center",
+                "style": {
+                  "classes": "Table/Column_Header",
+                  "textAlign": "center"
+                },
+                "title": "Gen. Pop Lunch"
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": false,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 70
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "cafeMWF",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": "month"
+              },
+              "header": {
+                "align": "center",
+                "justify": "center",
+                "style": {
+                  "classes": "Table/Column_Header",
+                  "textAlign": "center"
+                },
+                "title": "Cafe M/W/F"
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": false,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 50
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "snackPacks",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": "month"
+              },
+              "header": {
+                "align": "center",
+                "justify": "center",
+                "style": {
+                  "classes": "Table/Column_Header",
+                  "textAlign": "center"
+                },
+                "title": "Snack Packs"
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": false,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 50
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "morningCensus",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": "month"
+              },
+              "header": {
+                "align": "center",
+                "justify": "center",
+                "style": {
+                  "classes": "Table/Column_Header",
+                  "textAlign": "center"
+                },
+                "title": "Morning Census"
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": false,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 60
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "dayCensus",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": "month"
+              },
+              "header": {
+                "align": "center",
+                "justify": "center",
+                "style": {
+                  "classes": "Table/Column_Header",
+                  "textAlign": "center"
+                },
+                "title": "Day Census"
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": false,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 60
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "showers",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": "month"
+              },
+              "header": {
+                "align": "center",
+                "justify": "center",
+                "style": {
+                  "classes": "Table/Column_Header",
+                  "textAlign": "center"
+                },
+                "title": "Showers"
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": false,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 60
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "laundry",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": "month"
+              },
+              "header": {
+                "align": "center",
+                "justify": "center",
+                "style": {
+                  "classes": "Table/Column_Header",
+                  "textAlign": "center"
+                },
+                "title": "Laundry"
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": false,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 60
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "mailCheckRITI",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": "month"
+              },
+              "header": {
+                "align": "center",
+                "justify": "center",
+                "style": {
+                  "classes": "Table/Column_Header",
+                  "textAlign": "center"
+                },
+                "title": "Mail Check RITI"
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": false,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 70
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "morningNews",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": "month"
+              },
+              "header": {
+                "align": "center",
+                "justify": "center",
+                "style": {
+                  "classes": "Table/Column_Header",
+                  "textAlign": "center"
+                },
+                "title": "Morning News"
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": false,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 60
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "noOfClasses",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": "month"
+              },
+              "header": {
+                "align": "center",
+                "justify": "center",
+                "style": {
+                  "classes": "Table/Column_Header",
+                  "textAlign": "center"
+                },
+                "title": "Number of Classes"
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": false,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 70
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "classAttendance",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": "month"
+              },
+              "header": {
+                "align": "center",
+                "justify": "center",
+                "style": {
+                  "classes": "Table/Column_Header",
+                  "textAlign": "center"
+                },
+                "title": "Class Attendance"
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": false,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 80
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "inPersonStore",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": "month"
+              },
+              "header": {
+                "align": "center",
+                "justify": "center",
+                "style": {
+                  "classes": "Table/Column_Header",
+                  "textAlign": "center"
+                },
+                "title": "In-Person Store"
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": false,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 70
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "navigationService",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": "month"
+              },
+              "header": {
+                "align": "center",
+                "justify": "center",
+                "style": {
+                  "classes": "Table/Column_Header",
+                  "textAlign": "center"
+                },
+                "title": "Navigation Service (NS)"
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": false,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 80
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "footClinic",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": "month"
+              },
+              "header": {
+                "align": "center",
+                "justify": "center",
+                "style": {
+                  "classes": "Table/Column_Header",
+                  "textAlign": "center"
+                },
+                "title": "Foot Clinic"
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": false,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 50
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "isClosed",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": "month"
+              },
+              "header": {
+                "align": "center",
+                "justify": "center",
+                "style": {
+                  "classes": "Table/Column_Header",
+                  "textAlign": "center"
+                },
+                "title": "IsClosed"
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": false,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": false,
+              "width": 60
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "isWeekend",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": "month"
+              },
+              "header": {
+                "align": "center",
+                "justify": "center",
+                "style": {
+                  "classes": "Table/Column_Header",
+                  "textAlign": "center"
+                },
+                "title": "IsWeekend"
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": false,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": false,
+              "width": 80
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "mailMissed",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": "month"
+              },
+              "header": {
+                "align": "center",
+                "justify": "center",
+                "style": {
+                  "classes": "Table/Column_Header",
+                  "textAlign": "center"
+                },
+                "title": ""
+              },
+              "justify": "left",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "auto",
+              "resizable": false,
+              "sort": "none",
+              "sortable": false,
+              "strictWidth": false,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": false,
+              "width": 430
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "showersMissed",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": "month"
+              },
+              "header": {
+                "align": "center",
+                "justify": "center",
+                "style": {
+                  "classes": "Table/Column_Header",
+                  "textAlign": "center"
+                },
+                "title": ""
+              },
+              "justify": "left",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "auto",
+              "resizable": false,
+              "sort": "none",
+              "sortable": false,
+              "strictWidth": false,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": false,
+              "width": 430
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "phoneComputerAccessMissed",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": "month"
+              },
+              "header": {
+                "align": "center",
+                "justify": "center",
+                "style": {
+                  "classes": "Table/Column_Header",
+                  "textAlign": "center"
+                },
+                "title": ""
+              },
+              "justify": "left",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "auto",
+              "resizable": false,
+              "sort": "none",
+              "sortable": false,
+              "strictWidth": false,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": false,
+              "width": 430
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "laundryMissed",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": "month"
+              },
+              "header": {
+                "align": "center",
+                "justify": "center",
+                "style": {
+                  "classes": "Table/Column_Header",
+                  "textAlign": "center"
+                },
+                "title": ""
+              },
+              "justify": "left",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "auto",
+              "resizable": false,
+              "sort": "none",
+              "sortable": false,
+              "strictWidth": false,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": false,
+              "width": 430
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "recuperativeCareFull",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": "month"
+              },
+              "header": {
+                "align": "center",
+                "justify": "center",
+                "style": {
+                  "classes": "Table/Column_Header",
+                  "textAlign": "center"
+                },
+                "title": "Recuperative Care Full"
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": false,
+              "strictWidth": false,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 80
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "notes",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": "month"
+              },
+              "header": {
+                "align": "center",
+                "justify": "center",
+                "style": {
+                  "classes": "Table/Column_Header",
+                  "textAlign": "center"
+                },
+                "title": "Notes"
+              },
+              "justify": "left",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": false,
+              "strictWidth": false,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 430
+            }
+          ],
+          "pager": {
+            "initialOption": 100
+          },
+          "rows": {
+            "highlight": {
+              "color": "#CCFFFF"
+            },
+            "striped": {
+              "color": {
+                "even": "#8AFFFF"
+              },
+              "enabled": false
+            },
+            "style": {
+              "cursor": "pointer"
+            }
+          },
+          "selection": {
+            "selectedColumn": "Date",
+            "selectedRow": -1,
+            "style": {
+              "backgroundColor": "#9af4eb4d"
+            }
+          },
+          "style": {
+            "classes": "Background/Default"
+          }
+        },
+        "scripts": {
+          "customMethods": [],
+          "extensionFunctions": null,
+          "messageHandlers": [
+            {
+              "messageType": "tableToExcel",
+              "pageScope": true,
+              "script": "\t# implement your handler here\n\timport traceback\n\ttry:\n\t\t#Send the dataset to Excel\n\t\tfilename \u003d \u0027HopeUDashboard_\u0027 + str(system.date.format(system.date.now(),\"yyyyMMddHHmmss\")) + \u0027.xls\u0027\t\t\n\t\t# dataset for first table:\n\t\tdataset \u003d self.custom.sql_data\n\t\t\n\t\t\n\t\t\t\n\t\t\n\t\tNewDataSet1 \u003d []\n\t\theaders1 \u003d [\u0027 \u0027,\u0027General Pop Lunch\u0027,\u0027Cafe M/W/F\u0027,\u0027Snack Packs\u0027,\u0027Morning Census\u0027,\u0027Day Census\u0027,\u0027Showers\u0027,\u0027Laundry\u0027,\u0027Mail Check RITI\u0027,\u0027Morning News\u0027,\u0027Number of Classes\u0027,\u0027Class Attendance\u0027,\u0027In-Person Store\u0027,\u0027Navigation Service (NS)\u0027,\u0027Foot Clinic\u0027,\u0027Recuperative Care Full\u0027,\u0027Notes\u0027]\n\t\tfor i in range(0,dataset.getRowCount()):\n\t\t\tif dataset.getValueAt(i,\u0027showers\u0027) is not None and dataset.getValueAt(i,\u0027showers\u0027) !\u003d \"\":\n\t\t\t\tshowers \u003d dataset.getValueAt(i,\u0027showers\u0027)\n\t\t\telse:\n\t\t\t\tshowers \u003d 0\n\t\t\t\t\n\t\t\tif dataset.getValueAt(i,\u0027laundry\u0027) is not None and dataset.getValueAt(i,\u0027laundry\u0027) !\u003d \"\":\n\t\t\t\tlaundry \u003d dataset.getValueAt(i,\u0027laundry\u0027)\n\t\t\telse:\n\t\t\t\tlaundry \u003d 0\n\t\t\t\n\t\t\tif dataset.getValueAt(i,\u0027mailCheckRITI\u0027) is not None and dataset.getValueAt(i,\u0027mailCheckRITI\u0027) !\u003d \"\":\n\t\t\t\tmailCheckRITI \u003d dataset.getValueAt(i,\u0027mailCheckRITI\u0027)\n\t\t\telse:\n\t\t\t\tmailCheckRITI \u003d 0\n\t\t\t\n\t\t\tif dataset.getValueAt(i,\u0027navigationService\u0027) is not None and dataset.getValueAt(i,\u0027navigationService\u0027) !\u003d \"\":\n\t\t\t\tnavigationService \u003d dataset.getValueAt(i,\u0027navigationService\u0027)\n\t\t\telse:\n\t\t\t\tnavigationService \u003d 0\n\t\t\t\n\t\t\tif dataset.getValueAt(i,\u0027laundryMissed\u0027) is not None and dataset.getValueAt(i,\u0027laundryMissed\u0027) !\u003d \"\":\n\t\t\t\tlaundryMissed \u003d dataset.getValueAt(i,\u0027laundryMissed\u0027)\n\t\t\telse:\n\t\t\t\tlaundryMissed \u003d 0\n\t\t\t\t\n\t\t\tif dataset.getValueAt(i,\u0027mailMissed\u0027) is not None and dataset.getValueAt(i,\u0027mailMissed\u0027) !\u003d \"\":\t\n\t\t\t\tmailMissed \u003d dataset.getValueAt(i,\u0027mailMissed\u0027)\n\t\t\telse:\n\t\t\t\tmailMissed \u003d 0\n\t\t\t\t\n\t\t\t\n\t\t\tif dataset.getValueAt(i,\u0027showersMissed\u0027) is not None and dataset.getValueAt(i,\u0027showersMissed\u0027) !\u003d \"\":\n\t\t\t\tshowersMissed \u003d dataset.getValueAt(i,\u0027showersMissed\u0027)\n\t\t\telse:\n\t\t\t\tshowersMissed \u003d 0\n\t\t\t\n\t\t\tif dataset.getValueAt(i,\u0027phoneComputerAccessMissed\u0027) is not None and dataset.getValueAt(i,\u0027phoneComputerAccessMissed\u0027) !\u003d \"\":\t\n\t\t\t\tphoneComputerAccessMissed \u003d dataset.getValueAt(i,\u0027phoneComputerAccessMissed\u0027)\n\t\t\telse:\n\t\t\t\tphoneComputerAccessMissed \u003d 0\n\t\t\t\n\t\t\t\n\t\t\tif showersMissed \u003e 0:\n\t\t\t\tshowersValue \u003d str(showers) + \"/\" + str(showersMissed)\n\t\t\telse:\n\t\t\t\tshowersValue \u003d str(showers) \n\t\t\t\n\t\t\tif laundryMissed \u003e 0:\n\t\t\t\tlaundryValue \u003d str(laundry) + \"/\" + str(showersMissed)\n\t\t\telse:\n\t\t\t\tlaundryValue \u003d str(laundry)\t\t\t\n\t\t\t\t\t\n\t\t\tif mailMissed \u003e 0:\n\t\t\t\tmailsValue \u003d str(mailCheckRITI) + \"/\" + str(mailMissed)\n\t\t\telse:\n\t\t\t\tmailsValue \u003d str(mailCheckRITI)\n\t\t\t\t\t\t\n\t\t\tif phoneComputerAccessMissed \u003e 0:\n\t\t\t\tnavigationValue \u003d str(navigationService) + \"/\" + str(phoneComputerAccessMissed)\n\t\t\telse:\n\t\t\t\tnavigationValue \u003d str(navigationService)\t\n\t\t\t\n\t\t\t\n\t\t\tif dataset.getValueAt(i,\u0027Date\u0027) in [\u0027Average\u0027,\u0027Last Month\u0027,\u0027Last Year\u0027,\u0027Total\u0027]:\n\t\t\t\tNewDataSet1.append([dataset.getValueAt(i,\u0027Date\u0027),dataset.getValueAt(i,\u0027generalPopLunch\u0027),dataset.getValueAt(i,\u0027cafeMWF\u0027),dataset.getValueAt(i,\u0027snackPacks\u0027),dataset.getValueAt(i,\u0027morningCensus\u0027),dataset.getValueAt(i,\u0027dayCensus\u0027),str(showers),str(laundry),str(mailCheckRITI),dataset.getValueAt(i,\u0027morningNews\u0027),dataset.getValueAt(i,\u0027noOfClasses\u0027),dataset.getValueAt(i,\u0027classAttendance\u0027),dataset.getValueAt(i,\u0027inPersonStore\u0027),str(navigationService),dataset.getValueAt(i,\u0027footClinic\u0027),str(dataset.getValueAt(i,\u0027recuperativeCareFull\u0027)),dataset.getValueAt(i,\u0027notes\u0027)])\n\t\t\telse:\n\t\t\t\tif dataset.getValueAt(i,\u0027recuperativeCareFull\u0027) \u003d\u003d 1:\n\t\t\t\t\trecuperativeCareFull \u003d \u0027Y\u0027\n\t\t\t\telse:\n\t\t\t\t\trecuperativeCareFull \u003d \u0027N\u0027\n\t\t\t\tNewDataSet1.append([dataset.getValueAt(i,\u0027Date\u0027),dataset.getValueAt(i,\u0027generalPopLunch\u0027),dataset.getValueAt(i,\u0027cafeMWF\u0027),dataset.getValueAt(i,\u0027snackPacks\u0027),dataset.getValueAt(i,\u0027morningCensus\u0027),dataset.getValueAt(i,\u0027dayCensus\u0027),showersValue,laundryValue,mailsValue,dataset.getValueAt(i,\u0027morningNews\u0027),dataset.getValueAt(i,\u0027noOfClasses\u0027),dataset.getValueAt(i,\u0027classAttendance\u0027),dataset.getValueAt(i,\u0027inPersonStore\u0027),navigationValue,dataset.getValueAt(i,\u0027footClinic\u0027),recuperativeCareFull, dataset.getValueAt(i,\u0027notes\u0027)])\n\t\tNewDataSet1 \u003d system.dataset.toDataSet(headers1, NewDataSet1)\t\t\n\t\t# dataset for second table:\n\t\tdataset2 \u003d self.parent.getChild(\"MonthlyTable\").getChild(\"Table_0\").custom.sql_data #self.parent.getChild(\"MonthlyTable\").getChild(\"Table_0\").props.data\n\t\tNewDataSet2 \u003d []\n\t\theaders2 \u003d [\u0027State ID\u0027,\u0027Birth Certificate\u0027,\"Travler\u0027s Aid\",\u0027Legal Clinic\u0027,\u0027Vaccine Clinic\u0027,\u0027Housed ESG\u0027,\u0027Bus Passes Total\u0027,\u002731 Day\u0027,\u00277 Day\u0027,\u0027All Day\u0027,\u00271 Ride\u0027]\n\t\tfor j in range(0,dataset2.getRowCount()):\n\t\t\tNewDataSet2.append([dataset2.getValueAt(j,\u0027stateID\u0027),dataset2.getValueAt(j,\u0027bithCertificate\u0027),dataset2.getValueAt(j,\u0027travlersAid\u0027),dataset2.getValueAt(j,\u0027legalClinic\u0027),dataset2.getValueAt(j,\u0027vaccineClinic\u0027),dataset2.getValueAt(j,\u0027housedESG\u0027),dataset2.getValueAt(j,\u0027busPassesTotal\u0027),dataset2.getValueAt(j,\u0027day_31\u0027),dataset2.getValueAt(j,\u0027day_7\u0027),dataset2.getValueAt(j,\u0027all_Day\u0027),dataset2.getValueAt(j,\u0027ride_1\u0027)])\n\t\tNewDataSet2 \u003d system.dataset.toDataSet(headers2, NewDataSet2)\t\n\t\t# add to excel\n\t\txlFile \u003d system.dataset.toExcel(True,[NewDataSet1,NewDataSet2],[],[\u0027HopeU_Dashboard\u0027,\u0027HopeU_MonthlyTotals\u0027])\n\t\tsystem.perspective.download(filename, xlFile)\n\texcept:   \n\t\tlogger \u003d system.util.getLogger(\"HopeU Dashboard tableToExcel\")\n\t\tmsg \u003d traceback.format_exc()\n\t\tlogger.error(msg)",
+              "sessionScope": false,
+              "viewScope": true
+            },
+            {
+              "messageType": "tableToPDF",
+              "pageScope": true,
+              "script": "\timport traceback\n\ttry:\n\t\t#Generate the report\n\t\tproject \u003d \"RITI\"\n\t\tpath \u003d \"Overview/HopeUTable_Report\"\n\t\tparameters \u003d {\u0027month\u0027:self.view.params.month,\n\t\t\t\t\t\u0027year\u0027:self.view.params.year,\n\t\t\t\t\t\u0027lastMonth\u0027:self.view.params.lastMonth,\n\t\t\t\t\t\u0027dateBefore12Months\u0027:self.view.params.dateBefore12Months,\n\t\t\t\t\t\u0027selectedDate\u0027:self.view.params.selectedDate\n\t\t\t\t\t}\n\t\tpdfFile \u003d system.report.executeReport(path,project,parameters,fileType\u003d\u0027pdf\u0027)\n\t\tfilename \u003d \u0027HopeUDashboard_\u0027 + str(system.date.format(system.date.now(),\"yyyyMMddHHmmss\")) + \u0027.pdf\u0027\n\n\t\tsystem.perspective.download(filename, pdfFile)\n\texcept:   \n\t\tlogger \u003d system.util.getLogger(\"HopeU Dashboard tableToPDF\")\n\t\tmsg \u003d traceback.format_exc()\n\t\tlogger.error(msg)",
+              "sessionScope": false,
+              "viewScope": false
+            },
+            {
+              "messageType": "HopeU_updated",
+              "pageScope": true,
+              "script": "\t# implement your handler here\n\tsystem.perspective.print(\u0027HopeU_updated\u0027)\n\tself.refreshBinding(\u0027custom.sql_data\u0027)\n\tself.refreshBinding(\u0027props.data\u0027)",
+              "sessionScope": false,
+              "viewScope": true
+            }
+          ]
+        },
+        "type": "ia.display.table"
+      },
+      {
+        "meta": {
+          "name": "Filler"
+        },
+        "position": {
+          "basis": "5%"
+        },
+        "props": {
+          "style": {
+            "classes": "Background/Alternative"
+          }
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "children": [
+          {
+            "meta": {
+              "name": "Label"
+            },
+            "position": {
+              "basis": "206px",
+              "grow": 1
+            },
+            "props": {
+              "style": {
+                "classes": "Text/Log_Title",
+                "paddingLeft": "10px"
+              },
+              "text": "Monthly Totals: "
+            },
+            "type": "ia.display.label"
+          }
+        ],
+        "meta": {
+          "name": "Title"
+        },
+        "position": {
+          "basis": "5%"
+        },
+        "props": {
+          "style": {
+            "classes": "Background/Alternative"
+          }
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "children": [
+          {
+            "meta": {
+              "name": "Table_0"
+            },
+            "position": {
+              "basis": "73.7%",
+              "grow": 1
+            },
+            "propConfig": {
+              "custom.HopeUMonthlyData": {
+                "binding": {
+                  "config": {
+                    "path": "this.custom.sql_data"
+                  },
+                  "transforms": [
+                    {
+                      "code": "\tFinalList \u003d []\n\tdataset \u003d value\n\tfor i in range(0,dataset.getRowCount()):\n\t\trow \u003d {}\n\t\tdateToday \u003d system.date.now()\n\t\tstartDate_sql \u003d dataset.getValueAt(i,\u0027startDate\u0027)\n\t\tfirstDateOfNextToSelectedMonth \u003d system.date.addMonths(startDate_sql,1)\n\t\tlastDateOfSelectedMonth \u003d system.date.addDays(firstDateOfNextToSelectedMonth, -1)\n\t\trow[\u0027id\u0027] \u003d {\u0027value\u0027: dataset.getValueAt(i,\u0027id\u0027), \u0027style\u0027: {}}\n\t\trow[\u0027month\u0027] \u003d {\u0027value\u0027: dataset.getValueAt(i,\u0027month\u0027), \u0027style\u0027: {}}\n\t\trow[\u0027year\u0027] \u003d {\u0027value\u0027: dataset.getValueAt(i,\u0027year\u0027), \u0027style\u0027: {}}\n\t\trow[\u0027startDate\u0027] \u003d {\u0027value\u0027: dataset.getValueAt(i,\u0027startDate\u0027), \u0027style\u0027: {}}\n\t\trow[\u0027stateID\u0027] \u003d {\u0027value\u0027: dataset.getValueAt(i,\u0027stateID\u0027), \u0027style\u0027: {}}\n\t\trow[\u0027bithCertificate\u0027] \u003d {\u0027value\u0027: dataset.getValueAt(i,\u0027bithCertificate\u0027), \u0027style\u0027: {}}\n\t\trow[\u0027travlersAid\u0027] \u003d {\u0027value\u0027: dataset.getValueAt(i,\u0027travlersAid\u0027), \u0027style\u0027: {}}\n\t\trow[\u0027legalClinic\u0027] \u003d {\u0027value\u0027: dataset.getValueAt(i,\u0027legalClinic\u0027), \u0027style\u0027: {}}\n\t\tvaccineClinic \u003d dataset.getValueAt(i,\u0027vaccineClinic\u0027)\n\t\tif (system.date.addSeconds(lastDateOfSelectedMonth, (23*60+59)*60+59)) \u003c dateToday and (vaccineClinic \u003d\u003d None or vaccineClinic \u003d\u003d \u0027\u0027):\n\t\t\trow[\u0027vaccineClinic\u0027] \u003d {\u0027value\u0027: vaccineClinic, \u0027style\u0027:{\"background\": \"#fcece8\"}} # orange\n\t\telse:\n\t\t\trow[\u0027vaccineClinic\u0027] \u003d {\u0027value\u0027: vaccineClinic, \u0027style\u0027: {\"background\": \"#9af4eb4d\"}} # blue\n#\t\trow[\u0027vaccineClinic\u0027] \u003d {\u0027value\u0027: dataset.getValueAt(i,\u0027vaccineClinic\u0027), \u0027style\u0027: {}}\n\t\trow[\u0027housedESG\u0027] \u003d {\u0027value\u0027: dataset.getValueAt(i,\u0027housedESG\u0027), \u0027style\u0027: {}}\n\t\trow[\u0027busPassesTotal\u0027] \u003d {\u0027value\u0027: dataset.getValueAt(i,\u0027busPassesTotal\u0027), \u0027style\u0027: {}}\n\t\trow[\u0027day_31\u0027] \u003d {\u0027value\u0027: dataset.getValueAt(i,\u0027day_31\u0027), \u0027style\u0027: {}}\n\t\trow[\u0027day_7\u0027] \u003d {\u0027value\u0027: dataset.getValueAt(i,\u0027day_7\u0027), \u0027style\u0027: {}}\n\t\trow[\u0027all_Day\u0027] \u003d {\u0027value\u0027: dataset.getValueAt(i,\u0027all_Day\u0027), \u0027style\u0027: {}}\n\t\trow[\u0027ride_1\u0027] \u003d {\u0027value\u0027: dataset.getValueAt(i,\u0027ride_1\u0027), \u0027style\u0027: {}}\n\t\tFinalList.append(row)\n\treturn FinalList",
+                      "type": "script"
+                    }
+                  ],
+                  "type": "property"
+                }
+              },
+              "custom.sql_data": {
+                "binding": {
+                  "config": {
+                    "parameters": {
+                      "month": "{view.params.month}",
+                      "year": "{view.params.year}"
+                    },
+                    "queryPath": "Overview/Get_MontlyTotal"
+                  },
+                  "type": "query"
+                }
+              },
+              "props.data": {
+                "binding": {
+                  "config": {
+                    "path": "this.custom.HopeUMonthlyData"
+                  },
+                  "transforms": [
+                    {
+                      "code": "\treturn value",
+                      "type": "script"
+                    }
+                  ],
+                  "type": "property"
+                }
+              }
+            },
+            "props": {
+              "cells": {
+                "allowEditOn": "single-click",
+                "style": {
+                  "classes": "Table/Cell_Dashboard_NoBG"
+                }
+              },
+              "columns": [
+                {
+                  "align": "center",
+                  "boolean": "checkbox",
+                  "dateFormat": "MM/DD/YYYY",
+                  "editable": false,
+                  "field": "id",
+                  "footer": {
+                    "align": "center",
+                    "justify": "left",
+                    "style": {
+                      "classes": ""
+                    },
+                    "title": "month"
+                  },
+                  "header": {
+                    "align": "center",
+                    "justify": "center",
+                    "style": {
+                      "classes": "Table/Column_Header"
+                    },
+                    "title": " "
+                  },
+                  "justify": "center",
+                  "number": "value",
+                  "numberFormat": "0,0.##",
+                  "progressBar": {
+                    "bar": {
+                      "color": "",
+                      "style": {
+                        "classes": ""
+                      }
+                    },
+                    "max": 100,
+                    "min": 0,
+                    "track": {
+                      "color": "",
+                      "style": {
+                        "classes": ""
+                      }
+                    },
+                    "value": {
+                      "enabled": true,
+                      "format": "0,0.##",
+                      "justify": "center",
+                      "style": {
+                        "classes": ""
+                      }
+                    }
+                  },
+                  "render": "view",
+                  "resizable": false,
+                  "sort": "none",
+                  "sortable": false,
+                  "strictWidth": true,
+                  "style": {
+                    "classes": "Table/Column_Normal",
+                    "paddingLeft": "10px"
+                  },
+                  "toggleSwitch": {
+                    "color": {
+                      "selected": "",
+                      "unselected": ""
+                    }
+                  },
+                  "viewParams": {
+                    "preview": "PreviewHopeUMonthly",
+                    "rowData": {
+                      "id": {
+                        "value": "value"
+                      }
+                    }
+                  },
+                  "viewPath": "Overview/Dashboard/Templates/EditButton_Monthly",
+                  "visible": true,
+                  "width": 50
+                },
+                {
+                  "align": "center",
+                  "boolean": "checkbox",
+                  "dateFormat": "MM/DD/YYYY",
+                  "editable": false,
+                  "field": "stateID",
+                  "footer": {
+                    "align": "center",
+                    "justify": "left",
+                    "style": {
+                      "classes": ""
+                    },
+                    "title": ""
+                  },
+                  "header": {
+                    "align": "center",
+                    "justify": "center",
+                    "style": {
+                      "classes": "Table/Column_Header"
+                    },
+                    "title": "State ID"
+                  },
+                  "justify": "center",
+                  "number": "value",
+                  "numberFormat": "0,0.##",
+                  "progressBar": {
+                    "bar": {
+                      "color": "#62A3F6",
+                      "linecap": "round",
+                      "width": 5
+                    },
+                    "max": 100,
+                    "track": {
+                      "color": "#DADADA",
+                      "linecap": "round",
+                      "width": 2
+                    },
+                    "value": {
+                      "color": "#7D7D7D",
+                      "show": true
+                    }
+                  },
+                  "render": "auto",
+                  "resizable": true,
+                  "sort": "none",
+                  "sortable": false,
+                  "strictWidth": true,
+                  "style": {
+                    "classes": "Table/Column_Normal"
+                  },
+                  "toggleSwitch": {
+                    "color": {
+                      "selected": "#2196F3",
+                      "unselected": "#FFFFFF"
+                    }
+                  },
+                  "viewParams": {},
+                  "viewPath": "",
+                  "visible": true,
+                  "width": 120
+                },
+                {
+                  "align": "center",
+                  "boolean": "checkbox",
+                  "dateFormat": "MM/DD/YYYY",
+                  "editable": false,
+                  "field": "bithCertificate",
+                  "footer": {
+                    "align": "center",
+                    "justify": "left",
+                    "style": {
+                      "classes": ""
+                    },
+                    "title": "month"
+                  },
+                  "header": {
+                    "align": "center",
+                    "justify": "center",
+                    "style": {
+                      "classes": "Table/Column_Header"
+                    },
+                    "title": "Bith Certificate"
+                  },
+                  "justify": "center",
+                  "number": "value",
+                  "numberFormat": "0,0.##",
+                  "progressBar": {
+                    "bar": {
+                      "color": "",
+                      "style": {
+                        "classes": ""
+                      }
+                    },
+                    "max": 100,
+                    "min": 0,
+                    "track": {
+                      "color": "",
+                      "style": {
+                        "classes": ""
+                      }
+                    },
+                    "value": {
+                      "enabled": true,
+                      "format": "0,0.##",
+                      "justify": "center",
+                      "style": {
+                        "classes": ""
+                      }
+                    }
+                  },
+                  "render": "auto",
+                  "resizable": true,
+                  "sort": "none",
+                  "sortable": false,
+                  "strictWidth": true,
+                  "style": {
+                    "classes": "Table/Column_Normal"
+                  },
+                  "toggleSwitch": {
+                    "color": {
+                      "selected": "",
+                      "unselected": ""
+                    }
+                  },
+                  "viewParams": {},
+                  "viewPath": "",
+                  "visible": true,
+                  "width": 120
+                },
+                {
+                  "align": "center",
+                  "boolean": "checkbox",
+                  "dateFormat": "MM/DD/YYYY",
+                  "editable": false,
+                  "field": "travlersAid",
+                  "footer": {
+                    "align": "center",
+                    "justify": "left",
+                    "style": {
+                      "classes": ""
+                    },
+                    "title": "month"
+                  },
+                  "header": {
+                    "align": "center",
+                    "justify": "center",
+                    "style": {
+                      "classes": "Table/Column_Header"
+                    },
+                    "title": "Travler\u0027s Aid"
+                  },
+                  "justify": "center",
+                  "number": "value",
+                  "numberFormat": "0,0.##",
+                  "progressBar": {
+                    "bar": {
+                      "color": "",
+                      "style": {
+                        "classes": ""
+                      }
+                    },
+                    "max": 100,
+                    "min": 0,
+                    "track": {
+                      "color": "",
+                      "style": {
+                        "classes": ""
+                      }
+                    },
+                    "value": {
+                      "enabled": true,
+                      "format": "0,0.##",
+                      "justify": "center",
+                      "style": {
+                        "classes": ""
+                      }
+                    }
+                  },
+                  "render": "auto",
+                  "resizable": true,
+                  "sort": "none",
+                  "sortable": false,
+                  "strictWidth": true,
+                  "style": {
+                    "classes": "Table/Column_Normal"
+                  },
+                  "toggleSwitch": {
+                    "color": {
+                      "selected": "",
+                      "unselected": ""
+                    }
+                  },
+                  "viewParams": {},
+                  "viewPath": "",
+                  "visible": true,
+                  "width": 120
+                },
+                {
+                  "align": "center",
+                  "boolean": "checkbox",
+                  "dateFormat": "MM/DD/YYYY",
+                  "editable": false,
+                  "field": "legalClinic",
+                  "footer": {
+                    "align": "center",
+                    "justify": "left",
+                    "style": {
+                      "classes": ""
+                    },
+                    "title": "month"
+                  },
+                  "header": {
+                    "align": "center",
+                    "justify": "center",
+                    "style": {
+                      "classes": "Table/Column_Header"
+                    },
+                    "title": "Legal Clinic"
+                  },
+                  "justify": "center",
+                  "number": "value",
+                  "numberFormat": "0,0.##",
+                  "progressBar": {
+                    "bar": {
+                      "color": "",
+                      "style": {
+                        "classes": ""
+                      }
+                    },
+                    "max": 100,
+                    "min": 0,
+                    "track": {
+                      "color": "",
+                      "style": {
+                        "classes": ""
+                      }
+                    },
+                    "value": {
+                      "enabled": true,
+                      "format": "0,0.##",
+                      "justify": "center",
+                      "style": {
+                        "classes": ""
+                      }
+                    }
+                  },
+                  "render": "auto",
+                  "resizable": true,
+                  "sort": "none",
+                  "sortable": false,
+                  "strictWidth": true,
+                  "style": {
+                    "classes": "Table/Column_Normal"
+                  },
+                  "toggleSwitch": {
+                    "color": {
+                      "selected": "",
+                      "unselected": ""
+                    }
+                  },
+                  "viewParams": {},
+                  "viewPath": "",
+                  "visible": true,
+                  "width": 120
+                },
+                {
+                  "align": "center",
+                  "boolean": "checkbox",
+                  "dateFormat": "MM/DD/YYYY",
+                  "editable": false,
+                  "field": "homelessCourt",
+                  "footer": {
+                    "align": "center",
+                    "justify": "left",
+                    "style": {
+                      "classes": ""
+                    },
+                    "title": "month"
+                  },
+                  "header": {
+                    "align": "center",
+                    "justify": "center",
+                    "style": {
+                      "classes": "Table/Column_Header"
+                    },
+                    "title": "Homeless Court"
+                  },
+                  "justify": "center",
+                  "number": "value",
+                  "numberFormat": "0,0.##",
+                  "progressBar": {
+                    "bar": {
+                      "color": "",
+                      "style": {
+                        "classes": ""
+                      }
+                    },
+                    "max": 100,
+                    "min": 0,
+                    "track": {
+                      "color": "",
+                      "style": {
+                        "classes": ""
+                      }
+                    },
+                    "value": {
+                      "enabled": true,
+                      "format": "0,0.##",
+                      "justify": "center",
+                      "style": {
+                        "classes": ""
+                      }
+                    }
+                  },
+                  "render": "auto",
+                  "resizable": true,
+                  "sort": "none",
+                  "sortable": false,
+                  "strictWidth": true,
+                  "style": {
+                    "classes": "Table/Column_Normal",
+                    "paddingRight": "5px"
+                  },
+                  "toggleSwitch": {
+                    "color": {
+                      "selected": "",
+                      "unselected": ""
+                    }
+                  },
+                  "viewParams": {},
+                  "viewPath": "",
+                  "visible": false,
+                  "width": 120
+                },
+                {
+                  "align": "center",
+                  "boolean": "checkbox",
+                  "dateFormat": "MM/DD/YYYY",
+                  "editable": false,
+                  "field": "vaccineClinic",
+                  "footer": {
+                    "align": "center",
+                    "justify": "left",
+                    "style": {
+                      "classes": ""
+                    },
+                    "title": "month"
+                  },
+                  "header": {
+                    "align": "center",
+                    "justify": "center",
+                    "style": {
+                      "classes": "Table/Column_Header",
+                      "textAlign": "center"
+                    },
+                    "title": "Vaccine Clinic"
+                  },
+                  "justify": "center",
+                  "number": "value",
+                  "numberFormat": "0,0.##",
+                  "progressBar": {
+                    "bar": {
+                      "color": "",
+                      "style": {
+                        "classes": ""
+                      }
+                    },
+                    "max": 100,
+                    "min": 0,
+                    "track": {
+                      "color": "",
+                      "style": {
+                        "classes": ""
+                      }
+                    },
+                    "value": {
+                      "enabled": true,
+                      "format": "0,0.##",
+                      "justify": "center",
+                      "style": {
+                        "classes": ""
+                      }
+                    }
+                  },
+                  "render": "auto",
+                  "resizable": true,
+                  "sort": "none",
+                  "sortable": false,
+                  "strictWidth": true,
+                  "style": {
+                    "classes": "Table/Column_Normal"
+                  },
+                  "toggleSwitch": {
+                    "color": {
+                      "selected": "",
+                      "unselected": ""
+                    }
+                  },
+                  "viewParams": {},
+                  "viewPath": "",
+                  "visible": true,
+                  "width": 120
+                },
+                {
+                  "align": "center",
+                  "boolean": "checkbox",
+                  "dateFormat": "MM/DD/YYYY",
+                  "editable": false,
+                  "field": "housedESG",
+                  "footer": {
+                    "align": "center",
+                    "justify": "left",
+                    "style": {
+                      "classes": ""
+                    },
+                    "title": "month"
+                  },
+                  "header": {
+                    "align": "center",
+                    "justify": "center",
+                    "style": {
+                      "classes": "Table/Column_Header",
+                      "textAlign": "center"
+                    },
+                    "title": "Housed ESG"
+                  },
+                  "justify": "center",
+                  "number": "value",
+                  "numberFormat": "0,0.##",
+                  "progressBar": {
+                    "bar": {
+                      "color": "",
+                      "style": {
+                        "classes": ""
+                      }
+                    },
+                    "max": 100,
+                    "min": 0,
+                    "track": {
+                      "color": "",
+                      "style": {
+                        "classes": ""
+                      }
+                    },
+                    "value": {
+                      "enabled": true,
+                      "format": "0,0.##",
+                      "justify": "center",
+                      "style": {
+                        "classes": ""
+                      }
+                    }
+                  },
+                  "render": "auto",
+                  "resizable": true,
+                  "sort": "none",
+                  "sortable": false,
+                  "strictWidth": true,
+                  "style": {
+                    "classes": "Table/Column_Normal"
+                  },
+                  "toggleSwitch": {
+                    "color": {
+                      "selected": "",
+                      "unselected": ""
+                    }
+                  },
+                  "viewParams": {},
+                  "viewPath": "",
+                  "visible": true,
+                  "width": 120
+                },
+                {
+                  "align": "center",
+                  "boolean": "checkbox",
+                  "dateFormat": "MM/DD/YYYY",
+                  "editable": false,
+                  "field": "busPassesTotal",
+                  "footer": {
+                    "align": "center",
+                    "justify": "left",
+                    "style": {
+                      "classes": ""
+                    },
+                    "title": "month"
+                  },
+                  "header": {
+                    "align": "center",
+                    "justify": "center",
+                    "style": {
+                      "classes": "Table/Column_Header",
+                      "textAlign": "center"
+                    },
+                    "title": "Bus Passes Total"
+                  },
+                  "justify": "center",
+                  "number": "value",
+                  "numberFormat": "0,0.##",
+                  "progressBar": {
+                    "bar": {
+                      "color": "",
+                      "style": {
+                        "classes": ""
+                      }
+                    },
+                    "max": 100,
+                    "min": 0,
+                    "track": {
+                      "color": "",
+                      "style": {
+                        "classes": ""
+                      }
+                    },
+                    "value": {
+                      "enabled": true,
+                      "format": "0,0.##",
+                      "justify": "center",
+                      "style": {
+                        "classes": ""
+                      }
+                    }
+                  },
+                  "render": "auto",
+                  "resizable": true,
+                  "sort": "none",
+                  "sortable": false,
+                  "strictWidth": true,
+                  "style": {
+                    "classes": "Table/Column_Normal"
+                  },
+                  "toggleSwitch": {
+                    "color": {
+                      "selected": "",
+                      "unselected": ""
+                    }
+                  },
+                  "viewParams": {},
+                  "viewPath": "",
+                  "visible": true,
+                  "width": 120
+                },
+                {
+                  "align": "center",
+                  "boolean": "checkbox",
+                  "dateFormat": "MM/DD/YYYY",
+                  "editable": false,
+                  "field": "day_31",
+                  "footer": {
+                    "align": "center",
+                    "justify": "left",
+                    "style": {
+                      "classes": ""
+                    },
+                    "title": "month"
+                  },
+                  "header": {
+                    "align": "center",
+                    "justify": "center",
+                    "style": {
+                      "classes": "Table/Column_Header",
+                      "textAlign": "center"
+                    },
+                    "title": "31 Day"
+                  },
+                  "justify": "center",
+                  "number": "value",
+                  "numberFormat": "0,0.##",
+                  "progressBar": {
+                    "bar": {
+                      "color": "",
+                      "style": {
+                        "classes": ""
+                      }
+                    },
+                    "max": 100,
+                    "min": 0,
+                    "track": {
+                      "color": "",
+                      "style": {
+                        "classes": ""
+                      }
+                    },
+                    "value": {
+                      "enabled": true,
+                      "format": "0,0.##",
+                      "justify": "center",
+                      "style": {
+                        "classes": ""
+                      }
+                    }
+                  },
+                  "render": "auto",
+                  "resizable": true,
+                  "sort": "none",
+                  "sortable": false,
+                  "strictWidth": true,
+                  "style": {
+                    "classes": "Table/Column_Normal"
+                  },
+                  "toggleSwitch": {
+                    "color": {
+                      "selected": "",
+                      "unselected": ""
+                    }
+                  },
+                  "viewParams": {},
+                  "viewPath": "",
+                  "visible": true,
+                  "width": 120
+                },
+                {
+                  "align": "center",
+                  "boolean": "checkbox",
+                  "dateFormat": "MM/DD/YYYY",
+                  "editable": false,
+                  "field": "day_7",
+                  "footer": {
+                    "align": "center",
+                    "justify": "left",
+                    "style": {
+                      "classes": ""
+                    },
+                    "title": "month"
+                  },
+                  "header": {
+                    "align": "center",
+                    "justify": "center",
+                    "style": {
+                      "classes": "Table/Column_Header",
+                      "textAlign": "center"
+                    },
+                    "title": "7 Day"
+                  },
+                  "justify": "center",
+                  "number": "value",
+                  "numberFormat": "0,0.##",
+                  "progressBar": {
+                    "bar": {
+                      "color": "",
+                      "style": {
+                        "classes": ""
+                      }
+                    },
+                    "max": 100,
+                    "min": 0,
+                    "track": {
+                      "color": "",
+                      "style": {
+                        "classes": ""
+                      }
+                    },
+                    "value": {
+                      "enabled": true,
+                      "format": "0,0.##",
+                      "justify": "center",
+                      "style": {
+                        "classes": ""
+                      }
+                    }
+                  },
+                  "render": "auto",
+                  "resizable": true,
+                  "sort": "none",
+                  "sortable": false,
+                  "strictWidth": true,
+                  "style": {
+                    "classes": "Table/Column_Normal"
+                  },
+                  "toggleSwitch": {
+                    "color": {
+                      "selected": "",
+                      "unselected": ""
+                    }
+                  },
+                  "viewParams": {},
+                  "viewPath": "",
+                  "visible": true,
+                  "width": 120
+                },
+                {
+                  "align": "center",
+                  "boolean": "checkbox",
+                  "dateFormat": "MM/DD/YYYY",
+                  "editable": false,
+                  "field": "all_Day",
+                  "footer": {
+                    "align": "center",
+                    "justify": "left",
+                    "style": {
+                      "classes": ""
+                    },
+                    "title": "month"
+                  },
+                  "header": {
+                    "align": "center",
+                    "justify": "center",
+                    "style": {
+                      "classes": "Table/Column_Header",
+                      "textAlign": "center"
+                    },
+                    "title": "All Day"
+                  },
+                  "justify": "center",
+                  "number": "value",
+                  "numberFormat": "0,0.##",
+                  "progressBar": {
+                    "bar": {
+                      "color": "",
+                      "style": {
+                        "classes": ""
+                      }
+                    },
+                    "max": 100,
+                    "min": 0,
+                    "track": {
+                      "color": "",
+                      "style": {
+                        "classes": ""
+                      }
+                    },
+                    "value": {
+                      "enabled": true,
+                      "format": "0,0.##",
+                      "justify": "center",
+                      "style": {
+                        "classes": ""
+                      }
+                    }
+                  },
+                  "render": "auto",
+                  "resizable": true,
+                  "sort": "none",
+                  "sortable": false,
+                  "strictWidth": true,
+                  "style": {
+                    "classes": "Table/Column_Normal"
+                  },
+                  "toggleSwitch": {
+                    "color": {
+                      "selected": "",
+                      "unselected": ""
+                    }
+                  },
+                  "viewParams": {},
+                  "viewPath": "",
+                  "visible": true,
+                  "width": 120
+                },
+                {
+                  "align": "center",
+                  "boolean": "checkbox",
+                  "dateFormat": "MM/DD/YYYY",
+                  "editable": false,
+                  "field": "ride_1",
+                  "footer": {
+                    "align": "center",
+                    "justify": "left",
+                    "style": {
+                      "classes": ""
+                    },
+                    "title": "month"
+                  },
+                  "header": {
+                    "align": "center",
+                    "justify": "center",
+                    "style": {
+                      "classes": "Table/Column_Header",
+                      "textAlign": "center"
+                    },
+                    "title": "1 Ride"
+                  },
+                  "justify": "center",
+                  "number": "value",
+                  "numberFormat": "0,0.##",
+                  "progressBar": {
+                    "bar": {
+                      "color": "",
+                      "style": {
+                        "classes": ""
+                      }
+                    },
+                    "max": 100,
+                    "min": 0,
+                    "track": {
+                      "color": "",
+                      "style": {
+                        "classes": ""
+                      }
+                    },
+                    "value": {
+                      "enabled": true,
+                      "format": "0,0.##",
+                      "justify": "center",
+                      "style": {
+                        "classes": ""
+                      }
+                    }
+                  },
+                  "render": "auto",
+                  "resizable": true,
+                  "sort": "none",
+                  "sortable": false,
+                  "strictWidth": true,
+                  "style": {
+                    "classes": "Table/Column_Normal"
+                  },
+                  "toggleSwitch": {
+                    "color": {
+                      "selected": "",
+                      "unselected": ""
+                    }
+                  },
+                  "viewParams": {},
+                  "viewPath": "",
+                  "visible": true,
+                  "width": 120
+                }
+              ],
+              "pager": {
+                "bottom": false,
+                "initialOption": 100
+              },
+              "rows": {
+                "highlight": {
+                  "color": "#CCFFFF",
+                  "enabled": false
+                },
+                "striped": {
+                  "color": {
+                    "even": "#8AFFFF"
+                  },
+                  "enabled": false
+                },
+                "style": {
+                  "cursor": "pointer"
+                }
+              },
+              "style": {
+                "classes": "Background/Default",
+                "paddingLeft": "10px"
+              }
+            },
+            "scripts": {
+              "customMethods": [],
+              "extensionFunctions": null,
+              "messageHandlers": [
+                {
+                  "messageType": "HopeUMonthly_updated",
+                  "pageScope": true,
+                  "script": "\t# implement your handler here\n\tsystem.perspective.print(\u0027HopeUMonthly_updated\u0027)\n\tself.refreshBinding(\u0027custom.sql_data\u0027)\n\tself.refreshBinding(\u0027props.data\u0027)",
+                  "sessionScope": false,
+                  "viewScope": false
+                }
+              ]
+            },
+            "type": "ia.display.table"
+          }
+        ],
+        "meta": {
+          "name": "MonthlyTable"
+        },
+        "position": {
+          "basis": "10%"
+        },
+        "props": {
+          "style": {
+            "classes": "Background/Default"
+          }
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "meta": {
+          "name": "Filler_0"
+        },
+        "position": {
+          "basis": "3%"
+        },
+        "props": {
+          "style": {
+            "classes": "Background/Alternative"
+          }
+        },
+        "type": "ia.container.flex"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column"
+    },
+    "type": "ia.container.flex"
+  }
+}

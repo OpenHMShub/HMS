@@ -1,0 +1,382 @@
+{
+  "custom": {},
+  "params": {
+    "employee_id": -1,
+    "endTime": "",
+    "hmis": 0,
+    "newNote": true,
+    "note": "",
+    "note_type_id": [],
+    "notify": [],
+    "startTime": ""
+  },
+  "propConfig": {
+    "params.employee_id": {
+      "paramDirection": "inout"
+    },
+    "params.endTime": {
+      "paramDirection": "inout"
+    },
+    "params.hmis": {
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.newNote": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.note": {
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.note_type_id": {
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.notify": {
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.startTime": {
+      "paramDirection": "inout"
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 270,
+      "width": 1100
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "children": [
+          {
+            "meta": {
+              "name": "Embed_Employee"
+            },
+            "position": {
+              "basis": "165px",
+              "shrink": 0
+            },
+            "propConfig": {
+              "props.params.options": {
+                "binding": {
+                  "config": {
+                    "queryPath": "Participants/EmployeeDropdownList"
+                  },
+                  "type": "query"
+                }
+              },
+              "props.params.selection": {
+                "binding": {
+                  "config": {
+                    "bidirectional": true,
+                    "path": "view.params.employee_id"
+                  },
+                  "type": "property"
+                }
+              }
+            },
+            "props": {
+              "params": {
+                "text": "Entered By"
+              },
+              "path": "Participants/Templates/120px/top/Input_DropDownSingle"
+            },
+            "type": "ia.display.view"
+          },
+          {
+            "meta": {
+              "name": "Embed_Notify"
+            },
+            "position": {
+              "basis": "300px",
+              "shrink": 0
+            },
+            "propConfig": {
+              "props.params.options": {
+                "binding": {
+                  "config": {
+                    "queryPath": "Participants/Tasks/GetStaff"
+                  },
+                  "type": "query"
+                }
+              },
+              "props.params.selection": {
+                "binding": {
+                  "config": {
+                    "bidirectional": true,
+                    "path": "view.params.notify"
+                  },
+                  "type": "property"
+                }
+              }
+            },
+            "props": {
+              "params": {
+                "text": "Notify"
+              },
+              "path": "Participants/Templates/60px/top/Input_DropDownMulti",
+              "useDefaultViewHeight": true
+            },
+            "type": "ia.display.view"
+          },
+          {
+            "meta": {
+              "name": "Embed_HMIS"
+            },
+            "position": {
+              "basis": "130px",
+              "shrink": 0
+            },
+            "propConfig": {
+              "props.params.selection": {
+                "binding": {
+                  "config": {
+                    "bidirectional": true,
+                    "path": "view.params.hmis"
+                  },
+                  "type": "property"
+                }
+              }
+            },
+            "props": {
+              "params": {
+                "options": {
+                  "$": [
+                    "ds",
+                    192,
+                    1598408843993
+                  ],
+                  "$columns": [
+                    {
+                      "data": [
+                        0,
+                        1
+                      ],
+                      "name": "id",
+                      "type": "Integer"
+                    },
+                    {
+                      "data": [
+                        "No",
+                        "Yes"
+                      ],
+                      "name": "text",
+                      "type": "String"
+                    }
+                  ]
+                },
+                "text": "HMIS"
+              },
+              "path": "Participants/Templates/120px/top/Input_DropDownSingle"
+            },
+            "type": "ia.display.view"
+          },
+          {
+            "meta": {
+              "name": "Embed_Type"
+            },
+            "position": {
+              "basis": "260px",
+              "shrink": 0
+            },
+            "propConfig": {
+              "props.params.options": {
+                "binding": {
+                  "config": {
+                    "queryPath": "Participants/CaseNotes/CaseNotesTypeSelect"
+                  },
+                  "type": "query"
+                }
+              },
+              "props.params.selection": {
+                "binding": {
+                  "config": {
+                    "bidirectional": true,
+                    "path": "view.params.note_type_id"
+                  },
+                  "type": "property"
+                }
+              }
+            },
+            "props": {
+              "params": {
+                "text": "TYPE"
+              },
+              "path": "1_TEMPLATES/60px/top/Input_DropDownMulti",
+              "useDefaultViewHeight": true
+            },
+            "type": "ia.display.view"
+          },
+          {
+            "meta": {
+              "name": "Embed_StartTime"
+            },
+            "position": {
+              "basis": "220px",
+              "shrink": 0
+            },
+            "propConfig": {
+              "props.params.date": {
+                "binding": {
+                  "config": {
+                    "bidirectional": true,
+                    "path": "view.params.startTime"
+                  },
+                  "type": "property"
+                },
+                "onChange": {
+                  "enabled": null,
+                  "script": "\tif currentValue.value is not None:\n\t\tstartDateTime \u003d currentValue.value\n\t\tif self.view.params.endTime \u003d\u003d None:\n\t\t\t## set the end date as startTime + 15 mins only when it is None\n\t\t\tendDateTime \u003d system.date.addMinutes(startDateTime, 15)\n\t\t\tself.view.params.endTime\u003d endDateTime"
+                }
+              },
+              "props.params.enabled": {
+                "binding": {
+                  "config": {
+                    "expression": "{view.params.newNote} || {session.custom.isAdministrator}"
+                  },
+                  "type": "expr"
+                }
+              }
+            },
+            "props": {
+              "params": {
+                "text": "Start Time"
+              },
+              "path": "Participants/Templates/60px/top/Input_Date_Time_WithEnableDisableSetting"
+            },
+            "type": "ia.display.view"
+          },
+          {
+            "meta": {
+              "name": "Embed_EndTime"
+            },
+            "position": {
+              "basis": "220px",
+              "shrink": 0
+            },
+            "propConfig": {
+              "props.params.date": {
+                "binding": {
+                  "config": {
+                    "bidirectional": true,
+                    "path": "view.params.endTime"
+                  },
+                  "type": "property"
+                }
+              },
+              "props.params.enabled": {
+                "binding": {
+                  "config": {
+                    "expression": "{view.params.newNote} || {session.custom.isAdministrator}"
+                  },
+                  "type": "expr"
+                }
+              }
+            },
+            "props": {
+              "params": {
+                "text": "End Time"
+              },
+              "path": "Participants/Templates/60px/top/Input_Date_Time_WithEnableDisableSetting"
+            },
+            "type": "ia.display.view"
+          },
+          {
+            "meta": {
+              "name": "Embed_Placeholder"
+            },
+            "position": {
+              "basis": "1px",
+              "grow": 1
+            },
+            "props": {
+              "path": "Participants/Templates/Placeholder"
+            },
+            "type": "ia.display.view"
+          }
+        ],
+        "meta": {
+          "name": "Row1"
+        },
+        "position": {
+          "basis": "70px"
+        },
+        "props": {
+          "style": {
+            "borderBottomColor": "#D5D5D5",
+            "borderBottomStyle": "solid",
+            "borderBottomWidth": "1px",
+            "overflow": "hidden"
+          }
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "children": [
+          {
+            "meta": {
+              "name": "Embed_Description"
+            },
+            "position": {
+              "basis": "100%",
+              "grow": 1
+            },
+            "propConfig": {
+              "props.params.text": {
+                "binding": {
+                  "config": {
+                    "bidirectional": true,
+                    "path": "view.params.note"
+                  },
+                  "type": "property"
+                }
+              }
+            },
+            "props": {
+              "params": {
+                "label": "NOTE",
+                "placeholder": "Start typing to create a case note..."
+              },
+              "path": "Participants/Templates/120px/top/Input_Text_grow"
+            },
+            "type": "ia.display.view"
+          }
+        ],
+        "meta": {
+          "name": "Row2"
+        },
+        "position": {
+          "basis": "200px",
+          "grow": 1
+        },
+        "type": "ia.container.flex"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column",
+      "style": {
+        "classes": "Background/Default"
+      }
+    },
+    "scripts": {
+      "customMethods": [],
+      "extensionFunctions": null,
+      "messageHandlers": [
+        {
+          "messageType": "clear_case_notes_detail_form",
+          "pageScope": true,
+          "script": "\tself.view.params.employee_id \u003d self.session.custom.loggedInStaffEmployeeID\n\tself.view.params.hmis \u003d 0\n\tself.view.params.note \u003d \"\"\n\tself.view.params.note_type_id \u003d []\n\tself.view.params.notify \u003d -1\n\t## change as per ticket #301\n\tself.view.params.endTime \u003d None\n\tself.view.params.startTime \u003d system.date.now()",
+          "sessionScope": false,
+          "viewScope": false
+        }
+      ]
+    },
+    "type": "ia.container.flex"
+  }
+}

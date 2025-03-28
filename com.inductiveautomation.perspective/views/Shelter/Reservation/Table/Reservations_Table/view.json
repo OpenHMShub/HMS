@@ -1,0 +1,1539 @@
+{
+  "custom": {},
+  "events": {
+    "system": {
+      "onStartup": {
+        "config": {
+          "script": "\ttry:\n\t\tself.session.custom.dateRangeFromDate \u003d system.date.format(system.date.now(), \"MM/dd/yyyy\")\n\t\tself.session.custom.dateRangeToDate \u003d system.date.format(system.date.now(), \"MM/dd/yyyy\")\n\texcept:\n\t\timport traceback\n\t\tlogger \u003d system.util.getLogger(\"{}\".format(\u0027Residents_Table onStartUp\u0027))\n\t\tmsg \u003d traceback.format_exc()\n\t\tlogger.error(msg)\t\n\n"
+        },
+        "enabled": false,
+        "scope": "G",
+        "type": "script"
+      }
+    }
+  },
+  "params": {
+    "facilityID": 0,
+    "fetch": null,
+    "resultRowCount": 41
+  },
+  "propConfig": {
+    "params.facilityID": {
+      "onChange": {
+        "enabled": null,
+        "script": "\tsystem.perspective.print(\"Reservation_Table\")\n\tsystem.perspective.print(self.params.facilityID)\n\tsystem.perspective.sendMessage(messageType\u003d\"refreshReservations\", payload\u003d{}, scope\u003d\"session\")\n\t"
+      },
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.fetch": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.resultRowCount": {
+      "paramDirection": "output",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 620,
+      "width": 873
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "custom": {
+          "_devPulse": false,
+          "_devTxt": "",
+          "_isDev": false,
+          "jsonLastPayload": null,
+          "lastPayload": {
+            "activeInactive": "All",
+            "expiredCheckedIn": null,
+            "gender": null,
+            "race": null,
+            "searchText": "",
+            "waitingList": null
+          }
+        },
+        "events": {
+          "component": {
+            "onRowClick": {
+              "config": {
+                "script": "\t#system.perspective.print(\"Hi\")\n\tfacilityId \u003d self.view.params.facilityID\n\treservationId \u003d event.value[\"reservationId\"]\n\tbedId \u003d event.value[\"bedId\"]\n\tparticipantId \u003d event.value[\"participantId\"]\n\troomId \u003d event.value[\"roomId\"]\n\tnotes \u003d event.value[\"notes\"]\n\t#system.perspective.print(event.value[\"reservationStart\"])\n\t#checkInDate \u003d  system.date.fromMillis(event.value[\"reservationStart\"])\n\tcheckInDate \u003d self.props.selection.data[0][\u0027reservationStart\u0027]\n\tcheckInDate \u003d system.date.fromMillis(checkInDate)\n\t#system.perspective.print(checkInDate)\n\t#checkOutDate \u003d  system.date.fromMillis(event.value[\"reservationEnd\"])\n\tcheckOutDate \u003d self.props.selection.data[0][\u0027reservationEnd\u0027]\n\tcheckOutDate \u003d system.date.fromMillis(checkOutDate)\n\t\t\n\t#system.perspective.print(checkOutDate)\n\twaitListName \u003d event.value[\"waitListName\"]\n\tprogramId \u003d event.value[\"programId\"]\n\tproviderId \u003d event.value[\"providerId\"]\n\tproviderTypeId \u003d event.value[\"providerTypeId\"]\n\treservationType \u003d event.value[\"reservationType\"]\n\t#system.perspective.print(\"reservationselected\")\n\tReasonForEntryId \u003d self.props.selection.data[0][\u0027ReasonForEntryId\u0027]\n\tprescribedControlledSubstance \u003d self.props.selection.data[0][\u0027prescribedControlledSubstance\u0027]\n\tsystem.perspective.sendMessage(\"reservationselected\",payload \u003d {\u0027facilityId\u0027:facilityId,\u0027reservationId\u0027:reservationId, \u0027bedId\u0027:bedId, \u0027participantId\u0027:participantId, \u0027roomId\u0027:roomId , \u0027notes\u0027:notes, \u0027checkInDate\u0027:checkInDate, \u0027checkOutDate\u0027:checkOutDate, \u0027waitListName\u0027:waitListName, \u0027programId\u0027:programId, \u0027providerId\u0027:providerId, \u0027providerTypeId\u0027:providerTypeId, \u0027reservationType\u0027:reservationType, \u0027ReasonForEntryId\u0027:ReasonForEntryId,\u0027prescribedControlledSubstance\u0027:prescribedControlledSubstance},scope\u003d\u0027session\u0027)\n\t\t\n\t\n\t\n\tfor item in range(len(self.props.data)):\n\t\tif item \u003d\u003d event.row:\n\t\t\tself.props.data[item].age.style.classes \u003d \u0027Table/Row_Select\u0027\n\t\t\tself.props.data[item].bedId.style.classes \u003d \u0027Table/Row_Select\u0027\n\t\t\tself.props.data[item].bedName.style.classes \u003d \u0027Table/Row_Select\u0027\n\t\t\tself.props.data[item].gender.style.classes \u003d \u0027Table/Row_Select\u0027\n\t\t\tself.props.data[item].name.style.classes \u003d \u0027Table/Row_Select\u0027\n\t\t\tself.props.data[item].notes.style.classes \u003d \u0027Table/Row_Select\u0027\n\t\t\tself.props.data[item].participantId.style.classes \u003d \u0027Table/Row_Select\u0027\n\t\t\tself.props.data[item].programId.style.classes \u003d \u0027Table/Row_Select\u0027\n\t\t\tself.props.data[item].providerId.style.classes \u003d \u0027Table/Row_Select\u0027\n\t\t\tself.props.data[item].providerTypeId.style.classes \u003d \u0027Table/Row_Select\u0027\n\t\t\tself.props.data[item].race.style.classes \u003d \u0027Table/Row_Select\u0027\n\t\t\tself.props.data[item].referralStatus.style.classes \u003d \u0027Table/Row_Select\u0027\n\t\t\tself.props.data[item].reservationEnd.style.classes \u003d \u0027Table/Row_Select\u0027\n\t\t\tself.props.data[item].reservationExpiration.style.classes \u003d \u0027Table/Row_Select\u0027\n\t\t\tself.props.data[item].reservationId.style.classes \u003d \u0027Table/Row_Select\u0027\n\t\t\tself.props.data[item].reservationStart.style.classes \u003d \u0027Table/Row_Select\u0027\n\t\t\tself.props.data[item].reservationType.style.classes \u003d \u0027Table/Row_Select\u0027\n\t\t\tself.props.data[item].roomId.style.classes \u003d \u0027Table/Row_Select\u0027\n\t\t\tself.props.data[item].roomName.style.classes \u003d \u0027Table/Row_Select\u0027\n\t\t\tself.props.data[item].timeRetired.style.classes \u003d \u0027Table/Row_Select\u0027\n\t\t\tself.props.data[item].waitListName.style.classes \u003d \u0027Table/Row_Select\u0027\n\t\telse:\n\t\t\tself.props.data[item].age.style.classes \u003d \u0027Table/Column_Normal\u0027\n\t\t\tself.props.data[item].bedId.style.classes \u003d \u0027Table/Column_Normal\u0027\n\t\t\tself.props.data[item].bedName.style.classes \u003d \u0027Table/Column_Normal\u0027\n\t\t\tself.props.data[item].gender.style.classes \u003d \u0027Table/Column_Normal\u0027\n\t\t\tself.props.data[item].name.style.classes \u003d \u0027Table/Column_Normal\u0027\n\t\t\tself.props.data[item].notes.style.classes \u003d \u0027Table/Column_Normal\u0027\n\t\t\tself.props.data[item].participantId.style.classes \u003d \u0027Table/Column_Normal\u0027\n\t\t\tself.props.data[item].programId.style.classes \u003d \u0027Table/Column_Normal\u0027\n\t\t\tself.props.data[item].providerId.style.classes \u003d \u0027Table/Column_Normal\u0027\n\t\t\tself.props.data[item].providerTypeId.style.classes \u003d \u0027Table/Column_Normal\u0027\n\t\t\tself.props.data[item].race.style.classes \u003d \u0027Table/Column_Normal\u0027\n\t\t\tself.props.data[item].referralStatus.style.classes \u003d \u0027Table/Column_Normal\u0027\n\t\t\tself.props.data[item].reservationEnd.style.classes \u003d \u0027Table/Column_Normal\u0027\n\t\t\tself.props.data[item].reservationExpiration.style.classes \u003d \u0027Table/Column_Normal\u0027\n\t\t\tself.props.data[item].reservationId.style.classes \u003d \u0027Table/Column_Normal\u0027\n\t\t\tself.props.data[item].reservationStart.style.classes \u003d \u0027Table/Column_Normal\u0027\n\t\t\tself.props.data[item].reservationType.style.classes \u003d \u0027Table/Column_Normal\u0027\n\t\t\tself.props.data[item].roomId.style.classes \u003d \u0027Table/Column_Normal\u0027\n\t\t\tself.props.data[item].roomName.style.classes \u003d \u0027Table/Column_Normal\u0027\n\t\t\tself.props.data[item].timeRetired.style.classes \u003d \u0027Table/Column_Normal\u0027\n\t\t\tself.props.data[item].waitListName.style.classes \u003d \u0027Table/Column_Normal\u0027"
+              },
+              "scope": "G",
+              "type": "script"
+            }
+          }
+        },
+        "meta": {
+          "name": "Table"
+        },
+        "position": {
+          "basis": "100%",
+          "grow": 1,
+          "shrink": 0
+        },
+        "propConfig": {
+          "custom._devPulse": {
+            "onChange": {
+              "enabled": null,
+              "script": "\tif self.custom._isDev:\n\t\tif currentValue.value is True:\n\t\t\tpayload \u003d {}\n\t\t\t\n#\t\t\tpayload[\u0027countReferralFromTo\u0027] \u003d [1,5]\n#\t\t\tpayload[\u0027providerTypeId\u0027] \u003d [0,2]\n\t\t\t\n\t\t\tpayload[\u0027gender\u0027] \u003d None\n\t\t\tpayload[\u0027race\u0027] \u003d None\n\t\t\tpayload[\u0027waitingList\u0027] \u003d None\n\t\t\tpayload[\u0027activeInactive\u0027] \u003d \u0027All\u0027\n\t\t\tpayload[\u0027expiredCheckedIn\u0027] \u003d None\n\t\t\tpayload[\u0027searchText\u0027] \u003d self.custom._devTxt\n\t\t\t#payload[\u0027fetch\u0027] \u003d 12\n\t\t\t\n\t\t\tsystem.perspective.sendMessage(\u0027mhByCondition\u0027, payload \u003d payload)\n\t\t\tself.custom.jsonLastPayload \u003d system.util.jsonEncode(payload)\n\n\t\telse:\n\t\t\t#payload \u003d {}\n\t\t\t#payload[\u0027providerTypeId\u0027] \u003d [-1]\n\t\t\t#payload[\u0027searchText\u0027] \u003d self.custom._devTxt\n\t\t\t#payload[\u0027fetch\u0027] \u003d 12\n\t\t\t\n\t\t\t#system.perspective.sendMessage(\u0027mhByCondition\u0027, payload \u003d payload)\n\t\t\t#self.custom.jsonLastPayload \u003d system.util.jsonEncode(payload)\n\n\t\t\t#self.props.data \u003d [{key: \u0027\u0027 if key \u003d\u003d \u0027providerName\u0027 else None for key in self.props.data[0]}]\n\t\t\tself.props.data \u003d [{key: None for key in self.props.data[0]}]\n\t\t\tself.custom.jsonLastPayload \u003d None\n\n\n"
+            }
+          },
+          "props.filter.text": {
+            "access": "PUBLIC"
+          },
+          "props.selection.style.backgroundColor": {
+            "binding": {
+              "config": {
+                "path": "this.props.selection.selectedRow"
+              },
+              "transforms": [
+                {
+                  "code": "\treturn \"#FFFFFF00\" if value is None or value \u003d\u003d -1 else \"#9AF4EB4D\"",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "cells": {
+            "style": {
+              "classes": "Table/Cell_Dashboard_NoBG"
+            }
+          },
+          "columns": [
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "name",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header"
+                },
+                "title": "Participant"
+              },
+              "justify": "left",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal",
+                "paddingLeft": "25px"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 220
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "gender",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header"
+                },
+                "title": "Gender"
+              },
+              "justify": "left",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 90
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "age",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header"
+                },
+                "title": "Age"
+              },
+              "justify": "left",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 70
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "race",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header"
+                },
+                "title": "Race"
+              },
+              "justify": "left",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 190
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY hh:mm a",
+              "editable": false,
+              "field": "reservationStart",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header"
+                },
+                "title": "Reservation Created"
+              },
+              "justify": "left",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "date",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 170
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY hh:mm a",
+              "editable": false,
+              "field": "reservationEnd",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header"
+                },
+                "title": "Reservation Expiration"
+              },
+              "justify": "left",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "date",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 200
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "roomName",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header"
+                },
+                "title": "Room"
+              },
+              "justify": "left",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 180
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "bedName",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header"
+                },
+                "title": "Bed"
+              },
+              "justify": "left",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": false,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 90
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "referralStatus",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header"
+                },
+                "title": "Referral Status"
+              },
+              "justify": "left",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": false,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 100
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "reservationExpiration",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header"
+                },
+                "title": ""
+              },
+              "justify": "left",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": false,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": false,
+              "width": ""
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "timeRetired",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header"
+                },
+                "title": ""
+              },
+              "justify": "left",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": false,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": false,
+              "width": ""
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "participantId",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header"
+                },
+                "title": ""
+              },
+              "justify": "left",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": false,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": false,
+              "width": ""
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "reservationId",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header"
+                },
+                "title": ""
+              },
+              "justify": "left",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": false,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": false,
+              "width": ""
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "roomId",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header"
+                },
+                "title": ""
+              },
+              "justify": "left",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": false,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": false,
+              "width": ""
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "bedId",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header"
+                },
+                "title": ""
+              },
+              "justify": "left",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": false,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": false,
+              "width": ""
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "notes",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header"
+                },
+                "title": ""
+              },
+              "justify": "left",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": false,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": false,
+              "width": ""
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "waitListName",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header"
+                },
+                "title": ""
+              },
+              "justify": "left",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": false,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": false,
+              "width": ""
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "programId",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header"
+                },
+                "title": ""
+              },
+              "justify": "left",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": false,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": false,
+              "width": ""
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "providerId",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header"
+                },
+                "title": ""
+              },
+              "justify": "left",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": false,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": false,
+              "width": ""
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "providerTypeId",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header"
+                },
+                "title": ""
+              },
+              "justify": "left",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": false,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": false,
+              "width": ""
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "reservationType",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header"
+                },
+                "title": ""
+              },
+              "justify": "left",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": false,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": false,
+              "width": ""
+            }
+          ],
+          "data": [
+            {
+              "age": null,
+              "bedId": null,
+              "bedName": null,
+              "gender": null,
+              "name": null,
+              "notes": null,
+              "participantId": null,
+              "programId": null,
+              "providerId": null,
+              "providerTypeId": null,
+              "race": null,
+              "referralStatus": null,
+              "reservationEnd": null,
+              "reservationExpiration": null,
+              "reservationId": null,
+              "reservationStart": null,
+              "reservationType": null,
+              "roomId": null,
+              "roomName": null,
+              "timeRetired": null,
+              "waitListName": null
+            }
+          ],
+          "pager": {
+            "initialOption": 100
+          },
+          "rows": {
+            "highlight": {
+              "color": "#ccffff"
+            },
+            "striped": {
+              "enabled": false
+            },
+            "style": {
+              "cursor": "pointer"
+            }
+          },
+          "style": {
+            "classes": "Background/Default",
+            "overflowX": "hidden"
+          }
+        },
+        "scripts": {
+          "customMethods": [
+            {
+              "name": "getDataDb",
+              "params": [
+                "payload"
+              ],
+              "script": "\timport extend.query\n\t\n\tdeclaration, queryCte, query, orderBy, fetchOffset \u003d self.getQuery()\n\n\targs \u003d []\t\n\n\t###############################################\n\t# This param must be java.util.Date or None. Not allowed empty string \u0027\u0027\n\tfacilityID\u003d self.view.params.facilityID\n\targs +\u003d [facilityID]\n\n\t################################################\n\t# This param must be java.util.Date or None. Not allowed empty string \u0027\u0027\n\tactiveInactive\u003d payload.get(\u0027activeInactive\u0027)\n\targs +\u003d [activeInactive]\n\t\n\t###############################################\n\t# This param must be int or None. Not allowed empty string \u0027\u0027\n\texpiredCheckedIn\u003d payload.get(\u0027expiredCheckedIn\u0027)\n\targs +\u003d [expiredCheckedIn]\n\t\n\t###############################################\n\t# This param must be STRING or None. Not allowed empty string \u0027\u0027\n\tgender\u003d payload.get(\u0027gender\u0027)\n\targs +\u003d [gender]\n\n\t###############################################\n\t# This param must be STRING or None. Not allowed empty string \u0027\u0027\n\trace\u003d payload.get(\u0027race\u0027)\n\targs +\u003d [race]\n\t\n\t###############################################\n\tsearch_text \u003d payload.get(\u0027searchText\u0027)\n\t\n\tif search_text is None:\n\t\tsearch_text \u003d \u0027\u0027\n\t\n\targs +\u003d [search_text]\n\t\n\t################################################\n\t# shelterNames should be list [\u0027val1\u0027,\u0027val2\u0027]. If it is None whereInFix will be always true: 1 \u003d 1. \n\t# If it is single value will be [val]. \n\twaitListNames \u003d payload.get(\u0027waitingList\u0027)\n\t\n\twhereIn \u003d \u0027TableJoin.[waitListName] in (*?)\u0027 # [0,2]   return: \u0027cteProvider.[providerTypeId] in (?,?)\u0027 , [0,2] \n\t#whereInFix, providerTypeIdsFix \u003d self.getWhereInParamFix(whereIn, providerTypeIds) \n\twhereInFix, waitListNamesFix \u003d extend.query.getWhereInParamFix(whereIn, waitListNames)\n\t\n\t#ystem.perspective.print((\u0027whereIn, whereInFix:\u0027,whereIn, whereInFix,providerTypeIds,providerTypeIdsFix))\n\t\n\tquery \u003d query.replace(whereIn, whereInFix)\n\targs +\u003d waitListNamesFix\n\n\t################################################\n\toffset \u003d payload.get(\u0027offset\u0027)\n\tfetch \u003d payload.get(\u0027fetch\u0027)\n\tif offset is not None and fetch is not None:\n\t\t#counterQuery \u003d \u0027{}; WITH cte AS ({}) SELECT COUNT(1) cnt FROM cte\u0027.format(declaration, query)\n\t\t# declaration, queryCte, query, orderBy, fetchOffset\n\t\tcounterQuery \u003d \u0027{} {} ,cte AS ({}) SELECT COUNT(1) cnt FROM cte\u0027.format(declaration, queryCte, query)\n\t\tresultRowCount \u003d system.db.runScalarPrepQuery(counterQuery, args, \u0027RITIOps\u0027)\n\t\targs +\u003d [offset]\n\t\targs +\u003d [fetch]\t\n\t\n\t\tquery \u003d \u0027{} {} {} {} {}\u0027.format(declaration, queryCte, query, orderBy, fetchOffset)\n#\t\tsystem.perspective.print(query)\n\t\tresult \u003d system.db.runPrepQuery(query, args, \u0027RITIOps\u0027)\n\t\n\telse:\n\t\tquery \u003d \u0027{} {} {} {}\u0027.format(declaration, queryCte, query, orderBy)\n#\t\tsystem.perspective.print(query)\n\t\tresult \u003d system.db.runPrepQuery(query, args, \u0027RITIOps\u0027)\t\n\t\tresultRowCount \u003d result.rowCount\n\t\n\tsystem.perspective.print((\u0027Exec: args\u0027,args)) \n\n\treturn result, resultRowCount\n"
+            },
+            {
+              "name": "getPropsColumns",
+              "params": [
+                "dataset"
+              ],
+              "script": "\tjsonDefaultColumn \u003d \"\"\"\n  {\n\t    \"field\": \"\",\n\t    \"visible\": true,\n\t    \"editable\": false,\n\t    \"render\": \"auto\",\n\t    \"justify\": \"left\",\n\t    \"align\": \"center\",\n\t    \"resizable\": true,\n\t    \"sortable\": true,\n\t    \"sort\": \"none\",\n\t    \"viewPath\": \"\",\n\t    \"viewParams\": {},\n\t    \"boolean\": \"checkbox\",\n\t    \"number\": \"value\",\n\t    \"progressBar\": {\n\t      \"max\": 100,\n\t      \"bar\": {\n\t        \"color\": \"#62A3F6\",\n\t        \"linecap\": \"round\",\n\t        \"width\": 5\n\t      },\n\t      \"track\": {\n\t        \"color\": \"#DADADA\",\n\t        \"linecap\": \"round\",\n\t        \"width\": 2\n\t      },\n\t      \"value\": {\n\t        \"color\": \"#7D7D7D\",\n\t        \"show\": true\n\t      }\n\t    },\n\t    \"toggleSwitch\": {\n\t      \"color\": {\n\t        \"selected\": \"#2196F3\",\n\t        \"unselected\": \"#FFFFFF\"\n\t      }\n\t    },\n\t    \"numberFormat\": \"0,0.##\",\n\t    \"dateFormat\": \"MM/DD/YYYY\",\n\t    \"width\": \"\",\n\t    \"strictWidth\": false,\n\t    \"header\": {\n\t      \"title\": \"\",\n\t      \"justify\": \"left\",\n\t      \"align\": \"center\",\n\t      \"style\": {\n\t        \"classes\": \"Table/Column_Header\"\n\t      }\n\t    },\n\t    \"footer\": {\n\t      \"title\": \"\",\n\t      \"justify\": \"left\",\n\t      \"align\": \"center\",\n\t      \"style\": {\n\t        \"classes\": \"\"\n\t      }\n\t    },\n\t    \"style\": {\n\t      \"classes\": \"Table/Column_Normal\"\n\t    }\n\t  },\t\n\t\"\"\"\n\n\tcolumnsForced \u003d [\n\t  \n\t  {\n\t    \"field\": \"name\",\n\t    \"width\": 220,\n\t    \"title\": \"Participant\"\n\t  },\n\t  {\n\t    \"field\": \"gender\",\n\t    \"width\": 90,\n\t    \"title\": \"Gender\"\n\t  },\n\t  {\n\t    \"field\": \"race\",\n\t    \"width\": 190,\n\t    \"title\": \"Race and Ethnicity\"\n\t  },\n\t  {\n\t    \"field\": \"age\",\n\t    \"width\": 70,\n\t    \"title\": \"Age\"\n\t  },\n\t  {\n\t    \"field\": \"reservationStart\",\n\t    \"width\": 170,\n\t    \"title\": \"Reservation Created\"\n\t  },\n\t  {\n\t    \"field\": \"reservationEnd\",\n\t    \"width\": 200,\n\t    \"title\": \"Reservation Expiration\"\n\t  },\n\t  {\n\t\t\"field\": \"roomName\",\n\t\t\"width\": 180,\n\t\t\"title\": \"Room\"\n\t  },\n\t  {\n\t  \t\"field\": \"participantId\",\n\t  \t\"width\": \u0027\u0027,\n\t  \t\"title\": \"\"\n\t  },\n\t  {\n\t  \t\"field\": \"reservationId\",\n\t  \t\"width\": \u0027\u0027,\n\t  \t\"title\": \"\"\n\t  },\n\t  {\n\t\t\"field\": \"roomId\",\n\t\t\"width\": \u0027\u0027,\n\t\t\"title\": \"\"\n\t  },\n\t  {\n\t\t\"field\": \"bedName\",\n\t\t\"width\": 90,\n\t\t\"title\": \"Bed\"\n\t  },\n\t  {\n\t\t\"field\": \"bedId\",\n\t\t\"width\": \u0027\u0027,\n\t\t\"title\": \"\"\n\t  },\n\t   {\n\t\t\"field\": \"notes\",\n\t\t\"width\": \u0027\u0027,\n\t\t\"title\": \"\"\n\t  },\n\t  {\n\t\t\"field\": \"waitListName\",\n\t\t\"width\": \u0027\u0027,\n\t\t\"title\": \"\"\n\t  },\n\t  {\n\t\t\"field\": \"programId\",\n\t\t\"width\": \u0027\u0027,\n\t\t\"title\": \"\"\n\t  },\n\t  {\n\t\t\"field\": \"providerId\",\n\t\t\"width\": \u0027\u0027,\n\t\t\"title\": \"\"\n\t  },\n\t  {\n\t\t\"field\": \"providerTypeId\",\n\t\t\"width\": \u0027\u0027,\n\t\t\"title\": \"\"\n\t  },\n\t  {\n\t\t\"field\": \"referralStatus\",\n\t\t\"width\": 100,\n\t\t\"title\": \"Referral Status\"\n\t  },\n\t  {\n\t\t\"field\": \"reservationType\",\n\t\t\"width\": \u0027\u0027,\n\t\t\"title\": \"\"\n\t  },\n\t  {\n\t\t\"field\": \"reservationExpiration\",\n\t\t\"width\": \u0027\u0027,\n\t\t\"title\": \"\"\n\t  },\n\t  {\n\t\t\"field\": \"timeRetired\",\n\t\t\"width\": \u0027\u0027,\n\t\t\"title\": \"\"\n\t  },\n\t  {\n  \t\t\"field\": \"ReasonForEntryId\",\n  \t\t\"width\": \u0027\u0027,\n  \t\t\"title\": \"\"\n  \t  },\n  \t  {\n    \t\t\"field\": \"prescribedControlledSubstance\",\n    \t\t\"width\": \u0027\u0027,\n    \t\t\"title\": \"\"\n      }\n\t  \t \n\t]\n\n\tcolNames \u003d system.dataset.getColumnHeaders(dataset)\n\tsystem.perspective.print(colNames)\n\t_columns \u003d []\n\tfor col in colNames:\n\t\t# This conversion json_\u003edict create actually deepcopy\n\t\tpyColumn \u003d system.util.jsonDecode(jsonDefaultColumn)\n\t\t\n\t\t# Note: Field must contain only letters and numbers.\n\t\tpyColumn[\u0027field\u0027] \u003d col\n\t\t\n\t\t_dictCol \u003d None\n\t\tfor item in columnsForced:\n\t\t\tif item[\u0027field\u0027] \u003d\u003d pyColumn[\u0027field\u0027]:\n\t\t\t\t_dictCol \u003d item.copy() \n\t\t\t\n\t\t\n\t\t#ystem.perspective.print((_dictCol))\n\t\t\n\t\tpyColumn[\u0027header\u0027][\u0027title\u0027] \u003d _dictCol[\u0027title\u0027] if _dictCol else \u0027\u0027\n\t\t\n\t\tif _dictCol and _dictCol.get(\u0027width\u0027):\n\t\t\tpyColumn[\u0027width\u0027] \u003d _dictCol[\u0027width\u0027]\n\t\t\tpyColumn[\u0027strictWidth\u0027] \u003d True\n\n#\t\tif col \u003d\u003d \u0027facilityId\u0027:\n#\t\t\tpyColumn[\u0027header\u0027][\u0027title\u0027] \u003d \u0027 \u0027\n#\t\t\tpyColumn[\"render\"] \u003d \"view\"\n#\t\t\tpyColumn[\"justify\"] \u003d \"center\"\n#\t\t\tpyColumn[\"resizable\"] \u003d False\n#\t\t\tpyColumn[\"sortable\"] \u003d False\n#\t\t\tpyColumn[\"viewPath\"] \u003d \"1_TEMPLATES/Tables/TableOptions\"\t\n\t\t\n\t\tif col \u003d\u003d \u0027reservationExpiration\u0027 or col \u003d\u003d \u0027timeRetired\u0027 or col \u003d\u003d \u0027notes\u0027 or col \u003d\u003d \u0027participantId\u0027 or col \u003d\u003d \u0027bedId\u0027 or col \u003d\u003d \u0027roomId\u0027 or col \u003d\u003d \u0027reservationId\u0027 or col \u003d\u003d \u0027waitListName\u0027 or col \u003d\u003d \u0027providerId\u0027 or col \u003d\u003d \u0027programId\u0027 or col \u003d\u003d \u0027providerTypeId\u0027 or col \u003d\u003d \u0027reservationType\u0027 or col \u003d\u003d \u0027prescribedControlledSubstance\u0027:\n\t\t\tpyColumn[\"visible\"] \u003d False\n\t\t\tpyColumn[\"editable\"] \u003d False\n\t\t\n\t\tif col \u003d\u003d \u0027bedName\u0027 or col \u003d\u003d \u0027referralStatus\u0027:\n\t\t\tpyColumn[\u0027strictWidth\u0027] \u003d False\n\t\t\n\t\tif col \u003d\u003d \"reservationStart\" or col \u003d\u003d \"reservationEnd\":\n\t\t\tpyColumn[\u0027render\u0027] \u003d \u0027date\u0027\n\t\t\tpyColumn[\u0027dateFormat\u0027] \u003d \"MM/DD/YYYY HH:mm\"\t\n\t\tif col \u003d\u003d \u0027name\u0027:\n#\t\t\t_style \u003d {\t\"color\": \"#0c4e85\",\n#\t\t\t\t\t\t\t\"cursor\": \"pointer\",\n#\t\t\t\t\t\t\t\"fontFamily\": \"Proxima Nova ExCn Medium\",\n#\t\t\t\t\t\t\t\"text-align\": \"left\",\n#\t\t\t\t\t\t\t\"paddingLeft\": \"25px\"}\n\t\t\t_style \u003d {\t\"classes\": \"Table/Column_Normal\",\n\t\t\t\t\t\t\"paddingLeft\": \"25px\"}\n\t\t\tpyColumn[\u0027style\u0027] \u003d _style\t\t\n\t\t_columns.append(pyColumn)\n\t\n\t#ystem.perspective.print((\"_columns: \",_columns))\n\t\n\treturn _columns"
+            },
+            {
+              "name": "correctTimeForClient",
+              "params": [
+                "pyds",
+                "columnsToCorrect"
+              ],
+              "script": "\t\n\t# !!!!!!!!!!!  NOT TESTED !!!!!!!!!!!!!!!!!!!!!!!\n\t\n\t# Table automaticaly change datetime according to client timezone, \n\t# For this table we don\u0027t need automatic conversion, we must recorrect datetimes, according client timezone.\n\t# Actually to see same values like in db.\n\t\n\t# This is correction client against ignition server\n\t# TODO add correction to SQL server\n\tcorrectionTime \u003d int(60*(system.date.getTimezoneOffset() - self.session.props.device.timezone.utcOffset)) \n\t\n\tlistDateFix \u003d [[]*len(columnsToCorrect)]\n\tfor rowIndex, row in enumerate(pyds):\n\t\tfor colIndex, col in enumerate(columnsToCorrect):\n\t\t\tlistDateFix[colIndex].append(system.date.addMinutes(row[col], correctionTime))\n\t\n\n\tfor index, item in enumerate(listDateFix):\n\t\tcolNames \u003d system.dataset.getColumnHeaders(pyds)\n\t\tcolPosition \u003d colNames.index(columnsToCorrect[index])\n\t\tpyds \u003d system.dataset.filterColumns(pyds, [ x for x in colNames if x !\u003d columnsToCorrect[index]])\n\t\tpyds \u003d system.dataset.addColumn(pyds,colPosition,item,columnsToCorrect[index])\n\t\n\treturn pyds\n"
+            },
+            {
+              "name": "setMisc",
+              "params": [],
+              "script": "\t\n\tself.props.cells.style\u003d {\n\t    \"classes\": \"Table/Cell_Dashboard_NoBG\"\n\t}\n\t\n\tself.props.style \u003d {\n\t  \"classes\": \"Background/Default\",\n\t  \"overflowX\": \"hidden\"\n\t}\n"
+            },
+            {
+              "name": "doByCondition",
+              "params": [
+                "payload"
+              ],
+              "script": "\timport java.lang\n\n\t# 1. Add fetch to payload if not exist. We can send from pager or use value self.view.params.fetch.\n\t# This should be step before offset\n\tfetch \u003d payload.get(\u0027fetch\u0027)\n\t\n\tif not(fetch):\n\t\tfetch \u003d self.view.params.fetch\n\t\n\t# If fetch value is integer greater then 0, pager exist\n\tif fetch and fetch \u003e 1:\n\t\tpayload[\u0027fetch\u0027] \u003d fetch\n\n\t\t#  2. If payload has \u0027offset\u0027, it means that comming from pager. Then take lastPayload \n\t\t# stored as json string, deserialize to python dict and  add node\u0027 offset\u0027\n\t\t# Else means payload is comming from conditions. Don\u0027t do anything just continue\n\t\tif payload.get(\u0027offset\u0027) is not None:\n\t\t\toffset \u003d payload[\u0027offset\u0027]\n\t\t\tpayload \u003d {}\n\t\t\tfor key in self.custom.lastPayload:\n\t\t\t\tpayload[key] \u003d self.custom.lastPayload[key]\n\t\t\t\n\t\t\t\n\t\t\tpayload[\u0027offset\u0027] \u003d offset\n\t\t\tpayload[\u0027fetch\u0027] \u003d fetch\n\t\telse:\n\t\t\tpayload[\u0027offset\u0027] \u003d 0\n\t\n\t# 3. Get data from DB. Data is dataset which contain only fetch number of rows. \n\t# _resultRowCount is scalar value which represent number of rows in case the that query is executed without  OFFSET ... FETCH...\n\t_data, _resultRowCount \u003d self.getDataDb(payload)\n\t\n\tself.view.params.resultRowCount \u003d _resultRowCount\n\n\t# 4. Set some misc props if necessary (explicit)\n\tself.setMisc()\n\n\t# 5. Step get columns props (explicit adjustment)\n\tself.props.columns \u003d self.getPropsColumns(_data)\n\n\t# 6. Correct values in datetime column according client timezone. (check comments inside function)\n\t#_data \u003d self.correctTimeForClient(_data, [\u0027dob\u0027])\n\n\t# 7. Send message to Kpis This is not needed for current residents\n\t#self.sendMessageToKpis(_data)\n\n\t# 8. Add dummy empty raw if result is empty dataset. Reason to do that is to avoid loosing focus on search cell in filters.\n\t_colNames \u003d system.dataset.getColumnHeaders(_data)\n\t\n#\tif _data.rowCount \u003d\u003d 0:\n#\t\t_lstData \u003d [{col: None for col in _colNames}]\n#\telse:\n#\t\t_pyds \u003d system.dataset.toPyDataSet(_data)\n#\t\t_lstData \u003d [{col: row[col] for col in _colNames} for row in _pyds]\n#\n#\t#ystem.perspective.print((\u0027_lstData: \u0027,_lstData))\n#\t\n#\t_makeUped \u003d self.getMakeUpData(_lstData)\n\n\tself.props.data \u003d _data #_makeUped\n\t\n#\tself.custom.jsonLastPayload \u003d system.util.jsonEncode(payload)\n\t\n\t# Remove fetch and offset, it is not necessary to store.\n\tpayload.pop(\u0027offset\u0027,None)\n\tpayload.pop(\u0027fetch\u0027,None)\n\tself.custom.lastPayload \u003d payload\n\t\n\t\n\t\n\n\n"
+            },
+            {
+              "name": "getQuery",
+              "params": [],
+              "script": "\tdeclaration \u003d \t\"\"\"\nDECLARE \n\t @facilityID INT \u003d ?\n\t,@activeInactive NVARCHAR(max) \u003d ?\n\t,@expiredCheckedIn NVARCHAR(max) \u003d ?\n\t,@gender NVARCHAR(max) \u003d ?\n\t,@race NVARCHAR(max) \u003d ?\n\t,@search_text NVARCHAR(max) \u003d ?\n\t\"\"\"\n\t\n\tqueryCte \u003d \"\"\"\n;WITH TableJoin1 as (\nSELECT distinct concat (h.firstName , \u0027 \u0027, h.middleName , \u0027 \u0027 , h.lastName) as name, res.reservationStart, res.reservationEnd, res.reservationExpiration, res.timeRetired,\nb.bedName, res.participantId, res.id as reservationId, r.id as roomId, r.roomName, b.id as bedId, coalesce(res.notes , \u0027\u0027) as notes, h.gender, h.race,\ndatediff(year, h.BirthDate, getdate())  as age, COALESCE(res.waitingListName,\u0027All Waiting Lists\u0027) as waitListName, COALESCE(res.programId, -1) as programId,\nCOALESCE(res.providerId, -1) as providerId, COALESCE(res.providerTypeId, -1) as providerTypeId,  \nCOALESCE(res.reservationType, \u0027\u0027) as reservationType, res.referralId, res.prescribedControlledSubstance\nfrom\nlodging.Reservation res, lodging.Bed b, lodging.Room r, lodging.Facility f, participant.Participant p, participant.Dashboard h\nwhere f.id \u003d @facilityID and f.timeRetired is null and p.timeRetired is null \nand res.bedId \u003d b.id \nand b.roomId \u003d r.id and r.facilityId \u003d f.id and res.participantId \u003d p.id\nand h.id \u003d p.Id\n\t),\nTableJoin as (\n\tSELECT TableJoin1.name, reservationStart, reservationEnd, reservationExpiration, timeRetired,\n\tbedName, TableJoin1.participantId, reservationId, roomId, roomName, bedId, notes, TableJoin1.gender, TableJoin1.race,\n\tTableJoin1.age, waitListName, TableJoin1.programId,\n\tTableJoin1.providerId, TableJoin1.providerTypeId, COALESCE(rd.referralStatus, \u0027\u0027) as referralStatus, \n\treservationType,TableJoin1.prescribedControlledSubstance,\n\t(SELECT ReasonForEntry_Id FROM participant.Referral where id \u003d TableJoin1.referralId) as ReasonForEntryId\n\tfrom\n\tTableJoin1 LEFT OUTER JOIN participant.ReferralDashboard rd\n\tON rd.participantId \u003d TableJoin1.participantId\n\tand (TableJoin1.providerId \u003d -1 OR rd.providerId \u003d TableJoin1.providerId)\n\tand (TableJoin1.programId \u003d -1 OR rd.programId \u003d TableJoin1.programId)\n\tand (TableJoin1.referralId \u003d NULL OR rd.id \u003d TableJoin1.referralId)\n\t\t)\n\"\"\"\n\n#REMOVED AND [cteProvider].[countReferral] \u003e 0 \n\tquery \u003d \"\"\"\n\tselect distinct [TableJoin].name,\n\t[TableJoin].gender, \n\t[TableJoin].age,\n\t[TableJoin].race,\n\t[TableJoin].reservationStart,  \n\t[TableJoin].reservationEnd,\n\t[TableJoin].roomName,\n\t[TableJoin].bedName,\n\t[TableJoin].referralStatus,  \n\t[TableJoin].reservationExpiration, \n\t[TableJoin].timeRetired, \n\t[TableJoin].participantId, \n\t[TableJoin].reservationId, \n\t[TableJoin].roomId, \n\t[TableJoin].bedId,\n\t[TableJoin].notes, \n\t[TableJoin].waitListName, \n\t[TableJoin].programId, \n\t[TableJoin].providerId, \n\t[TableJoin].providerTypeId, \n\t[TableJoin].reservationType,\n\t[TableJoin].ReasonForEntryId,\n\t[TableJoin].prescribedControlledSubstance\n\tfrom [TableJoin]\n\tWHERE (1\u003d1) \n\tAND TableJoin.[waitListName] in (*?)\n\tAND ( TableJoin.[gender] \u003d @gender OR @gender IS NULL)\n\tAND ( TableJoin.[race] \u003d @race OR @race IS NULL)\n\tAND ( @activeInactive \u003d \u0027All\u0027 \n\tOR (( @activeInactive IS NULL OR @activeInactive \u003d \u0027Active\u0027 ) AND @expiredCheckedIn IS NULL AND (TableJoin.reservationExpiration IS NULL AND TableJoin.timeRetired IS NULL))\n\tOR (@activeInactive \u003d \u0027InActive\u0027 AND ( @expiredCheckedIn IS NULL AND (TableJoin.reservationExpiration IS NOT NULL OR TableJoin.timeRetired IS NOT NULL )))\n\tOR (@activeInactive \u003d \u0027InActive\u0027 AND ( @expiredCheckedIn \u003d \u0027Expired\u0027 AND TableJoin.reservationExpiration IS NOT NULL AND TableJoin.timeRetired IS NULL ))\n\tOR (@activeInactive \u003d \u0027InActive\u0027 AND ( @expiredCheckedIn \u003d \u0027Checked-In\u0027 AND TableJoin.reservationExpiration IS NULL AND TableJoin.timeRetired IS NOT NULL AND [TableJoin].referralStatus \u003d \u0027Checked In\u0027))\n\t)\nAND (\n\t@search_text \u003d \u0027\u0027 \n\tOR [TableJoin].[name] LIKE CONCAT(\u0027%\u0027,@search_text,\u0027%\u0027) \n\tOR CAST([TableJoin].[age] AS VARCHAR(20))  LIKE CONCAT(\u0027%\u0027,@search_text,\u0027%\u0027) \n\tOR CONVERT(VARCHAR(10),[TableJoin].[reservationStart],101) LIKE CONCAT(\u0027%\u0027,@search_text,\u0027%\u0027) \n\tOR CONVERT(VARCHAR(10),[TableJoin].[reservationEnd],101) LIKE CONCAT(\u0027%\u0027,@search_text,\u0027%\u0027)\n\tOR [TableJoin].[roomName] LIKE CONCAT(\u0027%\u0027,@search_text,\u0027%\u0027)\n\tOR [TableJoin].[bedName] LIKE CONCAT(\u0027%\u0027,@search_text,\u0027%\u0027)\n\tOR [TableJoin].[race] LIKE CONCAT(\u0027%\u0027,@search_text,\u0027%\u0027)\n\tOR [TableJoin].[gender] LIKE CONCAT(\u0027%\u0027,@search_text,\u0027%\u0027)\n)\n\t\"\"\"\n\torderBy \u003d \"\"\"\nORDER BY [TableJoin].[reservationStart] desc\n\t\"\"\"\n\n\tfetchOffset \u003d \"\"\"\nOFFSET ? ROWS \nFETCH NEXT ? ROWS ONLY;  \n\t\"\"\"\t\n\treturn declaration, queryCte, query, orderBy, fetchOffset\n\n\t\t"
+            },
+            {
+              "name": "sendMessageToKpis",
+              "params": [
+                "data"
+              ],
+              "script": "\t# Send message to KPIs\n\tpayload \u003d {}\n\t\n\t\n#\tif data.rowCount \u003e 0:\n#\t\tpayload[\u0027providerIds\u0027] \u003d []\n#\t\t#payload[\u0027totalReferralsYtd\u0027] \u003d 0\t\n#\t\tfor rowIndex, row in enumerate(system.dataset.toPyDataSet(data)):\n#\t\t\tpayload[\u0027providerIds\u0027].append(row[\u0027id\u0027])\n\t\n\tsystem.perspective.sendMessage(\u0027mhProviderDashboardKpiHeader\u0027,payload)\n\t\n\tsendMessageToKpis"
+            },
+            {
+              "name": "getMakeUpData",
+              "params": [
+                "lstData"
+              ],
+              "script": "\t\n\n\t_style \u003d {\t\"color\": \"#0c4e85\",\n\t\t\t\t\"cursor\": \"pointer\",\n\t\t\t\t\"fontFamily\": \"Proxima Nova ExCn Medium\",\n\t\t\t\t\"text-align\": \"left\"}\n\t_normalStyle \u003d {\"classes\":\"Table/Column_Normal\"}\t\t\t\n\n\n\tfor row in lstData:\n\t\tfor key in row:\n\t\t\tif key \u003d\u003d \u0027name\u0027:\n\t\t\t\trow[key] \u003d {\u0027value\u0027: row[key] if row[key] is not None else \u0027\u0027, \"style\": _style}\n\t\t\telse:\n#\t\t\t\tif key \u003d\u003d \u0027reservationStart\u0027 or key \u003d\u003d \u0027reservationEnd\u0027:\n#\t\t\t\t\tsystem.perspective.print(row[key])\n#\t\t\t\t\trow[key] \u003d {\u0027value\u0027: str(system.date.format(row[key],\"MM/dd/YYYY HH:mm\")) if row[key] is not None else \u0027\u0027, \"style\": _normalStyle}\n#\t\t\t\telse:\n\t\t\t\t\trow[key] \u003d {\u0027value\u0027: row[key] if row[key] is not None else \u0027\u0027, \"style\": _normalStyle}\n\treturn lstData"
+            }
+          ],
+          "extensionFunctions": null,
+          "messageHandlers": [
+            {
+              "messageType": "mhByCondition",
+              "pageScope": true,
+              "script": "\tsystem.perspective.print(\"initializing the table, facility id \u003d \")\n\tsystem.perspective.print(self.view.params.facilityID)\n\tself.doByCondition(payload)",
+              "sessionScope": false,
+              "viewScope": false
+            },
+            {
+              "messageType": "ClearRowSelection_reservation",
+              "pageScope": true,
+              "script": "\t# implement your handler here\n\tself.props.selection.selectedRow \u003d -1",
+              "sessionScope": true,
+              "viewScope": false
+            }
+          ]
+        },
+        "type": "ia.display.table"
+      }
+    ],
+    "custom": {
+      "_test": false
+    },
+    "meta": {
+      "name": "root"
+    },
+    "propConfig": {
+      "custom._test": {
+        "onChange": {
+          "enabled": null,
+          "script": "\tif previousValue is not None and currentValue is not None:\n\t\tif previousValue.value \u003d\u003d 0 and currentValue.value \u003d\u003d 1:\n\t\t\tself.getChild(\"Table\").doByCondition({})"
+        }
+      }
+    },
+    "props": {
+      "direction": "column",
+      "justify": "space-around",
+      "style": {
+        "overflow": "visible"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

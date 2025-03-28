@@ -1,0 +1,503 @@
+{
+  "custom": {},
+  "params": {
+    "congregation": -1,
+    "gender": -1,
+    "hostLocationType": -1,
+    "seasonId": 14,
+    "summary": false,
+    "veteranId": -1
+  },
+  "propConfig": {
+    "params.congregation": {
+      "binding": {
+        "config": {
+          "path": "/root/Congregation.props.params.selection"
+        },
+        "transforms": [
+          {
+            "code": "\tif value is None:\n\t\treturn -1\n\telse:\n\t\treturn value",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.gender": {
+      "binding": {
+        "config": {
+          "path": "/root/genders.props.params.selection"
+        },
+        "transforms": [
+          {
+            "code": "\tif value is None:\n\t\treturn -1\n\telse:\n\t\treturn value",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.hostLocationType": {
+      "binding": {
+        "config": {
+          "path": "/root/HostLocation.props.params.selection"
+        },
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.seasonId": {
+      "binding": {
+        "config": {
+          "path": "/root/season.props.params.selection"
+        },
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.summary": {
+      "binding": {
+        "config": {
+          "path": "/root/summary.props.params.checked"
+        },
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.veteranId": {
+      "binding": {
+        "config": {
+          "path": "/root/veteran.props.params.selection"
+        },
+        "transforms": [
+          {
+            "code": "\tif value is None:\n\t\treturn -1\n\telse:\n\t\treturn value",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 30,
+      "width": 1817
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "lblFilter"
+        },
+        "position": {
+          "basis": "70px",
+          "display": false,
+          "shrink": 0
+        },
+        "propConfig": {
+          "custom.sqlData": {
+            "binding": {
+              "config": {
+                "parameters": {
+                  "accessible": "{session.custom.filters.winterShelterRegistrations.HDCP.where}",
+                  "amenities": "{session.custom.filters.winterShelterRegistrations.amenities.where}",
+                  "city": "{session.custom.filters.winterShelterRegistrations.city.where}",
+                  "families": "{session.custom.filters.winterShelterRegistrations.families.where}",
+                  "friday": "{session.custom.filters.winterShelterRegistrations.friday.where}",
+                  "genders": "{session.custom.filters.winterShelterRegistrations.genders.where}",
+                  "locationName": "{session.custom.filters.winterShelterRegistrations.locationName.where}",
+                  "maxGuests": "{session.custom.filters.winterShelterRegistrations.maxGuests.where}",
+                  "minGuests": "{session.custom.filters.winterShelterRegistrations.minGuests.where}",
+                  "monday": "{session.custom.filters.winterShelterRegistrations.monday.where}",
+                  "reminderCall": "{session.custom.filters.winterShelterRegistrations.reminderCall.where}",
+                  "saturday": "{session.custom.filters.winterShelterRegistrations.saturday.where}",
+                  "season": "{session.custom.filters.winterShelterRegistrations.season.where}",
+                  "shortNotice": "{session.custom.filters.winterShelterRegistrations.shortNotice.where}",
+                  "smoking": "{session.custom.filters.winterShelterRegistrations.smoking.where}",
+                  "stairs": "{session.custom.filters.winterShelterRegistrations.stairs.where}",
+                  "sunday": "{session.custom.filters.winterShelterRegistrations.sunday.where}",
+                  "thursday": "{session.custom.filters.winterShelterRegistrations.thursday.where}",
+                  "tuesday": "{session.custom.filters.winterShelterRegistrations.tuesday.where}",
+                  "wednesday": "{session.custom.filters.winterShelterRegistrations.wednesday.where}",
+                  "zipCode": "{session.custom.filters.winterShelterRegistrations.zipCode.where}"
+                },
+                "queryPath": "WinterShelter/Dashboard/Registrations",
+                "returnFormat": "dataset"
+              },
+              "type": "query"
+            }
+          }
+        },
+        "props": {
+          "style": {
+            "classes": "Filter/Header_Text"
+          },
+          "text": "Filters:"
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "meta": {
+          "name": "season"
+        },
+        "position": {
+          "basis": "140px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.options": {
+            "binding": {
+              "config": {
+                "queryPath": "WinterShelterGlobal/Filters/getSeasons"
+              },
+              "type": "query"
+            }
+          },
+          "props.params.placeholder": {
+            "binding": {
+              "config": {
+                "expression": "toInt(if (getMonth(now()),getYear(now()),getYear(now())-1))"
+              },
+              "transforms": [
+                {
+                  "code": "\treturn str(value) + \u0027-\u0027 + str(value+1)",
+                  "type": "script"
+                }
+              ],
+              "type": "expr"
+            }
+          },
+          "props.params.selection": {
+            "binding": {
+              "config": {
+                "queryPath": "WinterShelterGlobal/getCurrentSeason"
+              },
+              "transforms": [
+                {
+                  "code": "\treturn value.getValueAt(0,\u0027id\u0027)",
+                  "type": "script"
+                }
+              ],
+              "type": "query"
+            }
+          }
+        },
+        "props": {
+          "path": "1_globalTEMPLATES/Filtering/Conditionals/Conditional_SingleDropDown_NoClear",
+          "style": {
+            "classes": "Filter/Filter_Container"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Button"
+        },
+        "position": {
+          "basis": "80px",
+          "display": false
+        },
+        "props": {
+          "style": {
+            "classes": "Buttons/Btn_Teal"
+          },
+          "text": "Export"
+        },
+        "type": "ia.input.button"
+      },
+      {
+        "meta": {
+          "name": "Congregation"
+        },
+        "position": {
+          "basis": "250px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.options": {
+            "binding": {
+              "config": {
+                "queryPath": "WinterShelter/Tasks/getCongregations"
+              },
+              "type": "query"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "placeholder": "Congregation",
+            "selection": -1
+          },
+          "path": "1_TEMPLATES/Filtering/Conditionals/Conditional_SingleDropDown",
+          "style": {
+            "classes": "Filter/Filter_Container",
+            "overflow": "hidden"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "HostLocation"
+        },
+        "position": {
+          "basis": "120px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.options": {
+            "binding": {
+              "config": {
+                "queryPath": "WinterShelter/Attendance/GetHostLocationTypes"
+              },
+              "type": "query"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "placeholder": "Location",
+            "selection": -1
+          },
+          "path": "1_TEMPLATES/Filtering/Conditionals/Conditional_SingleDropDown",
+          "style": {
+            "classes": "Filter/Filter_Container",
+            "overflow": "hidden"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "dateRange"
+        },
+        "position": {
+          "basis": "250px",
+          "shrink": 0
+        },
+        "props": {
+          "params": {
+            "column_name": "x.checkinDate",
+            "filter": "WinterShelterAttendance",
+            "key": "checkinDate",
+            "placeholder": "Date Range",
+            "searchType": "dateRange",
+            "text": ""
+          },
+          "path": "1_TEMPLATES/Filtering/Session/DateRangePicker",
+          "style": {
+            "classes": "Filter/Filter_Container"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "genders"
+        },
+        "position": {
+          "basis": "180px"
+        },
+        "propConfig": {
+          "props.params.options": {
+            "binding": {
+              "config": {
+                "queryPath": "Filter/getGenderId"
+              },
+              "type": "query"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "placeholder": "Gender",
+            "selection": -1
+          },
+          "path": "1_TEMPLATES/Filtering/Conditionals/Conditional_SingleDropDown",
+          "style": {
+            "classes": "Filter/Filter_Container"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "veteran"
+        },
+        "position": {
+          "basis": "180px"
+        },
+        "propConfig": {
+          "props.params.options": {
+            "binding": {
+              "config": {
+                "queryPath": "Filter/getVeteranStatusId"
+              },
+              "type": "query"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "placeholder": "(All Veteran Status)",
+            "selection": -1
+          },
+          "path": "1_TEMPLATES/Filtering/Conditionals/Conditional_SingleDropDown",
+          "style": {
+            "classes": "Filter/Filter_Container"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "ExportToExcel"
+        },
+        "position": {
+          "basis": "40px"
+        },
+        "props": {
+          "params": {
+            "dataset": "value",
+            "defaultFilePrefix": "toExcel"
+          },
+          "path": "1_globalTEMPLATES/Tables/TableToExcel"
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "summary"
+        },
+        "position": {
+          "basis": "180px",
+          "shrink": 0
+        },
+        "props": {
+          "params": {
+            "checked": false,
+            "text": "Summary"
+          },
+          "path": "1_TEMPLATES/60px/top/Input_Checkbox",
+          "useDefaultViewHeight": true,
+          "useDefaultViewWidth": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Placeholder"
+        },
+        "position": {
+          "basis": "1px",
+          "grow": 1
+        },
+        "props": {
+          "path": "1_globalTEMPLATES/Filtering/Filter_Placeholder"
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "lblSearch"
+        },
+        "position": {
+          "basis": "50px",
+          "shrink": 0
+        },
+        "props": {
+          "style": {
+            "classes": "Table/Filter_Header",
+            "textAlign": "end"
+          },
+          "text": "Search:"
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "meta": {
+          "name": "Search"
+        },
+        "position": {
+          "basis": "220px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.column_name": {
+            "binding": {
+              "config": {
+                "path": "../summary.props.params.checked"
+              },
+              "transforms": [
+                {
+                  "code": "\tif value \u003d\u003d True:\n\t\tcolumns \u003d [\n\t\t\t\t  \"x.participantName\"\n\t\t\t\t]\n\telse:\n\t\tcolumns \u003d [\n\t\t\t\t  \"x.participantName\",\n\t\t\t\t  \"x.locationName\"\n\t\t\t\t]\n\treturn columns",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "filter": "WinterShelterAttendance",
+            "key": "search",
+            "placeholder": "Search",
+            "searchType": "like"
+          },
+          "path": "1_globalTEMPLATES/Filtering/Session/Text",
+          "style": {
+            "classes": "Table/Search_Bar"
+          },
+          "useDefaultViewWidth": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "events": {
+          "dom": {
+            "onClick": {
+              "config": {
+                "script": "\t#Clear the filter components\n\tsystem.perspective.sendMessage(messageType\u003d\"clearFilter\")\n\tself.getSibling(\"genders\").props.params.selection \u003d -1\n\tself.getSibling(\"Congregation\").props.params.selection \u003d -1"
+              },
+              "scope": "G",
+              "type": "script"
+            }
+          }
+        },
+        "meta": {
+          "name": "ClearFilters"
+        },
+        "position": {
+          "basis": "40px",
+          "shrink": 0
+        },
+        "props": {
+          "path": "1_globalTEMPLATES/Filtering/Filters/ClearFilters"
+        },
+        "type": "ia.display.view"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "style": {
+        "classes": "Filter/Header_Text"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

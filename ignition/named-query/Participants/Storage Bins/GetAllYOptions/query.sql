@@ -1,0 +1,1 @@
+SELECT * FROM participant.StorageBinsYOptions WHERE timeRetired IS NULL

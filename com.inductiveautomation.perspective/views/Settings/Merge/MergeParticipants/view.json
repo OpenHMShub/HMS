@@ -1,0 +1,344 @@
+{
+  "custom": {},
+  "params": {},
+  "props": {
+    "defaultSize": {
+      "width": 1166
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "Label"
+        },
+        "position": {
+          "basis": "50px",
+          "display": false
+        },
+        "props": {
+          "alignVertical": "bottom",
+          "style": {
+            "classes": "Text/Summary_Title",
+            "textAlign": "left"
+          },
+          "text": "Settings:Merge Participants (Under Construction)"
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "children": [
+          {
+            "meta": {
+              "name": "Merge"
+            },
+            "position": {
+              "basis": "320px",
+              "grow": 1
+            },
+            "props": {
+              "params": {
+                "Dataset": [],
+                "MergeParticipants": [],
+                "SelectedParticipantToKeep": []
+              },
+              "path": "Settings/Merge/Edit/Merge",
+              "style": {
+                "marginBottom": "10px"
+              }
+            },
+            "type": "ia.display.view"
+          },
+          {
+            "children": [
+              {
+                "events": {
+                  "dom": {
+                    "onClick": {
+                      "config": {
+                        "script": "\t#message sent to message handler on \u0027Participants/Services/Batch/Cards/Participant_Select\u003eroot container\"\n#\tmessage \u003d \u0027addParticipant\u0027\n#\tpayload \u003d {\n#\t\t\u0027participantID\u0027: self.parent.parent.getChild(\"Embed_Search\").props.params.selectedId\n#\t}\n#\tsystem.perspective.sendMessage(message,payload,\u0027page\u0027)\n\tselected_dataset \u003d self.parent.parent.getChild(\"Merge\").props.params.SelectedParticipantToKeep\n\tif selected_dataset[0].participant_id !\u003d None and selected_dataset[0].participant_id !\u003d \u0027\u0027:\n\t\tself.parent.parent.parent.getChild(\"Keep_and_Merge\").getChild(\"Keep\").props.params.humanId \u003d selected_dataset[0].human_id\n\t\tself.parent.parent.parent.getChild(\"Keep_and_Merge\").getChild(\"Keep\").props.params.participantId \u003d selected_dataset[0].participant_id\n\t\tself.parent.parent.parent.getChild(\"Keep_and_Merge\").getChild(\"Keep\").props.params.NoOfServices \u003d selected_dataset[0].NoOfServices\n\t\tself.parent.parent.parent.getChild(\"Keep_and_Merge\").getChild(\"Keep\").props.params.NoOfShelterStay \u003d selected_dataset[0].NoOfShelters\n\t\tself.parent.parent.parent.getChild(\"Keep_and_Merge\").getChild(\"Keep\").props.params.dob \u003d selected_dataset[0].dob\n\t\tself.parent.parent.parent.getChild(\"Keep_and_Merge\").getChild(\"Keep\").props.params.firstName \u003d selected_dataset[0].first_name\n\t\tself.parent.parent.parent.getChild(\"Keep_and_Merge\").getChild(\"Keep\").props.params.lastName \u003d selected_dataset[0].last_name\n\t\tself.parent.parent.parent.getChild(\"Keep_and_Merge\").getChild(\"Keep\").props.params.middleName \u003d selected_dataset[0].middle_name\n\t\tself.parent.parent.parent.getChild(\"Keep_and_Merge\").getChild(\"Keep\").props.params.nickname \u003d selected_dataset[0].nick_name\n\t\tself.parent.parent.parent.getChild(\"Keep_and_Merge\").getChild(\"Keep\").props.params.race \u003d selected_dataset[0].race\n\t\tself.parent.parent.parent.getChild(\"Keep_and_Merge\").getChild(\"Keep\").props.params.ssn \u003d selected_dataset[0].ssn\n\t\tmessage \u003d \u0027addedToKeepParticipant\u0027\n\t\tpayload \u003d {\n\t\t\t\u0027participantID\u0027: selected_dataset[0].participant_id\n\t\t}\n\t\tsystem.perspective.sendMessage(message,payload,\u0027page\u0027)"
+                      },
+                      "scope": "G",
+                      "type": "script"
+                    }
+                  }
+                },
+                "meta": {
+                  "name": "SendToKeep"
+                },
+                "position": {
+                  "basis": "30px"
+                },
+                "props": {
+                  "style": {
+                    "classes": "Buttons/Main",
+                    "marginLeft": "8px",
+                    "padding": "10px"
+                  },
+                  "text": "\u003e\u003e\u003e"
+                },
+                "type": "ia.input.button"
+              }
+            ],
+            "meta": {
+              "name": "Button"
+            },
+            "position": {
+              "basis": "60px",
+              "shrink": 0
+            },
+            "props": {
+              "alignItems": "center",
+              "direction": "column",
+              "justify": "center",
+              "style": {
+                "padding": "0px"
+              }
+            },
+            "type": "ia.container.flex"
+          },
+          {
+            "meta": {
+              "name": "Keep"
+            },
+            "position": {
+              "basis": "600px"
+            },
+            "props": {
+              "params": {
+                "NoOfServices": "",
+                "NoOfShelterStay": "",
+                "dob": "",
+                "firstName": "",
+                "humanId": "",
+                "lastName": "",
+                "middleName": "",
+                "nickname": "",
+                "participantId": "",
+                "race": "",
+                "ssn": ""
+              },
+              "path": "Settings/Merge/Edit/Keep",
+              "style": {
+                "marginBottom": "10px",
+                "marginLeft": "10px"
+              }
+            },
+            "type": "ia.display.view"
+          }
+        ],
+        "meta": {
+          "name": "Keep_and_Merge"
+        },
+        "position": {
+          "basis": "320px"
+        },
+        "props": {
+          "style": {
+            "marginLeft": "40px",
+            "marginRight": "40px"
+          }
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "meta": {
+                  "name": "Filler"
+                },
+                "position": {
+                  "basis": "50%",
+                  "display": false,
+                  "grow": 1
+                },
+                "type": "ia.container.flex"
+              },
+              {
+                "events": {
+                  "dom": {
+                    "onClick": {
+                      "config": {
+                        "script": "\tselected_dataset \u003d self.parent.parent.parent.getChild(\"HumanTable\").getChild(\"Table\").props.params.SelectedRowData\n\tself.parent.parent.parent.getChild(\"Keep_and_Merge\").getChild(\"Merge\").props.params.MergeParticipants \u003d selected_dataset\n\t#system.perspective.sendMessage(\"SendToMerge\", payload \u003d {\u0027selected_dataset\u0027:selected_dataset}, scope \u003d \"page\")"
+                      },
+                      "scope": "G",
+                      "type": "script"
+                    }
+                  }
+                },
+                "meta": {
+                  "name": "SendToMerge"
+                },
+                "position": {
+                  "basis": "120px",
+                  "shrink": 0
+                },
+                "props": {
+                  "style": {
+                    "classes": "Buttons/Main",
+                    "marginBottom": "5px",
+                    "marginLeft": "10px",
+                    "marginTop": "5px"
+                  },
+                  "text": "Send to Merge"
+                },
+                "type": "ia.input.button"
+              },
+              {
+                "children": [
+                  {
+                    "meta": {
+                      "name": "Label",
+                      "visible": false
+                    },
+                    "position": {
+                      "basis": "60%",
+                      "grow": 1
+                    },
+                    "props": {
+                      "style": {
+                        "classes": "Text/Error_Message"
+                      },
+                      "text": "Test"
+                    },
+                    "scripts": {
+                      "customMethods": [
+                        {
+                          "name": "showMessage",
+                          "params": [
+                            "message"
+                          ],
+                          "script": "\timport time\n\tself.props.text \u003d message\n\tself.meta.visible \u003d True\n\ttime.sleep(5)\n\tself.meta.visible \u003d False\n\t"
+                        }
+                      ],
+                      "extensionFunctions": null,
+                      "messageHandlers": []
+                    },
+                    "type": "ia.display.label"
+                  }
+                ],
+                "meta": {
+                  "name": "ErrorMsg"
+                },
+                "position": {
+                  "basis": "50%",
+                  "grow": 1
+                },
+                "type": "ia.container.flex"
+              }
+            ],
+            "meta": {
+              "name": "root Actions"
+            },
+            "position": {
+              "basis": "50px",
+              "grow": 1,
+              "shrink": 0
+            },
+            "props": {
+              "style": {
+                "classes": "Background/Default",
+                "marginTop": "5px",
+                "paddingTop": "5px"
+              }
+            },
+            "type": "ia.container.flex"
+          }
+        ],
+        "meta": {
+          "name": "FlexContainer"
+        },
+        "position": {
+          "basis": "60px"
+        },
+        "props": {
+          "style": {
+            "marginBottom": "10px",
+            "marginLeft": "40px",
+            "marginRight": "40px"
+          }
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "children": [
+          {
+            "meta": {
+              "name": "TableFilter"
+            },
+            "position": {
+              "basis": "30px"
+            },
+            "props": {
+              "path": "Settings/Merge/Filter/TableFilter_Humans"
+            },
+            "type": "ia.display.view"
+          },
+          {
+            "meta": {
+              "name": "Table"
+            },
+            "position": {
+              "basis": "320px",
+              "grow": 1
+            },
+            "props": {
+              "params": {
+                "SelectedRowData": []
+              },
+              "path": "Settings/Merge/Table/Humans_Table"
+            },
+            "type": "ia.display.view"
+          }
+        ],
+        "meta": {
+          "name": "HumanTable"
+        },
+        "position": {
+          "basis": "200px",
+          "grow": 1
+        },
+        "props": {
+          "direction": "column",
+          "style": {
+            "marginLeft": "40px",
+            "marginRight": "40px"
+          }
+        },
+        "type": "ia.container.flex"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column",
+      "style": {
+        "classes": "Background/Alternative"
+      }
+    },
+    "scripts": {
+      "customMethods": [],
+      "extensionFunctions": null,
+      "messageHandlers": [
+        {
+          "messageType": "OpenPopup",
+          "pageScope": true,
+          "script": "\t# implement your handler here\n\tKeepParticipant \u003d payload[\u0027KeepParticipant\u0027]\n\tKeepParticipantId \u003d payload[\u0027participantId\u0027]\n\tKeepHumanId \u003d payload[\u0027humanId\u0027]\n\tMergeParticipants \u003d self.getChild(\"Keep_and_Merge\").getChild(\"Merge\").props.params.Dataset\n\t\n\tif MergeParticipants is not None and len(MergeParticipants) \u003e 0:\n\t\tsystem.perspective.openPopup(\"ConfirmMerge_Popup\",\u0027Settings/Merge/Templates/ConfirmMerge_popup\u0027, params \u003d {\u0027KeepParticipant\u0027:KeepParticipant,\u0027KeepParticipantId\u0027:KeepParticipantId,\u0027KeepHumanId\u0027:KeepHumanId,\u0027MergeParticipants\u0027:MergeParticipants}, showCloseIcon \u003d False, resizable \u003d False, draggable \u003d False, overlayDismiss \u003d True, modal  \u003d True)\n\telse:\n\t\tself.getChild(\"FlexContainer\").getChild(\"root Actions\").getChild(\"ErrorMsg\").getChild(\"Label\").showMessage(\"Select at least one participant to merge.\")",
+          "sessionScope": false,
+          "viewScope": false
+        },
+        {
+          "messageType": "MergeCompleted",
+          "pageScope": true,
+          "script": "\t# implement your handler here\n\tself.getChild(\"Keep_and_Merge\").getChild(\"Keep\").props.params.NoOfServices \u003d \u0027\u0027\n\tself.getChild(\"Keep_and_Merge\").getChild(\"Keep\").props.params.NoOfShelterStay \u003d \u0027\u0027\n\tself.getChild(\"Keep_and_Merge\").getChild(\"Keep\").props.params.dob \u003d \u0027\u0027\n\tself.getChild(\"Keep_and_Merge\").getChild(\"Keep\").props.params.firstName \u003d \u0027\u0027\n\tself.getChild(\"Keep_and_Merge\").getChild(\"Keep\").props.params.humanId \u003d \u0027\u0027\n\tself.getChild(\"Keep_and_Merge\").getChild(\"Keep\").props.params.lastName \u003d \u0027\u0027\n\tself.getChild(\"Keep_and_Merge\").getChild(\"Keep\").props.params.middleName \u003d \u0027\u0027\n\tself.getChild(\"Keep_and_Merge\").getChild(\"Keep\").props.params.nickname \u003d \u0027\u0027\n\tself.getChild(\"Keep_and_Merge\").getChild(\"Keep\").props.params.participantId \u003d \u0027\u0027\n\tself.getChild(\"Keep_and_Merge\").getChild(\"Keep\").props.params.race \u003d \u0027\u0027\n\tself.getChild(\"Keep_and_Merge\").getChild(\"Keep\").props.params.ssn \u003d \u0027\u0027",
+          "sessionScope": false,
+          "viewScope": false
+        }
+      ]
+    },
+    "type": "ia.container.flex"
+  }
+}

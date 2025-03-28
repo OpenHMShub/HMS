@@ -1,0 +1,2008 @@
+{
+  "custom": {
+    "defaultDates": {},
+    "participantFullName": null,
+    "resetDates": null,
+    "selectedBin": null
+  },
+  "params": {
+    "Selected_Id": null,
+    "Selected_Participant_Id": 4635
+  },
+  "propConfig": {
+    "custom.defaultDates": {
+      "persistent": true
+    },
+    "custom.defaultDates.expiry": {
+      "binding": {
+        "config": {
+          "expression": "addDays(now(0), 30)"
+        },
+        "type": "expr"
+      }
+    },
+    "custom.defaultDates.start": {
+      "binding": {
+        "config": {
+          "expression": "now(0)"
+        },
+        "type": "expr"
+      }
+    },
+    "custom.participantFullName": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "participantId": "{view.params.Selected_Participant_Id}"
+          },
+          "queryPath": "Participants/Storage Bins/GetParticipantName"
+        },
+        "transforms": [
+          {
+            "expression": "{value}[0, \u0027full_name\u0027]",
+            "type": "expression"
+          }
+        ],
+        "type": "query"
+      },
+      "persistent": true
+    },
+    "custom.resetDates": {
+      "binding": {
+        "config": {
+          "expression": "{view.params.Selected_Id} + {view.custom.participantFullName}"
+        },
+        "type": "expr"
+      },
+      "onChange": {
+        "enabled": null,
+        "script": "\t# reset the dates to defaults when a participant is picked from the participant table\t\n\tif self.params.Selected_Id is None:\n\t\tself.getChild(\"root\").getChild(\"Bin Lookup Flex\").getChild(\"BinSelectFlex\").custom.mode \u003d 0\n\t\tself.getChild(\"root\").getChild(\"Bin Lookup Flex\").getChild(\"BinSelectFlex\").getChild(\"StartDate\").getChild(\"DateTimeInput\").props.value \u003d self.custom.defaultDates.start\n\t\tself.getChild(\"root\").getChild(\"Bin Lookup Flex\").getChild(\"BinSelectFlex\").getChild(\"StartDate\").getChild(\"DateTimeInput\").custom.origValue \u003d None\n\t\tself.getChild(\"root\").getChild(\"Bin Lookup Flex\").getChild(\"BinSelectFlex\").getChild(\"ExpireDate\").getChild(\"DateTimeInput\").props.value \u003d self.custom.defaultDates.expiry\n\t\tself.getChild(\"root\").getChild(\"Bin Lookup Flex\").getChild(\"BinSelectFlex\").getChild(\"ExpireDate\").getChild(\"DateTimeInput\").custom.origValue \u003d None"
+      },
+      "persistent": true
+    },
+    "custom.selectedBin": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "id": "{view.params.Selected_Id}"
+          },
+          "queryPath": "Participants/Storage Bins/GetSpecificBinIdStatus",
+          "returnFormat": "json"
+        },
+        "transforms": [
+          {
+            "code": "\tif len(value) \u003d\u003d 0:\n\t\treturn None\n\telse:\n\t\treturn value[0]",
+            "type": "script"
+          }
+        ],
+        "type": "query"
+      },
+      "persistent": true
+    },
+    "params.Selected_First_Name": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.Selected_Id": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.Selected_Last_Name": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.Selected_Middle_Name": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.Selected_Participant": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.Selected_Participant_Id": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 912,
+      "width": 931
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "custom": {
+                      "grabAttention": 0
+                    },
+                    "meta": {
+                      "name": "Label"
+                    },
+                    "position": {
+                      "basis": "35px",
+                      "shrink": 0
+                    },
+                    "props": {
+                      "style": {
+                        "classes": "Labels/Label_Text_Res",
+                        "fontSize": "15px"
+                      },
+                      "text": "Column"
+                    },
+                    "type": "ia.display.label"
+                  },
+                  {
+                    "custom": {
+                      "availOptions": "value",
+                      "selectAndFilter": null
+                    },
+                    "events": {
+                      "component": {
+                        "onActionPerformed": {
+                          "config": {
+                            "script": "\tself.custom.selectAndFilter \u003d self.props.value\n\tself.parent.parent.getChild(\"Bin\").getChild(\"Dropdown\").props.value \u003d None\n\tself.parent.parent.getChild(\"Placeholder_textinput\").getChild(\"TextField\").focus()\n\t"
+                          },
+                          "scope": "G",
+                          "type": "script"
+                        }
+                      }
+                    },
+                    "meta": {
+                      "name": "Dropdown"
+                    },
+                    "position": {
+                      "basis": "34px",
+                      "shrink": 0
+                    },
+                    "propConfig": {
+                      "custom.allOptions": {
+                        "binding": {
+                          "config": {
+                            "queryPath": "Participants/Storage Bins/GetAllXOptions",
+                            "returnFormat": "json"
+                          },
+                          "type": "query"
+                        }
+                      },
+                      "position.display": {
+                        "binding": {
+                          "config": {
+                            "path": "..../BinSelectFlex.custom.mode"
+                          },
+                          "transforms": [
+                            {
+                              "code": "\tif value \u003d\u003d 0:\n\t\treturn True\n\telse:\n\t\treturn False",
+                              "type": "script"
+                            }
+                          ],
+                          "type": "property"
+                        }
+                      },
+                      "props.options": {
+                        "binding": {
+                          "config": {
+                            "path": "this.custom.allOptions"
+                          },
+                          "transforms": [
+                            {
+                              "code": "\tlst \u003d []\n\tfor x in value:\n\t\tlst.append({\u0027label\u0027:x[\u0027xValue\u0027],\u0027value\u0027:x[\u0027xValue\u0027]})\n\treturn lst",
+                              "type": "script"
+                            }
+                          ],
+                          "type": "property"
+                        }
+                      }
+                    },
+                    "props": {
+                      "dropdownOptionStyle": {
+                        "backgroundColor": "#FFFFFF",
+                        "classes": "Dropdowns/DD_DefaultNoBorder"
+                      },
+                      "placeholder": {
+                        "text": "Select Column..."
+                      },
+                      "showClearIcon": true,
+                      "style": {
+                        "classes": "Dropdowns/DD_Default"
+                      },
+                      "value": null
+                    },
+                    "type": "ia.input.dropdown"
+                  },
+                  {
+                    "meta": {
+                      "name": "Label_0"
+                    },
+                    "position": {
+                      "basis": "34px",
+                      "shrink": 0
+                    },
+                    "propConfig": {
+                      "position.display": {
+                        "binding": {
+                          "config": {
+                            "path": "..../BinSelectFlex.custom.mode"
+                          },
+                          "transforms": [
+                            {
+                              "code": "\tif value \u003d\u003d 1:\n\t\treturn True\n\telse:\n\t\treturn False",
+                              "type": "script"
+                            }
+                          ],
+                          "type": "property"
+                        }
+                      },
+                      "props.text": {
+                        "binding": {
+                          "config": {
+                            "path": "view.custom.selectedBin.col"
+                          },
+                          "type": "property"
+                        }
+                      }
+                    },
+                    "props": {
+                      "style": {
+                        "backgroundColor": "#FFFFFF",
+                        "classes": "Dropdowns/DD_Default",
+                        "textAlign": "center"
+                      }
+                    },
+                    "type": "ia.display.label"
+                  }
+                ],
+                "meta": {
+                  "name": "Column"
+                },
+                "position": {
+                  "basis": "130px",
+                  "shrink": 0
+                },
+                "propConfig": {
+                  "custom.SelectedColumn": {
+                    "binding": {
+                      "config": {
+                        "bidirectional": true,
+                        "path": "./Dropdown.props.value"
+                      },
+                      "type": "property"
+                    }
+                  }
+                },
+                "props": {
+                  "direction": "column",
+                  "style": {
+                    "overflow": "visible"
+                  }
+                },
+                "type": "ia.container.flex"
+              },
+              {
+                "children": [
+                  {
+                    "meta": {
+                      "name": "Label"
+                    },
+                    "position": {
+                      "basis": "35px",
+                      "shrink": 0
+                    },
+                    "props": {
+                      "style": {
+                        "classes": "Labels/Label_Text_Res",
+                        "fontSize": "15px"
+                      },
+                      "text": "Bin"
+                    },
+                    "type": "ia.display.label"
+                  },
+                  {
+                    "custom": {
+                      "availOptions": "value"
+                    },
+                    "meta": {
+                      "name": "Dropdown"
+                    },
+                    "position": {
+                      "basis": "34px",
+                      "shrink": 0
+                    },
+                    "propConfig": {
+                      "custom.allOptions": {
+                        "binding": {
+                          "config": {
+                            "queryPath": "Participants/Storage Bins/GetAllYOptions",
+                            "returnFormat": "json"
+                          },
+                          "type": "query"
+                        }
+                      },
+                      "position.display": {
+                        "binding": {
+                          "config": {
+                            "path": "..../BinSelectFlex.custom.mode"
+                          },
+                          "transforms": [
+                            {
+                              "code": "\tif value \u003d\u003d 0:\n\t\treturn True\n\telse:\n\t\treturn False",
+                              "type": "script"
+                            }
+                          ],
+                          "type": "property"
+                        }
+                      },
+                      "props.options": {
+                        "binding": {
+                          "config": {
+                            "parameters": {
+                              "xValue": "{.../Column/Dropdown.custom.selectAndFilter}"
+                            },
+                            "queryPath": "Participants/Storage Bins/GetAvailableYOptions",
+                            "returnFormat": "json"
+                          },
+                          "transforms": [
+                            {
+                              "code": "\tlst \u003d []\n\tfor y in value:\n\t\tlst.append({\u0027label\u0027:int(y[\u0027yValue\u0027]),\u0027value\u0027:int(y[\u0027yValue\u0027])})\n\treturn lst",
+                              "type": "script"
+                            }
+                          ],
+                          "type": "query"
+                        }
+                      },
+                      "props.value": {
+                        "onChange": {
+                          "enabled": null,
+                          "script": "\tif previousValue is not None and previousValue.value is not None and (currentValue is None or currentValue.value is None):\n\t\tself.parent.parent.getChild(\"Placeholder_textinput\").getChild(\"TextField\").focus()"
+                        }
+                      }
+                    },
+                    "props": {
+                      "dropdownOptionStyle": {
+                        "backgroundColor": "#FFFFFF",
+                        "classes": "Dropdowns/DD_DefaultNoBorder"
+                      },
+                      "placeholder": {
+                        "text": "Select Bin..."
+                      },
+                      "showClearIcon": true,
+                      "style": {
+                        "classes": "Dropdowns/DD_Default"
+                      },
+                      "value": null
+                    },
+                    "type": "ia.input.dropdown"
+                  },
+                  {
+                    "meta": {
+                      "name": "Label_0"
+                    },
+                    "position": {
+                      "basis": "34px",
+                      "shrink": 0
+                    },
+                    "propConfig": {
+                      "position.display": {
+                        "binding": {
+                          "config": {
+                            "path": "..../BinSelectFlex.custom.mode"
+                          },
+                          "transforms": [
+                            {
+                              "code": "\tif value \u003d\u003d 1:\n\t\treturn True\n\telse:\n\t\treturn False",
+                              "type": "script"
+                            }
+                          ],
+                          "type": "property"
+                        }
+                      },
+                      "props.text": {
+                        "binding": {
+                          "config": {
+                            "path": "view.custom.selectedBin.bin"
+                          },
+                          "type": "property"
+                        }
+                      }
+                    },
+                    "props": {
+                      "style": {
+                        "backgroundColor": "#FFFFFF",
+                        "classes": "Dropdowns/DD_Default",
+                        "textAlign": "center"
+                      }
+                    },
+                    "type": "ia.display.label"
+                  }
+                ],
+                "meta": {
+                  "name": "Bin"
+                },
+                "position": {
+                  "basis": "130px",
+                  "shrink": 0
+                },
+                "propConfig": {
+                  "custom.SelectedBin": {
+                    "binding": {
+                      "config": {
+                        "bidirectional": true,
+                        "path": "./Dropdown.props.value"
+                      },
+                      "type": "property"
+                    }
+                  }
+                },
+                "props": {
+                  "direction": "column",
+                  "style": {
+                    "marginLeft": "18.5px",
+                    "overflow": "visible"
+                  }
+                },
+                "type": "ia.container.flex"
+              },
+              {
+                "children": [
+                  {
+                    "meta": {
+                      "name": "Label"
+                    },
+                    "position": {
+                      "basis": "35px",
+                      "shrink": 0
+                    },
+                    "props": {
+                      "style": {
+                        "classes": "Labels/Label_Text_Res",
+                        "fontSize": "15px"
+                      },
+                      "text": "Start Date"
+                    },
+                    "type": "ia.display.label"
+                  },
+                  {
+                    "custom": {
+                      "origValue": null
+                    },
+                    "meta": {
+                      "name": "DateTimeInput"
+                    },
+                    "position": {
+                      "basis": "34px",
+                      "shrink": 0
+                    },
+                    "propConfig": {
+                      "props.value": {
+                        "binding": {
+                          "config": {
+                            "path": "view.custom.defaultDates.start"
+                          },
+                          "type": "property"
+                        }
+                      }
+                    },
+                    "props": {
+                      "format": "MM/DD/YYYY",
+                      "formattedValue": "09/02/2024",
+                      "modalStyle": {
+                        "classes": "DateTime/Add_Date"
+                      },
+                      "pickerType": "date",
+                      "style": {
+                        "classes": "DateTime/Date_Purple",
+                        "cursor": "pointer",
+                        "overflow": "hidden"
+                      }
+                    },
+                    "type": "ia.input.date-time-input"
+                  }
+                ],
+                "meta": {
+                  "name": "StartDate"
+                },
+                "position": {
+                  "basis": "110px",
+                  "shrink": 0
+                },
+                "propConfig": {
+                  "custom.ExpDate": {
+                    "binding": {
+                      "config": {
+                        "bidirectional": true,
+                        "path": "./DateTimeInput.props.value"
+                      },
+                      "type": "property"
+                    }
+                  }
+                },
+                "props": {
+                  "direction": "column",
+                  "style": {
+                    "marginLeft": "18.5px",
+                    "overflow": "visible"
+                  }
+                },
+                "type": "ia.container.flex"
+              },
+              {
+                "children": [
+                  {
+                    "meta": {
+                      "name": "Label"
+                    },
+                    "position": {
+                      "basis": "35px",
+                      "shrink": 0
+                    },
+                    "props": {
+                      "style": {
+                        "classes": "Labels/Label_Text_Res",
+                        "fontSize": "15px"
+                      },
+                      "text": "Expiry Date"
+                    },
+                    "type": "ia.display.label"
+                  },
+                  {
+                    "custom": {
+                      "origValue": null
+                    },
+                    "meta": {
+                      "name": "DateTimeInput"
+                    },
+                    "position": {
+                      "basis": "34px",
+                      "shrink": 0
+                    },
+                    "propConfig": {
+                      "props.value": {
+                        "binding": {
+                          "config": {
+                            "path": "view.custom.defaultDates.expiry"
+                          },
+                          "type": "property"
+                        }
+                      }
+                    },
+                    "props": {
+                      "format": "MM/DD/YYYY",
+                      "formattedValue": "10/02/2024",
+                      "modalStyle": {
+                        "classes": "DateTime/Add_Date"
+                      },
+                      "pickerType": "date",
+                      "style": {
+                        "classes": "DateTime/Date_Purple",
+                        "cursor": "pointer",
+                        "overflow": "hidden"
+                      }
+                    },
+                    "type": "ia.input.date-time-input"
+                  }
+                ],
+                "meta": {
+                  "name": "ExpireDate"
+                },
+                "position": {
+                  "basis": "110px",
+                  "shrink": 0
+                },
+                "propConfig": {
+                  "custom.ExpDate": {
+                    "binding": {
+                      "config": {
+                        "bidirectional": true,
+                        "path": "./DateTimeInput.props.value"
+                      },
+                      "type": "property"
+                    }
+                  }
+                },
+                "props": {
+                  "direction": "column",
+                  "style": {
+                    "marginLeft": "18.5px",
+                    "overflow": "visible"
+                  }
+                },
+                "type": "ia.container.flex"
+              },
+              {
+                "children": [
+                  {
+                    "meta": {
+                      "name": "Label_0"
+                    },
+                    "position": {
+                      "basis": "35px",
+                      "shrink": 0
+                    },
+                    "propConfig": {
+                      "props.text": {
+                        "binding": {
+                          "config": {
+                            "expression": "\u0027Current Status\u0027"
+                          },
+                          "type": "expr"
+                        }
+                      }
+                    },
+                    "props": {
+                      "style": {
+                        "classes": "Labels/Label_Text_Res",
+                        "fontSize": "15px"
+                      },
+                      "textStyle": {
+                        "textAlign": "left"
+                      }
+                    },
+                    "type": "ia.display.label"
+                  },
+                  {
+                    "meta": {
+                      "name": "Label"
+                    },
+                    "position": {
+                      "basis": "34px",
+                      "shrink": 0
+                    },
+                    "propConfig": {
+                      "props.style.backgroundColor": {
+                        "binding": {
+                          "config": {
+                            "path": "parent.custom.Status"
+                          },
+                          "transforms": [
+                            {
+                              "fallback": "#FFFFFF",
+                              "inputType": "scalar",
+                              "mappings": [
+                                {
+                                  "input": "Available",
+                                  "output": "#3EC3D9"
+                                },
+                                {
+                                  "input": "Expired",
+                                  "output": "#FF2800"
+                                },
+                                {
+                                  "input": "In-Use",
+                                  "output": "#0C4E8B"
+                                },
+                                {
+                                  "input": "None Selected",
+                                  "output": "#555555"
+                                },
+                                {
+                                  "input": "Exited / Evicted",
+                                  "output": "#800000"
+                                }
+                              ],
+                              "outputType": "color",
+                              "type": "map"
+                            }
+                          ],
+                          "type": "property"
+                        }
+                      },
+                      "props.text": {
+                        "binding": {
+                          "config": {
+                            "path": "parent.custom.Status"
+                          },
+                          "type": "property"
+                        }
+                      }
+                    },
+                    "props": {
+                      "style": {
+                        "color": "#FFFFFF",
+                        "textAlign": "center"
+                      }
+                    },
+                    "type": "ia.display.label"
+                  }
+                ],
+                "meta": {
+                  "name": "Status"
+                },
+                "position": {
+                  "basis": "130px",
+                  "shrink": 0
+                },
+                "propConfig": {
+                  "custom.BinCurrentStatus": {
+                    "binding": {
+                      "config": {
+                        "expression": "if(hasChanged({../Column.custom.SelectedColumn}),1,\r\nif(hasChanged({../Bin.custom.SelectedBin}),1,\r\nif(hasChanged({parent.custom.mode}),1,\r\n0)))"
+                      },
+                      "transforms": [
+                        {
+                          "code": "\t\n\tcol \u003d self.getSibling(\"Column\").custom.SelectedColumn\n\tbin \u003d self.getSibling(\"Bin\").custom.SelectedBin\n\tif col is None or bin is None:\n\t\treturn \"None Selected\"\n\telse:\n\t\tparams \u003d {\n\t\t\t\u0027col\u0027: col,\n\t\t\t\u0027bin\u0027: bin\n\t\t}\n\t\t\n\t\tres \u003d system.db.runNamedQuery(\u0027Participants/Storage Bins/GetSpecificBinStatus\u0027, params)\n\t\tres \u003d system.dataset.toPyDataSet(res)\n\t\t\n\t\tif len(res) \u003d\u003d 0:\n\t\t\treturn \u0027Available\u0027\n\t\telse:\n\t\t\texitAction \u003d res[0][\u0027exitAction\u0027]\n\t\t\texpireOn \u003d res[0][\u0027expireOn\u0027]\n\t\t\tif exitAction is not None:\n\t\t\t\treturn \u0027Exited / Evicted\u0027\n\t\t\telif system.date.isAfter(system.date.now(), expireOn):\n\t\t\t\treturn \u0027Expired\u0027\n\t\t\telse:\n\t\t\t\treturn \u0027In-Use\u0027",
+                          "type": "script"
+                        }
+                      ],
+                      "type": "expr"
+                    }
+                  },
+                  "custom.Status": {
+                    "binding": {
+                      "config": {
+                        "expression": "if(hasChanged({../Column.custom.SelectedColumn}),1,\r\nif(hasChanged({../Bin.custom.SelectedBin}),1,\r\nif(hasChanged({parent.custom.mode}),1,\r\n0)))"
+                      },
+                      "transforms": [
+                        {
+                          "code": "\tmode \u003d self.parent.custom.mode\n\t# Mode of 1 means a historical record was selected from the table\n\tif mode \u003d\u003d 1:\n\t\tid \u003d self.parent.parent.parent.getChild(\"Table_0\").props.selection.data[0].id\n\t\tres \u003d system.db.runNamedQuery(\u0027Participants/Storage Bins/GetSpecificBinIdStatus\u0027, {\u0027id\u0027:id})\n\t\tres \u003d system.dataset.toPyDataSet(res)\n\t\tif len(res) \u003d\u003d 0:\n\t\t\treturn \u0027Available\u0027\n\t\telse:\n\t\t\texitAction \u003d res[0][\u0027exitAction\u0027]\n\t\t\texpireOn \u003d res[0][\u0027expireOn\u0027]\n\t\t\tif exitAction is not None:\n\t\t\t\treturn \u0027Exited / Evicted\u0027\n\t\t\telif system.date.isAfter(system.date.now(), expireOn):\n\t\t\t\treturn \u0027Expired\u0027\n\t\t\telse:\n\t\t\t\treturn \u0027In-Use\u0027\n\t# Mode of 0 is New record / editing so checking current status of the bin\n\telse:\n\t\tcol \u003d self.getSibling(\"Column\").custom.SelectedColumn\n\t\tbin \u003d self.getSibling(\"Bin\").custom.SelectedBin\n\t\tif col is None or bin is None:\n\t\t\treturn \"None Selected\"\n\t\telse:\n\t\t\tparams \u003d {\n\t\t\t\t\u0027col\u0027: col,\n\t\t\t\t\u0027bin\u0027: bin\n\t\t\t}\n\t\t\t\n\t\t\tres \u003d system.db.runNamedQuery(\u0027Participants/Storage Bins/GetSpecificBinStatus\u0027, params)\n\t\t\tres \u003d system.dataset.toPyDataSet(res)\n\t\t\t\n\t\t\tif len(res) \u003d\u003d 0:\n\t\t\t\treturn \u0027Available\u0027\n\t\t\telse:\n\t\t\t\texitAction \u003d res[0][\u0027exitAction\u0027]\n\t\t\t\texpireOn \u003d res[0][\u0027expireOn\u0027]\n\t\t\t\tif exitAction is not None:\n\t\t\t\t\treturn \u0027Exited / Evicted\u0027\n\t\t\t\telif system.date.isAfter(system.date.now(), expireOn):\n\t\t\t\t\treturn \u0027Expired\u0027\n\t\t\t\telse:\n\t\t\t\t\treturn \u0027In-Use\u0027",
+                          "type": "script"
+                        }
+                      ],
+                      "type": "expr"
+                    }
+                  }
+                },
+                "props": {
+                  "direction": "column",
+                  "justify": "space-around",
+                  "style": {
+                    "marginLeft": "18.5px",
+                    "overflow": "visible",
+                    "textAlign": "center"
+                  }
+                },
+                "type": "ia.container.flex"
+              },
+              {
+                "children": [
+                  {
+                    "meta": {
+                      "name": "TextField"
+                    },
+                    "position": {
+                      "basis": "2px"
+                    },
+                    "props": {
+                      "rejectUpdatesWhileFocused": false,
+                      "style": {
+                        "cursor": "none"
+                      }
+                    },
+                    "type": "ia.input.text-field"
+                  }
+                ],
+                "meta": {
+                  "name": "Placeholder_textinput"
+                },
+                "position": {
+                  "basis": "20px",
+                  "shrink": 0
+                },
+                "props": {
+                  "direction": "column",
+                  "justify": "space-around",
+                  "style": {
+                    "marginLeft": "18.5px",
+                    "overflow": "visible",
+                    "textAlign": "center"
+                  }
+                },
+                "type": "ia.container.flex"
+              }
+            ],
+            "custom": {
+              "mode": 0
+            },
+            "meta": {
+              "name": "BinSelectFlex"
+            },
+            "position": {
+              "basis": "75px",
+              "shrink": 0
+            },
+            "props": {
+              "style": {
+                "borderBottomColor": "#9db8d1",
+                "borderBottomStyle": "solid",
+                "borderBottomWidth": "1px",
+                "classes": "Background/Default",
+                "paddingBottom": "5px",
+                "paddingLeft": "18.5px"
+              }
+            },
+            "type": "ia.container.flex"
+          },
+          {
+            "meta": {
+              "name": "Participant"
+            },
+            "position": {
+              "basis": "35px",
+              "shrink": 0
+            },
+            "propConfig": {
+              "props.text": {
+                "binding": {
+                  "config": {
+                    "path": "view.custom.participantFullName"
+                  },
+                  "type": "property"
+                }
+              }
+            },
+            "props": {
+              "style": {
+                "classes": "Text/Personal_Header",
+                "marginBottom": "20px",
+                "paddingLeft": "18.5px"
+              }
+            },
+            "type": "ia.display.label"
+          },
+          {
+            "children": [
+              {
+                "events": {
+                  "component": {
+                    "onActionPerformed": {
+                      "config": {
+                        "script": "\tself.parent.parent.getChild(\"BinSelectFlex\").custom.mode \u003d 0\n\tself.parent.parent.getChild(\"BinSelectFlex\").getChild(\"Column\").getChild(\"Dropdown\").props.value \u003d None\n\tself.parent.parent.getChild(\"BinSelectFlex\").getChild(\"Bin\").getChild(\"Dropdown\").props.value \u003d None\n\tself.parent.parent.getChild(\"BinSelectFlex\").getChild(\"StartDate\").getChild(\"DateTimeInput\").props.value \u003d self.view.custom.defaultDates.start\n\tself.parent.parent.getChild(\"BinSelectFlex\").getChild(\"ExpireDate\").getChild(\"DateTimeInput\").props.value \u003d self.view.custom.defaultDates.expiry\n\tself.parent.parent.parent.getChild(\"Table_0\").props.selection.selectedRow \u003d None\n\tself.parent.parent.parent.getChild(\"Table_0\").props.selection.selectedColumn \u003d None\n\tself.parent.parent.parent.getChild(\"Table_0\").props.selection.data \u003d []\n\t\n\tself.view.params.Selected_Id \u003d None"
+                      },
+                      "scope": "G",
+                      "type": "script"
+                    }
+                  }
+                },
+                "meta": {
+                  "name": "BtnNew"
+                },
+                "position": {
+                  "basis": "120px"
+                },
+                "propConfig": {
+                  "position.display": {
+                    "binding": {
+                      "config": {
+                        "expression": "{session.custom.isWSManager} || {session.custom.isManager} || {session.custom.isAdministrator} || {session.custom.isSupportCoordinator} || {session.custom.isWSSupportCoordinator}"
+                      },
+                      "type": "expr"
+                    }
+                  }
+                },
+                "props": {
+                  "style": {
+                    "classes": "Buttons/Main"
+                  },
+                  "text": "New"
+                },
+                "type": "ia.input.button"
+              },
+              {
+                "events": {
+                  "component": {
+                    "onActionPerformed": {
+                      "config": {
+                        "script": "\tmode \u003d self.parent.parent.getChild(\"BinSelectFlex\").custom.mode\n\t# mode of 0 is inserting a fresh record\n\tstartDate \u003d self.parent.parent.getChild(\"BinSelectFlex\").getChild(\"StartDate\").getChild(\"DateTimeInput\").props.value\n\texpDate \u003d self.parent.parent.getChild(\"BinSelectFlex\").getChild(\"ExpireDate\").getChild(\"DateTimeInput\").props.value\n\tid \u003d self.view.params.Selected_Id\n\tif mode \u003d\u003d 0:\n\t\tcol \u003d self.parent.parent.getChild(\"BinSelectFlex\").getChild(\"Column\").getChild(\"Dropdown\").props.value\n\t\tbin \u003d self.parent.parent.getChild(\"BinSelectFlex\").getChild(\"Bin\").getChild(\"Dropdown\").props.value\n\t\t\n\t\tparticipantId \u003d self.view.params.Selected_Participant_Id\n\t\n\t\t\n\t\tnow \u003d system.date.now()\n\t\t\n\t\tif id is None: # add a new bin entry\n\t\t\tparams \u003d {\u0027participantId\u0027: participantId,\n\t\t\t\t\t  \u0027col\u0027          : col,\n\t\t\t\t\t  \u0027bin\u0027          : bin,\n\t\t\t\t\t  \u0027startOn\u0027      : startDate,\n\t\t\t\t\t  \u0027expireOn\u0027     : expDate}\n\t\t\t\n\t\t\tsystem.perspective.print(\"\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003dStorageBin Assign Bin params\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\")\n\t\t\tsystem.perspective.print(params)\t\n\t\t\tsystem.db.runNamedQuery(\u0027Participants/Storage Bins/AssignBin\u0027, params)\n\t# mode of 1 we are updating an existing entry\n\telse: \n\t\tparams \u003d {\n\t\t\t\t  \u0027startOn\u0027      : startDate,\n\t\t\t\t  \u0027expireOn\u0027     : expDate,\n\t\t\t\t  \u0027id\u0027           : id}\n\t\t\n\t\tsystem.perspective.print(\"\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003dStorageBin Update Bin params\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\")\n\t\tsystem.perspective.print(params)\n\t\tsystem.db.runNamedQuery(\u0027Participants/Storage Bins/UpdateBin\u0027, params)\n\t\t\n\tsystem.perspective.sendMessage(\u0027storage_bin_refresh\u0027, payload \u003d {})\n#\tself.parent.parent.getChild(\"BinSelectFlex\").getChild(\"Status\").refreshBinding(\"custom.Status\")\n\tself.parent.parent.getChild(\"BinSelectFlex\").getChild(\"StartDate\").getChild(\"DateTimeInput\").custom.origValue \u003d self.parent.parent.getChild(\"BinSelectFlex\").getChild(\"StartDate\").getChild(\"DateTimeInput\").props.value \n\tself.parent.parent.getChild(\"BinSelectFlex\").getChild(\"ExpireDate\").getChild(\"DateTimeInput\").custom.origValue \u003d self.parent.parent.getChild(\"BinSelectFlex\").getChild(\"ExpireDate\").getChild(\"DateTimeInput\").props.value\n\t\n\t# COPY OF NEW BUTTON SCRIPT\n\tself.parent.parent.getChild(\"BinSelectFlex\").custom.mode \u003d 0\n\tself.parent.parent.getChild(\"BinSelectFlex\").getChild(\"Column\").getChild(\"Dropdown\").props.value \u003d None\n\tself.parent.parent.getChild(\"BinSelectFlex\").getChild(\"Bin\").getChild(\"Dropdown\").props.value \u003d None\n\tself.parent.parent.getChild(\"BinSelectFlex\").getChild(\"StartDate\").getChild(\"DateTimeInput\").props.value \u003d self.view.custom.defaultDates.start\n\tself.parent.parent.getChild(\"BinSelectFlex\").getChild(\"ExpireDate\").getChild(\"DateTimeInput\").props.value \u003d self.view.custom.defaultDates.expiry\n\tself.parent.parent.parent.getChild(\"Table_0\").props.selection.selectedRow \u003d None\n\tself.parent.parent.parent.getChild(\"Table_0\").props.selection.selectedColumn \u003d None\n\tself.parent.parent.parent.getChild(\"Table_0\").props.selection.data \u003d []\n\t\n\tself.view.params.Selected_Id \u003d None"
+                      },
+                      "scope": "G",
+                      "type": "script"
+                    }
+                  }
+                },
+                "meta": {
+                  "name": "BtnUpd"
+                },
+                "position": {
+                  "basis": "120px"
+                },
+                "propConfig": {
+                  "position.display": {
+                    "binding": {
+                      "config": {
+                        "expression": "{session.custom.isWSManager} || {session.custom.isManager} || {session.custom.isAdministrator} || {session.custom.isSupportCoordinator} || {session.custom.isWSSupportCoordinator}"
+                      },
+                      "type": "expr"
+                    }
+                  },
+                  "props.enabled": {
+                    "binding": {
+                      "config": {
+                        "expression": "//{.../BinSelectFlex/Status.custom.Status} \u003d \u0027Available\u0027 ||\r\n//(\r\n//\t{.../BinSelectFlex/StartDate/DateTimeInput.props.value} !\u003d {.../BinSelectFlex/StartDate/DateTimeInput.custom.origValue} ||\r\n//\t{.../BinSelectFlex/ExpireDate/DateTimeInput.props.value} !\u003d {.../BinSelectFlex/ExpireDate/DateTimeInput.custom.origValue}\r\n//)\r\n//\u0026\u0026\r\n//{..../Table_0.custom.hasExited} \u003d False\r\n\r\nif(\r\n\t{.../BinSelectFlex.custom.mode}\u003d0,\r\n\t\t{.../BinSelectFlex/Status.custom.Status} \u003d \u0027Available\u0027 \u0026\u0026 isNull({.../BinSelectFlex/Column/Dropdown.props.value})\u003d0 \u0026\u0026 isNull({.../BinSelectFlex/Bin/Dropdown.props.value}) \u003d0,\r\n\tif(\r\n\t\tisNull({view.custom.selectedBin.exitAction}),\r\n\t\t\t{.../BinSelectFlex/StartDate/DateTimeInput.props.value} !\u003d {.../BinSelectFlex/StartDate/DateTimeInput.custom.origValue} ||\r\n\t\t\t{.../BinSelectFlex/ExpireDate/DateTimeInput.props.value} !\u003d {.../BinSelectFlex/ExpireDate/DateTimeInput.custom.origValue},\t\r\n\t\tFalse)\r\n\t)\r\n\t\t"
+                      },
+                      "type": "expr"
+                    }
+                  }
+                },
+                "props": {
+                  "style": {
+                    "classes": "Buttons/Main"
+                  },
+                  "text": "Save"
+                },
+                "type": "ia.input.button"
+              },
+              {
+                "custom": {
+                  "ActionId": 1
+                },
+                "events": {
+                  "component": {
+                    "onActionPerformed": {
+                      "config": {
+                        "script": "\tparams \u003d {\u0027ExitAction\u0027: self.custom.ActionId, \n\t\t\t  \u0027StorageBinLogId\u0027: self.view.params.Selected_Id,\n\t\t\t  \u0027Col\u0027: self.parent.parent.getChild(\"BinSelectFlex\").getChild(\"Column\").getChild(\"Label_0\").props.text,\n\t\t\t  \u0027Bin\u0027: int(self.parent.parent.getChild(\"BinSelectFlex\").getChild(\"Bin\").getChild(\"Label_0\").props.text)\n\t\t\t  }\n\tdockId \u003d \u0027BinModify\u0027\n\t\n\tsystem.perspective.openDock(id \u003d dockId,\n\t\t\t\t\t\t\t\tparams \u003d params)"
+                      },
+                      "scope": "G",
+                      "type": "script"
+                    }
+                  }
+                },
+                "meta": {
+                  "name": "BtnExit"
+                },
+                "position": {
+                  "basis": "120px"
+                },
+                "propConfig": {
+                  "position.display": {
+                    "binding": {
+                      "config": {
+                        "path": "view.custom.selectedBin"
+                      },
+                      "transforms": [
+                        {
+                          "code": "\tif value is not None:\n\t\tif value[\u0027exitAction\u0027] is None and (self.session.custom.isManager or self.session.custom.isWSManager or self.session.custom.isAdministrator or self.session.custom.isSupportCoordinator or self.session.custom.isWSSupportCoordinator):\n\t\t\treturn True\n\t\telse:\n\t\t\treturn False\n\telse:\n\t\treturn False",
+                          "type": "script"
+                        }
+                      ],
+                      "type": "property"
+                    }
+                  }
+                },
+                "props": {
+                  "style": {
+                    "classes": "Buttons/Delete"
+                  },
+                  "text": "Exit"
+                },
+                "type": "ia.input.button"
+              },
+              {
+                "custom": {
+                  "ActionId": 2
+                },
+                "events": {
+                  "component": {
+                    "onActionPerformed": {
+                      "config": {
+                        "script": "\tparams \u003d {\u0027ExitAction\u0027: self.custom.ActionId, \n\t\t\t  \u0027StorageBinLogId\u0027: self.view.params.Selected_Id,\n\t\t\t  \u0027Col\u0027: self.parent.parent.getChild(\"BinSelectFlex\").getChild(\"Column\").getChild(\"Label_0\").props.text,\n\t\t\t  \u0027Bin\u0027: int(self.parent.parent.getChild(\"BinSelectFlex\").getChild(\"Bin\").getChild(\"Label_0\").props.text)\n\t\t\t  }\n\tdockId \u003d \u0027BinModify\u0027\n\t\n\tsystem.perspective.openDock(id \u003d dockId,\n\t\t\t\t\t\t\t\tparams \u003d params)"
+                      },
+                      "scope": "G",
+                      "type": "script"
+                    }
+                  }
+                },
+                "meta": {
+                  "name": "BtnEvict"
+                },
+                "position": {
+                  "basis": "120px"
+                },
+                "propConfig": {
+                  "position.display": {
+                    "binding": {
+                      "config": {
+                        "path": "view.custom.selectedBin"
+                      },
+                      "transforms": [
+                        {
+                          "code": "\tif value is not None:\n\t\tif value[\u0027exitAction\u0027] is None and (self.session.custom.isManager or self.session.custom.isWSManager or self.session.custom.isAdministrator or self.session.custom.isSupportCoordinator or self.session.custom.isWSSupportCoordinator):\n\t\t\treturn True\n\t\telse:\n\t\t\treturn False\n\telse:\n\t\treturn False",
+                          "type": "script"
+                        }
+                      ],
+                      "type": "property"
+                    }
+                  }
+                },
+                "props": {
+                  "style": {
+                    "classes": "Buttons/Delete"
+                  },
+                  "text": "Evict"
+                },
+                "type": "ia.input.button"
+              }
+            ],
+            "meta": {
+              "name": "BinActionsFlex"
+            },
+            "position": {
+              "basis": "50px",
+              "shrink": 0
+            },
+            "props": {
+              "style": {
+                "classes": "Background/Default",
+                "gap": "20px",
+                "padding": "5px",
+                "paddingLeft": "20px"
+              }
+            },
+            "type": "ia.container.flex"
+          }
+        ],
+        "meta": {
+          "name": "Bin Lookup Flex"
+        },
+        "position": {
+          "shrink": 0
+        },
+        "props": {
+          "direction": "column",
+          "style": {
+            "marginBottom": "25px"
+          }
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "children": [
+          {
+            "meta": {
+              "name": "BinStatus"
+            },
+            "position": {
+              "basis": "150px"
+            },
+            "propConfig": {
+              "props.params.selection": {
+                "onChange": {
+                  "enabled": null,
+                  "script": "\tsystem.perspective.sendMessage(\u0027storage_bin_refresh\u0027)"
+                }
+              }
+            },
+            "props": {
+              "params": {
+                "options": {
+                  "$": [
+                    "ds",
+                    192,
+                    1643803471597
+                  ],
+                  "$columns": [
+                    {
+                      "data": [
+                        0,
+                        1,
+                        2
+                      ],
+                      "name": "id",
+                      "type": "Integer"
+                    },
+                    {
+                      "data": [
+                        "Active",
+                        "Inactive",
+                        "Active \u0026 Inactive"
+                      ],
+                      "name": "name",
+                      "type": "String"
+                    }
+                  ]
+                },
+                "placeholder": "Bin Status",
+                "selection": 2
+              },
+              "path": "1_TEMPLATES/Filtering/Conditionals/Conditional_SingleDropDown_NoClear",
+              "style": {
+                "classes": "Filter/Filter_Container"
+              }
+            },
+            "type": "ia.display.view"
+          },
+          {
+            "meta": {
+              "name": "DateRange"
+            },
+            "position": {
+              "basis": "150px"
+            },
+            "props": {
+              "params": {
+                "placeholder": "Expires In",
+                "selection": 365,
+                "selection_in": 365
+              },
+              "path": "1_TEMPLATES/Filtering/Conditionals/Conditional_SingleDropDown_NoClear_ActivityRange",
+              "style": {
+                "classes": "Filter/Filter_Container"
+              }
+            },
+            "type": "ia.display.view"
+          },
+          {
+            "meta": {
+              "name": "EmbeddedView"
+            },
+            "position": {
+              "basis": "150px"
+            },
+            "props": {
+              "params": {
+                "column_name": "",
+                "filter": "",
+                "key": "",
+                "placeholder": "Search",
+                "searchText": "",
+                "searchType": "like"
+              },
+              "path": "1_TEMPLATES/Filtering/Filters/Search_Bar",
+              "style": {
+                "classes": "Table/Search_Bar"
+              }
+            },
+            "type": "ia.display.view"
+          },
+          {
+            "meta": {
+              "name": "toExcel"
+            },
+            "position": {
+              "basis": "34px"
+            },
+            "props": {
+              "params": {
+                "dataset": null,
+                "defaultFilePrefix": "Participants"
+              },
+              "path": "1_TEMPLATES/Tables/TableToExcel",
+              "style": {
+                "paddingTop": 3
+              }
+            },
+            "type": "ia.display.view"
+          }
+        ],
+        "meta": {
+          "name": "Filters"
+        },
+        "position": {
+          "basis": "40px"
+        },
+        "props": {
+          "style": {
+            "marginLeft": "18.5px"
+          }
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "custom": {
+          "hasExited": false
+        },
+        "events": {
+          "component": {
+            "onRowClick": {
+              "config": {
+                "script": "\timport traceback\n\ttry:\n\t\tself.view.params.Selected_Id \u003d event.value[\u0027id\u0027]\n\t\tself.parent.getChild(\"Bin Lookup Flex\").getChild(\"BinSelectFlex\").custom.mode \u003d 1\n\t\tself.parent.getChild(\"Bin Lookup Flex\").getChild(\"BinSelectFlex\").getChild(\"Column\").getChild(\"Label_0\").props.text \u003d event.value[\u0027col\u0027]\n\t\tself.parent.getChild(\"Bin Lookup Flex\").getChild(\"BinSelectFlex\").getChild(\"Bin\").getChild(\"Label_0\").props.text \u003d event.value[\u0027bin\u0027]\n\t\tself.parent.getChild(\"Bin Lookup Flex\").getChild(\"BinSelectFlex\").getChild(\"StartDate\").getChild(\"DateTimeInput\").props.value \u003d event.value[\u0027startOn\u0027]\n\t\tself.parent.getChild(\"Bin Lookup Flex\").getChild(\"BinSelectFlex\").getChild(\"StartDate\").getChild(\"DateTimeInput\").custom.origValue \u003d event.value[\u0027startOn\u0027]\n\t\tself.parent.getChild(\"Bin Lookup Flex\").getChild(\"BinSelectFlex\").getChild(\"ExpireDate\").getChild(\"DateTimeInput\").props.value \u003d event.value[\u0027expireOn\u0027]\n\t\tself.parent.getChild(\"Bin Lookup Flex\").getChild(\"BinSelectFlex\").getChild(\"ExpireDate\").getChild(\"DateTimeInput\").custom.origValue \u003d event.value[\u0027expireOn\u0027]\n\t\t\t\t\n\t\tself.view.params.Selected_Participant_Id \u003d event.value[\u0027participantId\u0027]\n\texcept:\n\t\tsystem.perspective.print(traceback.format_exc())"
+              },
+              "scope": "G",
+              "type": "script"
+            }
+          }
+        },
+        "meta": {
+          "name": "Table_0"
+        },
+        "position": {
+          "basis": "300px",
+          "grow": 1
+        },
+        "propConfig": {
+          "custom.sql_data": {
+            "binding": {
+              "config": {
+                "parameters": {
+                  "activityStatus": "{../Filters/BinStatus.props.params.selection}",
+                  "daysAgoFilter": "{../Filters/DateRange.props.params.selection}",
+                  "searchFilter": "\u0027%\u0027 + \r {../Filters/EmbeddedView.props.params.searchText}\r + \u0027%\u0027\r "
+                },
+                "queryPath": "Participants/Storage Bins/GetStorageBinStatus",
+                "returnFormat": "json"
+              },
+              "transforms": [
+                {
+                  "code": "\t# val has: id action actionDate col bin participantId pfname pmname plname employeeId efname emname elname\n\t# res has: [id] pname column bin start exp exit evict sname\n\tresult \u003d []\n\t\n\tfor row in value:\n\t\trowStruct \u003d {}\n\t\trowStruct[\u0027style\u0027] \u003d {\u0027classes\u0027: \u0027Table/Cell_Detail\u0027}\n\t\t\n\t\trowValue \u003d {}\n\t\trowValue[\u0027id\u0027] \u003d row[\u0027id\u0027]\n\t\trowValue[\u0027col\u0027] \u003d row[\u0027col\u0027]\n\t\trowValue[\u0027bin\u0027] \u003d row[\u0027bin\u0027]\n\t\trowValue[\u0027participantId\u0027] \u003d row[\u0027participantId\u0027]\n\t\trowValue[\u0027participantFullName\u0027] \u003d getName(row[\u0027participantFirstName\u0027], row[\u0027participantMiddleName\u0027], row[\u0027participantLastName\u0027])\n\t\trowValue[\u0027startOn\u0027] \u003d row[\u0027startOn\u0027]\n\t\trowValue[\u0027expireOn\u0027] \u003d row[\u0027expireOn\u0027]\n\t\t\n\t\texitAction \u003d row[\u0027exitAction\u0027]\n\t\texitedOn \u003d row[\u0027exitedOn\u0027]\n\t\texitedBy \u003d getName(row[\u0027exitedByFirstName\u0027], row[\u0027exitedByMiddleName\u0027], row[\u0027exitedByLastName\u0027])\n\t\t\n\t\tif exitAction \u003d\u003d 1: # participant bin was exited\n\t\t\trowValue[\u0027exitedOn\u0027] \u003d exitedOn\n\t\t\trowValue[\u0027exitActionBy\u0027] \u003d exitedBy\n\t\t\trowValue[\u0027evictedOn\u0027] \u003d None\n\t\telif exitAction \u003d\u003d 2: # participant bin was evicted\n\t\t\trowValue[\u0027exitedOn\u0027] \u003d None\n\t\t\trowValue[\u0027exitActionBy\u0027] \u003d exitedBy\n\t\t\trowValue[\u0027evictedOn\u0027] \u003d exitedOn\n\t\telse:\n\t\t\trowValue[\u0027exitedOn\u0027] \u003d None\n\t\t\trowValue[\u0027exitActionBy\u0027] \u003d None\n\t\t\trowValue[\u0027evictedOn\u0027] \u003d None\n\t\t\n\t\tif row[\u0027cancelledByStaffEmployeeId\u0027] !\u003d None:\n\t\t\trowValue[\u0027cancelledBy\u0027] \u003d getName(row[\u0027cancelledByFirstName\u0027], row[\u0027cancelledByMiddleName\u0027], row[\u0027cancelledByLastName\u0027])\n\t\telse:\n\t\t\trowValue[\u0027cancelledBy\u0027] \u003d None\n\t\t\t\t\n\t\trowStruct[\u0027value\u0027] \u003d rowValue\n\t\tresult.append(rowStruct)\n\t\n\treturn result\n\ndef getName(fname, mname, lname):\n\tname \u003d \u0027\u0027\n\tif fname:\n\t\tname +\u003d fname + \u0027 \u0027\n\tif mname:\n\t\tname +\u003d mname + \u0027 \u0027\n\tif lname:\n\t\tname +\u003d lname + \u0027 \u0027\n\treturn name[:-1]",
+                  "type": "script"
+                }
+              ],
+              "type": "query"
+            }
+          },
+          "props.data": {
+            "binding": {
+              "config": {
+                "path": "this.custom.sql_data"
+              },
+              "type": "property"
+            }
+          },
+          "props.selection.style.backgroundColor": {
+            "binding": {
+              "config": {
+                "path": "this.props.selection.selectedRow"
+              },
+              "transforms": [
+                {
+                  "code": "\tif value is None or value \u003d\u003d -1:\n\t\treturn \u0027#FFFFFF00\u0027\n\telse:\n\t\treturn \u0027#9af4eb4d\u0027",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "columns": [
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "id",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header_Line"
+                },
+                "title": ""
+              },
+              "justify": "auto",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": false,
+              "style": {
+                "classes": "Table/Column_Normal_Detail"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": false,
+              "width": ""
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "participantFullName",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header_Line"
+                },
+                "title": "Participant"
+              },
+              "justify": "auto",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": false,
+              "style": {
+                "classes": "Table/Column_Normal_Detail"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 140
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "col",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header_Line"
+                },
+                "title": "Column"
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": false,
+              "style": {
+                "classes": "Table/Column_Normal_Detail"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 70
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "bin",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header_Line"
+                },
+                "title": "Bin"
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": false,
+              "style": {
+                "classes": "Table/Column_Normal_Detail"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 60
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "startOn",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header_Line"
+                },
+                "title": "Start"
+              },
+              "justify": "auto",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "date",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": false,
+              "style": {
+                "classes": "Table/Column_Normal_Detail"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 85
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "expireOn",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header_Line"
+                },
+                "title": "Exp"
+              },
+              "justify": "auto",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "date",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": false,
+              "style": {
+                "classes": "Table/Column_Normal_Detail"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 85
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "exitedOn",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header_Line"
+                },
+                "title": "Exit"
+              },
+              "justify": "auto",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "date",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": false,
+              "style": {
+                "classes": "Table/Column_Normal_Detail"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 85
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "evictedOn",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header_Line"
+                },
+                "title": "Evict"
+              },
+              "justify": "auto",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "date",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": false,
+              "style": {
+                "classes": "Table/Column_Normal_Detail"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 85
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "exitActionBy",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header_Line"
+                },
+                "title": "Staff"
+              },
+              "justify": "auto",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": false,
+              "style": {
+                "classes": "Table/Column_Normal_Detail"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": ""
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "participantId",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "justify": "auto",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": false,
+              "style": {
+                "classes": ""
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": false,
+              "width": ""
+            }
+          ],
+          "filter": {
+            "results": {
+              "enabled": true
+            }
+          },
+          "rows": {
+            "highlight": {
+              "color": "#ccffff"
+            },
+            "striped": {
+              "enabled": false
+            },
+            "style": {
+              "cursor": "pointer"
+            }
+          },
+          "style": {
+            "classes": "Background/Default Table/Column_Normal_Detail",
+            "paddingLeft": "20px"
+          }
+        },
+        "scripts": {
+          "customMethods": [],
+          "extensionFunctions": null,
+          "messageHandlers": [
+            {
+              "messageType": "storage_bin_refresh",
+              "pageScope": true,
+              "script": "\tself.refreshBinding(\u0027custom.sql_data\u0027)\n\tself.parent.getChild(\"Bin Lookup Flex\").getChild(\"BinSelectFlex\").getChild(\"Status\").refreshBinding(\u0027custom.Status\u0027)",
+              "sessionScope": false,
+              "viewScope": false
+            },
+            {
+              "messageType": "clearSelection",
+              "pageScope": true,
+              "script": "\t_selectedRow \u003d payload.get(\u0027selectedRow\u0027)\n\t\n\t#ystem.perspective.print((\u0027payload:\u0027,payload))\n\t\n\tif _selectedRow is None:\n\t\tself.props.selection.selectedRow \u003d None\n\t\tself.props.selection.selectedColumn \u003d None\n\t\tself.getSibling(\"Label\").props.text \u003d \u0027HERE IT IS\u0027",
+              "sessionScope": false,
+              "viewScope": false
+            },
+            {
+              "messageType": "tableToExcel",
+              "pageScope": true,
+              "script": "\t# implement your handler here\n\timport traceback\n\ttry:\n\t\t#Send the dataset to Excel\n\t\tfilename \u003d \u0027storage_bins_\u0027 + str(system.date.format(system.date.now(),\"yyyyMMddHHmmss\")) + \u0027.xls\u0027\n\t\tdatasetJSON \u003d self.props.data\n\t\theader \u003d [\u0027Participant\u0027,\u0027Column\u0027,\u0027Bin\u0027,\u0027Start\u0027,\u0027Exp\u0027,\u0027Exit\u0027,\u0027Evict\u0027,\u0027Staff\u0027]\n\t\trows \u003d []\n\t\t\n\t\tfor oneData in datasetJSON:\n\t\t\tstartOnDate \u003d system.date.fromMillis(long(oneData[\u0027value\u0027][\u0027startOn\u0027]))\n\t\t\t\n\t\t\texpireOnDate \u003d system.date.fromMillis(long(oneData[\u0027value\u0027][\u0027expireOn\u0027]))\n\t\t\t\n\t\t\texitedOnDate \u003d None\n\t\t\tif oneData[\u0027value\u0027][\u0027exitedOn\u0027] is not None:\n\t\t\t\texitedOnDate \u003d system.date.fromMillis(long(oneData[\u0027value\u0027][\u0027exitedOn\u0027]))\n\t\t\t\n\t\t\tevictedOnDate \u003d None\n\t\t\tif oneData[\u0027value\u0027][\u0027evictedOn\u0027] is not None:\n\t\t\t\tevictedOnDate \u003d system.date.fromMillis(long(oneData[\u0027value\u0027][\u0027evictedOn\u0027]))\n\t\t\toneRow \u003d [oneData[\u0027value\u0027][\u0027participantFullName\u0027],oneData[\u0027value\u0027][\u0027col\u0027],oneData[\u0027value\u0027][\u0027bin\u0027],startOnDate,expireOnDate,exitedOnDate,evictedOnDate,oneData[\u0027value\u0027][\u0027exitActionBy\u0027]]\n\t\t\trows.append(oneRow)\n\t\t\n\t\tdataset \u003d system.dataset.toDataSet(header, rows)\n\t\txlFile \u003d system.dataset.toExcel(True,dataset)\n\t\tsystem.perspective.download(filename, xlFile)\n\texcept:   \n\t\tlogger \u003d system.util.getLogger(\"Participants Dashboard tableToExcel\")\n\t\tmsg \u003d traceback.format_exc()\n\t\tlogger.error(msg)",
+              "sessionScope": false,
+              "viewScope": false
+            }
+          ]
+        },
+        "type": "ia.display.table"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column",
+      "style": {
+        "classes": "Background/Default"
+      }
+    },
+    "scripts": {
+      "customMethods": [],
+      "extensionFunctions": null,
+      "messageHandlers": [
+        {
+          "messageType": "sbin_selected_participant",
+          "pageScope": true,
+          "script": "\tself.view.params.Selected_Participant_Id \u003d payload[\u0027participantId\u0027]\n\tself.getChild(\"Bin Lookup Flex\").getChild(\"BinSelectFlex\").getChild(\"Column\").getChild(\"Dropdown\").props.value \u003d None\n\tself.getChild(\"Bin Lookup Flex\").getChild(\"BinSelectFlex\").getChild(\"Bin\").getChild(\"Dropdown\").props.value \u003d None\n\tself.view.params.Selected_Id \u003d None\n\tself.getChild(\"Table_0\").props.selection.selectedRow \u003d -1",
+          "sessionScope": false,
+          "viewScope": false
+        }
+      ]
+    },
+    "type": "ia.container.flex"
+  }
+}

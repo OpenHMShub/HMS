@@ -1,0 +1,211 @@
+{
+  "custom": {
+    "_devCopy": {
+      "applicantStatusId": 43,
+      "appliedComment": "Online applications",
+      "appliedDate": {
+        "$": [
+          "ts",
+          192,
+          1625007395634
+        ],
+        "$ts": 1610625600000
+      },
+      "employerId": 46,
+      "hiredComment": "He got the job!!",
+      "hiredDate": {
+        "$": [
+          "ts",
+          192,
+          1625007395634
+        ],
+        "$ts": 1611403200000
+      },
+      "hiredState": true,
+      "interviewedComment": "Does my typing get cut off",
+      "interviewedDate": {
+        "$": [
+          "ts",
+          192,
+          1625007395634
+        ],
+        "$ts": 1610798400000
+      },
+      "participantId": 918,
+      "position": "Head Jumper",
+      "timeCreated": {
+        "$": [
+          "ts",
+          192,
+          1625007395634
+        ],
+        "$ts": 1611863817400
+      },
+      "timeRetired": null
+    }
+  },
+  "params": {
+    "objDataIn": {},
+    "participantId": null,
+    "position": ""
+  },
+  "propConfig": {
+    "custom._devCopy": {
+      "persistent": true
+    },
+    "params.ZemployerId": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.objDataIn": {
+      "onChange": {
+        "enabled": null,
+        "script": "\troot \u003d self.getChild(\"root\")\n\temvParticipan \u003d self.getChild(\"root\").getChild(\"emvParticipant\")\n\temvPosition \u003d self.getChild(\"root\").getChild(\"emvPosition\")\n\t\n\tif currentValue.value:\n\t\ttry:\n\t\t\tparticipantId \u003d currentValue.value.get(\u0027participantId\u0027).value if currentValue.value.get(\u0027participantId\u0027) else None\n\t\texcept:\n\t\t\tparticipantId \u003d None\n\t\t\n\t\tposition \u003d currentValue.value.get(\u0027position\u0027).value if currentValue.value.get(\u0027position\u0027) else \u0027\u0027\n\t\tposition \u003d position if position else \u0027\u0027\n\n\telse:\n\t\tparticipantId \u003d None\n\t\tposition \u003d \u0027\u0027\n\n\temvParticipan.props.params.selection \u003d participantId\n\temvPosition.props.params.text \u003d position\n\t\n\t\t"
+      },
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.participantId": {
+      "binding": {
+        "config": {
+          "path": "/root/emvParticipant.props.params.selection"
+        },
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.position": {
+      "binding": {
+        "config": {
+          "path": "/root/emvPosition.props.params.text"
+        },
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 180,
+      "width": 300
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "emvPosition"
+        },
+        "position": {
+          "basis": "54px",
+          "grow": 1,
+          "shrink": 0
+        },
+        "props": {
+          "params": {
+            "label": "Position",
+            "placeholder": "Start typing",
+            "text": ""
+          },
+          "path": "Employers/Applicants/Detail/Main/Cards/Input_Text_Info",
+          "style": {
+            "classes": "InputCards/InputCard_NoBorder",
+            "marginBottom": "0px",
+            "marginTop": "0px"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "EmbeddedView"
+        },
+        "position": {
+          "basis": "40px"
+        },
+        "props": {
+          "path": "Employers/Templates/Placeholder"
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "custom": {
+          "_devPulse": false
+        },
+        "meta": {
+          "name": "emvParticipant"
+        },
+        "position": {
+          "basis": "54px",
+          "grow": 1,
+          "shrink": 0
+        },
+        "propConfig": {
+          "custom._devPulse": {
+            "onChange": {
+              "enabled": null,
+              "script": "\tif currentValue.value is True:\n\t\tself.setOptions()\n\telif currentValue.value is False:\n\t\tself.props.params.options \u003d []\t"
+            }
+          },
+          "props.params.options": {
+            "binding": {
+              "config": {
+                "queryPath": "Shelter/Reservations/SelectParticipantsForReservation"
+              },
+              "type": "query"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "selection": null,
+            "text": "Participant"
+          },
+          "path": "Employers/Applicants/Detail/Main/Cards/Input_DropDownSingle",
+          "style": {
+            "classes": "InputCards/InputCard_NoBorder",
+            "marginBottom": "0px",
+            "marginTop": "0px"
+          }
+        },
+        "type": "ia.display.view"
+      }
+    ],
+    "custom": {
+      "_devPulse": false
+    },
+    "meta": {
+      "name": "root"
+    },
+    "propConfig": {
+      "custom._devPulse": {
+        "onChange": {
+          "enabled": null,
+          "script": "\t\n\tif currentValue.value:\n\t\t\n\t\tpayload \u003d {\n\t\t\t\u0027employerId\u0027: 15, \n\t\t\t\u0027participantId\u0027: 3009,\n\t\t\t\u0027position\u0027:\u0027SomePos\u0027\n\t\t}\n\t\tself.setComponents(payload)\n\telse:\n\t\tself.setComponents({})\n\t\t"
+        }
+      }
+    },
+    "props": {
+      "direction": "column",
+      "style": {
+        "classes": "Background/Default"
+      }
+    },
+    "scripts": {
+      "customMethods": [
+        {
+          "name": "setComponents",
+          "params": [
+            "payload"
+          ],
+          "script": "\n\temvParticipant \u003d self.getChild(\"emvParticipant\")\n\temvPosition \u003d self.getChild(\"emvPosition\")\n\t\n\tparticipantId \u003d payload.get(\u0027participantId\u0027)\n\temvParticipant.props.params.selection \u003d participantId \n\t\n\tposition \u003d payload.get(\u0027position\u0027)\n\temvPosition.props.params.text \u003d position\n\t\n\t"
+        }
+      ],
+      "extensionFunctions": null,
+      "messageHandlers": []
+    },
+    "type": "ia.container.flex"
+  }
+}

@@ -1,0 +1,111 @@
+{
+  "custom": {},
+  "params": {
+    "volunteerId": 1320
+  },
+  "propConfig": {
+    "params.volunteerId": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 295,
+      "width": 300
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "EmbeddedView"
+        },
+        "position": {
+          "shrink": 0
+        },
+        "props": {
+          "path": "Volunteers/Detail/Cards/Summary/Header",
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "EmbeddedView_0"
+        },
+        "position": {
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.volunteerId": {
+            "binding": {
+              "config": {
+                "path": "view.params.volunteerId"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "path": "Volunteers/Detail/Cards/Summary/KPIHeader",
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "EmbeddedView_1"
+        },
+        "position": {
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.data": {
+            "binding": {
+              "config": {
+                "parameters": {
+                  "volunteerId": "{view.params.volunteerId}"
+                },
+                "queryPath": "Volunteers/Details/VolunteerHoursMonthly",
+                "returnFormat": "json"
+              },
+              "transforms": [
+                {
+                  "code": "\tnow \u003d system.date.now()\n\tyearStart \u003d system.date.getDate(system.date.getYear(now), 0, 1)\n\tmonthStart \u003d yearStart \u003d system.date.getDate(system.date.getYear(now), system.date.getMonth(now), 1)\n\tsixMonthsBefore \u003d system.date.addMonths(monthStart, -5)\n\t\n\t_values \u003d []\n\tfor num in range(6):\n\t\t_time \u003d system.date.addMonths(sixMonthsBefore, num)\n\t\t_val \u003d 0\n\t\tfor item in value:\n\t\t\tif system.date.fromMillis(item[\"time\"]) \u003d\u003d _time:\n\t\t\t\t_val \u003d item[\"hours\"]\n\t\t_values.append(dict(volunteers \u003d _val, time \u003d _time))\n\treturn _values",
+                  "type": "script"
+                }
+              ],
+              "type": "query"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "Title": "Hours Monthly",
+            "Value": 100000
+          },
+          "path": "Volunteers/Dashboard/Cards/KPI/Graph_Flex _bar",
+          "style": {
+            "marginLeft": "15px"
+          },
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column",
+      "style": {
+        "borderBottomColor": "#e6e6e6",
+        "borderBottomStyle": "solid",
+        "borderBottomWidth": 1,
+        "classes": "Background/Default"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

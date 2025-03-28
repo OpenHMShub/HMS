@@ -1,0 +1,103 @@
+{
+  "custom": {
+    "_devPulse": false,
+    "_isDev": false
+  },
+  "params": {
+    "interval": {
+      "dateFrom": null,
+      "dateTo": null,
+      "selectedDateRange": null
+    },
+    "placeholder": "(Date Range)"
+  },
+  "propConfig": {
+    "custom._devPulse": {
+      "onChange": {
+        "enabled": null,
+        "script": "\tif self.custom._isDev:\n\t\tif currentValue.value:\n\t\t\tnow \u003d system.date.now()\n\t\t\tnow0 \u003d system.date.midnight(now)\n\t\t\ttommorow0 \u003d system.date.addDays(now0,1)\n\n\n\t\t\tself.params.interval.selectedDateRange \u003d \u0027appliedDate\u0027\t\t\t\n\t\t\tself.params.interval.dateFrom \u003d now0\n\t\t\tself.params.interval.dateTo \u003d tommorow0\n\n\t\telse:\n\t\t\t\n\t\t\tself.params.interval.selectedDateRange \u003d None\t\t\t\n\t\t\tself.params.interval.dateFrom \u003d None\n\t\t\tself.params.interval.dateTo \u003d None\n\n\t\t\t"
+      },
+      "persistent": true
+    },
+    "custom._isDev": {
+      "persistent": true
+    },
+    "params.interval": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.placeholder": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 30,
+      "width": 300
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "events": {
+          "dom": {
+            "onClick": {
+              "config": {
+                "draggable": true,
+                "id": "lcPXqfCl",
+                "modal": true,
+                "overlayDismiss": true,
+                "resizable": false,
+                "showCloseIcon": false,
+                "title": "Date Range",
+                "type": "open",
+                "viewPath": "Employers/Templates/DateRange/DateSelection",
+                "viewportBound": false
+              },
+              "scope": "C",
+              "type": "popup"
+            }
+          }
+        },
+        "meta": {
+          "name": "Label"
+        },
+        "position": {
+          "basis": "30px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.text": {
+            "binding": {
+              "config": {
+                "path": "view.params.interval"
+              },
+              "transforms": [
+                {
+                  "code": "\t#return value\n\t\n\tdateFrom \u003d system.date.format(value[\u0027dateFrom\u0027], \u0027MM/dd/yyyy\u0027) if value.get(\u0027dateFrom\u0027) else \u0027\u0027\n\tdateTo \u003d system.date.format(value[\u0027dateTo\u0027], \u0027MM/dd/yyyy\u0027) if value.get(\u0027dateTo\u0027) else \u0027\u0027\n\tselectedDateRange \u003d value[\u0027selectedDateRange\u0027] if value[\u0027selectedDateRange\u0027] else \u0027\u0027\n\n\t_map \u003d \t{\u0027appliedDate\u0027: \u0027Applied Date\u0027,\n\t\t\u0027interviewedDate\u0027: \u0027Interviewed Date\u0027,\n\t\t\u0027hiredDate\u0027: \u0027Hired Date\u0027}\n\t\t\n\tif _map.get(selectedDateRange):\n\t\tselectedDateRange \u003d  _map.get(selectedDateRange) \n\t\n\tplaceholder \u003d self.view.params.placeholder\n\n\ttextToShow \u003d \u0027{} to {} ({})\u0027.format(dateFrom,dateTo,selectedDateRange) if dateFrom or dateTo else \u0027{}\u0027.format(placeholder)\n\t\n\treturn textToShow",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "style": {
+            "classes": "DateTime/Date_Purple",
+            "textAlign": "left"
+          }
+        },
+        "type": "ia.display.label"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column"
+    },
+    "type": "ia.container.flex"
+  }
+}

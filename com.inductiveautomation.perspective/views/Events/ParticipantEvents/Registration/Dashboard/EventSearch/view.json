@@ -1,0 +1,1527 @@
+{
+  "custom": {
+    "IsUpdate": false
+  },
+  "events": {
+    "system": {
+      "onStartup": {
+        "config": {
+          "script": "\tsystem.perspective.sendMessage(\"ResetSearch\", payload\u003d{}, scope\u003d\"session\")\n\tsystem.perspective.sendMessage(\"ResetRegistration\", payload\u003d{}, scope\u003d\"session\")\n#\tself.getChild(\"root\").getChild(\"Table\").props.selection.selectedRow \u003d -1"
+        },
+        "scope": "G",
+        "type": "script"
+      }
+    }
+  },
+  "params": {},
+  "propConfig": {
+    "custom.IsUpdate": {
+      "binding": {
+        "config": {
+          "expression": "if({/root/Table.props.selection.selectedRow}!\u003dNone \u0026\u0026 {/root/Table.props.selection.selectedRow}!\u003d\u0027\u0027 \u0026\u0026 {/root/Table.props.selection.selectedRow}!\u003d-1 , True, False) "
+        },
+        "type": "expr"
+      },
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 1080,
+      "width": 600
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "EmbeddedView"
+        },
+        "position": {
+          "shrink": 0
+        },
+        "props": {
+          "params": {
+            "Dock_To_Close": "EventSearch",
+            "text": "New Event"
+          },
+          "path": "Events/ParticipantEvents/Registration/Dashboard/Cards/RegistrationHeader",
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "children": [
+          {
+            "meta": {
+              "name": "EventName"
+            },
+            "position": {
+              "basis": "60%"
+            },
+            "props": {
+              "params": {
+                "inputText": "",
+                "text": "Event Name"
+              },
+              "path": "Events/ParticipantEvents/Registration/Dashboard/Cards/TextInput_Mandatory",
+              "style": {
+                "marginTop": "5px"
+              },
+              "useDefaultViewHeight": true
+            },
+            "type": "ia.display.view"
+          }
+        ],
+        "meta": {
+          "name": "Row1"
+        },
+        "position": {
+          "basis": "60px"
+        },
+        "props": {
+          "style": {
+            "marginLeft": "20px",
+            "marginRight": "20px"
+          }
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "children": [
+          {
+            "events": {
+              "component": {
+                "onActionPerformed": {
+                  "config": {
+                    "script": "\timport traceback\n\ttry:\n\t\tIsUpdate \u003d self.view.custom.IsUpdate\n\t\tif IsUpdate \u003d\u003d True:\n\t\t\tselected_data \u003d self.parent.parent.getChild(\"Table\").props.selection.data\n\t\t\tevent_name \u003d selected_data[0][\u0027name\u0027]\n\t\t\tevent_id \u003d selected_data[0][\u0027id\u0027]\n\t\t\tparameters \u003d {\u0027event_name\u0027:event_name,\u0027IsUpdate\u0027:IsUpdate,\u0027event_id\u0027:event_id}\n\t\t\tsystem.perspective.openDock(\"RegisterEvent\", params \u003d parameters)\n\t\telse:\t\t\n\t\t\tevent_name \u003d self.parent.parent.getChild(\"Row1\").getChild(\"EventName\").props.params.inputText\n\t\t\tevent_id \u003d -1\t\n\t\t\tparameters \u003d {\u0027event_name\u0027:event_name,\u0027IsUpdate\u0027:IsUpdate,\u0027event_id\u0027:event_id}\n\t\t\tsystem.perspective.openDock(\"RegisterEvent\", params \u003d parameters)\n\t\t\n\texcept:\n\t\tlogger \u003d system.util.getLogger(\"Events RegisterEventSearch Button Create\")\n\t\tmsg \u003d traceback.format_exc()\n\t\tlogger.error(msg)\t"
+                  },
+                  "scope": "G",
+                  "type": "script"
+                }
+              }
+            },
+            "meta": {
+              "name": "Button Register"
+            },
+            "position": {
+              "basis": "120px",
+              "display": false
+            },
+            "propConfig": {
+              "position.display": {
+                "binding": {
+                  "config": {
+                    "struct": {
+                      "IsUpdate": "{view.custom.IsUpdate}",
+                      "eventName": "{.../Row1/EventName.props.params.inputText}",
+                      "table": "{.../Table.props.data}"
+                    },
+                    "waitOnAll": true
+                  },
+                  "enabled": false,
+                  "transforms": [
+                    {
+                      "code": "\tif value[\u0027eventName\u0027] !\u003d None and value[\u0027eventName\u0027] !\u003d \u0027\u0027:\n\t\tif value[\u0027table\u0027] is not None and  value[\u0027table\u0027].getRowCount() \u003e 0:\t\n\t\t\tif value[\u0027IsUpdate\u0027] \u003d\u003d True:\n\t\t\t\treturn True\n\t\t\telse:\n\t\t\t\treturn False\n\t\telse:\n\t\t\treturn True\n\telse:\n\t\treturn False\n#\treturn value[\u0027eventName\u0027]",
+                      "type": "script"
+                    }
+                  ],
+                  "type": "expr-struct"
+                }
+              }
+            },
+            "props": {
+              "style": {
+                "classes": "Buttons/Main",
+                "marginBottom": "15px",
+                "marginLeft": "20px",
+                "marginRight": "20px",
+                "marginTop": "15px"
+              },
+              "text": "Register"
+            },
+            "type": "ia.input.button"
+          },
+          {
+            "events": {
+              "component": {
+                "onActionPerformed": {
+                  "config": {
+                    "script": "\timport traceback\n\ttry:\n\t\tsystem.perspective.sendMessage(\"ResetSearch\", payload\u003d{}, scope\u003d\"session\")\n\t\tsystem.perspective.sendMessage(\"ResetRegistration\", payload\u003d{}, scope\u003d\"session\")\n\texcept:\n\t\tlogger \u003d system.util.getLogger(\"Events RegisterEventSearch Button Clear\")\n\t\tmsg \u003d traceback.format_exc()\n\t\tlogger.error(msg)"
+                  },
+                  "scope": "G",
+                  "type": "script"
+                }
+              }
+            },
+            "meta": {
+              "name": "Button Clear"
+            },
+            "position": {
+              "basis": "120px"
+            },
+            "props": {
+              "style": {
+                "classes": "Buttons/Delete",
+                "marginBottom": "15px",
+                "marginLeft": "26px",
+                "marginRight": "20px",
+                "marginTop": "15px"
+              },
+              "text": "Clear"
+            },
+            "type": "ia.input.button"
+          },
+          {
+            "events": {
+              "component": {
+                "onActionPerformed": {
+                  "config": {
+                    "script": "\timport traceback\n\ttry:\n\t\tIsUpdate \u003d self.view.custom.IsUpdate\n\t\tif IsUpdate \u003d\u003d True:\n\t\t\tselected_data \u003d self.parent.parent.getChild(\"Table\").props.selection.data\n\t\t\tevent_name \u003d selected_data[0][\u0027name\u0027]\n\t\t\tevent_id \u003d selected_data[0][\u0027id\u0027]\n\t\t\tsystem.perspective.print(event_id)\n\t\t\tsystem.perspective.print(IsUpdate)\n\t\t\tparameters \u003d {\u0027event_name\u0027:event_name,\u0027IsUpdate\u0027:IsUpdate,\u0027event_id\u0027:event_id}\n\t\t\tsystem.perspective.openDock(\"RegisterEvent\", params \u003d parameters)\n\t\telse:\t\t\n\t\t\tevent_name \u003d self.parent.parent.getChild(\"Row1\").getChild(\"EventName\").props.params.inputText\n\t\t\tevent_id \u003d -1\t\n\t\t\tparameters \u003d {\u0027event_name\u0027:event_name,\u0027IsUpdate\u0027:IsUpdate,\u0027event_id\u0027:event_id}\n\t\t\tsystem.perspective.openDock(\"RegisterEvent\", params \u003d parameters)\n\t\t\n\texcept:\n\t\tlogger \u003d system.util.getLogger(\"Events RegisterEventSearch Button Create\")\n\t\tmsg \u003d traceback.format_exc()\n\t\tlogger.error(msg)\t"
+                  },
+                  "scope": "G",
+                  "type": "script"
+                }
+              }
+            },
+            "meta": {
+              "name": "Button Create"
+            },
+            "position": {
+              "basis": "120px"
+            },
+            "propConfig": {
+              "position.display": {
+                "binding": {
+                  "config": {
+                    "struct": {
+                      "IsUpdate": "{view.custom.IsUpdate}",
+                      "eventName": "{.../Row1/EventName.props.params.inputText}",
+                      "table": "{.../Table.props.data}"
+                    },
+                    "waitOnAll": true
+                  },
+                  "transforms": [
+                    {
+                      "code": "\tif value[\u0027eventName\u0027] !\u003d None and value[\u0027eventName\u0027] !\u003d \u0027\u0027:\n\t\tif value[\u0027table\u0027] is not None and  value[\u0027table\u0027].getRowCount() \u003e 0:\t\n\t\t\tif value[\u0027IsUpdate\u0027] \u003d\u003d True:\n\t\t\t\treturn True\n\t\t\telse:\n\t\t\t\treturn False\n\t\telse:\n\t\t\treturn True\n\telse:\n\t\treturn False\n#\treturn value[\u0027eventName\u0027]",
+                      "type": "script"
+                    }
+                  ],
+                  "type": "expr-struct"
+                }
+              },
+              "props.text": {
+                "binding": {
+                  "config": {
+                    "expression": "if({view.custom.IsUpdate}\u003dTrue , \u0027Update\u0027, \u0027Create\u0027)"
+                  },
+                  "type": "expr"
+                }
+              }
+            },
+            "props": {
+              "style": {
+                "classes": "Buttons/Main",
+                "marginBottom": "15px",
+                "marginLeft": "20px",
+                "marginRight": "20px",
+                "marginTop": "15px"
+              }
+            },
+            "type": "ia.input.button"
+          },
+          {
+            "meta": {
+              "name": "Label",
+              "visible": false
+            },
+            "position": {
+              "basis": "50px",
+              "grow": 1
+            },
+            "props": {
+              "style": {
+                "classes": "Text/Error_Message"
+              },
+              "text": "Event Name is a required field to create new event."
+            },
+            "scripts": {
+              "customMethods": [
+                {
+                  "name": "showMessage",
+                  "params": [
+                    "message"
+                  ],
+                  "script": "\timport time\n\t#system.perspective.print(message)\n\tself.props.text \u003d message\n\tself.meta.visible \u003d True\n\ttime.sleep(5)\n\tself.meta.visible \u003d False\n\t"
+                }
+              ],
+              "extensionFunctions": null,
+              "messageHandlers": []
+            },
+            "type": "ia.display.label"
+          }
+        ],
+        "meta": {
+          "name": "root Actions"
+        },
+        "position": {
+          "basis": "65px",
+          "shrink": 0
+        },
+        "props": {
+          "style": {
+            "overflow": "hidden"
+          }
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "meta": {
+          "name": "RowCount"
+        },
+        "position": {
+          "basis": "32px"
+        },
+        "propConfig": {
+          "props.text": {
+            "binding": {
+              "config": {
+                "path": "../Table.props.data"
+              },
+              "transforms": [
+                {
+                  "code": "\trowCount \u003d value.getRowCount()\n\treturn str(rowCount) + \u0027 Results Found\u0027",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "style": {
+            "classes": "Text/Add_TextArea",
+            "marginLeft": "27px"
+          }
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "children": [
+          {
+            "meta": {
+              "name": "legends"
+            },
+            "position": {
+              "basis": "110px",
+              "shrink": 0
+            },
+            "props": {
+              "style": {
+                "classes": "Text/Add_TextArea"
+              },
+              "text": "A \u003d Active Status"
+            },
+            "type": "ia.display.label"
+          },
+          {
+            "meta": {
+              "name": "permissionMessage"
+            },
+            "position": {
+              "basis": "50px",
+              "grow": 1,
+              "shrink": 0
+            },
+            "propConfig": {
+              "position.display": {
+                "binding": {
+                  "config": {
+                    "path": ".../Table.props.selection.data"
+                  },
+                  "transforms": [
+                    {
+                      "code": "\tdata \u003d value\n\tdisplay \u003d False\n\tif self.session.custom.isAdministrator \u003d\u003d False:\n\t\tif data !\u003d None and len(data)\u003e0:\n\t\t\tif data[0][\u0027IsActive\u0027] \u003d\u003d 0:\n\t\t\t\tdisplay \u003d True\n\treturn display",
+                      "type": "script"
+                    }
+                  ],
+                  "type": "property"
+                }
+              }
+            },
+            "props": {
+              "style": {
+                "classes": "Text/Error_Message"
+              },
+              "text": "This event is inactive. You don\u0027t have permission to activate it.",
+              "textStyle": {
+                "textAlign": "right"
+              }
+            },
+            "type": "ia.display.label"
+          }
+        ],
+        "meta": {
+          "name": "info"
+        },
+        "position": {
+          "basis": "32px",
+          "shrink": 0
+        },
+        "props": {
+          "style": {
+            "marginLeft": "27px"
+          }
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "events": {
+          "component": {
+            "onRowClick": {
+              "config": {
+                "script": "\tselected_data \u003d self.props.selection.data\n\teventId \u003d selected_data[0][\u0027id\u0027]\n\teventName \u003d selected_data[0][\u0027name\u0027]\n\tselected_column \u003d self.props.selection.selectedColumn\n\tActiveParticipant \u003d selected_data[0][\u0027IsActive\u0027]\n\tif selected_column \u003d\u003d \u0027id\u0027:\n\t\tif ActiveParticipant \u003d\u003d 1:\n\t\t\ttab_id \u003d 2 # registration\n\t\t\tsystem.perspective.navigate(\"Events/Detail/\" + str(eventId) + \"/\" + str(tab_id))\n\t\telse:\n\t\t\tif self.session.custom.isAdministrator \u003d\u003d True:\n\t\t\t\tid \u003d \"pop_event_set_active\" \n\t\t\t\tview \u003d \"Events/ParticipantEvents/Templates/PopupSetActive\"\n\t\t\t\tparameters \u003d {\u0027eventId\u0027:eventId,\u0027eventName\u0027:eventName}\n\t\t\t\tsystem.perspective.openPopup(id,view,parameters,showCloseIcon \u003d False, modal \u003d True)\n\telse:\n\t\tif ActiveParticipant \u003d\u003d 0:\n\t\t\tif self.session.custom.isAdministrator \u003d\u003d True:\n\t\t\t\tid \u003d \"pop_event_set_active\" \n\t\t\t\tview \u003d \"Events/ParticipantEvents/Templates/PopupSetActive\"\n\t\t\t\tparameters \u003d {\u0027eventId\u0027:eventId,\u0027eventName\u0027:eventName}\n\t\t\t\tsystem.perspective.openPopup(id,view,parameters,showCloseIcon \u003d False, modal \u003d True)\n\t\telse:\n\t\t\tpass"
+              },
+              "scope": "G",
+              "type": "script"
+            }
+          }
+        },
+        "meta": {
+          "name": "Table"
+        },
+        "position": {
+          "grow": 1
+        },
+        "propConfig": {
+          "custom.sqlData": {
+            "access": "PRIVATE"
+          },
+          "props.data": {
+            "binding": {
+              "config": {
+                "parameters": {
+                  "eventName": "{../Row1/EventName.props.params.inputText}"
+                },
+                "queryPath": "Event/ParticipantEvents/Registration/Get_Events"
+              },
+              "type": "query"
+            },
+            "onChange": {
+              "enabled": null,
+              "script": "\tself.props.selection.selectedRow \u003d -1\n\tself.props.selection.selectedColumn \u003d None"
+            }
+          }
+        },
+        "props": {
+          "cells": {
+            "style": {
+              "classes": "Table/Cell_Dashboard"
+            }
+          },
+          "columns": [
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "id",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "center",
+                "style": {
+                  "background-origin": "content-box",
+                  "classes": "Table/Column_Header",
+                  "cursor": "pointer",
+                  "wordWrap": "break-word"
+                },
+                "title": " "
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "view",
+              "resizable": true,
+              "sort": "none",
+              "sortable": false,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "1_TEMPLATES/Tables/TableDetail",
+              "visible": true,
+              "width": 35
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "IsActive",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "center",
+                "style": {
+                  "background-origin": "content-box",
+                  "classes": "Table/Column_Header",
+                  "cursor": "pointer",
+                  "wordWrap": "break-word"
+                },
+                "title": "A"
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "view",
+              "resizable": true,
+              "sort": "none",
+              "sortable": false,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {
+                "rowData": {
+                  "IsActive": 0
+                }
+              },
+              "viewPath": "Events/ParticipantEvents/Templates/ActiveStatus",
+              "visible": true,
+              "width": 35
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "categoryId",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "center",
+                "style": {
+                  "background-origin": "content-box",
+                  "classes": "Table/Column_Header",
+                  "color": "#F3F4F8",
+                  "cursor": "pointer",
+                  "wordWrap": "break-word"
+                },
+                "title": "D"
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "view",
+              "resizable": true,
+              "sort": "none",
+              "sortable": false,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "1_TEMPLATES/Tables/TableDetail",
+              "visible": false,
+              "width": 25
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "name",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "center",
+                "style": {
+                  "background-origin": "content-box",
+                  "classes": "Table/Column_Header",
+                  "cursor": "pointer",
+                  "wordWrap": "break-word"
+                },
+                "title": "Event"
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "string",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": false,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "1_TEMPLATES/Tables/TableDetail",
+              "visible": true,
+              "width": 25
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "startsOn",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "center",
+                "style": {
+                  "background-origin": "content-box",
+                  "classes": "Table/Column_Header",
+                  "cursor": "pointer",
+                  "wordWrap": "break-word"
+                },
+                "title": "Starts On"
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "date",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": false,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "1_TEMPLATES/Tables/TableDetail",
+              "visible": true,
+              "width": 25
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "endsOn",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "center",
+                "style": {
+                  "background-origin": "content-box",
+                  "classes": "Table/Column_Header",
+                  "cursor": "pointer",
+                  "wordWrap": "break-word"
+                },
+                "title": "Ends On"
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "date",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": false,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "1_TEMPLATES/Tables/TableDetail",
+              "visible": true,
+              "width": 25
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "category",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "center",
+                "style": {
+                  "background-origin": "content-box",
+                  "classes": "Table/Column_Header",
+                  "cursor": "pointer",
+                  "wordWrap": "break-word"
+                },
+                "title": "Category"
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "string",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": false,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "1_TEMPLATES/Tables/TableAlert",
+              "visible": true,
+              "width": 30
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "allDayEvent",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "center",
+                "style": {
+                  "background-origin": "content-box",
+                  "classes": "Table/Column_Header",
+                  "cursor": "pointer",
+                  "wordWrap": "break-word"
+                },
+                "title": "All day"
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "boolean",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "1_TEMPLATES/Tables/TableAlert",
+              "visible": true,
+              "width": 80
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "description",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header",
+                  "color": "#0C4E8B",
+                  "fontFamily": "Proxima Nova ExCn Light",
+                  "fontSize": "20px"
+                },
+                "title": "description"
+              },
+              "justify": "auto",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "string",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": false,
+              "style": {
+                "color": "#0c4e85",
+                "cursor": "pointer",
+                "fontFamily": "Proxima Nova ExCn Medium",
+                "text-align": "left"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "Participants/Dashboard/Components/Tables/Templates/Name",
+              "visible": false,
+              "width": 200
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "repeatFrequencyTypeId",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "background-origin": "content-box",
+                  "classes": "Table/Column_Header",
+                  "cursor": "pointer",
+                  "wordWrap": "break-word"
+                },
+                "title": "repeatFrequencyTypeId"
+              },
+              "justify": "auto",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "string",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "Participants/Dashboard/Components/Tables/Templates/Name",
+              "visible": false,
+              "width": 200
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "dateSelectionPattern",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "background-origin": "content-box",
+                  "classes": "Table/Column_Header",
+                  "cursor": "pointer",
+                  "wordWrap": "break-word"
+                },
+                "title": "dateSelectionPattern"
+              },
+              "justify": "auto",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "string",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "Participants/Dashboard/Components/Tables/Templates/Name",
+              "visible": false,
+              "width": 200
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "dateSelectionDays",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "background-origin": "content-box",
+                  "classes": "Table/Column_Header",
+                  "cursor": "pointer",
+                  "wordWrap": "break-word"
+                },
+                "title": "dateSelectionDays"
+              },
+              "justify": "auto",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "string",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "Participants/Dashboard/Components/Tables/Templates/Name",
+              "visible": false,
+              "width": 200
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "timeCreated",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "background-origin": "content-box",
+                  "classes": "Table/Column_Header",
+                  "cursor": "pointer",
+                  "wordWrap": "break-word"
+                },
+                "title": "timeCreated"
+              },
+              "justify": "auto",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "string",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "Participants/Dashboard/Components/Tables/Templates/Name",
+              "visible": false,
+              "width": 200
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "points",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "center",
+                "style": {
+                  "background-origin": "content-box",
+                  "classes": "Table/Column_Header",
+                  "cursor": "pointer",
+                  "wordWrap": "break-word"
+                },
+                "title": "Points"
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "string",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "Participants/Dashboard/Components/Tables/Templates/Name",
+              "visible": true,
+              "width": 60
+            }
+          ],
+          "headerGroups": [
+            [
+              {
+                "align": "center",
+                "justify": "left",
+                "span": 1,
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              {
+                "align": "center",
+                "justify": "left",
+                "span": 1,
+                "style": {
+                  "background-origin": "content-box",
+                  "background-size": "15px",
+                  "backgroundImage": "url(\"/system/images/SVGs/Arrow (Menu).svg\")",
+                  "backgroundPosition": "right center",
+                  "backgroundRepeat": "no-repeat",
+                  "classes": "",
+                  "color": "#0d80e3",
+                  "wordWrap": "break-word"
+                },
+                "title": "Name"
+              },
+              {
+                "align": "center",
+                "justify": "left",
+                "span": 1,
+                "style": {
+                  "background-origin": "content-box",
+                  "background-size": "15px",
+                  "backgroundImage": "url(\"/system/images/SVGs/Arrow (Menu).svg\")",
+                  "backgroundPosition": "right center",
+                  "backgroundRepeat": "no-repeat",
+                  "classes": "",
+                  "color": "#0d80e3",
+                  "wordWrap": "break-word"
+                },
+                "title": "ID"
+              },
+              {
+                "align": "center",
+                "justify": "left",
+                "span": 1,
+                "style": {
+                  "background-origin": "content-box",
+                  "background-size": "15px",
+                  "backgroundImage": "url(\"/system/images/SVGs/Arrow (Menu).svg\")",
+                  "backgroundPosition": "right center",
+                  "backgroundRepeat": "no-repeat",
+                  "classes": "",
+                  "color": "#0d80e3",
+                  "wordWrap": "break-word"
+                },
+                "title": "Birth Date"
+              },
+              {
+                "align": "center",
+                "justify": "left",
+                "span": 1,
+                "style": {
+                  "background-origin": "content-box",
+                  "background-size": "15px",
+                  "backgroundImage": "url(\"/system/images/SVGs/Arrow (Menu).svg\")",
+                  "backgroundPosition": "right center",
+                  "backgroundRepeat": "no-repeat",
+                  "classes": "",
+                  "color": "#0d80e3",
+                  "wordWrap": "break-word"
+                },
+                "title": "Gender"
+              },
+              {
+                "align": "center",
+                "justify": "left",
+                "span": 1,
+                "style": {
+                  "background-origin": "content-box",
+                  "background-size": "15px",
+                  "backgroundImage": "url(\"/system/images/SVGs/Arrow (Menu).svg\")",
+                  "backgroundPosition": "right center",
+                  "backgroundRepeat": "no-repeat",
+                  "classes": "",
+                  "color": "#0d80e3",
+                  "wordWrap": "break-word"
+                },
+                "title": "Intake Date"
+              },
+              {
+                "align": "center",
+                "justify": "left",
+                "span": 1,
+                "style": {
+                  "background-origin": "content-box",
+                  "background-size": "15px",
+                  "backgroundImage": "url(\"/system/images/SVGs/Arrow (Menu).svg\")",
+                  "backgroundPosition": "right center",
+                  "backgroundRepeat": "no-repeat",
+                  "classes": "",
+                  "color": "#0d80e3",
+                  "wordWrap": "break-word"
+                },
+                "title": "Last Action"
+              },
+              {
+                "align": "center",
+                "justify": "left",
+                "span": 1,
+                "style": {
+                  "background-origin": "content-box",
+                  "background-size": "15px",
+                  "backgroundImage": "url(\"/system/images/SVGs/Arrow (Menu).svg\")",
+                  "backgroundPosition": "right center",
+                  "backgroundRepeat": "no-repeat",
+                  "classes": "",
+                  "color": "#0d80e3",
+                  "wordWrap": "break-word"
+                },
+                "title": "Suspension"
+              },
+              {
+                "align": "center",
+                "justify": "left",
+                "span": 1,
+                "style": {
+                  "background-origin": "content-box",
+                  "background-size": "15px",
+                  "backgroundImage": "url(\"/system/images/SVGs/Arrow (Menu).svg\")",
+                  "backgroundPosition": "right center",
+                  "backgroundRepeat": "no-repeat",
+                  "classes": "",
+                  "color": "#0d80e3",
+                  "wordWrap": "break-word"
+                },
+                "title": "Shelter"
+              }
+            ]
+          ],
+          "pager": {
+            "initialOption": 100,
+            "options": [
+              5,
+              15,
+              25,
+              50,
+              100
+            ]
+          },
+          "rows": {
+            "highlight": {
+              "color": "#ccffff"
+            },
+            "striped": {
+              "enabled": false
+            },
+            "style": {
+              "cursor": "pointer"
+            }
+          },
+          "selection": {
+            "style": {
+              "backgroundColor": "#9af4eb4d"
+            }
+          },
+          "style": {
+            "classes": "Background/Default",
+            "overflowX": "hidden"
+          }
+        },
+        "type": "ia.display.table"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column",
+      "style": {
+        "classes": "Background/Default"
+      }
+    },
+    "scripts": {
+      "customMethods": [],
+      "extensionFunctions": null,
+      "messageHandlers": [
+        {
+          "messageType": "ResetSearch",
+          "pageScope": true,
+          "script": "\t# implement your handler here\n\tself.getChild(\"Row1\").getChild(\"EventName\").props.params.inputText \u003d \u0027\u0027\n",
+          "sessionScope": true,
+          "viewScope": false
+        }
+      ]
+    },
+    "type": "ia.container.flex"
+  }
+}

@@ -1,0 +1,331 @@
+{
+  "custom": {
+    "StartDate": {
+      "$": [
+        "ts",
+        192,
+        1619898342435
+      ],
+      "$ts": 1619466342435
+    }
+  },
+  "params": {
+    "SelectedDate": {
+      "$": [
+        "ts",
+        192,
+        1619897917071
+      ],
+      "$ts": 1619897917071
+    }
+  },
+  "propConfig": {
+    "custom.StartDate": {
+      "binding": {
+        "config": {
+          "expression": "addDays(now(),(-getDayOfWeek(now(0))+2))"
+        },
+        "type": "expr"
+      },
+      "persistent": true
+    },
+    "params.SelectedDate": {
+      "paramDirection": "output",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 135,
+      "width": 400
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "Title"
+        },
+        "position": {
+          "basis": "30px",
+          "shrink": 0
+        },
+        "props": {
+          "style": {
+            "classes": "Event/Event_DateText",
+            "fontSize": 34,
+            "textAlign": "left"
+          },
+          "text": "THIS WEEK"
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "events": {
+          "system": {
+            "onStartup": {
+              "config": {
+                "script": "\ttry: \n\t\tfor x in self.props.instances :\n\t\t\tif x.CurrentDay :\n\t\t\t\tself.view.params.SelectedDate \u003d x.Date\n\t\t\t\tx.Selected \u003d True\n\texcept:\n\t\tself.view.params.SelectedDate \u003d self.view.custom.StartDate\n\t\tpass"
+              },
+              "enabled": false,
+              "scope": "G",
+              "type": "script"
+            }
+          }
+        },
+        "meta": {
+          "name": "FlexRepeater"
+        },
+        "position": {
+          "basis": "300px",
+          "grow": 1
+        },
+        "propConfig": {
+          "props.instances[0].CurrentDay": {
+            "binding": {
+              "config": {
+                "expression": "getDayOfYear({this.props.instances[0].Date}) \u003d getDayOfYear(now(0))"
+              },
+              "type": "expr"
+            }
+          },
+          "props.instances[0].Date": {
+            "binding": {
+              "config": {
+                "path": "view.custom.StartDate"
+              },
+              "type": "property"
+            }
+          },
+          "props.instances[0].Selected": {
+            "onChange": {
+              "enabled": null,
+              "script": "\tif currentValue.value :\n\t\tself.props.instances[1].Selected \u003d False\n\t\tself.props.instances[2].Selected \u003d False\n\t\tself.props.instances[3].Selected \u003d False\n\t\tself.props.instances[4].Selected \u003d False\n\t\tself.props.instances[5].Selected \u003d False\n\t\tself.props.instances[6].Selected \u003d False\n\t\tself.view.params.SelectedDate \u003d self.props.instances[0].Date\t\t"
+            }
+          },
+          "props.instances[1].CurrentDay": {
+            "binding": {
+              "config": {
+                "expression": "getDayOfYear({this.props.instances[1].Date}) \u003d getDayOfYear(now(0))"
+              },
+              "type": "expr"
+            }
+          },
+          "props.instances[1].Date": {
+            "binding": {
+              "config": {
+                "expression": "addDays({view.custom.StartDate},1)"
+              },
+              "type": "expr"
+            },
+            "persistent": false
+          },
+          "props.instances[1].Selected": {
+            "onChange": {
+              "enabled": null,
+              "script": "\tif currentValue.value :\n\t\tself.props.instances[0].Selected \u003d False\n\t\tself.props.instances[2].Selected \u003d False\n\t\tself.props.instances[3].Selected \u003d False\n\t\tself.props.instances[4].Selected \u003d False\n\t\tself.props.instances[5].Selected \u003d False\n\t\tself.props.instances[6].Selected \u003d False\t\n\t\tself.view.params.SelectedDate \u003d self.props.instances[1].Date"
+            }
+          },
+          "props.instances[2].CurrentDay": {
+            "binding": {
+              "config": {
+                "expression": "getDayOfYear({this.props.instances[2].Date}) \u003d getDayOfYear(now(0))"
+              },
+              "type": "expr"
+            }
+          },
+          "props.instances[2].Date": {
+            "binding": {
+              "config": {
+                "expression": "addDays({view.custom.StartDate},2)"
+              },
+              "type": "expr"
+            }
+          },
+          "props.instances[2].Selected": {
+            "onChange": {
+              "enabled": null,
+              "script": "\tif currentValue.value :\n\t\tself.props.instances[0].Selected \u003d False\n\t\tself.props.instances[1].Selected \u003d False\n\t\tself.props.instances[3].Selected \u003d False\n\t\tself.props.instances[4].Selected \u003d False\n\t\tself.props.instances[5].Selected \u003d False\n\t\tself.props.instances[6].Selected \u003d False\n\t\tself.view.params.SelectedDate \u003d self.props.instances[2].Date"
+            }
+          },
+          "props.instances[3].CurrentDay": {
+            "binding": {
+              "config": {
+                "expression": "getDayOfYear({this.props.instances[3].Date}) \u003d getDayOfYear(now(0))"
+              },
+              "type": "expr"
+            }
+          },
+          "props.instances[3].Date": {
+            "binding": {
+              "config": {
+                "expression": "addDays({view.custom.StartDate},3)"
+              },
+              "type": "expr"
+            }
+          },
+          "props.instances[3].Selected": {
+            "onChange": {
+              "enabled": null,
+              "script": "\tif currentValue.value :\n\t\tself.props.instances[0].Selected \u003d False\n\t\tself.props.instances[1].Selected \u003d False\n\t\tself.props.instances[2].Selected \u003d False\n\t\tself.props.instances[4].Selected \u003d False\n\t\tself.props.instances[5].Selected \u003d False\n\t\tself.props.instances[6].Selected \u003d False\t\t\n\t\tself.view.params.SelectedDate \u003d self.props.instances[3].Date"
+            }
+          },
+          "props.instances[4].CurrentDay": {
+            "binding": {
+              "config": {
+                "expression": "getDayOfYear({this.props.instances[4].Date}) \u003d getDayOfYear(now(0))"
+              },
+              "type": "expr"
+            }
+          },
+          "props.instances[4].Date": {
+            "binding": {
+              "config": {
+                "expression": "addDays({view.custom.StartDate},4)"
+              },
+              "type": "expr"
+            }
+          },
+          "props.instances[4].Selected": {
+            "onChange": {
+              "enabled": null,
+              "script": "\tif currentValue.value :\n\t\tself.props.instances[0].Selected \u003d False\n\t\tself.props.instances[1].Selected \u003d False\n\t\tself.props.instances[2].Selected \u003d False\n\t\tself.props.instances[3].Selected \u003d False\n\t\tself.props.instances[5].Selected \u003d False\n\t\tself.props.instances[6].Selected \u003d False\t\t\n\t\tself.view.params.SelectedDate \u003d self.props.instances[4].Date\t"
+            }
+          },
+          "props.instances[5].CurrentDay": {
+            "binding": {
+              "config": {
+                "expression": "getDayOfYear({this.props.instances[5].Date}) \u003d getDayOfYear(now(0))"
+              },
+              "type": "expr"
+            }
+          },
+          "props.instances[5].Date": {
+            "binding": {
+              "config": {
+                "expression": "addDays({view.custom.StartDate},5)"
+              },
+              "type": "expr"
+            }
+          },
+          "props.instances[5].Selected": {
+            "onChange": {
+              "enabled": null,
+              "script": "\tif currentValue.value :\n\t\tself.props.instances[0].Selected \u003d False\n\t\tself.props.instances[1].Selected \u003d False\n\t\tself.props.instances[2].Selected \u003d False\n\t\tself.props.instances[3].Selected \u003d False\n\t\tself.props.instances[4].Selected \u003d False\n\t\tself.props.instances[6].Selected \u003d False\t\t\n\t\tself.view.params.SelectedDate \u003d self.props.instances[5].Date"
+            }
+          },
+          "props.instances[6].CurrentDay": {
+            "binding": {
+              "config": {
+                "expression": "getDayOfYear({this.props.instances[6].Date}) \u003d getDayOfYear(now(0))"
+              },
+              "type": "expr"
+            }
+          },
+          "props.instances[6].Date": {
+            "binding": {
+              "config": {
+                "expression": "addDays({view.custom.StartDate},6)"
+              },
+              "type": "expr"
+            }
+          },
+          "props.instances[6].Selected": {
+            "onChange": {
+              "enabled": null,
+              "script": "\tif currentValue.value :\n\t\tself.props.instances[0].Selected \u003d False\n\t\tself.props.instances[1].Selected \u003d False\n\t\tself.props.instances[2].Selected \u003d False\n\t\tself.props.instances[3].Selected \u003d False\n\t\tself.props.instances[4].Selected \u003d False\n\t\tself.props.instances[5].Selected \u003d False\t\n\t\tself.view.params.SelectedDate \u003d self.props.instances[6].Date"
+            }
+          }
+        },
+        "props": {
+          "alignContent": "space-between",
+          "alignItems": "flex-start",
+          "elementPosition": {
+            "basis": 100
+          },
+          "elementStyle": {
+            "marginRight": 5
+          },
+          "instances": [
+            {
+              "Selected": false,
+              "instancePosition": {},
+              "instanceStyle": {
+                "classes": ""
+              }
+            },
+            {
+              "Selected": false,
+              "instancePosition": {},
+              "instanceStyle": {
+                "classes": ""
+              }
+            },
+            {
+              "Selected": false,
+              "instancePosition": {},
+              "instanceStyle": {
+                "classes": ""
+              }
+            },
+            {
+              "Selected": false,
+              "instancePosition": {},
+              "instanceStyle": {
+                "classes": ""
+              }
+            },
+            {
+              "Selected": false,
+              "instancePosition": {},
+              "instanceStyle": {
+                "classes": ""
+              }
+            },
+            {
+              "Selected": true,
+              "instancePosition": {},
+              "instanceStyle": {
+                "classes": ""
+              }
+            },
+            {
+              "Selected": false,
+              "instancePosition": {},
+              "instanceStyle": {
+                "classes": ""
+              }
+            }
+          ],
+          "path": "Events/Dashboard/Components/EventList/DayButton",
+          "style": {
+            "marginLeft": 5,
+            "paddingTop": 10
+          }
+        },
+        "type": "ia.display.flex-repeater"
+      }
+    ],
+    "events": {
+      "system": {
+        "onStartup": {
+          "config": {
+            "script": "\t#\ttry: \n#\t\tfor x in self.getChild(\"FlexRepeater\").props.instances :\n#\t\t\tif x.CurrentDay :\n#\t\t\t\tself.view.params.SelectedDate \u003d x.Date\n#\t\t\t\tx.Selected \u003d True\n#\texcept:\n#\t\tself.view.params.SelectedDate \u003d self.view.custom.StartDate\n#\t\tpass\n\tself.view.params.SelectedDate \u003d system.date.now()"
+          },
+          "scope": "G",
+          "type": "script"
+        }
+      }
+    },
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column",
+      "style": {
+        "overflow": "hidden"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

@@ -1,0 +1,351 @@
+{
+  "custom": {
+    "endDate": null,
+    "filters": [],
+    "startDate": null
+  },
+  "params": {
+    "key": "dateCol",
+    "label": "Dates"
+  },
+  "propConfig": {
+    "custom.endDate": {
+      "binding": {
+        "config": {
+          "path": "view.custom.filters"
+        },
+        "transforms": [
+          {
+            "code": "\tfor condition in value:\n\t\tif condition[\u0027type\u0027] \u003d\u003d \u0027maxBound\u0027:\n\t\t\treturn condition[\u0027value\u0027]\n\treturn None",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      },
+      "persistent": true
+    },
+    "custom.filters": {
+      "binding": {
+        "config": {
+          "path": "session.custom.filters"
+        },
+        "transforms": [
+          {
+            "code": "\treturn filters.retrievePageFilters(value, self.page.props.pageId)",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      },
+      "persistent": true
+    },
+    "custom.startDate": {
+      "binding": {
+        "config": {
+          "path": "view.custom.filters"
+        },
+        "transforms": [
+          {
+            "code": "\tfor condition in value:\n\t\tif condition[\u0027type\u0027] \u003d\u003d \u0027minBound\u0027:\n\t\t\treturn condition[\u0027value\u0027]\n\treturn None",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      },
+      "persistent": true
+    },
+    "params.key": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.label": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 112,
+      "width": 249
+    },
+    "style": {
+      "backgroundColor": "transparent",
+      "borderColor": "transparent",
+      "borderStyle": "none",
+      "borderWidth": "0px",
+      "classes": "",
+      "fill": "transparent",
+      "opacity": "1",
+      "outlineColor": "transparent",
+      "outlineStyle": "none",
+      "outlineWidth": "0px",
+      "strokeWidth": "0"
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "Icon"
+        },
+        "position": {
+          "height": 53,
+          "width": 80,
+          "x": 60,
+          "y": -20.003
+        },
+        "props": {
+          "color": "#cee4f6",
+          "path": "material/arrow_drop_up"
+        },
+        "type": "ia.display.icon"
+      },
+      {
+        "meta": {
+          "name": "AnyAfter"
+        },
+        "position": {
+          "height": 32,
+          "width": 182,
+          "x": 9,
+          "y": 20
+        },
+        "propConfig": {
+          "props.placeholder": {
+            "binding": {
+              "config": {
+                "expression": "concat({view.params.label}, \" after...\")"
+              },
+              "type": "expr"
+            }
+          },
+          "props.value": {
+            "binding": {
+              "config": {
+                "path": "view.custom.startDate"
+              },
+              "type": "property"
+            },
+            "onChange": {
+              "enabled": null,
+              "script": "\t# No change, just a different origin trigger\n\tif previousValue is None or currentValue is None:\n\t\treturn\n\tif previousValue.value \u003d\u003d currentValue.value:\n\t\treturn\n\t\n\tpageId \u003d filters.sanitizePageID(self.page.props.pageId)\n\t# Update the session\u0027s filter listing for this page\n\tself.session.custom.filters[pageId] \u003d filters.manageFilterList(\n\t\tself.session.custom.filters.get(pageId, []),\n\t\t\u0027minBound\u0027,\n\t\tself.view.params.key,\n\t\tcurrentValue.value or None,\n\t\t\u0027auto\u0027\n\t\t)\n"
+            }
+          }
+        },
+        "props": {
+          "pickerType": "date",
+          "style": {
+            "background-origin": "content-box",
+            "background-size": "15px",
+            "backgroundImage": "url(\"/system/images/SVGs/Search Magnifying Glass.svg\")",
+            "backgroundPosition": "right center",
+            "backgroundRepeat": "no-repeat",
+            "borderColor": "#3ec3d9",
+            "borderStyle": "solid",
+            "borderWidth": "1px",
+            "color": "#3C71A2",
+            "fontFamily": "Gibson",
+            "outlineColor": "#cee4f6",
+            "outlineStyle": "solid",
+            "outlineWidth": "10px"
+          }
+        },
+        "type": "ia.input.date-time-input"
+      },
+      {
+        "meta": {
+          "name": "AnyBefore"
+        },
+        "position": {
+          "height": 32,
+          "width": 182,
+          "x": 9,
+          "y": 70.991
+        },
+        "propConfig": {
+          "props.value": {
+            "binding": {
+              "config": {
+                "path": "view.custom.endDate"
+              },
+              "type": "property"
+            },
+            "onChange": {
+              "enabled": null,
+              "script": "\t# No change, just a different origin trigger\n\tif previousValue is None or currentValue is None:\n\t\treturn\n\tif previousValue.value \u003d\u003d currentValue.value:\n\t\treturn\n\t\n\tpageId \u003d filters.sanitizePageID(self.page.props.pageId)\n\t# Update the session\u0027s filter listing for this page\n\tself.session.custom.filters[pageId] \u003d filters.manageFilterList(\n\t\tself.session.custom.filters.get(pageId, []),\n\t\t\u0027maxBound\u0027,\n\t\tself.view.params.key,\n\t\tcurrentValue.value or None,\n\t\t\u0027auto\u0027\n\t\t)\n"
+            }
+          }
+        },
+        "props": {
+          "pickerType": "date",
+          "placeholder": "and/or before...",
+          "style": {
+            "background-origin": "content-box",
+            "background-size": "15px",
+            "backgroundImage": "url(\"/system/images/SVGs/Search Magnifying Glass.svg\")",
+            "backgroundPosition": "right center",
+            "backgroundRepeat": "no-repeat",
+            "borderColor": "#3ec3d9",
+            "borderStyle": "solid",
+            "borderWidth": "1px",
+            "color": "#3C71A2",
+            "fontFamily": "Gibson",
+            "outlineColor": "#cee4f6",
+            "outlineStyle": "solid",
+            "outlineWidth": "10px"
+          }
+        },
+        "type": "ia.input.date-time-input"
+      },
+      {
+        "events": {
+          "dom": {
+            "onClick": {
+              "config": {
+                "script": "\tself.getSibling(\"AnyAfter\").props.value \u003d None"
+              },
+              "scope": "G",
+              "type": "script"
+            }
+          }
+        },
+        "meta": {
+          "name": "ClearMin"
+        },
+        "position": {
+          "height": 32,
+          "width": 36,
+          "x": 201,
+          "y": 19.9897
+        },
+        "propConfig": {
+          "meta.visible": {
+            "binding": {
+              "config": {
+                "expression": "!isNull({../AnyAfter.props.value})"
+              },
+              "type": "expr"
+            }
+          }
+        },
+        "props": {
+          "image": {
+            "icon": {
+              "color": "#FFA1A1",
+              "path": "material/backspace"
+            }
+          },
+          "style": {
+            "background-origin": "content-box",
+            "background-size": "15px",
+            "backgroundPosition": "right center",
+            "backgroundRepeat": "no-repeat",
+            "borderColor": "#3ec3d9",
+            "borderStyle": "solid",
+            "borderWidth": "1px",
+            "color": "#3C71A2",
+            "fontFamily": "Gibson",
+            "outlineColor": "#cee4f6",
+            "outlineStyle": "solid",
+            "outlineWidth": "10px"
+          },
+          "text": ""
+        },
+        "type": "ia.input.button"
+      },
+      {
+        "events": {
+          "dom": {
+            "onClick": {
+              "config": {
+                "script": "\tself.getSibling(\"AnyBefore\").props.value \u003d None"
+              },
+              "scope": "G",
+              "type": "script"
+            }
+          }
+        },
+        "meta": {
+          "name": "ClearMax"
+        },
+        "position": {
+          "height": 32,
+          "width": 36,
+          "x": 200.99564361572266,
+          "y": 70.96876112670898
+        },
+        "propConfig": {
+          "meta.visible": {
+            "binding": {
+              "config": {
+                "expression": "!isNull({../AnyBefore.props.value})"
+              },
+              "type": "expr"
+            }
+          }
+        },
+        "props": {
+          "image": {
+            "icon": {
+              "color": "#FFA1A1",
+              "path": "material/backspace"
+            }
+          },
+          "style": {
+            "background-origin": "content-box",
+            "background-size": "15px",
+            "backgroundPosition": "right center",
+            "backgroundRepeat": "no-repeat",
+            "borderColor": "#3ec3d9",
+            "borderStyle": "solid",
+            "borderWidth": "1px",
+            "color": "#3C71A2",
+            "fontFamily": "Gibson",
+            "outlineColor": "#cee4f6",
+            "outlineStyle": "solid",
+            "outlineWidth": "10px"
+          },
+          "text": ""
+        },
+        "type": "ia.input.button"
+      }
+    ],
+    "events": {
+      "dom": {
+        "onMouseLeave": {
+          "config": {
+            "draggable": false,
+            "id": "{view.params.label}",
+            "modal": false,
+            "overlayDismiss": false,
+            "resizable": false,
+            "showCloseIcon": false,
+            "type": "close",
+            "viewPath": "1_TEMPLATES/Filtering/Popup_Overlay"
+          },
+          "scope": "C",
+          "type": "popup"
+        }
+      }
+    },
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "style": {
+        "backgroundColor": "transparent",
+        "borderColor": "transparent",
+        "borderStyle": "hidden",
+        "borderWidth": "0px",
+        "fill": "transparent",
+        "opacity": "1",
+        "outlineColor": "transparent",
+        "outlineStyle": "none",
+        "outlineWidth": "0px",
+        "overflow": "hidden",
+        "strokeWidth": "0"
+      }
+    },
+    "type": "ia.container.coord"
+  }
+}

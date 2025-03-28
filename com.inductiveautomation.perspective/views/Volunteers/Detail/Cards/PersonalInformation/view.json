@@ -1,0 +1,418 @@
+{
+  "custom": {
+    "VolunteerRow": "[{\"lastName\":\"\",\"zipCode\":null,\"hours\":null,\"city\":null,\"volunteerId\":null,\"firstName\":\"\",\"volunteerGroupName\":null,\"phone\":null,\"school\":null,\"dob\":null,\"street\":null,\"congregation\":null,\"employer\":null,\"middleName\":\"\",\"id\":null,\"state\":null,\"email\":null}]"
+  },
+  "params": {
+    "trackID": 0
+  },
+  "propConfig": {
+    "custom.VolunteerRow": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "volunteerId": "{view.params.trackID}"
+          },
+          "queryPath": "Volunteers/Details/PersonalInfo",
+          "returnFormat": "json"
+        },
+        "transforms": [
+          {
+            "code": "\t\n\tif value:\n\t\treturn value\n\telse:\n\t\treturn system.util.jsonEncode([{\n\t  \"firstName\": \"\",\n\t  \"middleName\": \"\",\n\t  \"lastName\": \"\",\n\t  \"phone\": None,\n\t  \"email\": None,\n\t  \"dob\": None,\n\t  \"id\": None,\n\t  \"volunteerId\": None,\n\t  \"congregation\": None,\n\t  \"school\": None,\n\t  \"employer\": None,\n\t  \"street\": None,\n\t  \"city\": None,\n\t  \"state\": None,\n\t  \"zipCode\": None,\n\t  \"hours\": None,\n\t  \"volunteerGroupName\": None\n}])",
+            "type": "script"
+          }
+        ],
+        "type": "query"
+      },
+      "persistent": true
+    },
+    "params.trackID": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "width": 250
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "headerEmbeddedView"
+        },
+        "position": {
+          "basis": "170px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.Text": {
+            "binding": {
+              "config": {
+                "expression": "concat(if(isNull({view.custom.VolunteerRow[0].firstName}),\"\",{view.custom.VolunteerRow[0].firstName}), \" \", if(isNull({view.custom.VolunteerRow[0].lastName}),\"\",{view.custom.VolunteerRow[0].lastName}))"
+              },
+              "type": "expr"
+            }
+          },
+          "props.params.volunteerId": {
+            "binding": {
+              "config": {
+                "path": "view.params.trackID"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "path": "Volunteers/Detail/Cards/Personal/Header",
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "EmbeddedView_2"
+        },
+        "position": {
+          "shrink": 0
+        },
+        "props": {
+          "params": {
+            "Text": "About this Volunteer"
+          },
+          "path": "Volunteers/Detail/Cards/Personal/AboutHeader",
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "firstNameEmbeddedView"
+        },
+        "position": {
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.Info": {
+            "binding": {
+              "config": {
+                "expression": "if(isNull({view.custom.VolunteerRow[0].firstName}),\"\",{view.custom.VolunteerRow[0].firstName})"
+              },
+              "type": "expr"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "Description": "First name"
+          },
+          "path": "Volunteers/Detail/Cards/Personal/AboutLabel",
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "lastNameEmbeddedView"
+        },
+        "position": {
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.Info": {
+            "binding": {
+              "config": {
+                "expression": "if(isNull({view.custom.VolunteerRow[0].lastName}),\"\",{view.custom.VolunteerRow[0].lastName})"
+              },
+              "type": "expr"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "Description": "Last Name"
+          },
+          "path": "Volunteers/Detail/Cards/Personal/AboutLabel",
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "genderEmbeddedView"
+        },
+        "position": {
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.Info": {
+            "binding": {
+              "config": {
+                "expression": "if(isNull({view.custom.VolunteerRow[0].genderName}),\"\",{view.custom.VolunteerRow[0].genderName})"
+              },
+              "type": "expr"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "Description": "Gender"
+          },
+          "path": "Volunteers/Detail/Cards/Personal/AboutLabel",
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "dobEmbeddedView"
+        },
+        "position": {
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.Info": {
+            "binding": {
+              "config": {
+                "expression": "if(isNull({view.custom.VolunteerRow[0].dob}), \"Unknown\",DateFormat({view.custom.VolunteerRow[0].dob},\"MMMM dd, YYYY\"))"
+              },
+              "type": "expr"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "Description": "Date of Birth"
+          },
+          "path": "Volunteers/Detail/Cards/Personal/AboutLabel",
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "ageEmbeddedView"
+        },
+        "position": {
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.Info": {
+            "binding": {
+              "config": {
+                "expression": "if(isNull({view.custom.VolunteerRow[0].age}),\"\",toStr({view.custom.VolunteerRow[0].age}))"
+              },
+              "type": "expr"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "Description": "Age"
+          },
+          "path": "Volunteers/Detail/Cards/Personal/AboutLabel",
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "phonenumberEmbeddedView"
+        },
+        "position": {
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.Info": {
+            "binding": {
+              "config": {
+                "expression": "if(isNull({view.custom.VolunteerRow[0].phone}),None,replace({view.custom.VolunteerRow[0].phone},\"-\",\"\"))"
+              },
+              "transforms": [
+                {
+                  "expression": "if(isNull({view.custom.VolunteerRow[0].phone}), \"Unknown\",concat(\"(\",substring({view.custom.VolunteerRow[0].phone},0,3),\") \",substring({view.custom.VolunteerRow[0].phone},3,6),\"-\",substring({view.custom.VolunteerRow[0].phone},6,len({view.custom.VolunteerRow[0].phone}))))\r\n",
+                  "type": "expression"
+                }
+              ],
+              "type": "expr"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "Description": "Phone Number"
+          },
+          "path": "Volunteers/Detail/Cards/Personal/AboutLabel",
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "emailEmbeddedView"
+        },
+        "position": {
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.Info": {
+            "binding": {
+              "config": {
+                "expression": "if(isNull({view.custom.VolunteerRow[0].email}),\"\",{view.custom.VolunteerRow[0].email})"
+              },
+              "type": "expr"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "Description": "E-mail"
+          },
+          "path": "Volunteers/Detail/Cards/Personal/AboutLabel",
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "streetEmbeddedView"
+        },
+        "position": {
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.Info": {
+            "binding": {
+              "config": {
+                "expression": "if(isNull({view.custom.VolunteerRow[0].street}),\"\",{view.custom.VolunteerRow[0].street})"
+              },
+              "type": "expr"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "Description": "Street"
+          },
+          "path": "Volunteers/Detail/Cards/Personal/AboutLabel",
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "cityEmbeddedView"
+        },
+        "position": {
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.Info": {
+            "binding": {
+              "config": {
+                "expression": "if(isNull({view.custom.VolunteerRow[0].city}),\"\",{view.custom.VolunteerRow[0].city})"
+              },
+              "type": "expr"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "Description": "City"
+          },
+          "path": "Volunteers/Detail/Cards/Personal/AboutLabel",
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "statezipEmbeddedView"
+        },
+        "position": {
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.Info": {
+            "binding": {
+              "config": {
+                "expression": "concat(if(isNull({view.custom.VolunteerRow[0].state}),\"\",{view.custom.VolunteerRow[0].state}),\" / \",toStr(if(isNull({view.custom.VolunteerRow[0].zip}),\"\",{view.custom.VolunteerRow[0].zip})))"
+              },
+              "type": "expr"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "Description": "State / Zip code"
+          },
+          "path": "Volunteers/Detail/Cards/Personal/AboutLabel",
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "congregationEmbeddedView"
+        },
+        "position": {
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.Info": {
+            "binding": {
+              "config": {
+                "expression": "if(isNull({view.custom.VolunteerRow[0].congregation}),\"\",{view.custom.VolunteerRow[0].congregation})"
+              },
+              "type": "expr"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "Description": "Congregation"
+          },
+          "path": "Volunteers/Detail/Cards/Personal/AboutLabel",
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "employeerEmbeddedView"
+        },
+        "position": {
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.Info": {
+            "binding": {
+              "config": {
+                "expression": "concat(if(isNull({view.custom.VolunteerRow[0].employer}),\"\",{view.custom.VolunteerRow[0].employer}),\" / \",if(isNull({view.custom.VolunteerRow[0].school}),\"\",{view.custom.VolunteerRow[0].school}))"
+              },
+              "type": "expr"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "Description": "Employeer / School"
+          },
+          "path": "Volunteers/Detail/Cards/Personal/AboutLabel",
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column",
+      "style": {
+        "classes": "Background/Default"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

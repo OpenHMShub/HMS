@@ -1,0 +1,1197 @@
+{
+  "custom": {
+    "Year1": "2024",
+    "Year2": "2025",
+    "dayName": "Wednesday",
+    "dayOfYear": 15,
+    "seasonForSelectedDate": {
+      "$": [
+        "ds",
+        192,
+        1737348565711
+      ],
+      "$columns": [
+        {
+          "data": [
+            14
+          ],
+          "name": "id",
+          "type": "Integer"
+        },
+        {
+          "data": [
+            "2024-2025"
+          ],
+          "name": "Seasons",
+          "type": "String"
+        }
+      ]
+    },
+    "seasonId": 14,
+    "totalGuests": 20
+  },
+  "params": {
+    "selectedDate": "2025-01-15"
+  },
+  "propConfig": {
+    "custom.Year1": {
+      "binding": {
+        "config": {
+          "path": "view.custom.seasonForSelectedDate"
+        },
+        "transforms": [
+          {
+            "code": "\treturn value.getValueAt(0,\u0027seasons\u0027)[0:4]",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      },
+      "persistent": true
+    },
+    "custom.Year2": {
+      "binding": {
+        "config": {
+          "path": "view.custom.seasonForSelectedDate"
+        },
+        "transforms": [
+          {
+            "code": "\treturn value.getValueAt(0,\u0027seasons\u0027)[-4:]",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      },
+      "persistent": true
+    },
+    "custom.dayName": {
+      "binding": {
+        "config": {
+          "expression": "dateFormat({view.params.selectedDate}, \u0027EEEE\u0027) "
+        },
+        "type": "expr"
+      },
+      "persistent": true
+    },
+    "custom.dayOfYear": {
+      "binding": {
+        "config": {
+          "expression": "toInt(getDayOfYear({view.params.selectedDate}))"
+        },
+        "type": "expr"
+      },
+      "persistent": true
+    },
+    "custom.seasonForSelectedDate": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "selectedDate": "{view.params.selectedDate}"
+          },
+          "queryPath": "WinterShelterGlobal/getSeasonFromDate"
+        },
+        "type": "query"
+      },
+      "persistent": true
+    },
+    "custom.seasonId": {
+      "binding": {
+        "config": {
+          "path": "view.custom.seasonForSelectedDate"
+        },
+        "transforms": [
+          {
+            "code": "\treturn value.getValueAt(0,\u0027id\u0027)",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      },
+      "persistent": true
+    },
+    "custom.totalGuests": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "dayOfYear": "{view.custom.dayOfYear}",
+            "seasonId": "{view.custom.seasonId}"
+          },
+          "queryPath": "WinterShelter/NightlyBedSummary/GetTotalGuestsForDate"
+        },
+        "type": "query"
+      },
+      "persistent": true
+    },
+    "params.selectedDate": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 713,
+      "width": 2109
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "Label_0"
+        },
+        "position": {
+          "basis": "40px"
+        },
+        "propConfig": {
+          "props.text": {
+            "binding": {
+              "config": {
+                "expression": " {view.custom.dayName} + \" Total: \" + toStr({view.custom.totalGuests}) "
+              },
+              "type": "expr"
+            }
+          }
+        },
+        "props": {
+          "style": {
+            "classes": "ActivityCards/Header_Card Table/Column_Bold",
+            "marginLeft": 10
+          }
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "events": {
+          "component": {
+            "onEditCellCommit": {
+              "config": {
+                "script": "\tsystem.perspective.print(event)\n\tif event.column \u003d\u003d \"notes\":\n\t\trowToEdit \u003d event.row \n\t\tnewValue \u003d event.value\n\t\t\n\t\tscheduleId \u003d self.props.data.getValueAt(rowToEdit,\u0027scheduleId\u0027)\n\t\tif scheduleId is not None:\n\t\t\t## udate q\n\t\t\tupdateQ \u003d \"UPDATE shelter.schedule set notes \u003d ? where id \u003d ?\"\n\t\t\tsystem.db.runPrepUpdate(updateQ, [newValue, scheduleId])\n\t\t\t\n\t\t\tself.refreshBinding(\"custom.sqlData\")"
+              },
+              "scope": "G",
+              "type": "script"
+            }
+          }
+        },
+        "meta": {
+          "name": "Table"
+        },
+        "position": {
+          "basis": "100%"
+        },
+        "propConfig": {
+          "custom.sqlData": {
+            "binding": {
+              "config": {
+                "parameters": {
+                  "dayOfYear": "{view.custom.dayOfYear}",
+                  "seasonId": "{view.custom.seasonId}",
+                  "selectedDate": "{view.params.selectedDate}"
+                },
+                "queryPath": "WinterShelter/NightlyBedSummary/GetSummaryForDate",
+                "returnFormat": "dataset"
+              },
+              "type": "query"
+            }
+          },
+          "props.data": {
+            "binding": {
+              "config": {
+                "path": "this.custom.sqlData"
+              },
+              "transforms": [
+                {
+                  "code": "\tdataset \u003d value\n\tnightlySummury_dataset \u003d []\n\tif dataset.getRowCount()\u003e0:\n\t\tnightlySummury_dataset \u003d []\n\t\tfor i in range(0,dataset.getRowCount()):\n\t\t\trow \u003d {}\n\t\t\t## add grey color to row if status is cancelled else keep as it is\n\t\t\tstatus \u003d dataset.getValueAt(i,\u0027isActive\u0027)\n\t\t\tif status \u003d\u003d \u0027Canceled\u0027:\n\t\t\t\tfor j in range(0,dataset.getColumnCount()):\n\t\t\t\t\tdataset_value \u003d dataset.getValueAt(i,j)\n\t\t\t\t\tcolumn_name \u003d dataset.getColumnName(j)\n\t\t\t\t\trow[column_name] \u003d {\u0027value\u0027:dataset_value, \u0027style\u0027:{\u0027color\u0027:\u0027#9eb8d1\u0027,\u0027classes\u0027:\u0027Table/Column_Normal\u0027}}\n\t\t\telse:\n\t\t\t\tfor j in range(0,dataset.getColumnCount()):\n\t\t\t\t\tdataset_value \u003d dataset.getValueAt(i,j)\n\t\t\t\t\tcolumn_name \u003d dataset.getColumnName(j)\n\t\t\t\t\trow[column_name] \u003d {\u0027value\u0027:dataset_value, \u0027style\u0027:{}}\n\t\t\tnightlySummury_dataset.append(row)\n\t\t\t\t\n\treturn nightlySummury_dataset",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "cells": {
+            "style": {
+              "classes": "Table/Cell_Dashboard_NoBG"
+            }
+          },
+          "columns": [
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "scheduleId",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header"
+                },
+                "title": " "
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "view",
+              "resizable": false,
+              "sort": "none",
+              "sortable": false,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {
+                "rowData": {
+                  "ID": "value"
+                }
+              },
+              "viewPath": "1_TEMPLATES/Placeholder",
+              "visible": true,
+              "width": 10
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "locationName",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header",
+                  "color": "#0C4E8B",
+                  "fontFamily": "Proxima Nova ExCn Light",
+                  "fontSize": "20px"
+                },
+                "title": "Congregation"
+              },
+              "justify": "left",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": true,
+              "style": {
+                "color": "#0c4e85",
+                "fontFamily": "Proxima Nova ExCn Medium",
+                "text-align": "left"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 350
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "dateSelected",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header"
+                },
+                "title": "Date"
+              },
+              "justify": "left",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "date",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 100
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "totalBeds",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "center",
+                "style": {
+                  "classes": "Table/Column_Header"
+                },
+                "title": "Guests"
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 100
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "genderName",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "center",
+                "style": {
+                  "classes": "Table/Column_Header"
+                },
+                "title": "Gender"
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 200
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "HostLocationType",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "center",
+                "style": {
+                  "classes": "Table/Column_Header"
+                },
+                "title": "Location"
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 150
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "smoking",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "center",
+                "style": {
+                  "classes": "Table/Column_Header"
+                },
+                "title": "Smoking"
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {
+                "currentColumn": "smoking",
+                "rowData": {
+                  "accessible": "value",
+                  "clothing": "value",
+                  "isActive": "value",
+                  "laundry": "value",
+                  "showers": "value",
+                  "smoking": "value",
+                  "stairs": "value"
+                }
+              },
+              "viewPath": "WinterShelter/Nightly Bed Summary/Tables/TableDetail",
+              "visible": true,
+              "width": 95
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "accessible",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "center",
+                "style": {
+                  "classes": "Table/Column_Header"
+                },
+                "title": "Accessible"
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {
+                "currentColumn": "accessible",
+                "rowData": {
+                  "accessible": "value",
+                  "clothing": "value",
+                  "isActive": "value",
+                  "laundry": "value",
+                  "showers": "value",
+                  "smoking": "value",
+                  "stairs": "value"
+                }
+              },
+              "viewPath": "WinterShelter/Nightly Bed Summary/Tables/TableDetail",
+              "visible": true,
+              "width": 95
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "stairs",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "center",
+                "style": {
+                  "backgroundImage": "/system/images/SVGs/Categories/classes.svg",
+                  "classes": "Table/Column_Header"
+                },
+                "title": "Stairs"
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {
+                "currentColumn": "stairs",
+                "rowData": {
+                  "accessible": "value",
+                  "clothing": "value",
+                  "isActive": "value",
+                  "laundry": "value",
+                  "showers": "value",
+                  "smoking": "value",
+                  "stairs": "value"
+                }
+              },
+              "viewPath": "WinterShelter/Nightly Bed Summary/Tables/TableDetail",
+              "visible": true,
+              "width": 95
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "showers",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "center",
+                "style": {
+                  "backgroundImage": "/system/images/SVGs/Categories/classes.svg",
+                  "classes": "Table/Column_Header"
+                },
+                "title": "Showers"
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {
+                "currentColumn": "showers",
+                "rowData": {
+                  "accessible": "value",
+                  "clothing": "value",
+                  "isActive": "value",
+                  "laundry": "value",
+                  "showers": "value",
+                  "smoking": "value",
+                  "stairs": "value"
+                }
+              },
+              "viewPath": "WinterShelter/Nightly Bed Summary/Tables/TableDetail",
+              "visible": true,
+              "width": 95
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "clothing",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "center",
+                "style": {
+                  "backgroundImage": "/system/images/SVGs/Categories/classes.svg",
+                  "classes": "Table/Column_Header"
+                },
+                "title": "Clothing"
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {
+                "currentColumn": "clothing",
+                "rowData": {
+                  "accessible": "value",
+                  "clothing": "value",
+                  "isActive": "value",
+                  "laundry": "value",
+                  "showers": "value",
+                  "smoking": "value",
+                  "stairs": "value"
+                }
+              },
+              "viewPath": "WinterShelter/Nightly Bed Summary/Tables/TableDetail",
+              "visible": true,
+              "width": 95
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "laundry",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "center",
+                "style": {
+                  "backgroundImage": "/system/images/SVGs/Categories/classes.svg",
+                  "classes": "Table/Column_Header"
+                },
+                "title": "Laundry"
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {
+                "currentColumn": "laundry",
+                "rowData": {
+                  "accessible": "value",
+                  "clothing": "value",
+                  "isActive": "value",
+                  "laundry": "value",
+                  "showers": "value",
+                  "smoking": "value",
+                  "stairs": "value"
+                }
+              },
+              "viewPath": "WinterShelter/Nightly Bed Summary/Tables/TableDetail",
+              "visible": true,
+              "width": 95
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": true,
+              "field": "notes",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "center",
+                "style": {
+                  "classes": "Table/Column_Header"
+                },
+                "title": "Notes"
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "string",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": false,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 100
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": true,
+              "field": "isActive",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "center",
+                "style": {
+                  "classes": "Table/Column_Header"
+                },
+                "title": "Status"
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "string",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": false,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 100
+            }
+          ],
+          "pager": {
+            "initialOption": 100
+          },
+          "rows": {
+            "highlight": {
+              "color": "#ccffff",
+              "enabled": false
+            },
+            "striped": {
+              "enabled": false
+            }
+          },
+          "selection": {
+            "style": {
+              "backgroundColor": "#9af4eb4d"
+            }
+          },
+          "style": {
+            "classes": "Background/Default"
+          }
+        },
+        "scripts": {
+          "customMethods": [],
+          "extensionFunctions": null,
+          "messageHandlers": [
+            {
+              "messageType": "tableToExcel",
+              "pageScope": true,
+              "script": "\t# implement your handler here\n\t\n\timport traceback\n\ttry:\n\t\tdayName \u003d self.view.custom.dayName\n\t\ttotalGuests \u003d self.view.custom.totalGuests\n\t\t#Send the dataset to Excel\n\t\tfilename \u003d \u0027WinterShelter_nightlybedsummary_\u0027 + dayName + \"_\" + str(system.date.format(self.view.params.selectedDate,\"yyyyMMdd\")) + \u0027.xls\u0027\n\t\tdataset \u003d self.props.data\n\t\tNewDataSet \u003d []\n\t\theaders \u003d [\"Congregation\",\"Date\",\"Guests\", \"Gender\",\"Location\", \"Smoking\", \"Accessible\", \"Stairs\", \"Showers\", \"Clothing\", \"Laundry\",\"Notes\",\"Status\"]\n#\t\tfor i in range(0,len(dataset)):\n#\t\t\tNewDataSet.append([dataset[i][\u0027name\u0027][\u0027value\u0027],dataset[i][\u0027eventStart\u0027][\u0027value\u0027],dataset[i][\u0027eventEnd\u0027][\u0027value\u0027],dataset[i][\u0027ExitDestination\u0027][\u0027value\u0027],dataset[i][\u0027gender\u0027][\u0027value\u0027],dataset[i][\u0027age\u0027][\u0027value\u0027],dataset[i][\u0027associatedProgram\u0027][\u0027value\u0027],dataset[i][\u0027facilityName\u0027][\u0027value\u0027],dataset[i][\u0027roomName\u0027][\u0027value\u0027],dataset[i][\u0027bedName\u0027][\u0027value\u0027]])\n\n#\t\tfor i in range(dataset.getRowCount()):\n#\t\t\tselectedDate \u003d dataset.getValueAt(i,\u0027dateSelected\u0027)\n#\t\t\tif selectedDate is not None:\n#\t\t\t\tselectedDate \u003d system.date.format(selectedDate, \u0027MM/dd/yyyy\u0027)\n#\t\t\t\n#\t\t\t\n#\t\t\tNewDataSet.append([dataset.getValueAt(i,\u0027locationName\u0027),selectedDate, dataset.getValueAt(i,\u0027totalBeds\u0027),dataset.getValueAt(i,\u0027genderName\u0027),dataset.getValueAt(i,\u0027HostLocationType\u0027),dataset.getValueAt(i,\u0027smoking\u0027),dataset.getValueAt(i,\u0027accessible\u0027),dataset.getValueAt(i,\u0027stairs\u0027),dataset.getValueAt(i,\u0027showers\u0027),dataset.getValueAt(i,\u0027clothing\u0027),dataset.getValueAt(i,\u0027laundry\u0027),dataset.getValueAt(i,\u0027notes\u0027)])\t\n#\t\t\n\t\tfor i in range(0,len(dataset)):\n\t\t\tselectedDate \u003d dataset[i][\u0027dateSelected\u0027].value\n\t\t\tif selectedDate is not None:\n\t\t\t\tselectedDate \u003d system.date.format(selectedDate, \u0027MM/dd/yyyy\u0027)\n\t\t\t\n\t\t\t\n\t\t\tNewDataSet.append([dataset[i][\u0027locationName\u0027].value, selectedDate, dataset[i][\u0027totalBeds\u0027].value, dataset[i][\u0027genderName\u0027].value, dataset[i][\u0027HostLocationType\u0027].value, dataset[i][\u0027smoking\u0027].value,dataset[i][\u0027accessible\u0027].value,dataset[i][\u0027stairs\u0027].value,dataset[i][\u0027showers\u0027].value ,dataset[i][\u0027clothing\u0027].value ,dataset[i][\u0027laundry\u0027].value ,dataset[i][\u0027notes\u0027].value, dataset[i][\u0027isActive\u0027].value])\t\n\t\t\n\t\t## add \tsummary row\n\t\tNewDataSet.append([\u0027\u0027,dayName + \" Total:\", totalGuests,\u0027\u0027,\u0027\u0027,\u0027\u0027,\u0027\u0027,\u0027\u0027,\u0027\u0027,\u0027\u0027,\u0027\u0027,\u0027\u0027,\u0027\u0027])\n\t\tsystem.perspective.print(headers)\n\t\tsystem.perspective.print(NewDataSet)\n\t\tNewDataSet \u003d system.dataset.toDataSet(headers, NewDataSet)\n#\t\t\tsystem.perspective.print(NewDataSet)\n\t\txlFile \u003d system.dataset.toExcel(True,NewDataSet)\n\t\tsystem.perspective.download(filename, xlFile)\n\texcept:   \n\t\tlogger \u003d system.util.getLogger(\"Wintershelter nightlybedsummary tableToExcel\")\n\t\tmsg \u003d traceback.format_exc()\n\t\tlogger.error(msg)",
+              "sessionScope": true,
+              "viewScope": true
+            }
+          ]
+        },
+        "type": "ia.display.table"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column"
+    },
+    "type": "ia.container.flex"
+  }
+}

@@ -1,0 +1,1 @@
+SELECT SUM(bedsActual) FROM shelter.LocationSeasonal where seasonId = :lastSeasonId

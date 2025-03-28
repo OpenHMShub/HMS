@@ -1,0 +1,769 @@
+{
+  "custom": {},
+  "events": {
+    "system": {
+      "onStartup": {
+        "config": {
+          "script": "\ttry:\n\t\troot \u003d self.getChild(\"root\")\n\t\troot.setPropsDropdowns()\n\t\t#emvSearch \u003d root.getChild(\"emvSearch\")\n\t\t#emvSearch.props.params.keyUpPulse \u003d False\n\texcept:\n\t\timport traceback\n\t\tlogger \u003d system.util.getLogger(\"Shelter\")\n\t\tmsg \u003d self.name + \u0027:\\n\u0027\n\t\tmsg +\u003d traceback.format_exc()\n\t\tlogger.error(msg)\t\t\t"
+        },
+        "scope": "G",
+        "type": "script"
+      }
+    }
+  },
+  "params": {},
+  "props": {
+    "defaultSize": {
+      "height": 30,
+      "width": 1820
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "emvProgram"
+        },
+        "position": {
+          "basis": "150px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.actionPerformedPulse": {
+            "onChange": {
+              "enabled": null,
+              "script": "\troot \u003d self.parent\n\troot.sendMsgCondition()\t"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "actionPerformedPulse": false,
+            "clear": false,
+            "multiSelect": false,
+            "options": [
+              {
+                "label": "ARP",
+                "value": "ARP"
+              },
+              {
+                "label": "asc",
+                "value": "asc"
+              },
+              {
+                "label": "Extended Recuperative Care",
+                "value": "Extended Recuperative Care"
+              },
+              {
+                "label": "fs",
+                "value": "fs"
+              },
+              {
+                "label": "Guest House",
+                "value": "Guest House"
+              },
+              {
+                "label": "Guest House Recovery Program",
+                "value": "Guest House Recovery Program"
+              },
+              {
+                "label": "Hope University",
+                "value": "Hope University"
+              },
+              {
+                "label": "Metro",
+                "value": "Metro"
+              },
+              {
+                "label": "Navigation",
+                "value": "Navigation"
+              },
+              {
+                "label": "Next Steps Residential",
+                "value": "Next Steps Residential"
+              },
+              {
+                "label": "Paticipant Escrow",
+                "value": "Paticipant Escrow"
+              },
+              {
+                "label": "Paticipant Mail Service",
+                "value": "Paticipant Mail Service"
+              },
+              {
+                "label": "Permanent Supportive Housing",
+                "value": "Permanent Supportive Housing"
+              },
+              {
+                "label": "Post-Treatment Supportive Shelter",
+                "value": "Post-Treatment Supportive Shelter"
+              },
+              {
+                "label": "Recuperative Care",
+                "value": "Recuperative Care"
+              },
+              {
+                "label": "RHP/TDOC",
+                "value": "RHP/TDOC"
+              },
+              {
+                "label": "Seeking/Pending Treatment",
+                "value": "Seeking/Pending Treatment"
+              },
+              {
+                "label": "Special Shelter",
+                "value": "Special Shelter"
+              },
+              {
+                "label": "Transitional Housing Program",
+                "value": "Transitional Housing Program"
+              },
+              {
+                "label": "Veterans Hospital to Housing",
+                "value": "Veterans Hospital to Housing"
+              },
+              {
+                "label": "Veterans Low Demand",
+                "value": "Veterans Low Demand"
+              },
+              {
+                "label": "Veterans Service Intensive",
+                "value": "Veterans Service Intensive"
+              },
+              {
+                "label": "Vine Hill Residential",
+                "value": "Vine Hill Residential"
+              },
+              {
+                "label": "Winter Shelter",
+                "value": "Winter Shelter"
+              }
+            ],
+            "placeholder": "Program",
+            "selection": null
+          },
+          "path": "Providers/Dashboard/Components/Filters/Conditional_DropDown",
+          "style": {
+            "classes": "Filter/Filter_Text_TeelBlue Filter/Filter_Container",
+            "marginLeft": "40px"
+          }
+        },
+        "scripts": {
+          "customMethods": [
+            {
+              "name": "setOptions",
+              "params": [],
+              "script": "\t\n\tquery \u003d \"\"\"\nSELECT programName FROM interaction.Program WHERE programName IS NOT NULL AND timeRetired IS NULL ORDER BY programName\n\t\"\"\"\n\t\n\tresult \u003d system.db.runPrepQuery(query,[],\u0027RITIOps\u0027)\n\t\n\t# Version 1 set options as list of dictionaries\n\tself.props.params.options \u003d [ dict(value \u003d x[0],label \u003d x[0]) for x in result]\n"
+            }
+          ],
+          "extensionFunctions": null,
+          "messageHandlers": []
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "emvGender"
+        },
+        "position": {
+          "basis": "150px"
+        },
+        "propConfig": {
+          "props.params.actionPerformedPulse": {
+            "onChange": {
+              "enabled": null,
+              "script": "\troot \u003d self.parent\n\troot.sendMsgCondition()\n"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "actionPerformedPulse": false,
+            "clear": false,
+            "multiSelect": false,
+            "options": [
+              {
+                "label": "Client doesn\u0027t know",
+                "value": "Client doesn\u0027t know"
+              },
+              {
+                "label": "Client refused",
+                "value": "Client refused"
+              },
+              {
+                "label": "Data not collected",
+                "value": "Data not collected"
+              },
+              {
+                "label": "Female",
+                "value": "Female"
+              },
+              {
+                "label": "Male",
+                "value": "Male"
+              },
+              {
+                "label": "Non-Binary",
+                "value": "Non-Binary"
+              },
+              {
+                "label": "Transgender Female to Male",
+                "value": "Transgender Female to Male"
+              },
+              {
+                "label": "Transgender Male to Female",
+                "value": "Transgender Male to Female"
+              }
+            ],
+            "placeholder": "Gender",
+            "selection": null
+          },
+          "path": "Providers/Dashboard/Components/Filters/Conditional_DropDown",
+          "style": {
+            "classes": "Filter/Filter_Text_TeelBlue Filter/Filter_Container"
+          }
+        },
+        "scripts": {
+          "customMethods": [
+            {
+              "name": "setOptions",
+              "params": [],
+              "script": "\tquery \u003d \"\"\"\n\tSELECT genderName FROM humans.Gender ORDER BY genderName\n\t\t\"\"\"\n\t\t\n\tresult \u003d system.db.runPrepQuery(query,[],\u0027RITIOps\u0027)\n\t\n\t# Version 1 set options as list of dictionaries\n\tself.props.params.options \u003d [ dict(value \u003d x[0],label \u003d x[0]) for x in result]\n\t\n\t"
+            }
+          ],
+          "extensionFunctions": null,
+          "messageHandlers": []
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "emvRace"
+        },
+        "position": {
+          "basis": "150px"
+        },
+        "propConfig": {
+          "props.params.actionPerformedPulse": {
+            "onChange": {
+              "enabled": null,
+              "script": "\troot \u003d self.parent\n\troot.sendMsgCondition()\n"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "actionPerformedPulse": false,
+            "clear": false,
+            "multiSelect": false,
+            "options": [
+              {
+                "label": "American Indian or Alaska Native",
+                "value": "American Indian or Alaska Native"
+              },
+              {
+                "label": "Asian or Asian American",
+                "value": "Asian or Asian American"
+              },
+              {
+                "label": "Black, African American or African",
+                "value": "Black, African American or African"
+              },
+              {
+                "label": "Client doesn\u0027t know",
+                "value": "Client doesn\u0027t know"
+              },
+              {
+                "label": "Client refused",
+                "value": "Client refused"
+              },
+              {
+                "label": "Data not collected",
+                "value": "Data not collected"
+              },
+              {
+                "label": "Hispanic/Latina/e/o",
+                "value": "Hispanic/Latina/e/o"
+              },
+              {
+                "label": "Middle Eastern or North African",
+                "value": "Middle Eastern or North African"
+              },
+              {
+                "label": "Native Hawaiian or Other Pacific Island",
+                "value": "Native Hawaiian or Other Pacific Island"
+              },
+              {
+                "label": "White",
+                "value": "White"
+              }
+            ],
+            "placeholder": "Race and Ethnicity",
+            "selection": null
+          },
+          "path": "Providers/Dashboard/Components/Filters/Conditional_DropDown",
+          "style": {
+            "classes": "Filter/Filter_Text_TeelBlue Filter/Filter_Container"
+          }
+        },
+        "scripts": {
+          "customMethods": [
+            {
+              "name": "setOptions",
+              "params": [],
+              "script": "\tquery \u003d \"\"\"\n\tSELECT * FROM\n\t(\n\tSELECT TOP 1000\n\t\traceName as \u0027race\u0027\n\tFROM\n\t\thumans.Race\n\t\twhere raceName not in (\u0027Client doesn\u0027\u0027t know\u0027, \u0027Client refused\u0027, \u0027Data not collected\u0027)\n\tORDER by raceName ) x\n\tUNION\n\tSELECT \n\t\traceName as \u0027race\u0027\n\tFROM\n\t\thumans.Race\n\t\twhere raceName in (\u0027Client doesn\u0027\u0027t know\u0027, \u0027Client refused\u0027, \u0027Data not collected\u0027)\n\t\t\"\"\"\n\t\t\n\tresult \u003d system.db.runPrepQuery(query,[],\u0027RITIOps\u0027)\n\t\n\t# Version 1 set options as list of dictionaries\n\tself.props.params.options \u003d [ dict(value \u003d x[0],label \u003d x[0]) for x in result]\n\t\n\t"
+            }
+          ],
+          "extensionFunctions": null,
+          "messageHandlers": []
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "emvMinAge"
+        },
+        "position": {
+          "basis": "150px"
+        },
+        "propConfig": {
+          "props.params.actionPerformedPulse": {
+            "onChange": {
+              "enabled": null,
+              "script": "\troot \u003d self.parent\n\troot.sendMsgCondition()\n"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "actionPerformedPulse": false,
+            "clear": false,
+            "multiSelect": false,
+            "options": [
+              {
+                "label": 18,
+                "value": 18
+              },
+              {
+                "label": 25,
+                "value": 25
+              },
+              {
+                "label": 35,
+                "value": 35
+              },
+              {
+                "label": 45,
+                "value": 45
+              },
+              {
+                "label": 55,
+                "value": 55
+              }
+            ],
+            "placeholder": "Min Age",
+            "selection": null
+          },
+          "path": "Providers/Dashboard/Components/Filters/Conditional_DropDown",
+          "style": {
+            "classes": "Filter/Filter_Text_TeelBlue Filter/Filter_Container"
+          }
+        },
+        "scripts": {
+          "customMethods": [
+            {
+              "name": "setOptions",
+              "params": [],
+              "script": "\tlstValues \u003d [18,25,35,45,55]\n\tself.props.params.options \u003d [ dict(value \u003d x,label \u003d x) for x in lstValues]\n\n\t"
+            }
+          ],
+          "extensionFunctions": null,
+          "messageHandlers": []
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "emvMaxAge"
+        },
+        "position": {
+          "basis": "150px"
+        },
+        "propConfig": {
+          "props.params.actionPerformedPulse": {
+            "onChange": {
+              "enabled": null,
+              "script": "\troot \u003d self.parent\n\troot.sendMsgCondition()\n"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "actionPerformedPulse": false,
+            "clear": false,
+            "multiSelect": false,
+            "options": [
+              {
+                "label": 18,
+                "value": 18
+              },
+              {
+                "label": 25,
+                "value": 25
+              },
+              {
+                "label": 35,
+                "value": 35
+              },
+              {
+                "label": 45,
+                "value": 45
+              },
+              {
+                "label": 55,
+                "value": 55
+              }
+            ],
+            "placeholder": "Max Age",
+            "selection": null
+          },
+          "path": "Providers/Dashboard/Components/Filters/Conditional_DropDown",
+          "style": {
+            "classes": "Filter/Filter_Text_TeelBlue Filter/Filter_Container"
+          }
+        },
+        "scripts": {
+          "customMethods": [
+            {
+              "name": "setOptions",
+              "params": [],
+              "script": "\tlstValues \u003d [18,25,35,45,55]\n\tself.props.params.options \u003d [ dict(value \u003d x,label \u003d x) for x in lstValues]\n\n\t"
+            }
+          ],
+          "extensionFunctions": null,
+          "messageHandlers": []
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "emvReferralStatus"
+        },
+        "position": {
+          "basis": "150px"
+        },
+        "propConfig": {
+          "props.params.actionPerformedPulse": {
+            "onChange": {
+              "enabled": null,
+              "script": "\troot \u003d self.parent\n\troot.sendMsgCondition()\n"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "actionPerformedPulse": false,
+            "clear": false,
+            "multiSelect": false,
+            "options": [
+              {
+                "label": "Already Discharged",
+                "value": "Already Discharged"
+              },
+              {
+                "label": "Approved",
+                "value": "Approved"
+              },
+              {
+                "label": "Approved / Already Discharged",
+                "value": "Approved / Already Discharged"
+              },
+              {
+                "label": "Approved / Other Arrangements Made",
+                "value": "Approved / Other Arrangements Made"
+              },
+              {
+                "label": "Checked In",
+                "value": "Checked In"
+              },
+              {
+                "label": "Conditionally Approved",
+                "value": "Conditionally Approved"
+              },
+              {
+                "label": "Created",
+                "value": "Created"
+              },
+              {
+                "label": "Denied",
+                "value": "Denied"
+              },
+              {
+                "label": "Denied - VA - No Follow Up from Veteran",
+                "value": "Denied - VA - No Follow Up from Veteran"
+              },
+              {
+                "label": "In Process",
+                "value": "In Process"
+              },
+              {
+                "label": "No Show",
+                "value": "No Show"
+              },
+              {
+                "label": "Other Arrangements Made",
+                "value": "Other Arrangements Made"
+              },
+              {
+                "label": "Received",
+                "value": "Received"
+              },
+              {
+                "label": "Waiting for Info",
+                "value": "Waiting for Info"
+              }
+            ],
+            "placeholder": "Referral Status",
+            "selection": null
+          },
+          "path": "Providers/Dashboard/Components/Filters/Conditional_DropDown",
+          "style": {
+            "classes": "Filter/Filter_Text_TeelBlue Filter/Filter_Container"
+          }
+        },
+        "scripts": {
+          "customMethods": [
+            {
+              "name": "setOptions",
+              "params": [],
+              "script": "\tquery \u003d \"\"\"\n\tSELECT ReferralStatusname FROM participant.ReferralStatus order by ReferralStatusname\n\t\t\"\"\"\n\t\t\n\tresult \u003d system.db.runPrepQuery(query,[],\u0027RITIOps\u0027)\n\t\n\t# Version 1 set options as list of dictionaries\n\tself.props.params.options \u003d [ dict(value \u003d x[0],label \u003d x[0]) for x in result]\n\n\t"
+            }
+          ],
+          "extensionFunctions": null,
+          "messageHandlers": []
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "emvActiveInactive"
+        },
+        "position": {
+          "basis": "150px"
+        },
+        "propConfig": {
+          "props.params.actionPerformedPulse": {
+            "onChange": {
+              "enabled": null,
+              "script": "\troot \u003d self.parent\n\troot.sendMsgCondition()\n"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "actionPerformedPulse": false,
+            "clear": false,
+            "multiSelect": false,
+            "options": [
+              {
+                "label": "InActive",
+                "value": "InActive"
+              },
+              {
+                "label": "All",
+                "value": "All"
+              }
+            ],
+            "placeholder": "Active",
+            "selection": null
+          },
+          "path": "Providers/Dashboard/Components/Filters/Conditional_DropDown",
+          "style": {
+            "classes": "Filter/Filter_Text_TeelBlue Filter/Filter_Container"
+          }
+        },
+        "scripts": {
+          "customMethods": [
+            {
+              "name": "setOptions",
+              "params": [],
+              "script": "\tlstValues \u003d [[\"InActive\",\"InActive\"],[\"All\",\"All\"]]\n\tself.props.params.options \u003d [ dict(value \u003d x[0],label \u003d x[1]) for x in lstValues]\n\t"
+            }
+          ],
+          "extensionFunctions": null,
+          "messageHandlers": []
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "toExcel"
+        },
+        "position": {
+          "basis": "30px",
+          "shrink": 0
+        },
+        "props": {
+          "params": {
+            "defaultFilePrefix": "Shelter"
+          },
+          "path": "1_TEMPLATES/Tables/TableToExcel"
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Placeholder"
+        },
+        "position": {
+          "basis": "200px",
+          "grow": 1
+        },
+        "props": {
+          "path": "1_TEMPLATES/Filtering/Filter_Placeholder"
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "lblSearch"
+        },
+        "position": {
+          "basis": "50px"
+        },
+        "props": {
+          "style": {
+            "classes": "Table/Filter_Header",
+            "textAlign": "end"
+          },
+          "text": "Search:"
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "meta": {
+          "name": "emvSearch"
+        },
+        "position": {
+          "basis": "220px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.keyUpPulse": {
+            "onChange": {
+              "enabled": null,
+              "script": "\troot \u003d self.parent\n\troot.sendMsgCondition()\t"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "clear": false,
+            "keyUpPulse": false,
+            "searchText": ""
+          },
+          "path": "Providers/Dashboard/Components/Filters/Search_Bar",
+          "style": {
+            "classes": "Table/Search_Bar"
+          },
+          "useDefaultViewWidth": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "events": {
+          "component": {
+            "onActionPerformed": {
+              "config": {
+                "script": "\troot \u003d self.parent\n\t\n\temvReferralStatus \u003d self.getSibling(\"emvReferralStatus\")\n\temvProgram \u003d self.getSibling(\"emvProgram\")\n\temvGender \u003d self.getSibling(\"emvGender\")\n\temvRace \u003d self.getSibling(\"emvRace\")\n\temvMinAge \u003d self.getSibling(\"emvMinAge\")\n\temvMaxAge \u003d self.getSibling(\"emvMaxAge\")\n\temvSearch \u003d self.getSibling(\"emvSearch\")\n\temvActiveInactive \u003d self.getSibling(\"emvActiveInactive\")\t\n\t\n\temvReferralStatus.props.params.clear \u003d True \n\temvProgram.props.params.clear \u003d True\n\temvGender.props.params.clear \u003d True\n\temvRace.props.params.clear \u003d True\n\temvMinAge.props.params.clear \u003d True\n\temvMaxAge.props.params.clear \u003d True\n\temvSearch.props.params.clear \u003d True\n\temvActiveInactive.props.params.clear \u003d True\n\t\n\tpayload \u003d {}\n\tpayload[\u0027referralStatus\u0027] \u003d None\n\tpayload[\u0027program\u0027] \u003d None\n\tpayload[\u0027gender\u0027] \u003d None\n\tpayload[\u0027race\u0027] \u003d None\n\tpayload[\u0027minAge\u0027] \u003d None\n\tpayload[\u0027maxAge\u0027] \u003d None\n\tpayload[\u0027searchText\u0027] \u003d None\n\tpayload[\u0027activeInactive\u0027] \u003d None\n\troot.sendMsgCondition(payload)"
+              },
+              "scope": "G",
+              "type": "script"
+            }
+          }
+        },
+        "meta": {
+          "name": "clearConditions"
+        },
+        "position": {
+          "basis": "30px",
+          "shrink": 0
+        },
+        "props": {
+          "image": {
+            "height": 16,
+            "icon": {
+              "color": "#0C4E8B",
+              "path": "material/close"
+            },
+            "position": "center",
+            "width": 16
+          },
+          "style": {
+            "classes": "Filter/Filter_Border_Default Filter/Filter_Container",
+            "marginRight": "37px"
+          },
+          "text": "",
+          "textStyle": {
+            "classes": "GreyColor"
+          }
+        },
+        "type": "ia.input.button"
+      }
+    ],
+    "custom": {
+      "_devClean": false,
+      "_devPulse": false,
+      "_isDev": false
+    },
+    "meta": {
+      "name": "root"
+    },
+    "propConfig": {
+      "custom._devClean": {
+        "onChange": {
+          "enabled": null,
+          "script": "\t\n\temvProviderType \u003d self.getChild(\"emvProviderType\")\n\temvActivityRange \u003d self.getChild(\"emvActivityRange\")\n\temvSearch \u003d self.getChild(\"emvSearch\")\n\t\n\temvProviderType.props.params.clear \u003d True\n\temvActivityRange.props.params.clear \u003d True\n\temvSearch.props.params.clear \u003d True\n\t\n\n\t\n\tif self.custom._devClean:\n\t\tself.custom._devClean \u003d False"
+        }
+      },
+      "custom._devPulse": {
+        "onChange": {
+          "enabled": null,
+          "script": "\t\n\temvProviderType \u003d self.getChild(\"emvProviderType\")\n\temvActivityRange \u003d self.getChild(\"emvActivityRange\")\n\temvSearch \u003d self.getChild(\"emvSearch\")\n\t\n\t\n\tif self.custom._isDev:\n\t\tif currentValue.value is True:\n\t\t\tself.setPropsDropdowns()\n\t\telse:\n\t\t\temvProviderType.props.params.options \u003d []\n\t\t\temvActivityRange.props.params.options \u003d []\n\t\n\temvProviderType.props.params.actionPerformedPulse \u003d False\n\temvActivityRange.props.params.actionPerformedPulse \u003d False\n\temvSearch.props.params.keyUpPulse \u003d False"
+        }
+      }
+    },
+    "props": {
+      "style": {
+        "classes": "Filter/Header_Text"
+      }
+    },
+    "scripts": {
+      "customMethods": [
+        {
+          "name": "setPropsDropdowns",
+          "params": [],
+          "script": "\temvReferralStatus \u003d self.getChild(\"emvReferralStatus\")\n\temvProgram \u003d self.getChild(\"emvProgram\")\n\temvGender \u003d self.getChild(\"emvGender\")\n\temvRace \u003d self.getChild(\"emvRace\")\n\temvMinAge \u003d self.getChild(\"emvMinAge\")\n\temvMaxAge \u003d self.getChild(\"emvMaxAge\")\n\temvActiveInactive \u003d self.getChild(\"emvActiveInactive\")\n\t\n\temvReferralStatus.setOptions()\n\temvProgram.setOptions()\n\temvGender.setOptions()\n\temvRace.setOptions()\n\temvMinAge.setOptions()\n\temvMaxAge.setOptions()\n\temvActiveInactive.setOptions()"
+        },
+        {
+          "name": "sendMsgCondition",
+          "params": [
+            "payload\u003dNone"
+          ],
+          "script": "\t\n\temvReferralStatus \u003d self.getChild(\"emvReferralStatus\")\n\temvProgram \u003d self.getChild(\"emvProgram\")\n\temvGender \u003d self.getChild(\"emvGender\")\n\temvRace \u003d self.getChild(\"emvRace\")\n\temvMinAge \u003d self.getChild(\"emvMinAge\")\n\temvMaxAge \u003d self.getChild(\"emvMaxAge\")\n#\temvDateRange \u003d self.getChild(\"emvDateRange\")\n\temvSearch \u003d self.getChild(\"emvSearch\")\n\temvActiveInactive \u003d self.getChild(\"emvActiveInactive\")\n\t\n\t\n\tif payload is None:\n\t\tpayload \u003d {}\n\t\tpayload[\u0027referralStatus\u0027] \u003d emvReferralStatus.props.params.selection\n\t\tpayload[\u0027program\u0027] \u003d emvProgram.props.params.selection\n\t\tpayload[\u0027gender\u0027] \u003d emvGender.props.params.selection\n\t\tpayload[\u0027race\u0027] \u003d emvRace.props.params.selection\n\t\tpayload[\u0027minAge\u0027] \u003d emvMinAge.props.params.selection\n\t\tpayload[\u0027maxAge\u0027] \u003d emvMaxAge.props.params.selection\n\t\tpayload[\u0027searchText\u0027] \u003d emvSearch.props.params.searchText\n\t\tpayload[\u0027activeInactive\u0027] \u003d emvActiveInactive.props.params.selection\n\t\n\tsystem.perspective.sendMessage(\u0027mhByCondition\u0027, payload)\n\t\n"
+        }
+      ],
+      "extensionFunctions": null,
+      "messageHandlers": [
+        {
+          "messageType": "refreshWaitList",
+          "pageScope": true,
+          "script": "\tself.sendMsgCondition()",
+          "sessionScope": true,
+          "viewScope": false
+        }
+      ]
+    },
+    "type": "ia.container.flex"
+  }
+}

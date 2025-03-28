@@ -1,0 +1,86 @@
+{
+  "custom": {},
+  "params": {
+    "dateFrom": "value",
+    "dateRangeLabel": "value",
+    "dateTo": "value"
+  },
+  "propConfig": {
+    "params.dateFrom": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.dateRangeLabel": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.dateTo": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 30,
+      "width": 150
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "events": {
+          "dom": {
+            "onClick": {
+              "config": {
+                "script": "\tpayload \u003d {}\n\tpayload[\u0027dateFrom\u0027] \u003d self.view.params.dateFrom\n\tpayload[\u0027dateTo\u0027] \u003d self.view.params.dateTo\n\tsystem.perspective.sendMessage(\u0027mhSetDateFromTo\u0027, payload \u003d payload)"
+              },
+              "scope": "G",
+              "type": "script"
+            }
+          }
+        },
+        "meta": {
+          "name": "Label"
+        },
+        "position": {
+          "basis": "100%"
+        },
+        "propConfig": {
+          "props.style.color": {
+            "binding": {
+              "config": {
+                "expression": "if({session.custom.selectedDateRange} \u003d {this.props.text}, \u0027#3eced9\u0027, \u0027#0C4E8B\u0027)"
+              },
+              "type": "expr"
+            }
+          },
+          "props.text": {
+            "binding": {
+              "config": {
+                "path": "view.params.dateRangeLabel"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "style": {
+            "backgroundColor": "#FFFFFF",
+            "cursor": "pointer",
+            "fontFamily": "Proxima NovaC Medium",
+            "fontSize": "16px",
+            "fontWeight": "normal"
+          }
+        },
+        "type": "ia.display.label"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column"
+    },
+    "type": "ia.container.flex"
+  }
+}

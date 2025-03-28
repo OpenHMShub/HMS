@@ -1,0 +1,735 @@
+{
+  "custom": {
+    "seasonName": "2023-2024",
+    "selectedMonthName": "November",
+    "sums": {
+      "totalCheckedIn": 2787,
+      "totalScheduled": 2889
+    }
+  },
+  "params": {
+    "seasonId": 13
+  },
+  "propConfig": {
+    "custom.seasonName": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "id": "{view.params.seasonId}"
+          },
+          "queryPath": "WinterShelterGlobal/Registration/getSeasonBySeasonId"
+        },
+        "transforms": [
+          {
+            "code": "\tseasonName \u003d \"\"\n\tif value is not None and value.getRowCount() \u003e 0 and value.getValueAt(0,0) !\u003d None:\n\t\tseasonName \u003d value.getValueAt(0,0)\n\treturn seasonName",
+            "type": "script"
+          }
+        ],
+        "type": "query"
+      },
+      "persistent": true
+    },
+    "custom.selectedMonthName": {
+      "binding": {
+        "config": {
+          "expression": "lookup({/root/Labels/LeftColDropdown/month.props.params.options},{/root/Labels/LeftColDropdown/month.props.params.selection},\u0027\u0027)"
+        },
+        "type": "expr"
+      },
+      "persistent": true
+    },
+    "custom.sums": {
+      "binding": {
+        "config": {
+          "path": "/root/Table.props.data"
+        },
+        "transforms": [
+          {
+            "code": "\ttotalScheduled \u003d 0\n\ttotalCheckedIn \u003d 0\n\tif value is not None and value.getRowCount() \u003e 0:\n\t\tfor i in range(value.getRowCount()):\n\t\t\ttotalScheduled \u003d totalScheduled + int(value.getValueAt(i,\u0027scheduled\u0027))\n\t\t\ttotalCheckedIn \u003d totalCheckedIn + int(value.getValueAt(i,\u0027checkedIn\u0027))\n\treturn {\u0027totalScheduled\u0027:totalScheduled,\u0027totalCheckedIn\u0027:totalCheckedIn}",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      },
+      "persistent": true
+    },
+    "params.seasonId": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 600,
+      "width": 500
+    },
+    "loading": {
+      "mode": "blocking"
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "EmbeddedView Header"
+        },
+        "position": {
+          "basis": "25px",
+          "shrink": 0
+        },
+        "props": {
+          "params": {
+            "Text": "Scheduled Vs Check-In"
+          },
+          "path": "1_globalTEMPLATES/Header/Header"
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "meta": {
+                  "name": "month"
+                },
+                "position": {
+                  "basis": "70%",
+                  "shrink": 0
+                },
+                "props": {
+                  "params": {
+                    "options": {
+                      "$": [
+                        "ds",
+                        192,
+                        1699532230802
+                      ],
+                      "$columns": [
+                        {
+                          "data": [
+                            11,
+                            12,
+                            1,
+                            2,
+                            3
+                          ],
+                          "name": "ID",
+                          "type": "Integer"
+                        },
+                        {
+                          "data": [
+                            "November",
+                            "December",
+                            "January",
+                            "February",
+                            "March"
+                          ],
+                          "name": "season",
+                          "type": "String"
+                        }
+                      ]
+                    },
+                    "placeholder": "November",
+                    "selection": 11
+                  },
+                  "path": "1_TEMPLATES/Filtering/Conditionals/Conditional_SingleDropDown_NoClear_TealBlue",
+                  "style": {
+                    "classes": "Filter/Filter_Container",
+                    "marginLeft": "20px"
+                  }
+                },
+                "type": "ia.display.view"
+              },
+              {
+                "meta": {
+                  "name": "TableToExcel"
+                },
+                "position": {
+                  "basis": "20%"
+                },
+                "props": {
+                  "params": {
+                    "messageType": "WS_ScheduledVsCheckedIn"
+                  },
+                  "path": "1_TEMPLATES/Tables/TableToExcelCustomMessageType"
+                },
+                "type": "ia.display.view"
+              }
+            ],
+            "meta": {
+              "name": "LeftColDropdown"
+            },
+            "position": {
+              "basis": "180px"
+            },
+            "props": {
+              "style": {
+                "overflow": "hidden",
+                "paddingBottom": "5px"
+              }
+            },
+            "type": "ia.container.flex"
+          },
+          {
+            "children": [
+              {
+                "meta": {
+                  "name": "Scheduled"
+                },
+                "position": {
+                  "basis": "30%"
+                },
+                "propConfig": {
+                  "props.text": {
+                    "binding": {
+                      "config": {
+                        "path": "view.custom.sums.totalScheduled"
+                      },
+                      "transforms": [
+                        {
+                          "formatType": "numeric",
+                          "formatValue": "number",
+                          "type": "format"
+                        }
+                      ],
+                      "type": "property"
+                    }
+                  }
+                },
+                "props": {
+                  "style": {
+                    "classes": "Text/Add_HeaderText_BlueText",
+                    "marginLeft": "2px",
+                    "marginRight": "2px"
+                  },
+                  "textStyle": {
+                    "fontSize": 22,
+                    "textAlign": "center"
+                  }
+                },
+                "type": "ia.display.label"
+              },
+              {
+                "meta": {
+                  "name": "CheckedIn"
+                },
+                "position": {
+                  "basis": "30%"
+                },
+                "propConfig": {
+                  "props.text": {
+                    "binding": {
+                      "config": {
+                        "path": "view.custom.sums.totalCheckedIn"
+                      },
+                      "transforms": [
+                        {
+                          "formatType": "numeric",
+                          "formatValue": "number",
+                          "type": "format"
+                        }
+                      ],
+                      "type": "property"
+                    }
+                  }
+                },
+                "props": {
+                  "style": {
+                    "classes": "Text/Add_HeaderText_BlueText",
+                    "marginLeft": "2px",
+                    "marginRight": "2px"
+                  },
+                  "textStyle": {
+                    "fontSize": 22,
+                    "textAlign": "center"
+                  }
+                },
+                "type": "ia.display.label"
+              },
+              {
+                "meta": {
+                  "name": "Delta"
+                },
+                "position": {
+                  "basis": "30%"
+                },
+                "propConfig": {
+                  "props.text": {
+                    "binding": {
+                      "config": {
+                        "expression": "{view.custom.sums.totalCheckedIn} - {view.custom.sums.totalScheduled}"
+                      },
+                      "transforms": [
+                        {
+                          "formatType": "numeric",
+                          "formatValue": "number",
+                          "type": "format"
+                        }
+                      ],
+                      "type": "expr"
+                    }
+                  }
+                },
+                "props": {
+                  "style": {
+                    "classes": "Text/Add_HeaderText_BlueText",
+                    "marginLeft": "2px",
+                    "marginRight": "2px"
+                  },
+                  "textStyle": {
+                    "fontSize": 22,
+                    "textAlign": "center"
+                  }
+                },
+                "type": "ia.display.label"
+              }
+            ],
+            "meta": {
+              "name": "RightColLabels"
+            },
+            "position": {
+              "basis": "200px",
+              "grow": 1
+            },
+            "type": "ia.container.flex"
+          }
+        ],
+        "meta": {
+          "name": "Labels"
+        },
+        "position": {
+          "basis": "35px"
+        },
+        "props": {
+          "style": {
+            "classes": "Background/Default",
+            "overflow": "hidden"
+          }
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "meta": {
+          "name": "Error"
+        },
+        "position": {
+          "basis": "25px",
+          "display": false
+        },
+        "props": {
+          "style": {
+            "classes": "Text/Error_Message"
+          }
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "custom": {
+          "DockID": -1
+        },
+        "meta": {
+          "name": "Table"
+        },
+        "position": {
+          "basis": "200px",
+          "grow": 1
+        },
+        "propConfig": {
+          "props.data": {
+            "binding": {
+              "config": {
+                "parameters": {
+                  "month": "{../Labels/LeftColDropdown/month.props.params.selection}",
+                  "seasonId": "{view.params.seasonId}"
+                },
+                "queryPath": "WinterShelter/Overview/GetScheduledVsCheckedIn"
+              },
+              "type": "query"
+            }
+          },
+          "props.filter.text": {
+            "access": "PUBLIC"
+          },
+          "props.selection.style.backgroundColor": {
+            "binding": {
+              "config": {
+                "path": "this.props.selection.selectedRow"
+              },
+              "transforms": [
+                {
+                  "code": "\treturn \"#FFFFFF00\" if value is None or value \u003d\u003d -1 else \"#9AF4EB4D\"",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "cells": {
+            "style": {
+              "classes": "Table/Cell_Dashboard_NoBG"
+            }
+          },
+          "columns": [
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YY",
+              "editable": false,
+              "field": "DateFromDayOfYear",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header_Line"
+                },
+                "title": "Date"
+              },
+              "justify": "left",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "date",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": false,
+              "style": {
+                "classes": "Table/Column_Normal_Detail",
+                "paddingLeft": "25px"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "1_TEMPLATES/Tables/TableOptions",
+              "visible": true,
+              "width": ""
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "dayName",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header_Line"
+                },
+                "title": "Day"
+              },
+              "justify": "left",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "date",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": false,
+              "style": {
+                "classes": "Table/Column_Normal_Detail"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "1_TEMPLATES/Tables/TableOptions",
+              "visible": true,
+              "width": 80
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "scheduled",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header_Line"
+                },
+                "title": "Scheduled"
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": false,
+              "style": {
+                "classes": "Table/Column_Normal_Detail"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "1_TEMPLATES/Tables/TableOptions",
+              "visible": true,
+              "width": 80
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "checkedIn",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header_Line"
+                },
+                "title": "Checked-In"
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": false,
+              "style": {
+                "classes": "Table/Column_Normal_Detail"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 85
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": true,
+              "field": "delta",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "center",
+                "style": {
+                  "classes": "Table/Column_Header_Line"
+                },
+                "title": "Delta"
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": false,
+              "style": {
+                "classes": "Table/Column_Normal_Detail",
+                "cursor": "text"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 80
+            }
+          ],
+          "headerStyle": {
+            "classes": "Table/Column_Normal"
+          },
+          "pager": {
+            "bottom": false,
+            "initialOption": 100
+          },
+          "rows": {
+            "highlight": {
+              "color": "#ccffff"
+            },
+            "striped": {
+              "enabled": false
+            },
+            "style": {
+              "cursor": "default"
+            }
+          },
+          "style": {
+            "classes": "Background/Default",
+            "cursor": "pointer",
+            "overflowX": "hidden"
+          }
+        },
+        "scripts": {
+          "customMethods": [],
+          "extensionFunctions": null,
+          "messageHandlers": [
+            {
+              "messageType": "WS_ScheduledVsCheckedIn",
+              "pageScope": true,
+              "script": "\timport traceback\n\ttry:\n\t\t#Send the dataset to Excel\n\t\t\n\t\tfilename \u003d \u0027WinterShelter_Overview_ScheduledVsCheckedIn_\u0027 +  self.view.custom.seasonName + \"_\" + self.view.custom.selectedMonthName+ \u0027.xls\u0027\n\t\tdataset \u003d self.props.data\n\t\tNewDataSet \u003d []\n\t\theaders \u003d [\"Date\",\"Day\",\"Scheduled\",\"Checked-In\",\"Delta\"]\n#\t\tfor i in range(0,len(dataset)):\n#\t\t\tNewDataSet.append([dataset[i][\u0027name\u0027][\u0027value\u0027],dataset[i][\u0027eventStart\u0027][\u0027value\u0027],dataset[i][\u0027eventEnd\u0027][\u0027value\u0027],dataset[i][\u0027ExitDestination\u0027][\u0027value\u0027],dataset[i][\u0027gender\u0027][\u0027value\u0027],dataset[i][\u0027age\u0027][\u0027value\u0027],dataset[i][\u0027associatedProgram\u0027][\u0027value\u0027],dataset[i][\u0027facilityName\u0027][\u0027value\u0027],dataset[i][\u0027roomName\u0027][\u0027value\u0027],dataset[i][\u0027bedName\u0027][\u0027value\u0027]])\n\t\tfor i in range(dataset.getRowCount()):\n\t\t\tdateValue \u003d dataset.getValueAt(i,\u0027DateFromDayOfYear\u0027)\n\t\t\tif dateValue is not None:\n\t\t\t\tdateValue \u003d system.date.format(dateValue, \u0027MM/dd/yyyy\u0027)\n\t\t\t\n\t\t\t\n\t\t\tNewDataSet.append([dateValue,dataset.getValueAt(i,\u0027dayName\u0027),dataset.getValueAt(i,\u0027scheduled\u0027),dataset.getValueAt(i,\u0027checkedIn\u0027),dataset.getValueAt(i,\u0027delta\u0027)])\t\n\t\t\t\n\t\tNewDataSet \u003d system.dataset.toDataSet(headers, NewDataSet)\n#\t\t\tsystem.perspective.print(NewDataSet)\n\t\txlFile \u003d system.dataset.toExcel(True,NewDataSet)\n\t\tsystem.perspective.download(filename, xlFile)\n\texcept:   \n\t\tlogger \u003d system.util.getLogger(\"Wintershelter Overview Dashboard ScheduledVsCheckedIn tableToExcel\")\n\t\tmsg \u003d traceback.format_exc()\n\t\tlogger.error(msg)",
+              "sessionScope": true,
+              "viewScope": false
+            }
+          ]
+        },
+        "type": "ia.display.table"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column",
+      "style": {
+        "classes": "Background/Alternative"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

@@ -1,0 +1,137 @@
+{
+  "custom": {
+    "totalBeds": {
+      "$": [
+        "ds",
+        192,
+        1603243410964
+      ],
+      "$columns": [
+        {
+          "data": [
+            200
+          ],
+          "name": "totalBeds",
+          "type": "Integer"
+        },
+        {
+          "data": [
+            200
+          ],
+          "name": "availableBeds",
+          "type": "Integer"
+        }
+      ]
+    }
+  },
+  "params": {
+    "shelterID": 0
+  },
+  "propConfig": {
+    "custom.totalBeds": {
+      "binding": {
+        "config": {
+          "queryPath": "Shelter/Dashboard/ShelterTotalAndAvailableBeds"
+        },
+        "type": "query"
+      },
+      "persistent": true
+    },
+    "params.shelterID": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 113,
+      "width": 300
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "EmbeddedView"
+        },
+        "position": {
+          "basis": "360px"
+        },
+        "propConfig": {
+          "props.params.Value": {
+            "binding": {
+              "config": {
+                "parameters": {
+                  "shelterID": "{view.params.shelterID}"
+                },
+                "queryPath": "Shelter/Details/ShelterTotalBeds"
+              },
+              "transforms": [
+                {
+                  "code": "\treturn value.getValueAt(0,0)",
+                  "type": "script"
+                }
+              ],
+              "type": "query"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "Title": "Total Beds"
+          },
+          "path": "Shelter/Detail/Cards/Summary/KPI/Metric_Flex",
+          "style": {
+            "marginLeft": "15px"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "EmbeddedView_1"
+        },
+        "position": {
+          "basis": "360px"
+        },
+        "propConfig": {
+          "props.params.Value": {
+            "binding": {
+              "config": {
+                "parameters": {
+                  "shelterID": "{view.params.shelterID}"
+                },
+                "queryPath": "Shelter/Details/ShelterCurrentResidents"
+              },
+              "transforms": [
+                {
+                  "code": "\treturn value.getValueAt(0,0)",
+                  "type": "script"
+                }
+              ],
+              "type": "query"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "Title": "Current Residents"
+          },
+          "path": "Shelter/Detail/Cards/Summary/KPI/Metric_Flex"
+        },
+        "type": "ia.display.view"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "alignContent": "center",
+      "alignItems": "flex-start",
+      "style": {
+        "classes": "Background/Default"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

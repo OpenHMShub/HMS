@@ -1,0 +1,205 @@
+{
+  "custom": {},
+  "params": {
+    "CalenderBreezeId": null,
+    "DaysToAdd": 365,
+    "EventName": null
+  },
+  "propConfig": {
+    "params.CalenderBreezeId": {
+      "onChange": {
+        "enabled": null,
+        "script": "\tself.getChild(\"root\").getChild(\"KPI4\").refreshBinding(\"props.params.Value\")"
+      },
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.DaysToAdd": {
+      "onChange": {
+        "enabled": null,
+        "script": "\tself.getChild(\"root\").getChild(\"KPI4\").refreshBinding(\"props.params.Value\")"
+      },
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.EventName": {
+      "onChange": {
+        "enabled": null,
+        "script": "\tself.getChild(\"root\").getChild(\"KPI4\").refreshBinding(\"props.params.Value\")"
+      },
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 185,
+      "width": 1430
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "KPI1"
+        },
+        "position": {
+          "basis": "345px",
+          "grow": 1,
+          "shrink": 0
+        },
+        "props": {
+          "params": {
+            "Title": "Total Services Hours",
+            "Value": 2.0166666666666666
+          },
+          "path": "Volunteers/Dashboard/Cards/KPI/Metric_Flex",
+          "style": {
+            "classes": "KPIs/KPI_Card",
+            "marginLeft": "40px"
+          },
+          "useDefaultViewHeight": true
+        },
+        "scripts": {
+          "customMethods": [],
+          "extensionFunctions": null,
+          "messageHandlers": [
+            {
+              "messageType": "updateCardData",
+              "pageScope": true,
+              "script": "\tself.props.params.Value\u003d payload[\"TotalHours\"]\n\t",
+              "sessionScope": false,
+              "viewScope": false
+            }
+          ]
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "KPI2"
+        },
+        "position": {
+          "basis": "270px",
+          "grow": 1,
+          "shrink": 0
+        },
+        "props": {
+          "params": {
+            "Title": "Active Volunteers",
+            "Value": 0
+          },
+          "path": "Volunteers/Dashboard/Cards/KPI/Metric_Flex",
+          "style": {
+            "classes": "KPIs/KPI_Card"
+          },
+          "useDefaultViewHeight": true
+        },
+        "scripts": {
+          "customMethods": [],
+          "extensionFunctions": null,
+          "messageHandlers": [
+            {
+              "messageType": "updateCardData",
+              "pageScope": true,
+              "script": "\tself.props.params.Value \u003d payload[\"ActiveVolunteers\"] ",
+              "sessionScope": false,
+              "viewScope": false
+            }
+          ]
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "KPI3"
+        },
+        "position": {
+          "basis": "345px",
+          "grow": 1,
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.data": {
+            "binding": {
+              "config": {
+                "queryPath": "Volunteers/KPIs/Volunteers/VolunteersAddedMonthly",
+                "returnFormat": "json"
+              },
+              "transforms": [
+                {
+                  "code": "\tnow \u003d system.date.now()\n\tyearStart \u003d system.date.getDate(system.date.getYear(now), 0, 1)\n\tmonthStart \u003d yearStart \u003d system.date.getDate(system.date.getYear(now), system.date.getMonth(now), 1)\n\tsixMonthsBefore \u003d system.date.addMonths(monthStart, -5)\n\t\n\t_values \u003d []\n\tfor num in range(6):\n\t\t_time \u003d system.date.addMonths(sixMonthsBefore, num)\n\t\t_val \u003d 0\n\t\tfor item in value:\n\t\t\tif system.date.fromMillis(item[\"time\"]) \u003d\u003d _time:\n\t\t\t\t_val \u003d item[\"volunteers\"]\n\t\t_values.append(dict(volunteers \u003d _val, time \u003d _time))\n\treturn _values",
+                  "type": "script"
+                }
+              ],
+              "type": "query"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "Title": "New Volunteers Monthly"
+          },
+          "path": "Volunteers/Dashboard/Cards/KPI/Graph_Flex _bar",
+          "style": {
+            "classes": "KPIs/KPI_Card"
+          },
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "KPI4"
+        },
+        "position": {
+          "basis": "270px",
+          "grow": 1,
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.Value": {
+            "binding": {
+              "config": {
+                "expression": "now(600000)"
+              },
+              "transforms": [
+                {
+                  "code": "#\tfEventDate \u003d system.date.format(system.date.now(), \"yyyy-MM-dd\")\n#\tfEndDate \u003d system.date.format(system.date.addMonths(system.date.now(), 1), \"yyyy-MM-dd\")\n\tfEventDate \u003d system.date.format(system.date.addDays(system.date.now(), -self.view.params.DaysToAdd), \"yyyy-MM-dd\")\n\tfEndDate \u003d system.date.format(system.date.now(), \"yyyy-MM-dd\")\n\teventData \u003d Integrations.breeze.api.GETTER.events(params\u003d {\"startDate\":fEventDate, \"endDate\":fEndDate})[\"Data\"]\n\tsystem.perspective.print(eventData)\n\t# filter data by calender and eventName filter\n\tcalender \u003d self.view.params.CalenderBreezeId #67528\n\tEventname \u003d self.view.params.EventName  #\u0027Hope U Activity (Monopoly)\u0027\n\tNewDataSet \u003d []\n\tif eventData !\u003d None:\n\t\tfor i in range(0,len(eventData)):\n\t\t\tcategoryId \u003d eventData[i][\u0027category_id\u0027]\n\t\t\tname \u003d eventData[i][\u0027name\u0027]\n\t\t\tif (calender !\u003d None and calender !\u003d \u0027\u0027) and (Eventname \u003d\u003d None or Eventname \u003d\u003d \u0027\u0027):\n\t\t\t\tif calender \u003d\u003d int(categoryId):\n\t\t\t\t\tNewDataSet.append(eventData[i])\n\t\t\telif (Eventname !\u003d None and Eventname !\u003d \u0027\u0027) and (calender \u003d\u003d None or calender \u003d\u003d \u0027\u0027):\n\t\t\t\tif Eventname in name:\n\t\t\t\t\tNewDataSet.append(eventData[i])\n\t\t\telif (Eventname !\u003d None and Eventname !\u003d \u0027\u0027) and (calender !\u003d None and calender !\u003d \u0027\u0027):\n\t\t\t\tif Eventname in name and calender \u003d\u003d int(categoryId):\n\t\t\t\t\tNewDataSet.append(eventData[i])\n\t\t\telse:\n\t\t\t\tNewDataSet.append(eventData[i])\n\tsystem.perspective.print(NewDataSet)\n\treturn len(NewDataSet)\n#\treturn len(eventData)\n\t#return len(Integrations.breeze.api.GETTER.events(params\u003d {\"startDate\":fEventDate, \"endDate\":fEndDate})[\"Data\"])",
+                  "type": "script"
+                }
+              ],
+              "type": "expr"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "Title": "Total Events"
+          },
+          "path": "Volunteers/Dashboard/Cards/KPI/Total_Flex",
+          "style": {
+            "classes": "KPIs/KPI_Card",
+            "marginRight": "40px"
+          },
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "alignContent": "flex-start",
+      "alignItems": "center",
+      "justify": "space-between",
+      "style": {
+        "classes": "KPIs/KPI_Flex_Container",
+        "overflow": "hidden",
+        "overflowY": "hidden"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

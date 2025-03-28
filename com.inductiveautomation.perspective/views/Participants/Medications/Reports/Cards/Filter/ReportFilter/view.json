@@ -1,0 +1,942 @@
+{
+  "custom": {},
+  "params": {
+    "SelectedID": -1,
+    "StartDate": {
+      "$": [
+        "ts",
+        201,
+        1738391050375
+      ],
+      "$ts": 1738391050375
+    }
+  },
+  "propConfig": {
+    "params.SelectedID": {
+      "binding": {
+        "config": {
+          "path": "/root/ReportSection/vFilter/Table.props.selection.data"
+        },
+        "transforms": [
+          {
+            "code": "\tif len(value) \u003e 0:\n\t\treturn value[0][\"participantId\"]\n\treturn -1",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.StartDate": {
+      "binding": {
+        "config": {
+          "path": "/root/ReportSection/DateFilter.custom.StartDate"
+        },
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 904,
+      "width": 393
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "meta": {
+                  "name": "Header"
+                },
+                "position": {
+                  "basis": "31px",
+                  "grow": 1
+                },
+                "props": {
+                  "params": {
+                    "HeaderText": "Report View"
+                  },
+                  "path": "Participants/Medications/Reports/Cards/FilterHeader",
+                  "style": {
+                    "borderTopLeftRadius": "8px",
+                    "borderTopRightRadius": "8px"
+                  }
+                },
+                "type": "ia.display.view"
+              }
+            ],
+            "meta": {
+              "name": "FlexContainer"
+            },
+            "position": {
+              "basis": "30px"
+            },
+            "props": {
+              "direction": "column",
+              "style": {
+                "borderTopLeftRadius": "8px",
+                "borderTopRightRadius": "8px",
+                "marginBottom": "10px"
+              }
+            },
+            "type": "ia.container.flex"
+          },
+          {
+            "children": [
+              {
+                "custom": {
+                  "origValue": null
+                },
+                "meta": {
+                  "name": "StartDate"
+                },
+                "position": {
+                  "basis": "136px",
+                  "shrink": 0
+                },
+                "propConfig": {
+                  "props.value": {
+                    "binding": {
+                      "config": {
+                        "expression": "now(0)"
+                      },
+                      "type": "expr"
+                    }
+                  }
+                },
+                "props": {
+                  "format": "MM/DD/YYYY",
+                  "formattedValue": "02/01/2025",
+                  "inputProps": {
+                    "style": {
+                      "color": "#0c4e8b",
+                      "fontFamily": "Proxima NovaC Medium",
+                      "fontSize": 16
+                    }
+                  },
+                  "modalStyle": {
+                    "classes": "DateTime/Add_Date"
+                  },
+                  "pickerType": "date",
+                  "style": {
+                    "classes": "DateTime/Date_Purple",
+                    "cursor": "pointer",
+                    "overflow": "hidden"
+                  }
+                },
+                "type": "ia.input.date-time-input"
+              }
+            ],
+            "meta": {
+              "name": "DateFilter"
+            },
+            "position": {
+              "basis": "35px"
+            },
+            "propConfig": {
+              "custom.StartDate": {
+                "binding": {
+                  "config": {
+                    "expression": "now(0)"
+                  },
+                  "type": "expr"
+                }
+              }
+            },
+            "props": {
+              "style": {
+                "marginTop": "5px",
+                "paddingLeft": "20px"
+              }
+            },
+            "type": "ia.container.flex"
+          },
+          {
+            "children": [
+              {
+                "events": {
+                  "dom": {
+                    "onClick": {
+                      "config": {
+                        "script": "\tself.parent.parent.getChild(\"DateFilter\").custom.StartDate \u003d self.parent.parent.getChild(\"DateFilter\").getChild(\"StartDate\").props.value\n\t"
+                      },
+                      "scope": "G",
+                      "type": "script"
+                    }
+                  }
+                },
+                "meta": {
+                  "name": "Button"
+                },
+                "position": {
+                  "basis": "110px"
+                },
+                "props": {
+                  "style": {
+                    "classes": "Buttons/Main",
+                    "marginBottom": "5px",
+                    "marginTop": "5px"
+                  },
+                  "text": "Apply"
+                },
+                "type": "ia.input.button"
+              }
+            ],
+            "meta": {
+              "name": "Apply Button"
+            },
+            "position": {
+              "basis": "40px",
+              "shrink": 0
+            },
+            "props": {
+              "style": {
+                "marginBottom": "5px",
+                "marginLeft": "20px",
+                "marginTop": "10px"
+              }
+            },
+            "type": "ia.container.flex"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "meta": {
+                      "name": "lblSearch"
+                    },
+                    "position": {
+                      "basis": "35%"
+                    },
+                    "props": {
+                      "style": {
+                        "classes": "Table/Filter_Header_Detail",
+                        "textAlign": "left"
+                      },
+                      "text": "Select Participant",
+                      "textStyle": {
+                        "color": "#0c4e8b",
+                        "fontFamily": "Proxima NovaC",
+                        "fontSize": 15
+                      }
+                    },
+                    "type": "ia.display.label"
+                  },
+                  {
+                    "meta": {
+                      "name": "Search"
+                    },
+                    "position": {
+                      "basis": "65%",
+                      "shrink": 0
+                    },
+                    "props": {
+                      "params": {
+                        "column_name": [
+                          "FirstName",
+                          "MiddleName",
+                          "LastName",
+                          "NickName",
+                          "BirthDate",
+                          "Gender",
+                          "Race",
+                          "veteran",
+                          "Shelter"
+                        ],
+                        "filter": "participantDashboard",
+                        "key": "Search",
+                        "placeholder": "Search",
+                        "searchText": "",
+                        "searchType": "like"
+                      },
+                      "path": "1_TEMPLATES/Filtering/Filters/Search_Bar",
+                      "style": {
+                        "classes": "Table/Search_Bar"
+                      },
+                      "useDefaultViewWidth": true
+                    },
+                    "type": "ia.display.view"
+                  }
+                ],
+                "meta": {
+                  "name": "VolunteerSearch"
+                },
+                "position": {
+                  "basis": "20%",
+                  "grow": 1
+                },
+                "props": {
+                  "style": {
+                    "maxHeight": "35px",
+                    "paddingBottom": 2,
+                    "paddingTop": 2
+                  }
+                },
+                "type": "ia.container.flex"
+              },
+              {
+                "custom": {
+                  "sqlData": {
+                    "$": [
+                      "ds",
+                      192,
+                      1738391050506
+                    ],
+                    "$columns": [
+                      {
+                        "data": [],
+                        "name": "participantId",
+                        "type": "Integer"
+                      },
+                      {
+                        "data": [],
+                        "name": "participantName",
+                        "type": "String"
+                      }
+                    ]
+                  }
+                },
+                "meta": {
+                  "name": "Table"
+                },
+                "position": {
+                  "basis": "80%",
+                  "grow": 1
+                },
+                "propConfig": {
+                  "custom.filteredData": {
+                    "binding": {
+                      "config": {
+                        "path": "../VolunteerSearch/Search.props.params.searchText"
+                      },
+                      "transforms": [
+                        {
+                          "code": "\tself.props.selection.selectedRow \u003d None\n\tself.props.selection.selectedColumn \u003d None\n\treturn self.FilterTable(value)",
+                          "type": "script"
+                        }
+                      ],
+                      "type": "property"
+                    }
+                  },
+                  "custom.sqlData": {
+                    "binding": {
+                      "config": {
+                        "queryPath": "Participants/Medications/GetParticipantsForReport"
+                      },
+                      "type": "query"
+                    },
+                    "persistent": true
+                  },
+                  "props.data": {
+                    "binding": {
+                      "config": {
+                        "path": "this.custom.filteredData"
+                      },
+                      "type": "property"
+                    }
+                  },
+                  "props.selection.selectedRow": {
+                    "persistent": false
+                  }
+                },
+                "props": {
+                  "cells": {
+                    "style": {
+                      "color": "#0c4e8b",
+                      "fontFamily": "Proxima NovaC",
+                      "fontSize": 16
+                    }
+                  },
+                  "columns": [
+                    {
+                      "align": "center",
+                      "boolean": "checkbox",
+                      "dateFormat": "MM/DD/YYYY",
+                      "editable": false,
+                      "field": "participantId",
+                      "footer": {
+                        "align": "center",
+                        "justify": "left",
+                        "style": {
+                          "classes": ""
+                        },
+                        "title": ""
+                      },
+                      "header": {
+                        "align": "center",
+                        "justify": "left",
+                        "style": {
+                          "classes": ""
+                        },
+                        "title": ""
+                      },
+                      "justify": "auto",
+                      "number": "value",
+                      "numberFormat": "0,0.##",
+                      "progressBar": {
+                        "bar": {
+                          "color": "",
+                          "style": {
+                            "classes": ""
+                          }
+                        },
+                        "max": 100,
+                        "min": 0,
+                        "track": {
+                          "color": "",
+                          "style": {
+                            "classes": ""
+                          }
+                        },
+                        "value": {
+                          "enabled": true,
+                          "format": "0,0.##",
+                          "justify": "center",
+                          "style": {
+                            "classes": ""
+                          }
+                        }
+                      },
+                      "render": "auto",
+                      "resizable": true,
+                      "sort": "none",
+                      "sortable": true,
+                      "strictWidth": false,
+                      "style": {
+                        "classes": ""
+                      },
+                      "toggleSwitch": {
+                        "color": {
+                          "selected": "",
+                          "unselected": ""
+                        }
+                      },
+                      "viewParams": {},
+                      "viewPath": "",
+                      "visible": false,
+                      "width": ""
+                    },
+                    {
+                      "align": "center",
+                      "boolean": "checkbox",
+                      "dateFormat": "MM/DD/YYYY",
+                      "editable": false,
+                      "field": "participantName",
+                      "footer": {
+                        "align": "center",
+                        "justify": "left",
+                        "style": {
+                          "classes": ""
+                        },
+                        "title": ""
+                      },
+                      "header": {
+                        "align": "center",
+                        "justify": "left",
+                        "style": {
+                          "classes": ""
+                        },
+                        "title": ""
+                      },
+                      "justify": "auto",
+                      "number": "value",
+                      "numberFormat": "0,0.##",
+                      "progressBar": {
+                        "bar": {
+                          "color": "",
+                          "style": {
+                            "classes": ""
+                          }
+                        },
+                        "max": 100,
+                        "min": 0,
+                        "track": {
+                          "color": "",
+                          "style": {
+                            "classes": ""
+                          }
+                        },
+                        "value": {
+                          "enabled": true,
+                          "format": "0,0.##",
+                          "justify": "center",
+                          "style": {
+                            "classes": ""
+                          }
+                        }
+                      },
+                      "render": "auto",
+                      "resizable": true,
+                      "sort": "none",
+                      "sortable": true,
+                      "strictWidth": false,
+                      "style": {
+                        "classes": ""
+                      },
+                      "toggleSwitch": {
+                        "color": {
+                          "selected": "",
+                          "unselected": ""
+                        }
+                      },
+                      "viewParams": {},
+                      "viewPath": "",
+                      "visible": true,
+                      "width": ""
+                    }
+                  ],
+                  "enableHeader": false,
+                  "pager": {
+                    "bottom": false
+                  },
+                  "rows": {
+                    "highlight": {
+                      "color": "#ccffff"
+                    },
+                    "style": {
+                      "classes": "Table/Cell_Detail"
+                    }
+                  },
+                  "selection": {
+                    "style": {
+                      "backgroundColor": "#9af4eb4d",
+                      "classes": "Table/Row_Select"
+                    }
+                  },
+                  "style": {
+                    "borderTopColor": "#0d80e3",
+                    "borderTopStyle": "solid",
+                    "borderTopWidth": "0.2px",
+                    "classes": "Background/Default Table/Column_Normal_Detail"
+                  }
+                },
+                "scripts": {
+                  "customMethods": [
+                    {
+                      "name": "FilterTable",
+                      "params": [
+                        "searchText"
+                      ],
+                      "script": "\tfilteredDataset \u003d self.custom.sqlData\n\theaders \u003d [\"participantId\",\"participantName\"]\n\t\n\treturnDataset \u003d []\n\tif searchText !\u003d \"\":\n\t\tfor i in range (filteredDataset.getRowCount()):\n\t\t\tfor j in [1]:\n\t\t\t\toneRow \u003d []\n\t\t\t\tcellValue \u003d filteredDataset.getValueAt(i,j)\n\t\t\t\tif cellValue!\u003dNone:\n\t\t\t\t\tif str(cellValue).lower().find(searchText) !\u003d -1 :\n\t\t\t\t\t\t#oneRow \u003d [originaldataset.getValueAt(i,0),originaldataset.getValueAt(i,1),originaldataset.getValueAt(i,2),originaldataset.getValueAt(i,3),originaldataset.getValueAt(i,4),originaldataset.getValueAt(i,5),originaldataset.getValueAt(i,6),originaldataset.getValueAt(i,7),originaldataset.getValueAt(i,8),originaldataset.getValueAt(i,9),originaldataset.getValueAt(i,10),originaldataset.getValueAt(i,11)]\n\t\t\t\t\t#\tfor x in range(originaldataset.getColumnCount()):\n\t\t\t\t\t\t#\toneRow.append(originaldataset.getValueAt(i,x))\n\t\t\t\t\t\toneRow \u003d [filteredDataset.getValueAt(i,x) for x in range(filteredDataset.getColumnCount())]\n\t\t\t\t\t\treturnDataset.append(oneRow)\n\t\t\t\t\t\tbreak\n\t\tfilteredDataset \u003d system.dataset.toDataSet(headers, returnDataset)\n\t\n\treturn filteredDataset"
+                    }
+                  ],
+                  "extensionFunctions": null,
+                  "messageHandlers": []
+                },
+                "type": "ia.display.table"
+              }
+            ],
+            "meta": {
+              "name": "vFilter"
+            },
+            "position": {
+              "basis": "71.3%"
+            },
+            "props": {
+              "direction": "column",
+              "style": {
+                "borderColor": "#0d80e3",
+                "borderStyle": "solid",
+                "borderWidth": 0.5,
+                "marginBottom": "20px",
+                "marginLeft": "20px",
+                "marginRight": "20px",
+                "outlineColor": "#FAFAFB",
+                "outlineStyle": "solid",
+                "paddingBottom": "0px",
+                "paddingLeft": "0px",
+                "paddingRight": "0px"
+              }
+            },
+            "type": "ia.container.flex"
+          }
+        ],
+        "meta": {
+          "name": "ReportSection"
+        },
+        "position": {
+          "basis": "50%"
+        },
+        "props": {
+          "direction": "column",
+          "justify": "space-around",
+          "style": {
+            "backgroundColor": "#ffffff",
+            "borderBottomLeftRadius": "8px",
+            "borderBottomRightRadius": "8px",
+            "borderTopLeftRadius": "8px",
+            "borderTopRightRadius": "8px"
+          }
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "meta": {
+                  "name": "Header"
+                },
+                "position": {
+                  "basis": "31px",
+                  "grow": 1
+                },
+                "props": {
+                  "params": {
+                    "HeaderText": "Save"
+                  },
+                  "path": "Participants/Medications/Reports/Cards/FilterHeader"
+                },
+                "type": "ia.display.view"
+              }
+            ],
+            "meta": {
+              "name": "FlexContainer_0"
+            },
+            "position": {
+              "basis": "30px"
+            },
+            "props": {
+              "style": {
+                "marginBottom": "10px",
+                "overflow": "hidden"
+              }
+            },
+            "type": "ia.container.flex"
+          },
+          {
+            "children": [
+              {
+                "meta": {
+                  "name": "Label"
+                },
+                "position": {
+                  "basis": "32px"
+                },
+                "props": {
+                  "style": {
+                    "classes": "Text/Add_Value"
+                  },
+                  "text": "File Name"
+                },
+                "type": "ia.display.label"
+              },
+              {
+                "meta": {
+                  "name": "TextField"
+                },
+                "position": {
+                  "basis": "32px"
+                },
+                "props": {
+                  "placeholder": "Enter file name",
+                  "style": {
+                    "borderColor": "#D5D5D5",
+                    "borderStyle": "solid",
+                    "borderWidth": 2,
+                    "classes": "Text/Add_TextArea",
+                    "marginRight": "50%",
+                    "marginTop": "5px"
+                  }
+                },
+                "type": "ia.input.text-field"
+              },
+              {
+                "children": [
+                  {
+                    "events": {
+                      "component": {
+                        "onActionPerformed": {
+                          "config": {
+                            "script": "\tsDate \u003d self.parent.parent.parent.parent.getChild(\"ReportSection\").getChild(\"DateFilter\").getChild(\"StartDate\").props.value\n\t\n\tparticipantId \u003d self.view.params.SelectedID\n\tuserName \u003d str(self.session.props.auth.user.firstName) + \" \" + str(self.session.props.auth.user.lastName)\n\tparams \u003d {\"StartDate\":sDate, \"ParticipantID\":participantId, \"UserName\":userName}\n\tbyteData \u003d system.report.executeReport(path\u003d\"MedicationLog/MedicationReport\", project\u003d\"RITI\", parameters\u003dparams, fileType\u003d\"pdf\")\n\t\n\tfilename \u003d self.parent.parent.getChild(\"TextField\").props.text+\".pdf\"\n\tsystem.perspective.download(filename, byteData)"
+                          },
+                          "scope": "G",
+                          "type": "script"
+                        }
+                      }
+                    },
+                    "meta": {
+                      "name": "Button"
+                    },
+                    "position": {
+                      "basis": "110px"
+                    },
+                    "props": {
+                      "style": {
+                        "classes": "Buttons/Main",
+                        "marginBottom": "5px",
+                        "marginTop": "5px"
+                      },
+                      "text": "SAVE"
+                    },
+                    "type": "ia.input.button"
+                  }
+                ],
+                "meta": {
+                  "name": "Save Button"
+                },
+                "position": {
+                  "basis": "40px",
+                  "shrink": 0
+                },
+                "type": "ia.container.flex"
+              }
+            ],
+            "meta": {
+              "name": "FlexContainer"
+            },
+            "position": {
+              "basis": "200px"
+            },
+            "props": {
+              "direction": "column",
+              "style": {
+                "marginLeft": "20px"
+              }
+            },
+            "type": "ia.container.flex"
+          }
+        ],
+        "meta": {
+          "name": "SaveSection"
+        },
+        "position": {
+          "basis": "28%"
+        },
+        "props": {
+          "direction": "column",
+          "style": {
+            "backgroundColor": "#ffffff",
+            "borderBottomLeftRadius": "8px",
+            "borderBottomRightRadius": "8px",
+            "borderTopLeftRadius": "8px",
+            "borderTopRightRadius": "8px",
+            "marginTop": "15px",
+            "overflow": "hidden"
+          }
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "meta": {
+                  "name": "Header"
+                },
+                "position": {
+                  "basis": "25px",
+                  "grow": 1
+                },
+                "props": {
+                  "params": {
+                    "HeaderText": "Email"
+                  },
+                  "path": "Participants/Medications/Reports/Cards/FilterHeader"
+                },
+                "type": "ia.display.view"
+              }
+            ],
+            "meta": {
+              "name": "FlexContainer_0"
+            },
+            "position": {
+              "basis": "30px"
+            },
+            "props": {
+              "style": {
+                "marginBottom": "10px"
+              }
+            },
+            "type": "ia.container.flex"
+          },
+          {
+            "children": [
+              {
+                "meta": {
+                  "name": "Emails"
+                },
+                "position": {
+                  "basis": "32px"
+                },
+                "props": {
+                  "placeholder": "Enter email address",
+                  "style": {
+                    "borderColor": "#D5D5D5",
+                    "borderStyle": "solid",
+                    "borderWidth": 2,
+                    "classes": "Text/Add_TextArea",
+                    "marginRight": "50%",
+                    "marginTop": "2px"
+                  }
+                },
+                "type": "ia.input.text-field"
+              },
+              {
+                "meta": {
+                  "name": "Subject"
+                },
+                "position": {
+                  "basis": "32px"
+                },
+                "props": {
+                  "placeholder": "Enter subject line",
+                  "style": {
+                    "borderColor": "#D5D5D5",
+                    "borderStyle": "solid",
+                    "borderWidth": 2,
+                    "classes": "Text/Add_TextArea",
+                    "marginRight": "50%"
+                  }
+                },
+                "type": "ia.input.text-field"
+              },
+              {
+                "meta": {
+                  "name": "Message"
+                },
+                "position": {
+                  "basis": "80px"
+                },
+                "props": {
+                  "placeholder": "Enter message",
+                  "style": {
+                    "borderColor": "#D5D5D5",
+                    "borderStyle": "solid",
+                    "borderWidth": 2,
+                    "classes": "Text/Add_TextArea",
+                    "marginRight": "5%"
+                  }
+                },
+                "type": "ia.input.text-area"
+              },
+              {
+                "children": [
+                  {
+                    "events": {
+                      "component": {
+                        "onActionPerformed": {
+                          "config": {
+                            "script": "\t        \n\tsDate \u003d self.parent.parent.parent.parent.getChild(\"ReportSection\").getChild(\"DateFilter\").getChild(\"StartDate\").props.value\n\t\n\tparticipantId \u003d self.view.params.SelectedID\n\tuserName \u003d  str(self.session.props.auth.user.firstName) + \" \" + str(self.session.props.auth.user.lastName)\n\tparams \u003d {\"StartDate\":sDate, \"ParticipantID\":participantId, \"UserName\":userName}\n\tbyteData \u003d system.report.executeReport(path\u003d\"MedicationLog/MedicationReport\", project\u003d\"RITI\", parameters\u003dparams, fileType\u003d\"pdf\")\n\n\trawEmail \u003d self.parent.parent.getChild(\"Emails\").props.text \n\temails \u003d rawEmail.split(\";\")\n\tsubj \u003d self.parent.parent.getChild(\"Subject\").props.text\n\tmessage \u003d self.parent.parent.getChild(\"Message\").props.text\n\n\tfilename \u003d \"Medication Report.pdf\"\n\ttry:\n\t\tsystem.net.sendEmail(fromAddr\u003d\"test-notifications@test.org\", subject\u003dsubj, \n\t\t\t\t\t\t\tbody\u003d message, to\u003d emails, attachmentNames\u003d[filename], attachmentData\u003d [byteData],\n\t\t\t\t\t\t\tsmtpProfile\u003d\"testnotifications\")\n\t\tself.getSibling(\"Label\").showMessage(\"Email sent successfully.\")\n\texcept:\n\t\tself.getSibling(\"Label\").showMessage(\"Something went wrong while sending email, please try again.\")\n\t# reset the form\n\tself.parent.parent.getChild(\"Emails\").props.text \u003d \"\"\n\tself.parent.parent.getChild(\"Subject\").props.text \u003d \"\"\n\tself.parent.parent.getChild(\"Message\").props.text \u003d \"\""
+                          },
+                          "scope": "G",
+                          "type": "script"
+                        }
+                      }
+                    },
+                    "meta": {
+                      "name": "Button"
+                    },
+                    "position": {
+                      "basis": "110px"
+                    },
+                    "props": {
+                      "style": {
+                        "classes": "Buttons/Main",
+                        "marginBottom": "5px",
+                        "marginTop": "5px"
+                      },
+                      "text": "SEND"
+                    },
+                    "type": "ia.input.button"
+                  },
+                  {
+                    "meta": {
+                      "name": "Label",
+                      "visible": false
+                    },
+                    "position": {
+                      "basis": "50px",
+                      "grow": 1
+                    },
+                    "props": {
+                      "style": {
+                        "classes": "Text/Error_Message"
+                      },
+                      "text": "Please fill in all the fields correctly before saving."
+                    },
+                    "scripts": {
+                      "customMethods": [
+                        {
+                          "name": "showMessage",
+                          "params": [
+                            "message"
+                          ],
+                          "script": "\timport time\n\tself.props.text \u003d message\n\tself.meta.visible \u003d True\n\ttime.sleep(5)\n\tself.meta.visible \u003d False\n\t"
+                        }
+                      ],
+                      "extensionFunctions": null,
+                      "messageHandlers": []
+                    },
+                    "type": "ia.display.label"
+                  }
+                ],
+                "meta": {
+                  "name": "Send Button"
+                },
+                "position": {
+                  "basis": "40px",
+                  "shrink": 0
+                },
+                "type": "ia.container.flex"
+              }
+            ],
+            "meta": {
+              "name": "FlexContainer"
+            },
+            "position": {
+              "basis": "90%"
+            },
+            "props": {
+              "direction": "column",
+              "style": {
+                "marginLeft": "20px"
+              }
+            },
+            "type": "ia.container.flex"
+          }
+        ],
+        "meta": {
+          "name": "EmailSection"
+        },
+        "position": {
+          "basis": "40%"
+        },
+        "props": {
+          "direction": "column",
+          "style": {
+            "backgroundColor": "#FFFFFF",
+            "borderBottomLeftRadius": "8px",
+            "borderBottomRightRadius": "8px",
+            "borderTopLeftRadius": "8px",
+            "borderTopRightRadius": "8px",
+            "marginBottom": "15px",
+            "marginTop": "15px"
+          }
+        },
+        "type": "ia.container.flex"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column",
+      "justify": "space-between",
+      "style": {
+        "backgroundColor": "#f3f4f8"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

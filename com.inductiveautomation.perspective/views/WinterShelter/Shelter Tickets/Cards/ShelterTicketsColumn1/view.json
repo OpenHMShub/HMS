@@ -1,0 +1,284 @@
+{
+  "custom": {
+    "TicketNumber": 5,
+    "dateOnly": "1/3/24",
+    "func_delete_participant": -1,
+    "ticketLimit": 1000
+  },
+  "params": {
+    "Date": {
+      "$": [
+        "ts",
+        201,
+        1704369408153
+      ],
+      "$ts": 1704304800000
+    },
+    "IfRoomTicketNumber": 0,
+    "PlusPlusTicketNumber": 0,
+    "PlusTicketNumber": 0,
+    "TicketNumber": 0
+  },
+  "propConfig": {
+    "custom.TicketNumber": {
+      "persistent": true
+    },
+    "custom.dateOnly": {
+      "binding": {
+        "config": {
+          "path": "view.params.Date"
+        },
+        "transforms": [
+          {
+            "formatType": "datetime",
+            "formatValue": {
+              "date": "short"
+            },
+            "type": "format"
+          }
+        ],
+        "type": "property"
+      },
+      "persistent": true
+    },
+    "custom.ticketLimit": {
+      "persistent": true
+    },
+    "params.Date": {
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.IfRoomTicketNumber": {
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.PlusPlusTicketNumber": {
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.PlusTicketNumber": {
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.TicketNumber": {
+      "paramDirection": "inout",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 629,
+      "width": 1043
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "children": [
+          {
+            "events": {
+              "component": {
+                "onActionPerformed": {
+                  "config": {
+                    "script": "\t\n\timport traceback\n\ttry:\n\t\tproject \u003d \"RITI\"\n\t\t### Declare parameters \n\t\ttime_created \u003d system.date.now()\n\t\tuser_name \u003d self.session.props.auth.user.userName\n\t\temployee_id \u003d self.view.custom.edit_data.employee_id\n\t\tenrollment_id \u003d self.view.custom.edit_data.enrollment_id\n\t\tservice_id \u003d self.view.custom.edit_data.service_id\n\t\tHMIS \u003d self.view.custom.edit_data.HMIS\n\t\tquantity \u003d self.view.custom.edit_data.quantity\n\t\tcomment \u003d self.view.custom.edit_data.comment\n\t\n\t\t## Check if parameters are filled in correctly \n\t\tif (time_created is None):\n\t\t\tvalid \u003d False\n\t\t\tsystem.perspective.print(\"Date Error\")\n\t\telif (employee_id is None) or (int(employee_id) \u003c 0):\n\t\t\tvalid \u003d False\n\t\t\tsystem.perspective.print(\"Employee ID Error\")\n\t\telif (enrollment_id is None) or (int(enrollment_id) \u003c 0):\n\t\t\tvalid \u003d False\n\t\t\tsystem.perspective.print(\"Enrollment ID Error\")\n\t\telif (service_id is None) or (int(service_id) \u003c 0):\n\t\t\tvalid \u003d False\n\t\t\tsystem.perspective.print(\"Service ID Error\")\n\t\telif (HMIS is None) or (int(HMIS) \u003c 0):\n\t\t\tvalid \u003d False\n\t\t\tsystem.perspective.print(\"HMIS Selection Error\")\n\t\telse:\n\t\t\tvalid \u003d True\n\t\t\tsystem.perspective.print(\"Batch Services Data Valid\")\n\t\t\n\t\t### Check if data is valid otherwise show error message.\n\t\tif valid:\n\t\t\t#system.perspective.print(\"Insert New Batch Data\")\n\t\t\tpath \u003d \"Participants/Services/ServicesDetailInsert\"\n\t\t\tfor row in range(len(self.view.custom.edit_data.selected_id_list)):\n\t\t\t\t### Batch jobs only create new data\n\t\t\t\tparticipant_id \u003d self.view.custom.edit_data.selected_id_list[row]\n\t\t\t\tparameters \u003d {\"time_created\":time_created,\"participant_id\":participant_id,\n\t\t\t\t\t\t\"employee_id\":employee_id,\"enrollment_id\":enrollment_id,\n\t\t\t\t\t\t\"service_id\":service_id,\"user_name\":user_name,\n\t\t\t\t\t\t\"HMIS\":HMIS,\"quantity\":quantity,\n\t\t\t\t\t\t\"comment\":comment}\n\t\t\t\tRefresh \u003d system.db.runNamedQuery(project\u003dproject,path\u003dpath,parameters\u003dparameters, getKey\u003dTrue)\t\t\n\t\t\t\t#system.perspective.print(\"Insert data\")\n\t\t\t\t\n\t\t\t################################################\n\t\t\t# Increment Yearly Services\n\t\t\ttotal_services \u003d system.tag.readBlocking([\"[default]RITI/Participants/long_TotalServices\"])[0].value\n\t\t\ttotal_services +\u003d len(self.view.custom.edit_data.selected_id_list)\n\t\t\tsystem.tag.writeBlocking([\"[default]RITI/Participants/long_TotalServices\"], [total_services])\n\t\t\t\n\t\t\t##### Refresh the table\n\t\t\tif Refresh:\n\t\t\t\tsystem.perspective.print(\"Batch Services Query Success\")\n\t\t\t\t#Reset all the data entry fields\n\t\t\t\tself.view.custom.edit_data.time_created \u003d system.date.now()\n\t\t\t\tself.view.custom.edit_data.employee_id \u003d -1\n\t\t\t\tself.view.custom.edit_data.enrollment_id \u003d -1\n\t\t\t\tself.view.custom.edit_data.service_id \u003d -1\n\t\t\t\tself.view.custom.edit_data.selected_id_list \u003d []\n\t\t\t\tself.view.custom.edit_data.selected_participants \u003d []\n\t\t\t\t#Send the message to refresh the table\n\t\t\t\tmessageType \u003d \u0027RefreshBatchServicesSearch\u0027\n\t\t\t\tsystem.perspective.sendMessage(messageType)\n\t\t\t\tmessageType \u003d \u0027ResetServicesSearch\u0027\n\t\t\t\tsystem.perspective.sendMessage(messageType)\n\t\t\n\t\telse:\n\t\t\tself.getSibling(\"Label\").showMessage(\"Please fill in all the fields correctly before saving.\")\n\texcept:\n\t\tlogger \u003d system.util.getLogger(\"Participants Batch Services\")\n\t\tmsg \u003d traceback.format_exc()\n\t\tlogger.error(msg)\n\t\tself.getSibling(\"Label\").showMessage(\"Something went wrong while saving data. Please try again.\")"
+                  },
+                  "enabled": false,
+                  "scope": "G",
+                  "type": "script"
+                }
+              }
+            },
+            "meta": {
+              "name": "button_save"
+            },
+            "position": {
+              "basis": "140px"
+            },
+            "props": {
+              "style": {
+                "classes": "Buttons/Main",
+                "marginBottom": "5px",
+                "marginLeft": "10px",
+                "marginTop": "5px"
+              },
+              "text": "Create Report"
+            },
+            "type": "ia.input.button"
+          }
+        ],
+        "meta": {
+          "name": "root Actions"
+        },
+        "position": {
+          "basis": "50px",
+          "display": false
+        },
+        "props": {
+          "justify": "center",
+          "style": {
+            "borderTopColor": "#9db8d1",
+            "borderTopStyle": "solid",
+            "borderTopWidth": "1px",
+            "classes": "Background/Default",
+            "marginTop": "5px",
+            "paddingTop": "5px"
+          }
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "meta": {
+          "name": "EmbeddedView Row2"
+        },
+        "position": {
+          "basis": "85px"
+        },
+        "propConfig": {
+          "props.params.Date": {
+            "binding": {
+              "config": {
+                "bidirectional": true,
+                "path": "view.params.Date"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "path": "WinterShelter/Shelter Tickets/Cards/Row2Column1"
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "custom": {
+          "TicketNumber": "value"
+        },
+        "meta": {
+          "name": "EmbeddedView Row1"
+        },
+        "position": {
+          "basis": "85px"
+        },
+        "propConfig": {
+          "props.params.TicketNumber": {
+            "binding": {
+              "config": {
+                "bidirectional": true,
+                "path": "view.params.TicketNumber"
+              },
+              "type": "property"
+            },
+            "onChange": {
+              "enabled": null,
+              "script": "\tsystem.perspective.print(currentValue.value)\n\tif currentValue.value is not None and int(currentValue.value) !\u003d 0:\n\t\t## check in database if record exists for this date and value is present for If Ticket\n\t\tselectedDate \u003d self.view.custom.dateOnly\n\t\tticketLimit \u003d self.view.custom.ticketLimit\n\t\tselectQ \u003d \"SELECT COALESCE(regularTickets,0) as  regularTickets FROM shelter.ShelterTickets WHERE datePrinted \u003d ?\"\n\t\tsystem.perspective.print(selectQ)\n\t\trecordData \u003d system.db.runPrepQuery(selectQ, [selectedDate])\n\t\t\n\t\tif recordData is not None and recordData.getRowCount() \u003e 0:\n\t\t\t## record exists\n\t\t\tprevTicketNo \u003d recordData.getValueAt(0,0)\n\t\t\tif (int(currentValue.value) \u003e int(prevTicketNo)) and (int(currentValue.value) \u003c int(ticketLimit)):\n\t\t\t\tupdateQ \u003d \"UPDATE shelter.ShelterTickets SET regularTickets \u003d ? WHERE datePrinted \u003d ?\"\n\t\t\t\tsystem.perspective.print(updateQ)\n\t\t\t\tsystem.db.runPrepUpdate(updateQ, [currentValue.value,selectedDate])\n\t\telse:\n\t\t\t## record does not exist, create record\n\t\t\tif (int(currentValue.value) \u003c int(ticketLimit)):\n\t\t\t\tinsertQ \u003d \"INSERT INTO shelter.ShelterTickets(datePrinted, regularTickets) VALUES ( ?,?)\"\n\t\t\t\tsystem.perspective.print(insertQ)\n\t\t\t\tsystem.db.runPrepUpdate(insertQ, [selectedDate,currentValue.value])"
+            }
+          }
+        },
+        "props": {
+          "path": "WinterShelter/Shelter Tickets/Cards/Row1Column1"
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "custom": {
+          "TicketNumber": "value"
+        },
+        "meta": {
+          "name": "EmbeddedView Row3"
+        },
+        "position": {
+          "basis": "85px"
+        },
+        "propConfig": {
+          "props.params.TicketNumber": {
+            "binding": {
+              "config": {
+                "bidirectional": true,
+                "path": "view.params.PlusTicketNumber"
+              },
+              "type": "property"
+            },
+            "onChange": {
+              "enabled": null,
+              "script": "\tif currentValue.value is not None and int(currentValue.value) \u003e 0:\n\t\t## check in database if record exists for this date and value is present for If Ticket\n\t\tselectedDate \u003d self.view.custom.dateOnly\n\t\tticketLimit \u003d self.view.custom.ticketLimit\n\t\tselectQ \u003d \"SELECT COALESCE(plusTickets,0) as  plusTickets FROM shelter.ShelterTickets WHERE datePrinted \u003d ?\"\n\t\t\n\t\trecordData \u003d system.db.runPrepQuery(selectQ, [selectedDate])\n\t\t\n\t\tif recordData is not None and recordData.getRowCount() \u003e 0:\n\t\t\t## record exists\n\t\t\tprevTicketNo \u003d recordData.getValueAt(0,0)\n\t\t\tif (int(currentValue.value) \u003e int(prevTicketNo)) and (int(currentValue.value) \u003c int(ticketLimit)):\n\t\t\t\tupdateQ \u003d \"UPDATE shelter.ShelterTickets SET plusTickets \u003d ? WHERE datePrinted \u003d ?\"\t\t\t\t\n\t\t\t\tsystem.db.runPrepUpdate(updateQ, [currentValue.value,selectedDate])\n\t\telse:\n\t\t\t## record does not exist, create record\n\t\t\tif (int(currentValue.value) \u003c int(ticketLimit)):\n\t\t\t\tinsertQ \u003d \"INSERT INTO shelter.ShelterTickets(datePrinted, plusTickets) VALUES ( ?,?)\"\t\t\t\n\t\t\t\tsystem.db.runPrepUpdate(insertQ, [selectedDate,currentValue.value])"
+            }
+          }
+        },
+        "props": {
+          "path": "WinterShelter/Shelter Tickets/Cards/PlusTickets"
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "custom": {
+          "TicketNumber": "value"
+        },
+        "meta": {
+          "name": "EmbeddedView Row4"
+        },
+        "position": {
+          "basis": "85px"
+        },
+        "propConfig": {
+          "props.params.TicketNumber": {
+            "binding": {
+              "config": {
+                "bidirectional": true,
+                "path": "view.params.PlusPlusTicketNumber"
+              },
+              "type": "property"
+            },
+            "onChange": {
+              "enabled": null,
+              "script": "\tif currentValue.value is not None and int(currentValue.value) \u003e 0:\n\t\t## check in database if record exists for this date and value is present for If Ticket\n\t\tselectedDate \u003d self.view.custom.dateOnly\n\t\tticketLimit \u003d self.view.custom.ticketLimit\n\t\tselectQ \u003d \"SELECT COALESCE(doublePlusTickets,0) as  doublePlusTickets FROM shelter.ShelterTickets WHERE datePrinted \u003d ?\"\n\t\t\n\t\trecordData \u003d system.db.runPrepQuery(selectQ, [selectedDate])\n\t\t\n\t\tif recordData is not None and recordData.getRowCount() \u003e 0:\n\t\t\t## record exists\n\t\t\tprevTicketNo \u003d recordData.getValueAt(0,0)\n\t\t\tif (int(currentValue.value) \u003e int(prevTicketNo)) and (int(currentValue.value) \u003c int(ticketLimit)):\n\t\t\t\tupdateQ \u003d \"UPDATE shelter.ShelterTickets SET doublePlusTickets \u003d ? WHERE datePrinted \u003d ?\"\t\t\t\t\n\t\t\t\tsystem.db.runPrepUpdate(updateQ, [currentValue.value,selectedDate])\n\t\telse:\n\t\t\t## record does not exist, create record\n\t\t\tif (int(currentValue.value) \u003c int(ticketLimit)):\n\t\t\t\tinsertQ \u003d \"INSERT INTO shelter.ShelterTickets(datePrinted, doublePlusTickets) VALUES ( ?,?)\"\t\t\t\n\t\t\t\tsystem.db.runPrepUpdate(insertQ, [selectedDate,currentValue.value])"
+            }
+          }
+        },
+        "props": {
+          "path": "WinterShelter/Shelter Tickets/Cards/PlusPlusTickets"
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "custom": {
+          "TicketNumber": "value"
+        },
+        "meta": {
+          "name": "EmbeddedView Row5"
+        },
+        "position": {
+          "basis": "85px"
+        },
+        "propConfig": {
+          "props.params.TicketNumber": {
+            "binding": {
+              "config": {
+                "bidirectional": true,
+                "path": "view.params.IfRoomTicketNumber"
+              },
+              "type": "property"
+            },
+            "onChange": {
+              "enabled": null,
+              "script": "\tif currentValue.value is not None and int(currentValue.value) \u003e 0:\n\t\t\t## check in database if record exists for this date and value is present for If Ticket\n\t\tselectedDate \u003d self.view.custom.dateOnly\n\t\tticketLimit \u003d self.view.custom.ticketLimit\n\t\tselectQ \u003d \"SELECT COALESCE(ifRoomTickets,0) as  ifRoomTickets FROM shelter.ShelterTickets WHERE datePrinted \u003d ?\"\n\t\t\n\t\trecordData \u003d system.db.runPrepQuery(selectQ, [selectedDate])\n\t\t\n\t\tif recordData is not None and recordData.getRowCount() \u003e 0:\n\t\t\t## record exists\n\t\t\tprevTicketNo \u003d recordData.getValueAt(0,0)\n\t\t\tif (int(currentValue.value) \u003e int(prevTicketNo)) and (int(currentValue.value) \u003c int(ticketLimit)):\n\t\t\t\tupdateQ \u003d \"UPDATE shelter.ShelterTickets SET ifRoomTickets \u003d ? WHERE datePrinted \u003d ?\"\t\t\t\n\t\t\t\tsystem.db.runPrepUpdate(updateQ, [currentValue.value,selectedDate])\n\t\telse:\n\t\t\t## record does not exist, create record\n\t\t\tif (int(currentValue.value) \u003c int(ticketLimit)):\n\t\t\t\tinsertQ \u003d \"INSERT INTO shelter.ShelterTickets(datePrinted, ifRoomTickets) VALUES ( ?,?)\"\t\t\t\n\t\t\t\tsystem.db.runPrepUpdate(insertQ, [selectedDate,currentValue.value])"
+            }
+          }
+        },
+        "props": {
+          "path": "WinterShelter/Shelter Tickets/Cards/IfRoomTickets"
+        },
+        "type": "ia.display.view"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column",
+      "style": {
+        "classes": "Background/Default"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

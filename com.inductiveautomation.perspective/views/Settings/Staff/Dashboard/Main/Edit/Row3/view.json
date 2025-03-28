@@ -1,0 +1,127 @@
+{
+  "custom": {
+    "userRights": "(User Credentials Not Found)"
+  },
+  "params": {
+    "assignment": false,
+    "email": "hammer@gmail.com"
+  },
+  "propConfig": {
+    "custom.userRights": {
+      "binding": {
+        "config": {
+          "path": "view.params.email"
+        },
+        "transforms": [
+          {
+            "code": "\tif value is not None and value !\u003d \u0027\u0027:\n\t\tuser \u003d system.user.getUser(\u0027default\u0027, self.params.email)\n\t\tif user is not None:\n\t\t\troleString \u003d \u0027\u0027\n\t\t\tuserRoles \u003d user.getRoles()\n\t\t\tfor role in userRoles:\n\t\t\t\troleString +\u003d role + \u0027, \u0027\n\t\t\treturn roleString[0:-2]\n\t\telse:\n\t\t\treturn \"(User Credentials Not Found)\"\n\telse:\n\t\treturn \"(Email Not Found)\"",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      },
+      "persistent": true
+    },
+    "params.assignment": {
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.email": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 60,
+      "width": 1624
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "embedUserRights"
+        },
+        "position": {
+          "basis": "210px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.text": {
+            "binding": {
+              "config": {
+                "bidirectional": true,
+                "path": "view.custom.userRights"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "label": "User Rights",
+            "placeholder": "User Rights"
+          },
+          "path": "1_TEMPLATES/60px/top/ReadOnly_Text",
+          "style": {
+            "classes": "InputCards/InputCard_NoBorder",
+            "overflow": "hidden"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "embededAssignment"
+        },
+        "position": {
+          "basis": "150px"
+        },
+        "propConfig": {
+          "props.params.checked": {
+            "binding": {
+              "config": {
+                "bidirectional": true,
+                "path": "view.params.assignment"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "text": "Assignments"
+          },
+          "path": "1_TEMPLATES/60px/top/Input_Checkbox_Horizontal"
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Embed_Placeholder"
+        },
+        "position": {
+          "basis": "1px",
+          "grow": 1
+        },
+        "props": {
+          "path": "Participants/Templates/Placeholder",
+          "style": {
+            "classes": "InputCards/InputCard_NoBorder"
+          }
+        },
+        "type": "ia.display.view"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "style": {
+        "classes": "Background/Default"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

@@ -1,0 +1,169 @@
+{
+  "custom": {},
+  "params": {
+    "instanceID": 9
+  },
+  "propConfig": {
+    "params.instanceID": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 247,
+      "width": 437
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "Label"
+        },
+        "position": {
+          "basis": "32px"
+        },
+        "props": {
+          "style": {
+            "classes": "Event/Event_DateText",
+            "marginBottom": 10,
+            "marginTop": 1
+          },
+          "text": "Tasks"
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "children": [
+          {
+            "meta": {
+              "name": "FlexRepeater"
+            },
+            "position": {
+              "grow": 1
+            },
+            "propConfig": {
+              "props.instances": {
+                "binding": {
+                  "config": {
+                    "parameters": {
+                      "instanceID": "{view.params.instanceID}"
+                    },
+                    "queryPath": "Calendar/EventInstanceTask/GetTasksByEventID"
+                  },
+                  "transforms": [
+                    {
+                      "code": "\tinstances \u003d []\n\tfor x in range(value.getRowCount()) :\n\t\tinstances.append({\u0027taskID\u0027 : value.getValueAt(x,\u0027id\u0027)})\n\t\n\t\n\treturn instances",
+                      "type": "script"
+                    }
+                  ],
+                  "type": "query"
+                }
+              }
+            },
+            "props": {
+              "direction": "column",
+              "elementPosition": {
+                "grow": 0
+              },
+              "elementStyle": {
+                "marginLeft": 5,
+                "marginTop": -5
+              },
+              "path": "Events/Dashboard/Components/EventDetail/Details/EventTask",
+              "style": {
+                "paddingTop": 5
+              }
+            },
+            "type": "ia.display.flex-repeater"
+          },
+          {
+            "children": [
+              {
+                "events": {
+                  "component": {
+                    "onActionPerformed": {
+                      "config": {
+                        "script": "\tsystem.db.runNamedQuery(\"Calendar/EventInstanceTask/CreateNewTask\", {\u0027instanceID\u0027 : self.view.params.instanceID })\n\tself.parent.parent.getChild(\"FlexRepeater\").refreshBinding(\"props.instances\")"
+                      },
+                      "scope": "G",
+                      "type": "script"
+                    }
+                  }
+                },
+                "meta": {
+                  "name": "AddItem"
+                },
+                "position": {
+                  "height": 20,
+                  "width": 20,
+                  "x": 0.75,
+                  "y": 5
+                },
+                "props": {
+                  "image": {
+                    "icon": {
+                      "color": "#9DB8D180",
+                      "path": "material/add"
+                    }
+                  },
+                  "style": {
+                    "classes": "Buttons/Detail_Action"
+                  },
+                  "text": ""
+                },
+                "type": "ia.input.button"
+              }
+            ],
+            "meta": {
+              "name": "CoordinateContainer"
+            },
+            "position": {
+              "shrink": 0
+            },
+            "props": {
+              "style": {
+                "marginBottom": 10,
+                "marginLeft": 6
+              }
+            },
+            "type": "ia.container.coord"
+          }
+        ],
+        "meta": {
+          "name": "FlexContainer"
+        },
+        "props": {
+          "direction": "column",
+          "style": {
+            "borderColor": "#A1BAD2BF",
+            "borderStyle": "solid",
+            "borderWidth": 1
+          }
+        },
+        "scripts": {
+          "customMethods": [],
+          "extensionFunctions": null,
+          "messageHandlers": [
+            {
+              "messageType": "refreshTasks",
+              "pageScope": false,
+              "script": "\t# implement your handler here\n\tself.getChild(\"FlexRepeater\").refreshBinding(\"props.instances\")",
+              "sessionScope": true,
+              "viewScope": false
+            }
+          ]
+        },
+        "type": "ia.container.flex"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column"
+    },
+    "type": "ia.container.flex"
+  }
+}

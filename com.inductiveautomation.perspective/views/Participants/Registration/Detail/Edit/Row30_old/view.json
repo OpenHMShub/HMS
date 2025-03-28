@@ -1,0 +1,562 @@
+{
+  "custom": {},
+  "params": {
+    "chronic_health_conditions": "value",
+    "developmental_disability": "value",
+    "disability_id": -1,
+    "mental_health": "",
+    "substance_abuse": "",
+    "va_healthcare_eligibility": -1,
+    "veteran_id": -1
+  },
+  "propConfig": {
+    "params.chronic_health_conditions": {
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.developmental_disability": {
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.disability_id": {
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.mental_health": {
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.substance_abuse": {
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.va_healthcare_eligibility": {
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.veteran_id": {
+      "paramDirection": "inout",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 60,
+      "width": 1416
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "Embed_Veteran"
+        },
+        "position": {
+          "basis": "190px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.IsEditable": {
+            "binding": {
+              "config": {
+                "expression": "{session.custom.isSupportCoordinator} || {session.custom.isWSSupportCoordinator} || {session.custom.isManager} || {session.custom.isWSManager} || {session.custom.isAdministrator}"
+              },
+              "type": "expr"
+            }
+          },
+          "props.params.highlight": {
+            "binding": {
+              "config": {
+                "path": "this.props.params.selection"
+              },
+              "transforms": [
+                {
+                  "code": "\tif value \u003d\u003d 4:\n\t\treturn True\n\telse:\n\t\treturn False",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          },
+          "props.params.options": {
+            "binding": {
+              "config": {
+                "queryPath": "Participants/Registration/GetVeteranStatus"
+              },
+              "type": "query"
+            }
+          },
+          "props.params.selection": {
+            "binding": {
+              "config": {
+                "bidirectional": true,
+                "path": "view.params.veteran_id"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "text": "Veteran"
+          },
+          "path": "Participants/Templates/60px/top/Input_DropDownSingle_Mandatory_WithEnableDisableSetting",
+          "style": {
+            "classes": "InputCards/InputCard"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Embed_VA_Healthcare_Eligible"
+        },
+        "position": {
+          "basis": "150px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.IsEditable": {
+            "binding": {
+              "config": {
+                "expression": "{session.custom.isSupportCoordinator} || {session.custom.isWSSupportCoordinator} || {session.custom.isManager} || {session.custom.isWSManager} || {session.custom.isAdministrator}"
+              },
+              "type": "expr"
+            }
+          },
+          "props.params.selection": {
+            "binding": {
+              "config": {
+                "bidirectional": true,
+                "path": "view.params.va_healthcare_eligibility"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "highlight": false,
+            "options": {
+              "$": [
+                "ds",
+                192,
+                1683787885718
+              ],
+              "$columns": [
+                {
+                  "data": [
+                    1,
+                    0,
+                    2
+                  ],
+                  "name": "id",
+                  "type": "Integer"
+                },
+                {
+                  "data": [
+                    "Yes",
+                    "No",
+                    "Unsure"
+                  ],
+                  "name": "disability_type",
+                  "type": "String"
+                }
+              ]
+            },
+            "text": "VA Healthcare Eligible"
+          },
+          "path": "Participants/Templates/60px/top/Input_DropDownSingle_WithEnableDisableSetting",
+          "style": {
+            "classes": "InputCards/InputCard"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Embed_Placeholder"
+        },
+        "position": {
+          "basis": "1px",
+          "display": false,
+          "grow": 1
+        },
+        "props": {
+          "path": "Participants/Templates/Placeholder",
+          "style": {
+            "classes": "InputCards/InputCard"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Embed_Disabitity"
+        },
+        "position": {
+          "basis": "190px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.IsEditable": {
+            "binding": {
+              "config": {
+                "expression": "{session.custom.isSupportCoordinator} || {session.custom.isWSSupportCoordinator} || {session.custom.isManager} || {session.custom.isWSManager} || {session.custom.isAdministrator}"
+              },
+              "type": "expr"
+            }
+          },
+          "props.params.options": {
+            "binding": {
+              "config": {
+                "queryPath": "Participants/Registration/GetDisablingCondition"
+              },
+              "type": "query"
+            }
+          },
+          "props.params.selection": {
+            "binding": {
+              "config": {
+                "bidirectional": true,
+                "path": "view.params.disability_id"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "highlight": false,
+            "text": "Disability"
+          },
+          "path": "Participants/Templates/60px/top/Input_DropDownSingle_WithEnableDisableSetting",
+          "style": {
+            "classes": "InputCards/InputCard"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Embed_SubstanceAbuse"
+        },
+        "position": {
+          "basis": "190px"
+        },
+        "propConfig": {
+          "props.params.IsEditable": {
+            "binding": {
+              "config": {
+                "expression": "{session.custom.isSupportCoordinator} || {session.custom.isWSSupportCoordinator} || {session.custom.isManager} || {session.custom.isWSManager} || {session.custom.isAdministrator}"
+              },
+              "type": "expr"
+            }
+          },
+          "props.params.highlight": {
+            "binding": {
+              "config": {
+                "path": "this.props.params.selection"
+              },
+              "transforms": [
+                {
+                  "code": "\tif value \u003d\u003d 8:\n\t\treturn True\n\telse:\n\t\treturn False",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          },
+          "props.params.selection": {
+            "binding": {
+              "config": {
+                "bidirectional": true,
+                "path": "view.params.substance_abuse"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "options": {
+              "$": [
+                "ds",
+                192,
+                1683788180119
+              ],
+              "$columns": [
+                {
+                  "data": [
+                    "Alcohol",
+                    "Drugs",
+                    "Both Alcohol and Drugs",
+                    "None Reported"
+                  ],
+                  "name": "label",
+                  "type": "String"
+                },
+                {
+                  "data": [
+                    "Alcohol",
+                    "Drugs",
+                    "Both Alcohol and Drugs",
+                    "None Reported"
+                  ],
+                  "name": "substanceAbuse",
+                  "type": "String"
+                }
+              ]
+            },
+            "text": "Substance Abuse"
+          },
+          "path": "Participants/Templates/60px/top/Input_DropDownSingle_WithEnableDisableSetting",
+          "style": {
+            "classes": "InputCards/InputCard"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Embed_ChronicHealthConditions"
+        },
+        "position": {
+          "basis": "190px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.IsEditable": {
+            "binding": {
+              "config": {
+                "expression": "{session.custom.isSupportCoordinator} || {session.custom.isWSSupportCoordinator} || {session.custom.isManager} || {session.custom.isWSManager} || {session.custom.isAdministrator}"
+              },
+              "type": "expr"
+            }
+          },
+          "props.params.highlight": {
+            "binding": {
+              "config": {
+                "path": "this.props.params.selection"
+              },
+              "transforms": [
+                {
+                  "code": "\tif value \u003d\u003d 8:\n\t\treturn True\n\telse:\n\t\treturn False",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          },
+          "props.params.selection": {
+            "binding": {
+              "config": {
+                "bidirectional": true,
+                "path": "view.params.chronic_health_conditions"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "options": {
+              "$": [
+                "ds",
+                192,
+                1683291647252
+              ],
+              "$columns": [
+                {
+                  "data": [
+                    1,
+                    0
+                  ],
+                  "name": "id",
+                  "type": "Integer"
+                },
+                {
+                  "data": [
+                    "Yes",
+                    "No"
+                  ],
+                  "name": "race",
+                  "type": "String"
+                }
+              ]
+            },
+            "text": "Chronic Health Conditions"
+          },
+          "path": "Participants/Templates/60px/top/Input_DropDownSingle_WithEnableDisableSetting",
+          "style": {
+            "classes": "InputCards/InputCard"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Embed_DevelopmentalDisability"
+        },
+        "position": {
+          "basis": "190px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.IsEditable": {
+            "binding": {
+              "config": {
+                "expression": "{session.custom.isSupportCoordinator} || {session.custom.isWSSupportCoordinator} || {session.custom.isManager} || {session.custom.isWSManager} || {session.custom.isAdministrator}"
+              },
+              "type": "expr"
+            }
+          },
+          "props.params.highlight": {
+            "binding": {
+              "config": {
+                "path": "this.props.params.selection"
+              },
+              "transforms": [
+                {
+                  "code": "\tif value \u003d\u003d 8:\n\t\treturn True\n\telse:\n\t\treturn False",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          },
+          "props.params.selection": {
+            "binding": {
+              "config": {
+                "bidirectional": true,
+                "path": "view.params.developmental_disability"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "options": {
+              "$": [
+                "ds",
+                192,
+                1680674017109
+              ],
+              "$columns": [
+                {
+                  "data": [
+                    1,
+                    0
+                  ],
+                  "name": "id",
+                  "type": "Integer"
+                },
+                {
+                  "data": [
+                    "Yes",
+                    "None Reported"
+                  ],
+                  "name": "race",
+                  "type": "String"
+                }
+              ]
+            },
+            "text": "Devlopmental Disability"
+          },
+          "path": "Participants/Templates/60px/top/Input_DropDownSingle_WithEnableDisableSetting",
+          "style": {
+            "classes": "InputCards/InputCard"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Embed_MentalHealth"
+        },
+        "position": {
+          "basis": "190px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.IsEditable": {
+            "binding": {
+              "config": {
+                "expression": "{session.custom.isSupportCoordinator} || {session.custom.isWSSupportCoordinator} || {session.custom.isManager} || {session.custom.isWSManager} || {session.custom.isAdministrator}"
+              },
+              "type": "expr"
+            }
+          },
+          "props.params.highlight": {
+            "binding": {
+              "config": {
+                "path": "this.props.params.selection"
+              },
+              "transforms": [
+                {
+                  "code": "\tif value \u003d\u003d 8:\n\t\treturn True\n\telse:\n\t\treturn False",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          },
+          "props.params.selection": {
+            "binding": {
+              "config": {
+                "bidirectional": true,
+                "path": "view.params.mental_health"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "options": {
+              "$": [
+                "ds",
+                192,
+                1680673988899
+              ],
+              "$columns": [
+                {
+                  "data": [
+                    1,
+                    0
+                  ],
+                  "name": "id",
+                  "type": "Integer"
+                },
+                {
+                  "data": [
+                    "Yes",
+                    "None Reported"
+                  ],
+                  "name": "race",
+                  "type": "String"
+                }
+              ]
+            },
+            "text": "Mental Health"
+          },
+          "path": "Participants/Templates/60px/top/Input_DropDownSingle_WithEnableDisableSetting",
+          "style": {
+            "classes": "InputCards/InputCard"
+          }
+        },
+        "type": "ia.display.view"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "style": {
+        "classes": "Background/Default"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

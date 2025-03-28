@@ -1,0 +1,146 @@
+{
+  "custom": {
+    "month": 9,
+    "year": 2023
+  },
+  "params": {
+    "dateRange": {
+      "endDate": {
+        "$": [
+          "ts",
+          0,
+          1693543671754
+        ],
+        "$ts": 1696050000000
+      },
+      "startDate": {
+        "$": [
+          "ts",
+          0,
+          1693543656738
+        ],
+        "$ts": 1693544400000
+      }
+    },
+    "instanceCount": 35
+  },
+  "propConfig": {
+    "custom.month": {
+      "binding": {
+        "config": {
+          "expression": "toInt(getMonth({view.params.dateRange.startDate}) + 1)"
+        },
+        "type": "expr"
+      },
+      "persistent": true
+    },
+    "custom.year": {
+      "binding": {
+        "config": {
+          "expression": "toInt(getYear({view.params.dateRange.startDate}))"
+        },
+        "type": "expr"
+      },
+      "persistent": true
+    },
+    "params.dateRange": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.endDate": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.instanceCount": {
+      "binding": {
+        "config": {
+          "path": "/root/FlexRepeater.props.instances"
+        },
+        "transforms": [
+          {
+            "code": "\treturn len(value)",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.startDate": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 350,
+      "width": 990
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "FlexRepeater"
+        },
+        "position": {
+          "basis": "300px",
+          "grow": 1
+        },
+        "propConfig": {
+          "props.instances": {
+            "binding": {
+              "config": {
+                "path": "view.params.dateRange"
+              },
+              "transforms": [
+                {
+                  "code": "\timport copy\n\t\n\tstartDate \u003d value[\"startDate\"]\n\tendDate \u003d value[\"endDate\"]\n\tdaysBetween \u003d system.date.daysBetween(startDate, endDate) + 1\n\t\n\tinstances \u003d []\n\tinstanceStruct \u003d {\n\t  \"instanceStyle\": {\n\t    \"classes\": \"\"\n\t  },\n\t  \"instancePosition\": {},\n\t  \"date\": \"\",\n\t  \"NoOfAttendees\":\u0027\u0027,\n\t  \"noOfEvents\":\u0027\u0027\n\t}\n\t\n\tflexInstanceIndex \u003d 0 ## will be used to determine if right border is needed\n\ttotalInstances \u003d 0 ## will be used to determine if bottom border is needed\n\t## if month does not start on Sunday, we need to append empty instances to the flex repeater e.g. 01-Jun-2022 starts on Wednesday so append 3 empty instances for Sun, Mon, tue in the week\n\tmonthStartDayOfWeek \u003d system.date.getDayOfWeek(startDate)\n\tif monthStartDayOfWeek \u003e 1:\n\t\tfor i in range(1,monthStartDayOfWeek):\n\t\t\tthisStruct \u003d copy.deepcopy(instanceStruct)\n\t\t\tthisStruct[\"date\"] \u003d None\n\t\t\tinstanceStyle \u003d {}\n\t\t\tinstanceStyle[\"classes\"] \u003d \"\"\n\t\t\tinstanceStyle[\"borderRightColor\"] \u003d \"#D5D5D5\"\n\t\t\tinstanceStyle[\"borderRightStyle\"] \u003d \"solid\"\n\t\t\tinstanceStyle[\"borderRightWidth\"] \u003d \"0.3px\"\n\t\t\tinstanceStyle[\"borderTopColor\"] \u003d \"#D5D5D5\"\n\t\t\tinstanceStyle[\"borderTopStyle\"] \u003d \"solid\"\n\t\t\tinstanceStyle[\"borderTopWidth\"] \u003d \"0.3px\"\n\t\t\tif i \u003d\u003d 1:\n\t\t\t\tinstanceStyle[\"borderLeftColor\"] \u003d \"#D5D5D5\"\n\t\t\t\tinstanceStyle[\"borderLeftStyle\"] \u003d \"solid\"\n\t\t\t\tinstanceStyle[\"borderLeftWidth\"] \u003d \"0.3px\"\n\t\t\tthisStruct[\"instanceStyle\"] \u003d instanceStyle\n\t\t\tinstances.append(thisStruct)\n\t\t\tflexInstanceIndex \u003d flexInstanceIndex + 1\n\t\t\ttotalInstances \u003d totalInstances + 1\n\t\n\temptyInstanceEndIndex \u003d flexInstanceIndex\n\tsystem.perspective.print(emptyInstanceEndIndex)\n\trangeStartDayOfYear \u003d system.date.getDayOfYear(startDate)\n\trangeEndDayOfYear \u003d system.date.getDayOfYear(endDate)\n\t\n\tyear \u003d self.view.custom.year\n\tmonth \u003d self.view.custom.month\n\t\n\ttotalInstances \u003d totalInstances + daysBetween\n\tsystem.perspective.print(totalInstances)\n\t## Initialize full month calendar with noOFevents \u003d 0 and noOfAttendees \u003d 0\t\n\tfor row in range(daysBetween):\n\t\tthisDay \u003d system.date.addDays(startDate, row)\n\t\tthisStruct \u003d copy.deepcopy(instanceStruct)\n\t\tinstanceStyle \u003d {}\n\t\tinstanceStyle[\"classes\"] \u003d \"\"\n\t\tinstanceStyle[\"borderRightColor\"] \u003d \"#D5D5D5\"\n\t\tinstanceStyle[\"borderRightStyle\"] \u003d \"solid\"\n\t\tinstanceStyle[\"borderRightWidth\"] \u003d \"0.3px\"\n\t\t\n\t\tinstanceStyle[\"borderTopColor\"] \u003d \"#D5D5D5\"\n\t\tinstanceStyle[\"borderTopStyle\"] \u003d \"solid\"\n\t\tinstanceStyle[\"borderTopWidth\"] \u003d \"0.3px\"\n\t\t\n\t\tif (flexInstanceIndex in (0,7,14,21,28,35)) :\n\t\t\tinstanceStyle[\"borderLeftColor\"] \u003d \"#D5D5D5\"\n\t\t\tinstanceStyle[\"borderLeftStyle\"] \u003d \"solid\"\n\t\t\tinstanceStyle[\"borderLeftWidth\"] \u003d \"0.3px\"\n\t\t\n\t\tif (totalInstances - flexInstanceIndex) \u003c\u003d 7:\n\t\t\tinstanceStyle[\"borderBottomColor\"] \u003d \"#D5D5D5\"\n\t\t\tinstanceStyle[\"borderBottomStyle\"] \u003d \"solid\"\n\t\t\tinstanceStyle[\"borderBottomWidth\"] \u003d \"0.3px\"\n\t\t\n\t\tthisStruct[\"instanceStyle\"] \u003d instanceStyle\n\t\tthisStruct[\"date\"] \u003d thisDay\n\t\tthisStruct[\"NoOfAttendees\"] \u003d 0\n\t\tthisStruct[\"noOfEvents\"] \u003d 0\n\t\tinstances.append(thisStruct)\n\t\tflexInstanceIndex \u003d flexInstanceIndex + 1\n\t\t## get the total no of events and total no of attendees data from database\n\tmonthData \u003d system.db.runNamedQuery(\"Event/ParticipantEvents/CheckIn/GetServeCalendarMonthDetails\",{\"year\":year,\"month\":month})\n\tif monthData is not None and monthData.getRowCount() \u003e 0:\n\t\tfor i in range(monthData.getRowCount()):\n\t\t\t\n\t\t\tday \u003d int(monthData.getValueAt(i,\u0027day\u0027))\n\t\t\tinstanceIndexForDay \u003d emptyInstanceEndIndex + ( day - 1) ### add count of empty instances that were added before start day of the month\n\t\t\tnoOfEvents \u003d monthData.getValueAt(i,\u0027noOfEvents\u0027)\n\t\t\tNoOfAttendees \u003d monthData.getValueAt(i,\u0027noOfAttendees\u0027)\n\t\t\tinstances[instanceIndexForDay][\u0027noOfEvents\u0027] \u003d noOfEvents\n\t\t\tinstances[instanceIndexForDay][\u0027NoOfAttendees\u0027] \u003d NoOfAttendees\n\t\t\t\n\treturn instances",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "alignContent": "flex-start",
+          "alignItems": "flex-start",
+          "path": "Events/ParticipantEvents/CheckIn/Dashboard/Components/Day",
+          "wrap": "wrap"
+        },
+        "type": "ia.display.flex-repeater"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "alignContent": "flex-start",
+      "alignItems": "flex-start",
+      "direction": "column"
+    },
+    "scripts": {
+      "customMethods": [],
+      "extensionFunctions": null,
+      "messageHandlers": [
+        {
+          "messageType": "refreshEvents",
+          "pageScope": true,
+          "script": "\t# implement your handler here\n\tself.getChild(\"FlexRepeater\").refreshBinding(\"props.instances\")",
+          "sessionScope": true,
+          "viewScope": false
+        },
+        {
+          "messageType": "participantCheckedIn",
+          "pageScope": true,
+          "script": "\t# implement your handler here\n\tself.getChild(\"FlexRepeater\").refreshBinding(\"props.instances\")",
+          "sessionScope": true,
+          "viewScope": false
+        }
+      ]
+    },
+    "type": "ia.container.flex"
+  }
+}

@@ -1,0 +1,680 @@
+{
+  "custom": {
+    "groupMembers": []
+  },
+  "params": {},
+  "propConfig": {
+    "custom.groupMembers": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "groupId": "{/root/FlexContainer SelectedGroup/FlexContainer Right/GroupId.props.params.inputText}"
+          },
+          "queryPath": "Volunteers/Group/GroupsMembersCreate",
+          "returnFormat": "json"
+        },
+        "transforms": [
+          {
+            "code": "\tif self.getChild(\"root\").getChild(\"FlexContainer SelectedGroup\").getChild(\"FlexContainer Right\").getChild(\"GroupId\").props.params.inputText \u003d\u003d \"\":\n\t\tvalue \u003d []\n\treturn value",
+            "type": "script"
+          }
+        ],
+        "type": "query"
+      },
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "width": 600
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "EmbeddedView"
+        },
+        "position": {
+          "shrink": 0
+        },
+        "props": {
+          "params": {
+            "dock": "RegisterGroupMembers",
+            "text": "Group Member Registration"
+          },
+          "path": "Volunteers/Registration/Cards/RegistrationHeader",
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "children": [
+          {
+            "meta": {
+              "name": "EmbeddedView"
+            },
+            "props": {
+              "params": {
+                "Text": "Find and Select Group"
+              },
+              "path": "Volunteers/Registration/Cards/LabelDivider",
+              "style": {
+                "classes": "InputCards/InputCard_TopBorder"
+              }
+            },
+            "type": "ia.display.view"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "meta": {
+                      "name": "GroupName"
+                    },
+                    "position": {
+                      "shrink": 0
+                    },
+                    "props": {
+                      "params": {
+                        "inputText": "",
+                        "text": "Search Group Name"
+                      },
+                      "path": "Volunteers/Registration/Cards/TextInput",
+                      "style": {
+                        "marginTop": "5px"
+                      },
+                      "useDefaultViewHeight": true
+                    },
+                    "type": "ia.display.view"
+                  }
+                ],
+                "meta": {
+                  "name": "FlexContainer Left"
+                },
+                "position": {
+                  "basis": "50%"
+                },
+                "props": {
+                  "direction": "column",
+                  "style": {
+                    "paddingLeft": "25px",
+                    "paddingRight": "20px"
+                  }
+                },
+                "type": "ia.container.flex"
+              },
+              {
+                "children": [
+                  {
+                    "meta": {
+                      "name": "GroupDescription"
+                    },
+                    "position": {
+                      "shrink": 0
+                    },
+                    "props": {
+                      "params": {
+                        "inputText": "",
+                        "text": "Search Group Description"
+                      },
+                      "path": "Volunteers/Registration/Cards/TextInput",
+                      "style": {
+                        "marginTop": "5px"
+                      },
+                      "useDefaultViewHeight": true
+                    },
+                    "type": "ia.display.view"
+                  }
+                ],
+                "meta": {
+                  "name": "FlexContainer Right"
+                },
+                "position": {
+                  "basis": "50%",
+                  "grow": 1
+                },
+                "props": {
+                  "direction": "column",
+                  "style": {
+                    "paddingLeft": "15px",
+                    "paddingRight": "30px"
+                  }
+                },
+                "type": "ia.container.flex"
+              }
+            ],
+            "meta": {
+              "name": "FlexContainerSearchItems"
+            },
+            "type": "ia.container.flex"
+          }
+        ],
+        "meta": {
+          "name": "FlexContainerSearch"
+        },
+        "position": {
+          "shrink": 0
+        },
+        "props": {
+          "direction": "column",
+          "style": {
+            "borderBottomColor": "#e6e6e6",
+            "borderBottomStyle": "solid",
+            "borderBottomWidth": 1,
+            "paddingBottom": "20px",
+            "paddingTop": "5px"
+          }
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "meta": {
+          "name": "Table"
+        },
+        "position": {
+          "basis": "40%"
+        },
+        "propConfig": {
+          "props.data": {
+            "binding": {
+              "config": {
+                "parameters": {
+                  "description": "{../FlexContainerSearch/FlexContainerSearchItems/FlexContainer Right/GroupDescription.props.params.inputText}",
+                  "name": "{../FlexContainerSearch/FlexContainerSearchItems/FlexContainer Left/GroupName.props.params.inputText}"
+                },
+                "queryPath": "Volunteers/Group/SearchGroups",
+                "returnFormat": "json"
+              },
+              "type": "query"
+            }
+          }
+        },
+        "props": {
+          "cells": {
+            "style": {
+              "classes": "Table/Cell_Detail_1"
+            }
+          },
+          "columns": [
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "id",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header_Detail\nBackground/Default"
+                },
+                "title": "ID"
+              },
+              "justify": "auto",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": false,
+              "style": {
+                "classes": "Table/Column_Normal_Detail"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": false,
+              "width": ""
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "name",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Background/Default Table/Column_Header_Detail"
+                },
+                "title": "Name"
+              },
+              "justify": "auto",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": false,
+              "style": {
+                "classes": "Table/Column_Normal_Detail"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": ""
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "description",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Background/Default Table/Column_Header_Detail"
+                },
+                "title": "Description"
+              },
+              "justify": "auto",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "date",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": false,
+              "style": {
+                "classes": "Table/Column_Normal_Detail"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": ""
+            }
+          ],
+          "rows": {
+            "highlight": {
+              "color": "#C7DCED"
+            },
+            "striped": {
+              "enabled": false
+            },
+            "style": {
+              "cursor": "pointer"
+            }
+          }
+        },
+        "type": "ia.display.table"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "meta": {
+                  "name": "GroupName"
+                },
+                "position": {
+                  "shrink": 0
+                },
+                "propConfig": {
+                  "props.params.inputText": {
+                    "binding": {
+                      "config": {
+                        "path": "..../Table.props.selection.data[0].name"
+                      },
+                      "transforms": [
+                        {
+                          "code": "\tif not value:\n\t\tvalue \u003d \"\"\n\treturn value",
+                          "type": "script"
+                        }
+                      ],
+                      "type": "property"
+                    }
+                  }
+                },
+                "props": {
+                  "params": {
+                    "text": "Selected Group\u0027s Name"
+                  },
+                  "path": "Volunteers/Registration/Cards/TextInput",
+                  "style": {
+                    "marginTop": "5px"
+                  },
+                  "useDefaultViewHeight": true
+                },
+                "type": "ia.display.view"
+              }
+            ],
+            "meta": {
+              "name": "FlexContainer Left"
+            },
+            "position": {
+              "basis": "50%"
+            },
+            "props": {
+              "direction": "column",
+              "style": {
+                "paddingLeft": "25px",
+                "paddingRight": "20px"
+              }
+            },
+            "type": "ia.container.flex"
+          },
+          {
+            "children": [
+              {
+                "meta": {
+                  "name": "GroupDescription"
+                },
+                "position": {
+                  "shrink": 0
+                },
+                "propConfig": {
+                  "props.params.inputText": {
+                    "binding": {
+                      "config": {
+                        "path": "..../Table.props.selection.data[0].description"
+                      },
+                      "transforms": [
+                        {
+                          "code": "\tif not value:\n\t\tvalue \u003d \"\"\n\treturn value",
+                          "type": "script"
+                        }
+                      ],
+                      "type": "property"
+                    }
+                  }
+                },
+                "props": {
+                  "params": {
+                    "text": "Selected Group\u0027s Description"
+                  },
+                  "path": "Volunteers/Registration/Cards/TextInput",
+                  "style": {
+                    "marginTop": "5px"
+                  },
+                  "useDefaultViewHeight": true
+                },
+                "type": "ia.display.view"
+              },
+              {
+                "meta": {
+                  "name": "GroupId"
+                },
+                "position": {
+                  "basis": "320px",
+                  "display": false
+                },
+                "propConfig": {
+                  "props.params.inputText": {
+                    "binding": {
+                      "config": {
+                        "path": "..../Table.props.selection.data[0].id"
+                      },
+                      "transforms": [
+                        {
+                          "code": "\tif not value:\n\t\tvalue \u003d \"\"\n\treturn value",
+                          "type": "script"
+                        }
+                      ],
+                      "type": "property"
+                    }
+                  }
+                },
+                "props": {
+                  "params": {
+                    "text": "ID"
+                  },
+                  "path": "Volunteers/Registration/Cards/TextInput",
+                  "style": {
+                    "marginTop": "5px"
+                  },
+                  "useDefaultViewHeight": true
+                },
+                "type": "ia.display.view"
+              }
+            ],
+            "meta": {
+              "name": "FlexContainer Right"
+            },
+            "position": {
+              "basis": "50%",
+              "grow": 1
+            },
+            "props": {
+              "direction": "column",
+              "style": {
+                "paddingLeft": "15px",
+                "paddingRight": "30px"
+              }
+            },
+            "type": "ia.container.flex"
+          }
+        ],
+        "meta": {
+          "name": "FlexContainer SelectedGroup"
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "children": [
+          {
+            "events": {
+              "component": {
+                "onActionPerformed": {
+                  "config": {
+                    "script": "#\timport traceback\n#\ttry:\n#\t\tsystem.perspective.sendMessage(\"ResetSearch\", payload\u003d{}, scope\u003d\"session\")\n#\t\tsystem.perspective.sendMessage(\"ResetRegistration\", payload\u003d{}, scope\u003d\"session\")\n#\texcept:\n#\t\tlogger \u003d system.util.getLogger(\"Participants RegisterParticipantSearch Button Clear\")\n#\t\tmsg \u003d traceback.format_exc()\n#\t\tlogger.error(msg)"
+                  },
+                  "scope": "G",
+                  "type": "script"
+                }
+              }
+            },
+            "meta": {
+              "name": "Button Clear"
+            },
+            "position": {
+              "basis": "120px"
+            },
+            "props": {
+              "style": {
+                "classes": "Buttons/Delete",
+                "marginBottom": "15px",
+                "marginLeft": "20px",
+                "marginRight": "20px",
+                "marginTop": "15px"
+              },
+              "text": "Clear"
+            },
+            "type": "ia.input.button"
+          },
+          {
+            "events": {
+              "component": {
+                "onActionPerformed": {
+                  "config": {
+                    "script": "\ttry:\n\t\tgroupId \u003d self.parent.parent.getChild(\"FlexContainer SelectedGroup\").getChild(\"FlexContainer Right\").getChild(\"GroupId\").props.params.inputText\n\t\tgroupName \u003d self.parent.parent.getChild(\"FlexContainer SelectedGroup\").getChild(\"FlexContainer Left\").getChild(\"GroupName\").props.params.inputText\n\t\tif groupId !\u003d \u0027\u0027:\n\t\t\t\n\t\t\tmembers \u003d self.view.custom.groupMembers\n\t\t\tindex \u003d 0\n\t\t\tfor member in members:\n\t\t\t\tmember[\"rowId\"] \u003d index\n\t\t\t\tindex +\u003d 1\n\t\t\tpayload \u003d {\n\t\t\t\t\"members\": members,\n\t\t\t\t\"groupId\": groupId,\n\t\t\t\t\"groupName\": groupName\n\t\t\t}\n\t\t\tsystem.perspective.sendMessage(\"AddVolunteerGroupCreation\", payload\u003dpayload, scope\u003d\"page\")\n\t\t\tsystem.perspective.closeDock(\"RegisterGroupMembers\")\n\t\telse:\n\t\t\tself.getSibling(\"Label\").showMessage(\"Group Name is a required field to add a new Group.\")\n\texcept:\n\t\tlogger \u003d system.util.getLogger(\"Groups GroupRegistration Button Create\")\n\t\tmsg \u003d traceback.format_exc()\n\t\tlogger.error(msg)"
+                  },
+                  "scope": "G",
+                  "type": "script"
+                }
+              }
+            },
+            "meta": {
+              "name": "Button Create"
+            },
+            "position": {
+              "basis": "120px"
+            },
+            "propConfig": {
+              "position.display": {
+                "binding": {
+                  "config": {
+                    "path": ".../FlexContainer SelectedGroup/FlexContainer Right/GroupId.props.params.inputText"
+                  },
+                  "transforms": [
+                    {
+                      "code": "\tif value:\n\t\treturn True\n\telse:\n\t\treturn False",
+                      "type": "script"
+                    }
+                  ],
+                  "type": "property"
+                }
+              }
+            },
+            "props": {
+              "style": {
+                "classes": "Buttons/Main",
+                "marginBottom": "15px",
+                "marginLeft": "20px",
+                "marginRight": "20px",
+                "marginTop": "15px"
+              },
+              "text": "Load Group Members"
+            },
+            "type": "ia.input.button"
+          },
+          {
+            "meta": {
+              "name": "Label",
+              "visible": false
+            },
+            "position": {
+              "basis": "50px",
+              "grow": 1
+            },
+            "props": {
+              "style": {
+                "classes": "Text/Error_Message"
+              },
+              "text": "First Name, Last Name, and Race are required fields to add a new participant."
+            },
+            "scripts": {
+              "customMethods": [
+                {
+                  "name": "showMessage",
+                  "params": [
+                    "message"
+                  ],
+                  "script": "\timport time\n\t#system.perspective.print(message)\n\tself.props.text \u003d message\n\tself.meta.visible \u003d True\n\ttime.sleep(5)\n\tself.meta.visible \u003d False\n\t"
+                }
+              ],
+              "extensionFunctions": null,
+              "messageHandlers": []
+            },
+            "type": "ia.display.label"
+          }
+        ],
+        "meta": {
+          "name": "root Actions"
+        },
+        "position": {
+          "basis": "65px",
+          "shrink": 0
+        },
+        "type": "ia.container.flex"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column",
+      "style": {
+        "classes": "Background/Default"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

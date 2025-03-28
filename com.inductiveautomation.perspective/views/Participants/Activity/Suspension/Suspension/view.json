@@ -1,0 +1,198 @@
+{
+  "custom": {
+    "Data": [
+      {
+        "comment": "Winter Shelter",
+        "duration": 365,
+        "suspension_type": "Winter Shelter",
+        "time_begin": 1612285200000,
+        "time_end": 1643821200000
+      }
+    ]
+  },
+  "params": {
+    "Date": "Apr. 19, 2020 at 11:32 AM",
+    "ID": 27,
+    "Size": 150
+  },
+  "propConfig": {
+    "custom.Data": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "ReinstatementID": "{view.params.ID}"
+          },
+          "queryPath": "Participants/Activities/SelectSingleReinstatement",
+          "returnFormat": "json"
+        },
+        "transforms": [
+          {
+            "code": "\tif len(value):\n\t\treturn value\n\telse:\n\t\treturn [{\n\t  \"suspension_type\": \"\",\n\t  \"duration\": \"\",\n\t  \"time_begin\": \"\",\n\t  \"time_end\": \"\",\n\t  \"comment\": \"\",\n\t}]",
+            "type": "script"
+          }
+        ],
+        "type": "query"
+      },
+      "persistent": true
+    },
+    "params.Date": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.ID": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.Size": {
+      "binding": {
+        "config": {
+          "path": "view.props.defaultSize.height"
+        },
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 150
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "EmbeddedView"
+        },
+        "position": {
+          "basis": "40px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.Date": {
+            "binding": {
+              "config": {
+                "expression": "{view.params.Date}"
+              },
+              "transforms": [
+                {
+                  "expression": "dateFormat({value},\"MMM. d, YYYY\") +\" at \"+ dateFormat({value},\"hh:mm a\")",
+                  "type": "expression"
+                }
+              ],
+              "type": "expr"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "Icon": "material/error_outline",
+            "Title": "Suspension"
+          },
+          "path": "Participants/Activity/ActivityHeader"
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "EmbeddedView_1"
+        },
+        "position": {
+          "basis": "38px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.duration": {
+            "binding": {
+              "config": {
+                "path": "view.custom.Data[0].duration"
+              },
+              "type": "property"
+            }
+          },
+          "props.params.suspension_type": {
+            "binding": {
+              "config": {
+                "path": "view.custom.Data[0].suspension_type"
+              },
+              "type": "property"
+            }
+          },
+          "props.params.time_begin": {
+            "binding": {
+              "config": {
+                "path": "view.custom.Data[0].time_begin"
+              },
+              "type": "property"
+            }
+          },
+          "props.params.time_end": {
+            "binding": {
+              "config": {
+                "path": "view.custom.Data[0].time_end"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "path": "Participants/Activity/Suspension/InformationTop",
+          "style": {
+            "borderTopColor": "#e6e6e6",
+            "borderTopStyle": "solid",
+            "borderTopWidth": 1,
+            "marginBottom": "10px",
+            "marginLeft": "50px",
+            "marginRight": "50px",
+            "paddingTop": "5px"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "EmbeddedView_3"
+        },
+        "position": {
+          "basis": "53px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.text": {
+            "binding": {
+              "config": {
+                "path": "view.custom.Data[0].comment"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "path": "Participants/Activity/Suspension/InformationBottom",
+          "style": {
+            "borderTopColor": "#e6e6e6",
+            "borderTopStyle": "solid",
+            "borderTopWidth": 1,
+            "marginBottom": "10px",
+            "marginLeft": "50px",
+            "marginRight": "50px",
+            "paddingTop": "5px"
+          }
+        },
+        "type": "ia.display.view"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column",
+      "style": {
+        "classes": "Background/Default",
+        "overflow": "hidden"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

@@ -1,0 +1,406 @@
+{
+  "custom": {},
+  "params": {
+    "active": "",
+    "callTheNameService": "No",
+    "case_manager_id": "",
+    "so_registry": "",
+    "so_registry_date": "",
+    "time_deceased": null
+  },
+  "propConfig": {
+    "params.active": {
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.callTheNameService": {
+      "binding": {
+        "config": {
+          "path": "/root/Embed_TimeDeceased.props.params.callTheNameService"
+        },
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.case_manager_id": {
+      "paramDirection": "inout"
+    },
+    "params.so_registry": {
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.so_registry_date": {
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.time_deceased": {
+      "paramDirection": "inout"
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 76,
+      "width": 1416
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "Embed_CaseManager"
+        },
+        "position": {
+          "basis": "190px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "position.display": {
+            "binding": {
+              "config": {
+                "expression": "hasRole(\u0027Administrator\u0027, {session.props.auth.user.userName}, {session.props.auth.idp})"
+              },
+              "type": "expr"
+            }
+          },
+          "props.params.options": {
+            "binding": {
+              "config": {
+                "queryPath": "Participants/CaseManagerDropdownList"
+              },
+              "type": "query"
+            }
+          },
+          "props.params.selection": {
+            "binding": {
+              "config": {
+                "bidirectional": true,
+                "path": "view.params.case_manager_id"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "text": "Case Manager"
+          },
+          "path": "Participants/Templates/60px/top/Input_DropDownSingle",
+          "style": {
+            "classes": "InputCards/InputCard"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Embed_Active"
+        },
+        "position": {
+          "basis": "250px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "position.display": {
+            "binding": {
+              "config": {
+                "expression": "hasRole(\u0027Manager\u0027, {session.props.auth.user.userName}, {session.props.auth.idp}) || hasRole(\u0027WS Manager\u0027, {session.props.auth.user.userName}, {session.props.auth.idp}) || hasRole(\u0027Administrator\u0027, {session.props.auth.user.userName}, {session.props.auth.idp})"
+              },
+              "type": "expr"
+            }
+          },
+          "props.params.selection": {
+            "binding": {
+              "config": {
+                "bidirectional": true,
+                "path": "view.params.active"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "options": {
+              "$": [
+                "ds",
+                192,
+                1609026072864
+              ],
+              "$columns": [
+                {
+                  "data": [
+                    0,
+                    1
+                  ],
+                  "name": "id",
+                  "type": "Integer"
+                },
+                {
+                  "data": [
+                    "No",
+                    "Yes"
+                  ],
+                  "name": "text",
+                  "type": "String"
+                }
+              ]
+            },
+            "text": "Active Participant"
+          },
+          "path": "Participants/Templates/60px/top/Input_DropDownSingle",
+          "style": {
+            "classes": "InputCards/InputCard"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Embed_TimeDeceased"
+        },
+        "position": {
+          "basis": "220px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "position.display": {
+            "binding": {
+              "config": {
+                "expression": "hasRole(\u0027Administrator\u0027, {session.props.auth.user.userName}, {session.props.auth.idp})"
+              },
+              "type": "expr"
+            }
+          },
+          "props.params.date": {
+            "binding": {
+              "config": {
+                "bidirectional": true,
+                "path": "view.params.time_deceased"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "callTheNameService": "No",
+            "text": "Deceased Date"
+          },
+          "path": "Participants/Registration/Detail/Edit/Deceased_Date_Template",
+          "style": {
+            "classes": "InputCards/InputCard"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Embed_TimeDeceased_ReadOnly"
+        },
+        "position": {
+          "basis": "150px",
+          "display": false,
+          "shrink": 0
+        },
+        "propConfig": {
+          "position.display": {
+            "binding": {
+              "config": {
+                "expression": "hasRole(\u0027Administrator\u0027, {session.props.auth.user.userName}, {session.props.auth.idp})"
+              },
+              "enabled": false,
+              "transforms": [
+                {
+                  "code": "\treturn not value",
+                  "type": "script"
+                }
+              ],
+              "type": "expr"
+            }
+          },
+          "props.params.text": {
+            "binding": {
+              "config": {
+                "path": "view.params.time_deceased"
+              },
+              "transforms": [
+                {
+                  "code": "\tif value \u003d\u003d None or value \u003d\u003d \u0027\u0027:\n\t\treturn \u0027\u0027\n\telse:\n\t\treturn system.date.format(system.date.fromMillis(value),\u0027MMM dd, yyyy\u0027)",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "label": "Deceased Date"
+          },
+          "path": "Participants/Templates/60px/top/ReadOnly_Text",
+          "style": {
+            "classes": "InputCards/InputCard"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Embed_SORegistry"
+        },
+        "position": {
+          "basis": "240px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "position.display": {
+            "binding": {
+              "config": {
+                "expression": "hasRole(\u0027Manager\u0027, {session.props.auth.user.userName}, {session.props.auth.idp}) || hasRole(\u0027WS Manager\u0027, {session.props.auth.user.userName}, {session.props.auth.idp}) || hasRole(\u0027Administrator\u0027, {session.props.auth.user.userName}, {session.props.auth.idp})"
+              },
+              "type": "expr"
+            }
+          },
+          "props.params.selection": {
+            "binding": {
+              "config": {
+                "bidirectional": true,
+                "path": "view.params.so_registry"
+              },
+              "type": "property"
+            }
+          },
+          "props.path": {
+            "binding": {
+              "config": {
+                "expression": "hasRole(\u0027Administrator\u0027, {session.props.auth.user.userName}, {session.props.auth.idp})"
+              },
+              "transforms": [
+                {
+                  "code": "\tif value:\n\t\treturn \"Participants/Templates/Input_DropDownSingle\"\n\telse:\n\t\treturn \"Participants/Templates/Placeholder\"",
+                  "type": "script"
+                }
+              ],
+              "type": "expr"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "options": {
+              "$": [
+                "ds",
+                192,
+                1619300685778
+              ],
+              "$columns": [
+                {
+                  "data": [
+                    0,
+                    1
+                  ],
+                  "name": "id",
+                  "type": "Integer"
+                },
+                {
+                  "data": [
+                    "No",
+                    "Yes"
+                  ],
+                  "name": "text",
+                  "type": "String"
+                }
+              ]
+            },
+            "text": "SO Registry"
+          },
+          "style": {
+            "classes": "InputCards/InputCard"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Embed_Placeholder"
+        },
+        "position": {
+          "basis": "1px",
+          "grow": 1
+        },
+        "props": {
+          "path": "Participants/Templates/Placeholder",
+          "style": {
+            "classes": "InputCards/InputCard"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Embed_DateSORegistry"
+        },
+        "position": {
+          "basis": "280px",
+          "display": false,
+          "shrink": 0
+        },
+        "propConfig": {
+          "position.display": {
+            "binding": {
+              "config": {
+                "expression": "hasRole(\u0027Manager\u0027, {session.props.auth.user.userName}, {session.props.auth.idp}) || hasRole(\u0027WS Manager\u0027, {session.props.auth.user.userName}, {session.props.auth.idp}) || hasRole(\u0027Administrator\u0027, {session.props.auth.user.userName}, {session.props.auth.idp})"
+              },
+              "enabled": false,
+              "type": "expr"
+            }
+          },
+          "props.params.date": {
+            "binding": {
+              "config": {
+                "path": "view.params.so_registry_date"
+              },
+              "enabled": false,
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "date": null,
+            "enabled": false,
+            "text": "SO Registry Date"
+          },
+          "path": "Participants/Templates/60px/top/Input_Date_WithEnableDisableSetting",
+          "style": {
+            "classes": "InputCards/InputCard"
+          }
+        },
+        "type": "ia.display.view"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "style": {
+        "classes": "Background/Default"
+      }
+    },
+    "scripts": {
+      "customMethods": [],
+      "extensionFunctions": null,
+      "messageHandlers": [
+        {
+          "messageType": "setDeceasedDate",
+          "pageScope": true,
+          "script": "\t# implement your handler here\n\tcallTheNameService \u003d payload[\u0027callTheNameService\u0027]\n\tdeceasedDate \u003d payload[\u0027deceasedDate\u0027]",
+          "sessionScope": true,
+          "viewScope": true
+        }
+      ]
+    },
+    "type": "ia.container.flex"
+  }
+}

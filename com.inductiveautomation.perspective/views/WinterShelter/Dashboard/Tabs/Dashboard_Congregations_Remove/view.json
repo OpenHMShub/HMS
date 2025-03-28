@@ -1,0 +1,240 @@
+{
+  "custom": {},
+  "params": {
+    "tab_id": 1
+  },
+  "propConfig": {
+    "params.tab_id": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 877,
+      "width": 1496
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "KPI"
+        },
+        "position": {
+          "basis": "175px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "custom.sqlData": {
+            "binding": {
+              "config": {
+                "parameters": {
+                  "city": "{session.custom.filters.winterShelterCongregations.city.where}",
+                  "locationName": "{session.custom.filters.winterShelterCongregations.locationName.where}",
+                  "seasonId": "{session.custom.filters.winterShelterCongregations.timeRetired.where}",
+                  "zipCode": "{session.custom.filters.winterShelterCongregations.zipCode.where}"
+                },
+                "queryPath": "WinterShelter/Dashboard/CongregationsSummary"
+              },
+              "type": "query"
+            }
+          },
+          "props.params.seasonId": {
+            "binding": {
+              "config": {
+                "path": "../Filter.props.params.seasonId"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "path": "WinterShelter/Dashboard/Cards/KPI_Header_Registration"
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Filter"
+        },
+        "position": {
+          "basis": "30px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.maxGuests": {
+            "binding": {
+              "config": {
+                "path": "../Table.props.params.maxGuests"
+              },
+              "type": "property"
+            }
+          },
+          "props.params.minGuests": {
+            "binding": {
+              "config": {
+                "path": "../Table.props.params.minGuests"
+              },
+              "type": "property"
+            }
+          },
+          "props.params.seasonId": {
+            "binding": {
+              "config": {
+                "queryPath": "WinterShelter/getCurrentSeason"
+              },
+              "transforms": [
+                {
+                  "code": "\treturn value.getValueAt(0,\u0027id\u0027)",
+                  "type": "script"
+                }
+              ],
+              "type": "query"
+            }
+          }
+        },
+        "props": {
+          "path": "WinterShelter/Dashboard/Components/Filter/Winter_Shelter_Congregation_Filter"
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Label"
+        },
+        "position": {
+          "basis": "30px",
+          "display": false,
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.text": {
+            "binding": {
+              "config": {
+                "expression": "\u0027Active:\u0027 + {session.custom.filters.winterShelterCongregations.timeRetired.where}\r\n+ \u0027, Location:\u0027 + {session.custom.filters.winterShelterCongregations.locationName.where}\r\n+ \u0027, City:\u0027 + {session.custom.filters.winterShelterCongregations.city.where}\r\n+ \u0027, Zip:\u0027 + {session.custom.filters.winterShelterCongregations.zipCode.where}\r\n+ \u0027, Min:\u0027 + {session.custom.filters.winterShelterCongregations.minGuests.where}\r\n+ \u0027, Max:\u0027 + {session.custom.filters.winterShelterCongregations.maxGuests.where}\r\n+ \u0027, Gender:\u0027 + {session.custom.filters.winterShelterCongregations.genders.where}"
+              },
+              "type": "expr"
+            }
+          }
+        },
+        "props": {
+          "style": {
+            "classes": "Background/Alternative Text/Error_Message"
+          }
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "meta": {
+          "name": "Table"
+        },
+        "position": {
+          "basis": "75%",
+          "grow": 1
+        },
+        "propConfig": {
+          "props.params.tab_id": {
+            "binding": {
+              "config": {
+                "path": "view.params.tab_id"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "maxGuests": {
+              "$": [
+                "ds",
+                192,
+                1660279507037
+              ],
+              "$columns": [
+                {
+                  "data": [
+                    8,
+                    9,
+                    10,
+                    11,
+                    12,
+                    13,
+                    15,
+                    17,
+                    24
+                  ],
+                  "name": "value",
+                  "type": "Integer"
+                },
+                {
+                  "data": [
+                    8,
+                    9,
+                    10,
+                    11,
+                    12,
+                    13,
+                    15,
+                    17,
+                    24
+                  ],
+                  "name": "label",
+                  "type": "Integer"
+                }
+              ]
+            },
+            "minGuests": {
+              "$": [
+                "ds",
+                192,
+                1660279507038
+              ],
+              "$columns": [
+                {
+                  "data": [
+                    8,
+                    9,
+                    10,
+                    11,
+                    12,
+                    13,
+                    15,
+                    17,
+                    24
+                  ],
+                  "name": "value",
+                  "type": "Integer"
+                },
+                {
+                  "data": [
+                    8,
+                    9,
+                    10,
+                    11,
+                    12,
+                    13,
+                    15,
+                    17,
+                    24
+                  ],
+                  "name": "label",
+                  "type": "Integer"
+                }
+              ]
+            }
+          },
+          "path": "WinterShelter/Dashboard/Components/Tables/Congregations_Table"
+        },
+        "type": "ia.display.view"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column"
+    },
+    "type": "ia.container.flex"
+  }
+}

@@ -1,0 +1,459 @@
+{
+  "custom": {
+    "AvailableVsTotalBeds": {
+      "$": [
+        "ds",
+        192,
+        1738565762904
+      ],
+      "$columns": [
+        {
+          "data": [
+            null
+          ],
+          "name": "Total Beds",
+          "type": "Integer"
+        },
+        {
+          "data": [
+            null
+          ],
+          "name": "Available Beds",
+          "type": "Integer"
+        }
+      ]
+    },
+    "realtimeEndDate": {
+      "$": [
+        "ts",
+        192,
+        1738567228447
+      ],
+      "$ts": 1738607399000
+    },
+    "realtimeStartDate": {
+      "$": [
+        "ts",
+        192,
+        1738567228447
+      ],
+      "$ts": 1738521000000
+    },
+    "shelter_filter_KPI": "1\u003d1",
+    "totalBeds": null
+  },
+  "params": {
+    "endDate": {
+      "$": [
+        "ts",
+        192,
+        1732254110958
+      ],
+      "$ts": 1732168800000
+    },
+    "selectedPrograms": "(82,24,44,48,83,47,29,81,32,80,61,62,1,49,50,51,52,53,55,56,57,58,59,40,-1)",
+    "selectedShelters": "(\u0027\u0027)",
+    "startDate": {
+      "$": [
+        "ts",
+        192,
+        1732254117888
+      ],
+      "$ts": 1704088800000
+    }
+  },
+  "propConfig": {
+    "custom.AvailableVsTotalBeds": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "endDate": "{view.params.endDate}",
+            "selectedPrograms": "{view.params.selectedPrograms}",
+            "selectedShelters": "{view.custom.shelter_filter_KPI}",
+            "startDate": "{view.params.startDate}"
+          },
+          "queryPath": "Shelter/Dashboard/KPI/AvailableVsTotalBeds"
+        },
+        "type": "query"
+      },
+      "persistent": true
+    },
+    "custom.realtimeEndDate": {
+      "binding": {
+        "config": {
+          "expression": "now()"
+        },
+        "transforms": [
+          {
+            "code": "\treturn system.date.setTime(value, 23, 59, 59)",
+            "type": "script"
+          }
+        ],
+        "type": "expr"
+      },
+      "persistent": true
+    },
+    "custom.realtimeStartDate": {
+      "binding": {
+        "config": {
+          "expression": "now()"
+        },
+        "transforms": [
+          {
+            "code": "\treturn system.date.setTime(value, 00, 00, 00)",
+            "type": "script"
+          }
+        ],
+        "type": "expr"
+      },
+      "persistent": true
+    },
+    "custom.shelter_filter_KPI": {
+      "binding": {
+        "config": {
+          "path": "view.params.selectedShelters"
+        },
+        "transforms": [
+          {
+            "code": "\tif value !\u003d None and value !\u003d \u0027\u0027 and value !\u003d \"(\u0027\u0027)\":\n\t\twhere \u003d \u0027frb.[Shelter Name] in \u0027 + str(value)\n\telse:\n\t\twhere \u003d \"1\u003d1\"\n\treturn where",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      },
+      "persistent": true
+    },
+    "custom.totalBeds": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "endDate": "{view.custom.realtimeEndDate}",
+            "selectedPrograms": "{view.params.selectedPrograms}",
+            "selectedShelters": "{view.custom.shelter_filter_KPI}",
+            "startDate": "{view.custom.realtimeStartDate}"
+          },
+          "queryPath": "Shelter/Dashboard/KPI/AvailableVsTotalBeds"
+        },
+        "transforms": [
+          {
+            "code": "\treturn value.getValueAt(0,0)",
+            "type": "script"
+          }
+        ],
+        "type": "query"
+      },
+      "persistent": true
+    },
+    "params.endDate": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.selectedPrograms": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.selectedShelters": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.startDate": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 185,
+      "width": 1430
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "KPI1"
+        },
+        "position": {
+          "basis": "345px",
+          "grow": 1,
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.Value": {
+            "binding": {
+              "config": {
+                "parameters": {
+                  "endDate": "{view.params.endDate}",
+                  "selectedPrograms": "{view.params.selectedPrograms}",
+                  "selectedShelters": "{view.custom.shelter_filter_KPI}",
+                  "startDate": "{view.params.startDate}"
+                },
+                "queryPath": "Shelter/Dashboard/KPI/BedNights"
+              },
+              "type": "query"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "Title": "Bed Nights"
+          },
+          "path": "Shelter/Dashboard/Cards/KPI/Metric_Flex",
+          "style": {
+            "classes": "KPIs/KPI_Card",
+            "marginLeft": "40px"
+          },
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "KPI2"
+        },
+        "position": {
+          "basis": "270px",
+          "grow": 1,
+          "shrink": 0
+        },
+        "propConfig": {
+          "custom.utilization": {
+            "binding": {
+              "config": {
+                "parameters": {
+                  "endDate": "{view.params.endDate}",
+                  "selectedPrograms": "{view.params.selectedPrograms}",
+                  "selectedShelters": "{view.custom.shelter_filter_KPI}",
+                  "startDate": "{view.params.startDate}"
+                },
+                "queryPath": "Shelter/Dashboard/KPI/Utilization"
+              },
+              "type": "query"
+            }
+          },
+          "props.params.Value": {
+            "binding": {
+              "config": {
+                "struct": {
+                  "totalBeds": "{view.custom.totalBeds}",
+                  "utilization": "{this.custom.utilization}"
+                },
+                "waitOnAll": true
+              },
+              "transforms": [
+                {
+                  "code": "\tnow \u003d system.date.now()\n\tresult \u003d value[\u0027utilization\u0027]\n\ttotalBeds \u003d value[\u0027totalBeds\u0027]\n#\tstartCurrentMonth \u003d system.date.getDate(system.date.getYear(now),system.date.getMonth(now),1)\n#\tcurrentMonthHours \u003d system.date.hoursBetween(startCurrentMonth, now)\n\tstartDate \u003d self.view.params.startDate\n\tendDate \u003d self.view.params.endDate\n\tcurrentMonthHours \u003d system.date.hoursBetween(startDate, endDate)\n\tif totalBeds !\u003d None:\n\t\ttotalHours \u003d totalBeds  * currentMonthHours\t\n\telse:\n\t\ttotalHours \u003d currentMonthHours\n\toccupiedHours \u003d 0\n#\toccupiedDays \u003d 0\n\tfor row in range(0,result.getRowCount()): \n#\t\toccupiedDays \u003d occupiedDays + system.date.daysBetween(result.getValueAt(row,\u0027correctedStart\u0027), result.getValueAt(row,\u0027correctedEnd\u0027))\n\t\toccupiedHours +\u003d result.getValueAt(row,\u0027deltaHours\u0027)\n\tutilizationPercent \u003d float(100 *occupiedHours) / totalHours if totalHours !\u003d 0 else 0\n\treturn round(utilizationPercent,3)",
+                  "type": "script"
+                }
+              ],
+              "type": "expr-struct"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "Title": "Utilization"
+          },
+          "path": "Shelter/Dashboard/Cards/KPI/Percent_Flex",
+          "style": {
+            "classes": "KPIs/KPI_Card"
+          },
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "KPI3"
+        },
+        "position": {
+          "basis": "345px",
+          "grow": 1,
+          "shrink": 0
+        },
+        "propConfig": {
+          "custom.unique_participants": {
+            "binding": {
+              "config": {
+                "parameters": {
+                  "endDate": "{view.params.endDate}",
+                  "selectedPrograms": "{view.params.selectedPrograms}",
+                  "selectedShelters": "{view.custom.shelter_filter_KPI}",
+                  "startDate": "{view.params.startDate}"
+                },
+                "queryPath": "Shelter/Dashboard/KPI/UniqueParticipantKPI_Historical"
+              },
+              "type": "query"
+            }
+          },
+          "props.params.Value": {
+            "binding": {
+              "config": {
+                "path": "this.custom.unique_participants"
+              },
+              "transforms": [
+                {
+                  "code": "\treturn value.getValueAt(0,0)",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "Title": "Unique Participants"
+          },
+          "path": "Shelter/Dashboard/Cards/KPI/Metric_Flex",
+          "style": {
+            "classes": "KPIs/KPI_Card"
+          },
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "KPI4"
+        },
+        "position": {
+          "basis": "270px",
+          "grow": 1,
+          "shrink": 0
+        },
+        "propConfig": {
+          "custom.AvgLenOfStay": {
+            "binding": {
+              "config": {
+                "struct": {
+                  "sql_data": "{this.custom.sql_data}",
+                  "unique_participant": "{this.custom.uniqueParticipantSummary}"
+                },
+                "waitOnAll": true
+              },
+              "transforms": [
+                {
+                  "code": "\tpyDataset \u003d value[\u0027sql_data\u0027]\n\tcolNames \u003d system.dataset.getColumnHeaders(pyDataset)\n\t## add column options in columns\n\tcolNames.insert(0, \u0027Options\u0027)\n\t\n\t## add style to ndividual columns\n\t_data \u003d []\n\tfor row in range(pyDataset.getRowCount()):\n\t\tauxDict \u003d {}\n\t\tfor col in colNames:\n\t\t\tcolNoSpace \u003d col.replace(\u0027 \u0027,\u0027\u0027)\n\t\t\tvalue \u003d pyDataset.getValueAt(row,col) if col !\u003d \u0027Options\u0027 else \u0027\u0027\n\t\t\tif value \u003d\u003d \u0027true\u0027:\n\t\t\t\tvalue \u003d True\n\t\t\tif value \u003d\u003d \u0027false\u0027:\n\t\t\t\tvalue \u003d False\n\t\t\t\t\n\t\t\tif col \u003d\u003d \u0027Options\u0027:\n\t\t\t\tauxDict[colNoSpace] \u003d \u0027\u0027\n\t\t\telif col \u003d\u003d \u0027Shelter Name\u0027:\n\t\t\t\t_style \u003d {\t\"color\": \"#0c4e85\",\n\t\t\t\t\t\t\t\"cursor\": \"pointer\",\n\t\t\t\t\t\t\t\"fontFamily\": \"Proxima Nova ExCn Medium\",\n\t\t\t\t\t\t\t\"text-align\": \"left\"}\n\t\t\t\t\t\t\t\n\t\t\t\tauxDict[colNoSpace] \u003d {\u0027value\u0027: value, \"style\": _style}\n\t\t\telse:\n\t\t\t\tauxDict[colNoSpace] \u003d value\n\t\t_data.append(auxDict)\n\t\n\t## append total to table\n\tuniqueParticipants \u003d 0\n\ttotalBedNights \u003d 0\n\tavgDaysPerOccupant \u003d 0\n\tfor row in _data:\n\t\ttotalBedNights \u003d totalBedNights + int(row[\u0027totalBedNights\u0027])\n\t\n\tuniqueParticipants \u003d self.custom.uniqueParticipantSummary\n\tavgDaysPerOccupant \u003d totalBedNights/uniqueParticipants if uniqueParticipants!\u003d0 else 0\n\t\n\treturn avgDaysPerOccupant",
+                  "type": "script"
+                }
+              ],
+              "type": "expr-struct"
+            }
+          },
+          "custom.sql_data": {
+            "binding": {
+              "config": {
+                "parameters": {
+                  "endDate": "{view.params.endDate}",
+                  "selectedPrograms": "{view.params.selectedPrograms}",
+                  "selectedShelters": "{view.custom.shelter_filter_KPI}",
+                  "startDate": "{view.params.startDate}"
+                },
+                "queryPath": "Shelter/Dashboard/KPI/ParticipantAvgLengthOfStay"
+              },
+              "type": "query"
+            }
+          },
+          "custom.uniqueParticipantSummary": {
+            "binding": {
+              "config": {
+                "parameters": {
+                  "endDate": "{view.params.endDate}",
+                  "selectedPrograms": "{view.params.selectedPrograms}",
+                  "selectedShelters": "{view.custom.shelter_filter_KPI}",
+                  "startDate": "{view.params.startDate}"
+                },
+                "queryPath": "Shelter/Dashboard/KPI/UniqueParticipantSummary_AsPerShelter"
+              },
+              "transforms": [
+                {
+                  "code": "\treturn value.getValueAt(0,0)",
+                  "type": "script"
+                }
+              ],
+              "type": "query"
+            }
+          },
+          "props.params.Value": {
+            "binding": {
+              "config": {
+                "path": "this.custom.AvgLenOfStay"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "Title": "Participant Avg Length of Stay (Days)"
+          },
+          "path": "Shelter/Dashboard/Cards/KPI/Total_Flex",
+          "style": {
+            "classes": "KPIs/KPI_Card",
+            "marginRight": "40px"
+          },
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "alignContent": "flex-start",
+      "alignItems": "center",
+      "style": {
+        "classes": "KPIs/KPI_Flex_Container",
+        "overflow": "hidden",
+        "overflowY": "hidden"
+      }
+    },
+    "scripts": {
+      "customMethods": [
+        {
+          "name": "setKpi1_AvailableTotal",
+          "params": [
+            "availableBeds",
+            "totalBeds"
+          ],
+          "script": "\tkpi1 \u003d self.getChild(\"KPI1\")\n\tkpi1.props.params.Title \u003d \u0027AVAILABLE/TOTAL BEDS\u0027\n\tkpi1.props.params.Value1 \u003d availableBeds\n\tkpi1.props.params.Value2 \u003d totalBeds\n"
+        },
+        {
+          "name": "setKpi2_Utilization",
+          "params": [
+            "totalBeds"
+          ],
+          "script": "\tkpi2 \u003d self.getChild(\"KPI2\")\n\n\t######\n\tquery \u003d \"\"\"\nDECLARE @fromDate datetime \u003d ?\n\t\t,@toDate datetime \u003d ?\n\t\t\t\n;WITH cte AS (\nSELECT [id]\n\t,[bedId]\n\t,[participantId]\n\t,[eventStart]\n\t,[eventEnd]\n\t,CASE WHEN [eventStart] \u003c @fromDate THEN @fromDate ELSE eventStart END [correctedStart]\n\t, ISNULL([eventEnd], @toDate) [correctedEnd]\nFROM [lodging].[BedLog]\nWHERE ISNULL([eventEnd], @fromDate) \u003e\u003d @fromDate\nAND [eventStart] \u003c\u003d @toDate\n)\n\nSELECT [id]\n\t,[bedId]\n\t,[participantId]\n\t,[eventStart]\n\t,[eventEnd]\n\t,[correctedStart]\n\t,[correctedEnd]\n, DATEDIFF(hour,[correctedStart],[correctedEnd]) deltaHours\nFROM cte\t\n\t\"\"\"\n\t\n\tnow \u003d system.date.now()\n\tstartCurrentMonth \u003d system.date.getDate(system.date.getYear(now),system.date.getMonth(now),1)\n\tcurrentMonthHours \u003d system.date.hoursBetween(startCurrentMonth, now)\n\ttotalHours \u003d totalBeds * currentMonthHours\n\t\n\tresult \u003d system.db.runPrepQuery(query, [startCurrentMonth, now],\u0027RITIOps\u0027)\n\t\n\toccupiedHours \u003d 0\n\tfor row in result: \n\t\toccupiedHours +\u003d row[\u0027deltaHours\u0027]\n\t\t\n\tutilizationPercent \u003d float(100 *occupiedHours) / totalHours if totalHours !\u003d 0 else 0\n\t\n\t#ystem.perspective.print((\u0027occupiedHours,currentMonthHours,totalBeds, totalHours ,  utilizationPercent:\u0027, occupiedHours,currentMonthHours,totalBeds, totalHours , utilizationPercent))\n\t\n\tkpi2.props.params.Title \u003d \u0027UTILIZATION THIS MONTH\u0027\n\tkpi2.props.params.Value \u003d round(utilizationPercent,3)\n\n\t"
+        },
+        {
+          "name": "setKpi3_WaitListTrend",
+          "params": [],
+          "script": "\tkpi3 \u003d self.getChild(\"KPI3\")\n\tkpi3.props.params.Value \u003d []\n\t\n\t######\n\tquery \u003d \"\"\"\n\tSELECT totalPeopleOnWaitlist, snapshotDate\n\tFROM [shelter].[WaitListSnapshot]\n\tWHERE snapshotDate \u003e\u003d ? AND snapshotDate \u003c\u003d ?\n\tORDER BY snapshotDate\n\t\"\"\"\n\tnow \u003d system.date.now()\n\tnowTime0 \u003d system.date.getDate(system.date.getYear(now), system.date.getMonth(now), system.date.getDayOfMonth(now))\n\tfourMonthsBeforeTime0 \u003d system.date.addMonths(nowTime0, -4)\n\n\tresult \u003d system.db.runPrepQuery(query, [fourMonthsBeforeTime0, nowTime0],\u0027RITIOps\u0027)\n\t\n\tsystem.perspective.print((\u0027kpi3 result: \u0027, result))\n\t\n\t\n\t\n\t#system.perspective.print((\u0027kpi3 _daysBetween: \u0027, _daysBetween))\t\n\tdata \u003d []\n\tif result is not None and result.getRowCount() \u003e 0:\n\t\tbeginDayInResult \u003d result.getValueAt(0,\u0027snapshotDate\u0027)\n\t\t_daysCount \u003d system.date.daysBetween(fourMonthsBeforeTime0, beginDayInResult) + 1\n\t\t_daysBetween \u003d[system.date.addDays(fourMonthsBeforeTime0, i) for i in range(_daysCount)]\n\t\tfor _day in _daysBetween:\n\t\t\tdata.append(dict(Enrollment \u003d 0, time \u003d _day))\n\t\tfor i in range(result.getRowCount()):\n\t\t\tdata.append(dict(Enrollment \u003d result.getValueAt(i,\u0027totalPeopleOnWaitlist\u0027), time \u003d result.getValueAt(i,\u0027snapshotDate\u0027)))\n\t\n\tif len(data) \u003d\u003d 0:\n\t\tdata.append(dict(Enrollment \u003d 0, time \u003d 0))\n\t\t\n\tseries \u003d [dict(data \u003d data, name \u003d \"Enrollment\")]\n\t\t\n\t#ystem.perspective.print((\u0027kpi 3 data: \u0027, data))\n\t\n\tkpi3.props.params.Title \u003d \u0027WAITING LIST TREND\u0027\n\tkpi3.props.params.Value \u003d series\n\t"
+        },
+        {
+          "name": "setKpi4_AvgDaysPerOccupant",
+          "params": [],
+          "script": "\tkpi4 \u003d self.getChild(\"KPI4\")\n\t\n\t######\n\tquery \u003d \"\"\"\nDECLARE @fromDate datetime \u003d ?,\n\t\t\t@toDate datetime \u003d ?\n\t\n\t;WITH cte AS (\n\tSELECT TOP (1000) [id]\n\t\t,[bedId]\n\t\t,[participantId]\n\t\t,[eventStart]\n\t\t,[eventEnd]\n\t\t,CASE WHEN [eventStart] \u003c @fromDate THEN @fromDate ELSE [eventStart] END AS [correctedEventStart]\n\t\t,CASE WHEN ISNULL([eventEnd], @toDate) \u003c\u003d @toDate THEN ISNULL([eventEnd], @toDate) ELSE @toDate END AS [correctedEventEnd]\n\tFROM [lodging].[BedLog]\n\tWHERE ([BedLog].[eventStart]\u003c\u003d @toDate\n\t\t\tAND ISNULL([BedLog].[eventEnd],@toDate) \u003e\u003d @fromDate)\n\t)\n\t\n\tSELECT [id]\n\t\t,[bedId]\n\t\t,[participantId]\n\t\t,[eventStart]\n\t\t,[eventEnd]\n\t\t,[correctedEventStart]\n\t\t,[correctedEventEnd]\n\t\t,DATEDIFF(hour,[correctedEventStart],[correctedEventEnd])  hoursDiff\n\tFROM cte\n\tWHERE DATEDIFF(hour,[correctedEventStart],[correctedEventEnd]) \u003e 1\n\t\"\"\"\n\tnow \u003d system.date.now()\n\t#nowTime0 \u003d system.date.getDate(system.date.getYear(now), system.date.getMonth(now), system.date.getDayOfMonth(now))\n\tyearStart \u003d system.date.getDate(system.date.getYear(now), 0, 1)\n\n\tresult \u003d system.db.runPrepQuery(query, [yearStart, now],\u0027RITIOps\u0027)\n\n\tsumHours \u003d 0\n\tdistinctParticipantList \u003d []\n\tfor _row in result:\n\t\tsumHours +\u003d _row[\u0027hoursDiff\u0027]\n\t\tif _row[\u0027participantId\u0027] not in distinctParticipantList:\n\t\t\tdistinctParticipantList.append(_row[\u0027participantId\u0027])\n\t\n\toccupants \u003d len(distinctParticipantList)\n\tavgDaysPerOccupant \u003d round((sumHours / 24.0 / occupants),1) if occupants \u003e 0 else 0\n\t\n\t#ystem.perspective.print((\u0027sumHours, occupants, avgDaysPerOccupant: \u0027, sumHours, occupants, avgDaysPerOccupant ))\n\t\n\tkpi4.props.params.Title \u003d \u0027Avg Days Per Occupant\u0027\n\tkpi4.props.params.Value \u003d avgDaysPerOccupant\n\t\n\t\n"
+        },
+        {
+          "name": "cleanKpis",
+          "params": [],
+          "script": "\tkpi1 \u003d self.getChild(\"KPI1\")\n\tkpi2 \u003d self.getChild(\"KPI2\")\n\tkpi3 \u003d self.getChild(\"KPI3\")\n\tkpi4 \u003d self.getChild(\"KPI4\")\t\n\t\n\t\n\t\n\t\n\tkpi1.props.params.Title \u003d \u0027\u0027\n\tkpi1.props.params.Value1 \u003d 0\n\tkpi1.props.params.Value2 \u003d 0\n\t\n\t\n\t\t\n\tkpi2.props.params.Title \u003d \u0027\u0027\n\tkpi2.props.params.Value \u003d 0\n\n\tkpi3.props.params.Title \u003d \u0027\u0027\n\tkpi3.props.params.Value \u003d []\n\n\tkpi4.props.params.Title \u003d \u0027\u0027\n\tkpi4.props.params.Value \u003d 0"
+        }
+      ],
+      "extensionFunctions": null,
+      "messageHandlers": [
+        {
+          "messageType": "mhShelterDashboardKpiHeader",
+          "pageScope": true,
+          "script": "\tsystem.perspective.print((\u0027kpishelter: \u0027))\n\tavailableBeds \u003d payload.get(\u0027availableBeds\u0027) \n\ttotalBeds \u003d payload.get(\u0027totalBeds\u0027) \n\t\n\n\tif totalBeds is None:\n\t\t# TODO: exec query and get totalBeds\n\t\traise ValueError(\u0027Missing totalBeds\u0027)\n\n\tif availableBeds is None:\n\t\traise ValueError(\u0027Missing availableBeds\u0027) # TODO: exec query and get totalBeds\n\t\t\n\t\n\tself.setKpi1_AvailableTotal(availableBeds, totalBeds)\n\tself.setKpi2_Utilization(totalBeds)\n\tself.setKpi3_WaitListTrend()\n\tself.setKpi4_AvgDaysPerOccupant()\n\n\t",
+          "sessionScope": false,
+          "viewScope": false
+        }
+      ]
+    },
+    "type": "ia.container.flex"
+  }
+}

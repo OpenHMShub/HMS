@@ -1,0 +1,207 @@
+{
+  "custom": {
+    "noOfSelectedGuests": 0
+  },
+  "params": {
+    "scheduleId": 363
+  },
+  "propConfig": {
+    "custom.noOfSelectedGuests": {
+      "binding": {
+        "config": {
+          "path": "/root/FlexContainer/participantsList.props.instances"
+        },
+        "transforms": [
+          {
+            "code": "\tcount \u003d 0\n\tif value is not None and len(value) \u003e 0:\n\t\tfor instance in value:\n\t\t\tcount \u003d count + 1\n\t\t\n\treturn count\t",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      },
+      "persistent": true
+    },
+    "params.dob_day": {
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.dob_month": {
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.dob_year": {
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.first_name": {
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.last_name": {
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.middle_name": {
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.nick_name": {
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.race_id": {
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.scheduleId": {
+      "paramDirection": "input"
+    },
+    "params.search_active": {
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.search_selection": {
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.selected_first_name": {
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.selected_last_name": {
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.selected_middle_name": {
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.ssn": {
+      "paramDirection": "output",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 500,
+      "width": 250
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "meta": {
+                  "name": "Label"
+                },
+                "position": {
+                  "basis": "55px",
+                  "grow": 1
+                },
+                "propConfig": {
+                  "props.text": {
+                    "binding": {
+                      "config": {
+                        "expression": "concat({view.custom.noOfSelectedGuests},\" Participants\")"
+                      },
+                      "type": "expr"
+                    }
+                  }
+                },
+                "props": {
+                  "style": {
+                    "classes": "Table/Column_Normal_Detail"
+                  },
+                  "textStyle": {
+                    "textAlign": "left"
+                  }
+                },
+                "type": "ia.display.label"
+              }
+            ],
+            "meta": {
+              "name": "NoOfGuests"
+            },
+            "position": {
+              "basis": "50px"
+            },
+            "props": {
+              "style": {
+                "overflow": "hidden"
+              }
+            },
+            "type": "ia.container.flex"
+          },
+          {
+            "meta": {
+              "name": "participantsList"
+            },
+            "position": {
+              "basis": "340px",
+              "grow": 1
+            },
+            "propConfig": {
+              "props.instances": {
+                "binding": {
+                  "config": {
+                    "parameters": {
+                      "scheduleId": "{view.params.scheduleId}"
+                    },
+                    "queryPath": "Event/ParticipantEvents/Preview/GetParticipants"
+                  },
+                  "transforms": [
+                    {
+                      "code": "\timport copy\n\tinstances \u003d []\n\tinstanceStruct \u003d {\n\t\t\t  \"instanceStyle\": {\n\t\t\t    \"classes\": \"\"\n\t\t\t  },\n\t\t\t  \"instancePosition\": {},\n\t\t\t  \"participantId\": -1,\n\t\t\t\n\t\t\t  \"participantName\":\u0027\u0027,\n\t\t\t \"allowPreview\":True,\n\t\t\t  \"isActive\":True\n\t\t\t\n\t\t\t}\n\tif value is not None and value.getRowCount() \u003e 0:\n\t\tfor i in range(value.getRowCount()):\n\t\t\tthisStruct \u003d copy.deepcopy(instanceStruct)\n\t\t\tthisStruct[\u0027participantId\u0027] \u003d value.getValueAt(i,\u0027participantId\u0027)\n\t\t\tthisStruct[\u0027participantName\u0027] \u003d value.getValueAt(i,\u0027participantName\u0027)\n\t\t\tthisStruct[\u0027isActive\u0027] \u003d value.getValueAt(i,\u0027isActive\u0027)\n\t\t\tinstances.append(thisStruct)\n\treturn instances",
+                      "type": "script"
+                    }
+                  ],
+                  "type": "query"
+                }
+              }
+            },
+            "props": {
+              "alignContent": "flex-start",
+              "direction": "column",
+              "path": "Events/ParticipantEvents/Schedule/Components/OneParticipant_Summary_Detail",
+              "style": {
+                "marginBottom": 5,
+                "marginRight": 15,
+                "marginTop": 5
+              },
+              "useDefaultViewWidth": false
+            },
+            "type": "ia.display.flex-repeater"
+          }
+        ],
+        "meta": {
+          "name": "FlexContainer"
+        },
+        "position": {
+          "basis": "200px",
+          "grow": 1
+        },
+        "props": {
+          "direction": "column",
+          "style": {
+            "classes": "Background/Default",
+            "marginLeft": 20
+          }
+        },
+        "type": "ia.container.flex"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column",
+      "style": {
+        "classes": "Background/Default"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

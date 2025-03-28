@@ -1,0 +1,1 @@
+SELECT count(id) FROM [participant].[Tasks] WHERE statusId in (1,2) and timeRetired IS NULL and staffId = :loggedInUserId

@@ -1,0 +1,173 @@
+{
+  "custom": {
+    "BedData": null
+  },
+  "params": {
+    "DateEnd": "Jul 19, 2021 4:19 PM",
+    "DateStart": "Jul 13, 2021 4:19 PM",
+    "FacID": "value",
+    "RoomID": 47
+  },
+  "propConfig": {
+    "custom.BedData": {
+      "binding": {
+        "config": {
+          "bypassCache": true,
+          "parameters": {
+            "RoomID": "{view.params.RoomID}"
+          },
+          "polling": {
+            "enabled": true,
+            "rate": "30"
+          },
+          "queryPath": "Shelter/BedView/BedStatusPerRoom"
+        },
+        "type": "query"
+      },
+      "persistent": true
+    },
+    "params.DateEnd": {
+      "binding": {
+        "config": {
+          "path": "/root/STEnd.props.formattedValue"
+        },
+        "type": "property"
+      },
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.DateStart": {
+      "binding": {
+        "config": {
+          "path": "/root/DTStart.props.formattedValue"
+        },
+        "type": "property"
+      },
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.FacID": {
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.RoomID": {
+      "paramDirection": "inout",
+      "persistent": true
+    }
+  },
+  "props": {},
+  "root": {
+    "children": [
+      {
+        "custom": {
+          "key": "value"
+        },
+        "meta": {
+          "name": "Table"
+        },
+        "position": {
+          "basis": "400px"
+        },
+        "propConfig": {
+          "custom.DateEnd": {
+            "binding": {
+              "config": {
+                "path": "../STEnd.props.formattedValue"
+              },
+              "type": "property"
+            }
+          },
+          "custom.DateStart": {
+            "binding": {
+              "config": {
+                "path": "../DTStart.props.formattedValue"
+              },
+              "type": "property"
+            }
+          },
+          "props.data": {
+            "binding": {
+              "config": {
+                "path": "view.custom.BedData"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "selection": {
+            "enableRowSelection": false
+          }
+        },
+        "type": "ia.display.table"
+      },
+      {
+        "meta": {
+          "name": "DTStart"
+        },
+        "position": {
+          "basis": "32px"
+        },
+        "propConfig": {
+          "props.value": {
+            "binding": {
+              "config": {
+                "expression": "dateArithmetic(now(),-3,\u0027day\u0027)"
+              },
+              "type": "expr"
+            }
+          }
+        },
+        "props": {
+          "formattedValue": "Jul 13, 2021 4:19 PM",
+          "formattedValues": {
+            "date": "Dec 9, 2020"
+          },
+          "modalStyle": {
+            "classes": "ActivityCards/Card_Date ActivityCards/Card_TextLight"
+          },
+          "pickerType": "date",
+          "placeholder": "Select Start Date"
+        },
+        "type": "ia.input.date-time-input"
+      },
+      {
+        "meta": {
+          "name": "STEnd"
+        },
+        "position": {
+          "basis": "32px"
+        },
+        "propConfig": {
+          "props.value": {
+            "binding": {
+              "config": {
+                "expression": "dateArithmetic(now(),3,\"day\")"
+              },
+              "type": "expr"
+            }
+          }
+        },
+        "props": {
+          "formattedValue": "Jul 19, 2021 4:19 PM",
+          "formattedValues": {
+            "date": "Dec 15, 2020"
+          },
+          "modalStyle": {
+            "classes": "ActivityCards/Card_Date ActivityCards/Card_TextLight"
+          },
+          "pickerType": "date",
+          "placeholder": "Select End Date"
+        },
+        "type": "ia.input.date-time-input"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column"
+    },
+    "type": "ia.container.flex"
+  }
+}

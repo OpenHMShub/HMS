@@ -1,0 +1,1 @@
+UPDATE lodging.BedLog SET exitDestinationId = :exitDestinationId, exit_ProviderId = :exit_ProviderId WHERE id = :id

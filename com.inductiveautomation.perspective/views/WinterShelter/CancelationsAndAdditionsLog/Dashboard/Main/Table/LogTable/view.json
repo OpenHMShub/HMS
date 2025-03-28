@@ -1,0 +1,743 @@
+{
+  "custom": {
+    "RegistrationTotal": -566,
+    "searchFilter": "%%",
+    "statusTypeFilter": "both"
+  },
+  "params": {
+    "RegistrationTotal": -566,
+    "searchText": "",
+    "seasonId": 13,
+    "type": ""
+  },
+  "propConfig": {
+    "custom.RegistrationTotal": {
+      "binding": {
+        "config": {
+          "path": "/root/Fillet2/Table.props.data"
+        },
+        "transforms": [
+          {
+            "code": "\ttotal \u003d 0\n\tif value!\u003dNone and value.getRowCount()\u003e0:\n\t\tfor i in range(0, value.getRowCount()):\n\t\t\ttotalBeds \u003d value.getValueAt(i,\u0027registrationChange\u0027)\n\t\t\tif len(str(totalBeds))\u003e1:\n\t\t\t\ttotal \u003d total + int(str(totalBeds))\n\t\t\telse:\n\t\t\t\ttotal \u003d total + int(totalBeds)\n\treturn total",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      },
+      "persistent": true
+    },
+    "custom.searchFilter": {
+      "binding": {
+        "config": {
+          "path": "view.params.searchText"
+        },
+        "transforms": [
+          {
+            "code": "\tsearchFilter \u003d \u0027%%\u0027\n\tif value !\u003d None and value !\u003d \u0027\u0027:\n\t\tsearchFilter \u003d \u0027%\u0027 + value + \u0027%\u0027\n\treturn searchFilter",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      },
+      "persistent": true
+    },
+    "custom.statusTypeFilter": {
+      "binding": {
+        "config": {
+          "path": "view.params.type"
+        },
+        "transforms": [
+          {
+            "code": "\ttype \u003d \u0027both\u0027\n\tif value is not None and value !\u003d -1:\n\t\tif value \u003d\u003d 1:\n\t\t\ttype \u003d \u0027Canceled\u0027\n\t\telif value \u003d\u003d 2:\n\t\t\ttype \u003d \u0027Added\u0027\n\t\n\treturn type",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      },
+      "persistent": true
+    },
+    "params.RegistrationTotal": {
+      "binding": {
+        "config": {
+          "path": "view.custom.RegistrationTotal"
+        },
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.searchText": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.seasonId": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.type": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 964,
+      "width": 1932
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "children": [
+          {
+            "meta": {
+              "name": "Label"
+            },
+            "position": {
+              "basis": "100px",
+              "shrink": 0
+            },
+            "propConfig": {
+              "props.text": {
+                "binding": {
+                  "config": {
+                    "path": "session.custom.filters.WinterShelterCancelationsAdditions.daterange.where"
+                  },
+                  "type": "property"
+                }
+              }
+            },
+            "props": {
+              "alignVertical": "top",
+              "textStyle": {
+                "color": "#FF4747",
+                "overflowWrap": "break-word"
+              }
+            },
+            "type": "ia.display.label"
+          }
+        ],
+        "meta": {
+          "name": "Fillet1"
+        },
+        "position": {
+          "basis": "1px",
+          "display": false
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "children": [
+          {
+            "custom": {
+              "DockID": -1
+            },
+            "events": {
+              "component": {
+                "onRowClick": {
+                  "config": {
+                    "script": "\tselectedColumn \u003d self.props.selection.selectedColumn\n\tif selectedColumn \u003d\u003d \"facilityId\":\n#\t\tsystem.perspective.print(\"participantID\")\n\t\tparticipantID \u003d self.props.selection.data[0][\u0027participantId\u0027]\n\t\tsystem.perspective.print(\"participantID\" + str(participantID))\n\t\tisActive \u003d self.props.selection.data[0][\u0027isActive\u0027]\n\t\tsystem.perspective.print(\"participantID\u003d\" + str(participantID))\n\t\tid \u003d \"PreviewParticipant\" \n\t\tparams \u003d {\"participantID\":participantID,\u0027isActive\u0027:isActive}\n\t\tsystem.perspective.openDock(id\u003did,params\u003dparams)\n\t\tsystem.perspective.print(\"participantID:\" + str(participantID))\n\t\t\n\telif selectedColumn \u003d\u003d \"facilityName\":\n\t\tfacilityID \u003d self.props.selection.data[0][\u0027facilityId\u0027]\n\t\tsystem.perspective.navigate(view \u003d \u0027Shelter/Detail/Shelter_Detail\u0027, params \u003d {\u0027shelterID\u0027:facilityID})\n\telif selectedColumn \u003d\u003d \"locationId\":\n\t\tid \u003d \"PreviewCongregation\" \n\t\tlocationID \u003d event.value[\u0027locationId\u0027]\n\t\tscheduleID \u003d event.value[\u0027SID\u0027]\n\t\tparams \u003d {\"locationId\":locationID}\n#\t\tsystem.perspective.print(str(self.custom.DockID)+\" \"+str(scheduleID))\n\t\tif self.custom.DockID !\u003d scheduleID:\n\t\t\tsystem.perspective.openDock(id\u003did,params\u003dparams)\n\t\t\tpayload \u003d {\"locationId\":locationID}\n\t\t\tsystem.perspective.sendMessage(\"DockUpdate\", payload\u003dpayload, scope \u003d \u0027view\u0027 )\n\t\telse:\n\t\t\tsystem.perspective.toggleDock(id\u003did,params\u003dparams)\n\t\tself.custom.DockID \u003d scheduleID\n\telse:\n\t\tpass"
+                  },
+                  "scope": "G",
+                  "type": "script"
+                }
+              }
+            },
+            "meta": {
+              "name": "Table"
+            },
+            "position": {
+              "basis": "100%"
+            },
+            "propConfig": {
+              "props.data": {
+                "binding": {
+                  "config": {
+                    "parameters": {
+                      "dateFilter": "{session.custom.filters.WinterShelterCancelationsAdditions.daterange.where}",
+                      "searchText": "{view.custom.searchFilter}",
+                      "seasonId": "{view.params.seasonId}",
+                      "statusType": "{view.custom.statusTypeFilter}"
+                    },
+                    "queryPath": "WinterShelter/Overview/GetCancellationsAndAdditions_Log"
+                  },
+                  "type": "query"
+                }
+              }
+            },
+            "props": {
+              "cells": {
+                "allowEditOn": "single-click"
+              },
+              "columns": [
+                {
+                  "align": "center",
+                  "boolean": "checkbox",
+                  "dateFormat": "MM/DD/YYYY",
+                  "editable": false,
+                  "field": "SID",
+                  "footer": {
+                    "align": "center",
+                    "justify": "left",
+                    "style": {
+                      "classes": ""
+                    },
+                    "title": ""
+                  },
+                  "header": {
+                    "align": "center",
+                    "justify": "left",
+                    "style": {
+                      "classes": "Table/Column_Header"
+                    },
+                    "title": " "
+                  },
+                  "justify": "center",
+                  "number": "value",
+                  "numberFormat": "0,0.##",
+                  "progressBar": {
+                    "bar": {
+                      "color": "#62A3F6",
+                      "linecap": "round",
+                      "width": 5
+                    },
+                    "max": 100,
+                    "track": {
+                      "color": "#DADADA",
+                      "linecap": "round",
+                      "width": 2
+                    },
+                    "value": {
+                      "color": "#7D7D7D",
+                      "show": true
+                    }
+                  },
+                  "render": "auto",
+                  "resizable": false,
+                  "sort": "none",
+                  "sortable": false,
+                  "strictWidth": true,
+                  "style": {
+                    "classes": "Table/Column_Normal",
+                    "cursor": "auto"
+                  },
+                  "toggleSwitch": {
+                    "color": {
+                      "selected": "#2196F3",
+                      "unselected": "#FFFFFF"
+                    }
+                  },
+                  "viewParams": {},
+                  "viewPath": "1_globalTEMPLATES/Tables/TableOptions",
+                  "visible": false,
+                  "width": 40
+                },
+                {
+                  "align": "center",
+                  "boolean": "checkbox",
+                  "dateFormat": "MM/DD/YYYY",
+                  "editable": false,
+                  "field": "locationId",
+                  "footer": {
+                    "align": "center",
+                    "justify": "left",
+                    "style": {
+                      "classes": ""
+                    },
+                    "title": ""
+                  },
+                  "header": {
+                    "align": "center",
+                    "justify": "left",
+                    "style": {
+                      "classes": "Table/Column_Header"
+                    },
+                    "title": " "
+                  },
+                  "justify": "center",
+                  "number": "value",
+                  "numberFormat": "0,0.##",
+                  "progressBar": {
+                    "bar": {
+                      "color": "#62A3F6",
+                      "linecap": "round",
+                      "width": 5
+                    },
+                    "max": 100,
+                    "track": {
+                      "color": "#DADADA",
+                      "linecap": "round",
+                      "width": 2
+                    },
+                    "value": {
+                      "color": "#7D7D7D",
+                      "show": true
+                    }
+                  },
+                  "render": "view",
+                  "resizable": false,
+                  "sort": "none",
+                  "sortable": false,
+                  "strictWidth": true,
+                  "style": {
+                    "classes": "Table/Column_Normal",
+                    "cursor": "auto"
+                  },
+                  "toggleSwitch": {
+                    "color": {
+                      "selected": "#2196F3",
+                      "unselected": "#FFFFFF"
+                    }
+                  },
+                  "viewParams": {},
+                  "viewPath": "1_globalTEMPLATES/Tables/TableOptions",
+                  "visible": true,
+                  "width": 40
+                },
+                {
+                  "align": "center",
+                  "boolean": "checkbox",
+                  "dateFormat": "MM/DD/YYYY",
+                  "editable": false,
+                  "field": "locationName",
+                  "footer": {
+                    "align": "center",
+                    "justify": "left",
+                    "style": {
+                      "classes": ""
+                    },
+                    "title": ""
+                  },
+                  "header": {
+                    "align": "center",
+                    "justify": "left",
+                    "style": {
+                      "classes": "Table/Column_Header"
+                    },
+                    "title": "Congregation"
+                  },
+                  "justify": "left",
+                  "number": "value",
+                  "numberFormat": "0,0.##",
+                  "progressBar": {
+                    "bar": {
+                      "color": "#62A3F6",
+                      "linecap": "round",
+                      "width": 5
+                    },
+                    "max": 100,
+                    "track": {
+                      "color": "#DADADA",
+                      "linecap": "round",
+                      "width": 2
+                    },
+                    "value": {
+                      "color": "#7D7D7D",
+                      "show": true
+                    }
+                  },
+                  "render": "auto",
+                  "resizable": true,
+                  "sort": "none",
+                  "sortable": true,
+                  "strictWidth": true,
+                  "style": {
+                    "classes": "Table/Column_Normal",
+                    "cursor": "auto"
+                  },
+                  "toggleSwitch": {
+                    "color": {
+                      "selected": "#2196F3",
+                      "unselected": "#FFFFFF"
+                    }
+                  },
+                  "viewParams": {},
+                  "viewPath": "",
+                  "visible": true,
+                  "width": 300
+                },
+                {
+                  "align": "center",
+                  "boolean": "checkbox",
+                  "dateFormat": "MM/DD/YYYY",
+                  "editable": false,
+                  "field": "day",
+                  "footer": {
+                    "align": "center",
+                    "justify": "left",
+                    "style": {
+                      "classes": ""
+                    },
+                    "title": ""
+                  },
+                  "header": {
+                    "align": "center",
+                    "justify": "center",
+                    "style": {
+                      "classes": "Table/Column_Header"
+                    },
+                    "title": "Date"
+                  },
+                  "justify": "center",
+                  "number": "value",
+                  "numberFormat": "0,0.##",
+                  "progressBar": {
+                    "bar": {
+                      "color": "#62A3F6",
+                      "linecap": "round",
+                      "width": 5
+                    },
+                    "max": 100,
+                    "track": {
+                      "color": "#DADADA",
+                      "linecap": "round",
+                      "width": 2
+                    },
+                    "value": {
+                      "color": "#7D7D7D",
+                      "show": true
+                    }
+                  },
+                  "render": "auto",
+                  "resizable": true,
+                  "sort": "none",
+                  "sortable": true,
+                  "strictWidth": true,
+                  "style": {
+                    "classes": "Table/Column_Normal",
+                    "cursor": "auto"
+                  },
+                  "toggleSwitch": {
+                    "color": {
+                      "selected": "#2196F3",
+                      "unselected": "#FFFFFF"
+                    }
+                  },
+                  "viewParams": {},
+                  "viewPath": "",
+                  "visible": true,
+                  "width": 140
+                },
+                {
+                  "align": "center",
+                  "boolean": "checkbox",
+                  "dateFormat": "MM/DD/YYYY",
+                  "editable": false,
+                  "field": "status",
+                  "footer": {
+                    "align": "center",
+                    "justify": "left",
+                    "style": {
+                      "classes": ""
+                    },
+                    "title": ""
+                  },
+                  "header": {
+                    "align": "center",
+                    "justify": "center",
+                    "style": {
+                      "classes": "Table/Column_Header"
+                    },
+                    "title": "Canceled/Added"
+                  },
+                  "justify": "center",
+                  "number": "value",
+                  "numberFormat": "0,0.##",
+                  "progressBar": {
+                    "bar": {
+                      "color": "#62A3F6",
+                      "linecap": "round",
+                      "width": 5
+                    },
+                    "max": 100,
+                    "track": {
+                      "color": "#DADADA",
+                      "linecap": "round",
+                      "width": 2
+                    },
+                    "value": {
+                      "color": "#7D7D7D",
+                      "show": true
+                    }
+                  },
+                  "render": "auto",
+                  "resizable": true,
+                  "sort": "none",
+                  "sortable": true,
+                  "strictWidth": true,
+                  "style": {
+                    "classes": "Table/Column_Normal",
+                    "cursor": "auto"
+                  },
+                  "toggleSwitch": {
+                    "color": {
+                      "selected": "#2196F3",
+                      "unselected": "#FFFFFF"
+                    }
+                  },
+                  "viewParams": {},
+                  "viewPath": "",
+                  "visible": true,
+                  "width": 150
+                },
+                {
+                  "align": "center",
+                  "boolean": "checkbox",
+                  "dateFormat": "MM/DD/YYYY",
+                  "editable": false,
+                  "field": "nightsChange",
+                  "footer": {
+                    "align": "center",
+                    "justify": "left",
+                    "style": {
+                      "classes": ""
+                    },
+                    "title": ""
+                  },
+                  "header": {
+                    "align": "center",
+                    "justify": "center",
+                    "style": {
+                      "classes": "Table/Column_Header"
+                    },
+                    "title": "Nights Change"
+                  },
+                  "justify": "center",
+                  "number": "value",
+                  "numberFormat": "0,0.##",
+                  "progressBar": {
+                    "bar": {
+                      "color": "#62A3F6",
+                      "linecap": "round",
+                      "width": 5
+                    },
+                    "max": 100,
+                    "track": {
+                      "color": "#DADADA",
+                      "linecap": "round",
+                      "width": 2
+                    },
+                    "value": {
+                      "color": "#7D7D7D",
+                      "show": true
+                    }
+                  },
+                  "render": "auto",
+                  "resizable": true,
+                  "sort": "none",
+                  "sortable": true,
+                  "strictWidth": true,
+                  "style": {
+                    "classes": "Table/Column_Normal",
+                    "cursor": "auto"
+                  },
+                  "toggleSwitch": {
+                    "color": {
+                      "selected": "#2196F3",
+                      "unselected": "#FFFFFF"
+                    }
+                  },
+                  "viewParams": {},
+                  "viewPath": "",
+                  "visible": true,
+                  "width": 150
+                },
+                {
+                  "align": "center",
+                  "boolean": "checkbox",
+                  "dateFormat": "MM/DD/YYYY",
+                  "editable": false,
+                  "field": "registrationChange",
+                  "footer": {
+                    "align": "center",
+                    "justify": "left",
+                    "style": {
+                      "classes": ""
+                    },
+                    "title": ""
+                  },
+                  "header": {
+                    "align": "center",
+                    "justify": "center",
+                    "style": {
+                      "classes": "Table/Column_Header"
+                    },
+                    "title": "Registration Change"
+                  },
+                  "justify": "center",
+                  "number": "value",
+                  "numberFormat": "0,0.##",
+                  "progressBar": {
+                    "bar": {
+                      "color": "#62A3F6",
+                      "linecap": "round",
+                      "width": 5
+                    },
+                    "max": 100,
+                    "track": {
+                      "color": "#DADADA",
+                      "linecap": "round",
+                      "width": 2
+                    },
+                    "value": {
+                      "color": "#7D7D7D",
+                      "show": true
+                    }
+                  },
+                  "render": "auto",
+                  "resizable": true,
+                  "sort": "none",
+                  "sortable": true,
+                  "strictWidth": true,
+                  "style": {
+                    "classes": "Table/Column_Normal",
+                    "cursor": "auto"
+                  },
+                  "toggleSwitch": {
+                    "color": {
+                      "selected": "#2196F3",
+                      "unselected": "#FFFFFF"
+                    }
+                  },
+                  "viewParams": {},
+                  "viewPath": "",
+                  "visible": true,
+                  "width": 170
+                },
+                {
+                  "align": "center",
+                  "boolean": "checkbox",
+                  "dateFormat": "MM/DD/YYYY",
+                  "editable": false,
+                  "field": "seasonId",
+                  "footer": {
+                    "align": "center",
+                    "justify": "left",
+                    "style": {
+                      "classes": ""
+                    },
+                    "title": ""
+                  },
+                  "header": {
+                    "align": "center",
+                    "justify": "left",
+                    "style": {
+                      "classes": "Table/Column_Header"
+                    },
+                    "title": " "
+                  },
+                  "justify": "left",
+                  "number": "value",
+                  "numberFormat": "0,0.##",
+                  "progressBar": {
+                    "bar": {
+                      "color": "#62A3F6",
+                      "linecap": "round",
+                      "width": 5
+                    },
+                    "max": 100,
+                    "track": {
+                      "color": "#DADADA",
+                      "linecap": "round",
+                      "width": 2
+                    },
+                    "value": {
+                      "color": "#7D7D7D",
+                      "show": true
+                    }
+                  },
+                  "render": "view",
+                  "resizable": false,
+                  "sort": "none",
+                  "sortable": false,
+                  "strictWidth": false,
+                  "style": {
+                    "classes": "Table/Column_Normal",
+                    "cursor": "auto"
+                  },
+                  "toggleSwitch": {
+                    "color": {
+                      "selected": "#2196F3",
+                      "unselected": "#FFFFFF"
+                    }
+                  },
+                  "viewParams": {},
+                  "viewPath": "1_TEMPLATES/Placeholder",
+                  "visible": true,
+                  "width": 170
+                }
+              ],
+              "pager": {
+                "initialOption": 100,
+                "options": [
+                  10,
+                  15,
+                  25,
+                  50,
+                  100
+                ]
+              },
+              "rows": {
+                "highlight": {
+                  "color": "#CCFFFF"
+                },
+                "striped": {
+                  "color": {
+                    "even": "#8AFFFF"
+                  },
+                  "enabled": false
+                },
+                "style": {
+                  "classes": "Table/Cell_Detail"
+                }
+              },
+              "selection": {
+                "style": {
+                  "backgroundColor": "#9af4eb4d"
+                }
+              },
+              "style": {
+                "borderColor": "#80CAE6",
+                "borderStyle": "none",
+                "borderWidth": "0.5px",
+                "classes": "Background/Default"
+              }
+            },
+            "scripts": {
+              "customMethods": [],
+              "extensionFunctions": null,
+              "messageHandlers": [
+                {
+                  "messageType": "refreshBedLogTable",
+                  "pageScope": true,
+                  "script": "\t# implement your handler here\n\tsystem.perspective.print(\"refresh\")\n\tself.refreshBinding(\"props.data\")\n#\tpass",
+                  "sessionScope": true,
+                  "viewScope": true
+                },
+                {
+                  "messageType": "tableToExcel",
+                  "pageScope": true,
+                  "script": "\t# implement your handler here\n\t\t# implement your handler here\n\t\timport traceback\n\t\ttry:\n\t\t\t#Send the dataset to Excel\n\t\t\tfilename \u003d \u0027WinterShelter_CancellationAndAddition_\u0027 + str(system.date.format(system.date.now(),\"yyyyMMddHHmmss\")) + \u0027.xls\u0027\n\t\t\tdataset \u003d []\n\t\t\theader \u003d [\"Congregation\", \"Date\",\"Cancelled/Added\",\"Nights Change\",\"Registration Change\"]\n\t\t\tdata \u003d self.props.data\n\t\t\tfor i in range(data.getRowCount()):\n\t\t\t\tcongregation \u003d data.getValueAt(i,\u0027LocationName\u0027)\n\t\t\t\tdate \u003d data.getValueAt(i,\u0027day\u0027)\n\t\t\t\tstatus \u003d data.getValueAt(i,\u0027status\u0027)\n\t\t\t\tnightsChange \u003d data.getValueAt(i,\u0027nightsChange\u0027)\n\t\t\t\tregistrationChange \u003d data.getValueAt(i,\u0027registrationChange\u0027)\n\t\t\t\tif date !\u003d None and date !\u003d \u0027\u0027:\n\t\t\t\t\tdate_formated \u003d str(system.date.format(date,\u0027MM/dd/yyyy hh:mm\u0027))\n\t\t\t\telse:\n\t\t\t\t\tdate_formated \u003d \u0027\u0027\n\t\t\t\tdataset.append([congregation,date_formated,status,nightsChange,registrationChange])\n\t#\t\tsystem.perspective.print(dataset)\n\t\t\tNewDataset \u003d system.dataset.toDataSet(header, dataset)\n\t#\t\tsystem.perspective.print(NewDataset)\n\t\t\txlFile \u003d system.dataset.toExcel(True,NewDataset)\n\t\t\tsystem.perspective.download(filename, xlFile)\n\t\texcept:   \n\t\t\tlogger \u003d system.util.getLogger(\"Winter Shelter Cancellation and Addition tableToExcel\")\n\t\t\tmsg \u003d traceback.format_exc()\n\t\t\tlogger.error(msg)",
+                  "sessionScope": false,
+                  "viewScope": false
+                }
+              ]
+            },
+            "type": "ia.display.table"
+          }
+        ],
+        "meta": {
+          "name": "Fillet2"
+        },
+        "position": {
+          "basis": "100%"
+        },
+        "type": "ia.container.flex"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "type": "ia.container.flex"
+  }
+}

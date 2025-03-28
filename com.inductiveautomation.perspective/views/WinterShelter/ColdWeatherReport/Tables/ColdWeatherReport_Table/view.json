@@ -1,0 +1,1169 @@
+{
+  "custom": {},
+  "params": {},
+  "props": {
+    "defaultSize": {
+      "height": 713,
+      "width": 2109
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "children": [
+          {
+            "meta": {
+              "name": "Button"
+            },
+            "position": {
+              "basis": "160px",
+              "display": false
+            },
+            "props": {
+              "style": {
+                "classes": "Buttons/Secondary",
+                "marginBottom": 2,
+                "marginLeft": 2,
+                "marginRight": 2,
+                "marginTop": 2
+              },
+              "text": "Set GH Beds Value"
+            },
+            "type": "ia.input.button"
+          },
+          {
+            "meta": {
+              "name": "EditGHBedsValue"
+            },
+            "position": {
+              "basis": "250px"
+            },
+            "props": {
+              "params": {
+                "rowData": {
+                  "id": "value",
+                  "name": "value"
+                }
+              },
+              "path": "WinterShelter/ColdWeatherReport/Cards/EditGHBedsValue",
+              "style": {
+                "marginLeft": "38px"
+              }
+            },
+            "type": "ia.display.view"
+          },
+          {
+            "meta": {
+              "name": "Filler"
+            },
+            "position": {
+              "basis": "950px"
+            },
+            "type": "ia.container.flex"
+          },
+          {
+            "meta": {
+              "name": "totalBedsUtilizedAtRiti"
+            },
+            "position": {
+              "basis": "145px"
+            },
+            "propConfig": {
+              "props.text": {
+                "binding": {
+                  "config": {
+                    "path": "parent.custom.totalBedsUtilizedAtRiti"
+                  },
+                  "transforms": [
+                    {
+                      "formatType": "numeric",
+                      "formatValue": "number",
+                      "type": "format"
+                    }
+                  ],
+                  "type": "property"
+                }
+              }
+            },
+            "props": {
+              "textStyle": {
+                "classes": "Filter/Filter_Text_Default",
+                "fontSize": "30px",
+                "textAlign": "center"
+              }
+            },
+            "type": "ia.display.label"
+          },
+          {
+            "meta": {
+              "name": "addedBeds"
+            },
+            "position": {
+              "basis": "130px"
+            },
+            "propConfig": {
+              "props.text": {
+                "binding": {
+                  "config": {
+                    "path": "parent.custom.addedBeds"
+                  },
+                  "transforms": [
+                    {
+                      "formatType": "numeric",
+                      "formatValue": "number",
+                      "type": "format"
+                    }
+                  ],
+                  "type": "property"
+                }
+              }
+            },
+            "props": {
+              "textStyle": {
+                "classes": "Filter/Filter_Text_TeelBlue",
+                "fontSize": "30px",
+                "textAlign": "center"
+              }
+            },
+            "type": "ia.display.label"
+          },
+          {
+            "meta": {
+              "name": "unUtilizedBeds"
+            },
+            "position": {
+              "basis": "20px",
+              "grow": 1
+            },
+            "propConfig": {
+              "props.text": {
+                "binding": {
+                  "config": {
+                    "path": "parent.custom.unUtilizedBeds"
+                  },
+                  "transforms": [
+                    {
+                      "formatType": "numeric",
+                      "formatValue": "number",
+                      "type": "format"
+                    }
+                  ],
+                  "type": "property"
+                }
+              }
+            },
+            "props": {
+              "textStyle": {
+                "classes": "Filter/Filter_Text_Orange",
+                "fontSize": "30px",
+                "paddingLeft": "30px",
+                "textAlign": "center"
+              }
+            },
+            "type": "ia.display.label"
+          }
+        ],
+        "custom": {
+          "addedBeds": 0,
+          "totalBedsUtilizedAtRiti": 448,
+          "unUtilizedBeds": 476
+        },
+        "meta": {
+          "name": "Summary"
+        },
+        "position": {
+          "basis": "5%",
+          "shrink": 0
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "meta": {
+          "name": "Table"
+        },
+        "position": {
+          "basis": "85%",
+          "grow": 1,
+          "shrink": 0
+        },
+        "propConfig": {
+          "custom.dateRangeValue": {
+            "binding": {
+              "config": {
+                "path": "session.custom.filters.coldWeatherReport.monthDate.where"
+              },
+              "transforms": [
+                {
+                  "code": "\tif value \u003d\u003d \u00271\u003d1\u0027: ## in case of no range , show from month to date\n\t\tendDate \u003d system.date.now()\n\t\tmonth \u003d system.date.getMonth(endDate)\n\t\tyear \u003d system.date.getYear(endDate)\n\t\tstartDate \u003d system.date.getDate(year, month, 1)\n\t\tqueryStr \u003d \"monthDate BETWEEN \u0027\" + system.date.format(startDate,\u0027yyyy-MM-dd\u0027) + \"\u0027 AND \u0027\" + system.date.format(endDate,\u0027yyyy-MM-dd\u0027) + \"\u0027\"\n\t\treturn queryStr\n\telse:\n\t\treturn value",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          },
+          "custom.sqlData": {
+            "binding": {
+              "config": {
+                "parameters": {
+                  "dateRange": "{this.custom.dateRangeValue}",
+                  "queryColdOnly": "if({session.custom.filters.coldWeatherReport.isCold.value} \u003d 1, 1, 0)"
+                },
+                "queryPath": "WinterShelter/ColdWeatherReport/GetReportData",
+                "returnFormat": "dataset"
+              },
+              "type": "query"
+            }
+          },
+          "custom.tableData": {
+            "binding": {
+              "config": {
+                "path": "this.custom.sqlData"
+              },
+              "transforms": [
+                {
+                  "code": "\tFinalList \u003d []\n\tdataset \u003d value\n\tsumBedsUtilizedRITI \u003d 0\n\tsumAddedBeds \u003d 0\n\tsumUnutilizedBeds \u003d 0\n\tfor i in range(0,dataset.getRowCount()):\n\t\trow \u003d {}\n\t\tisCold \u003d bool(dataset.getValueAt(i,\u0027isCold\u0027))\n\t\trow[\u0027id\u0027] \u003d {\u0027value\u0027: dataset.getValueAt(i,\u0027id\u0027), \u0027style\u0027: {}}\n\t\tif isCold:\n\t\t\trow[\u0027dayOfWeek\u0027] \u003d {\u0027value\u0027: dataset.getValueAt(i,\u0027dayOfWeek\u0027), \u0027style\u0027: {\u0027background\u0027:\u0027#A5D4EA\u0027}}\n\t\t\trow[\u0027monthDate\u0027] \u003d {\u0027value\u0027: dataset.getValueAt(i,\u0027monthDate\u0027), \u0027style\u0027: {\u0027background\u0027:\u0027#A5D4EA\u0027}}\n\t\t\trow[\u0027overflowShelter\u0027] \u003d {\u0027value\u0027: dataset.getValueAt(i,\u0027overflowShelter\u0027), \u0027style\u0027: {\u0027background\u0027:\u0027#A5D4EA\u0027, \u0027color\u0027:\u0027#0066FF\u0027}}\n\t\t\trow[\u0027ghBeds\u0027] \u003d {\u0027value\u0027: dataset.getValueAt(i,\u0027ghBeds\u0027), \u0027style\u0027: {\u0027background\u0027:\u0027#A5D4EA\u0027}}\n\t\t\trow[\u0027ghUtilization\u0027] \u003d {\u0027value\u0027: dataset.getValueAt(i,\u0027ghUtilization\u0027), \u0027style\u0027: {\u0027background\u0027:\u0027#A5D4EA\u0027}}\n\t\t\trow[\u0027congregationalBeds\u0027] \u003d{\u0027value\u0027:  dataset.getValueAt(i,\u0027congregationalBeds\u0027), \u0027style\u0027: {\u0027background\u0027:\u0027#A5D4EA\u0027}}\n\t\t\trow[\u0027congregationalBedsUtilization\u0027] \u003d {\u0027value\u0027: dataset.getValueAt(i,\u0027congregationalBedsUtilization\u0027), \u0027style\u0027: {\u0027background\u0027:\u0027#A5D4EA\u0027}}\n\t\t\trow[\u0027totalBedsCapacityRITI\u0027] \u003d {\u0027value\u0027: dataset.getValueAt(i,\u0027totalBedsCapacityRITI\u0027), \u0027style\u0027: {\u0027background\u0027:\u0027#A5D4EA\u0027}}\n\t\telse:\n\t\t\trow[\u0027dayOfWeek\u0027] \u003d {\u0027value\u0027: dataset.getValueAt(i,\u0027dayOfWeek\u0027), \u0027style\u0027: {}}\n\t\t\trow[\u0027monthDate\u0027] \u003d {\u0027value\u0027: dataset.getValueAt(i,\u0027monthDate\u0027), \u0027style\u0027: {}}\n\t\t\trow[\u0027overflowShelter\u0027] \u003d {\u0027value\u0027: dataset.getValueAt(i,\u0027overflowShelter\u0027), \u0027style\u0027: {\u0027color\u0027:\u0027#0066FF\u0027}}\n\t\t\trow[\u0027ghBeds\u0027] \u003d {\u0027value\u0027: dataset.getValueAt(i,\u0027ghBeds\u0027), \u0027style\u0027: {}}\n\t\t\trow[\u0027ghUtilization\u0027] \u003d {\u0027value\u0027: dataset.getValueAt(i,\u0027ghUtilization\u0027), \u0027style\u0027: {}}\n\t\t\trow[\u0027congregationalBeds\u0027] \u003d{\u0027value\u0027:  dataset.getValueAt(i,\u0027congregationalBeds\u0027), \u0027style\u0027: {}}\n\t\t\trow[\u0027congregationalBedsUtilization\u0027] \u003d {\u0027value\u0027: dataset.getValueAt(i,\u0027congregationalBedsUtilization\u0027), \u0027style\u0027: {}}\n\t\t\trow[\u0027totalBedsCapacityRITI\u0027] \u003d {\u0027value\u0027: dataset.getValueAt(i,\u0027totalBedsCapacityRITI\u0027), \u0027style\u0027: {}}\n\t\trow[\u0027totalBedsUtilizedRITI\u0027] \u003d {\u0027value\u0027: dataset.getValueAt(i,\u0027totalBedsUtilizedRITI\u0027), \u0027style\u0027: {}}\n\t\trow[\u0027addedBeds\u0027] \u003d {\u0027value\u0027: dataset.getValueAt(i,\u0027addedBeds\u0027), \u0027style\u0027: {\u0027color\u0027:\u0027#1CBFBB\u0027}}\n\t\trow[\u0027unUtilizedBeds\u0027] \u003d {\u0027value\u0027: dataset.getValueAt(i,\u0027unUtilizedBeds\u0027), \u0027style\u0027: {\u0027color\u0027:\u0027#FF7A59\u0027}}\n\t\trow[\u0027notes\u0027] \u003d {\u0027value\u0027: dataset.getValueAt(i,\u0027notes\u0027), \u0027style\u0027: {}}\n\t\tif dataset.getValueAt(i,\u0027totalBedsUtilizedRITI\u0027) is not None:\n\t\t\tsumBedsUtilizedRITI \u003d sumBedsUtilizedRITI + dataset.getValueAt(i,\u0027totalBedsUtilizedRITI\u0027)\n\t\t\n\t\tif dataset.getValueAt(i,\u0027addedBeds\u0027) is not None:\n\t\t\tsumAddedBeds \u003d sumAddedBeds + dataset.getValueAt(i,\u0027addedBeds\u0027)\n\t\t\t\n\t\tif dataset.getValueAt(i,\u0027unUtilizedBeds\u0027) is not None:\n\t\t\tsumUnutilizedBeds \u003d sumUnutilizedBeds + dataset.getValueAt(i,\u0027unUtilizedBeds\u0027)\n\t\t\n\t\tFinalList.append(row)\n\tself.getSibling(\"Summary\").custom.totalBedsUtilizedAtRiti \u003d sumBedsUtilizedRITI\n\tself.getSibling(\"Summary\").custom.addedBeds \u003d sumAddedBeds\n\tself.getSibling(\"Summary\").custom.unUtilizedBeds \u003d sumUnutilizedBeds\n\treturn FinalList",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          },
+          "props.data": {
+            "binding": {
+              "config": {
+                "path": "this.custom.tableData"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "cells": {
+            "style": {
+              "classes": "Table/Cell_Dashboard_NoBG"
+            }
+          },
+          "columns": [
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "id",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header"
+                },
+                "title": " "
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "view",
+              "resizable": false,
+              "sort": "none",
+              "sortable": false,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "WinterShelter/ColdWeatherReport/Cards/EditButton",
+              "visible": true,
+              "width": 40
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "dayOfWeek",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header",
+                  "color": "#0C4E8B",
+                  "fontFamily": "Proxima Nova ExCn Light",
+                  "fontSize": "20px"
+                },
+                "title": "Day of the Week"
+              },
+              "justify": "left",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": true,
+              "style": {
+                "color": "#0c4e85",
+                "fontFamily": "Proxima Nova ExCn Medium",
+                "text-align": "left"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 197
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "monthDate",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header"
+                },
+                "title": "Date"
+              },
+              "justify": "left",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "date",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 150
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "overflowShelter",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "center",
+                "style": {
+                  "classes": "Table/Column_Header"
+                },
+                "title": "Overflow Shelter"
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 125
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "ghBeds",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "center",
+                "style": {
+                  "classes": "Table/Column_Header"
+                },
+                "title": "GH Beds"
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 125
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "ghUtilization",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "center",
+                "style": {
+                  "classes": "Table/Column_Header"
+                },
+                "title": "GH Utilization"
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 125
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "congregationalBeds",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "center",
+                "style": {
+                  "classes": "Table/Column_Header"
+                },
+                "title": "Congregational Beds"
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 150
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "congregationalBedsUtilization",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "center",
+                "style": {
+                  "classes": "Table/Column_Header"
+                },
+                "title": "Congregational Bed Utilization"
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {
+                "rowData": {
+                  "ID": "value"
+                }
+              },
+              "viewPath": "",
+              "visible": true,
+              "width": 180
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "totalBedsCapacityRITI",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "center",
+                "style": {
+                  "classes": "Table/Column_Header"
+                },
+                "title": "Total Beds Capacity at RITI"
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {
+                "rowData": {
+                  "ID": "value"
+                }
+              },
+              "viewPath": "",
+              "visible": true,
+              "width": 150
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "totalBedsUtilizedRITI",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "center",
+                "style": {
+                  "classes": "Table/Column_Header"
+                },
+                "title": "Total Beds Utilized at RITI"
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {
+                "rowData": {
+                  "ID": "value"
+                }
+              },
+              "viewPath": "",
+              "visible": true,
+              "width": 140
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "addedBeds",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "center",
+                "style": {
+                  "classes": "Table/Column_Header"
+                },
+                "title": "Added Beds"
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {
+                "rowData": {
+                  "ID": "value"
+                }
+              },
+              "viewPath": "",
+              "visible": true,
+              "width": 140
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "unUtilizedBeds",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "center",
+                "style": {
+                  "classes": "Table/Column_Header"
+                },
+                "title": "Unutilized Beds"
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": false,
+              "style": {
+                "classes": "Table/Column_Normal",
+                "paddingLeft": "20px"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {
+                "rowData": {
+                  "ID": "value"
+                }
+              },
+              "viewPath": "",
+              "visible": true,
+              "width": 140
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "notes",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header"
+                },
+                "title": " "
+              },
+              "justify": "left",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "view",
+              "resizable": false,
+              "sort": "none",
+              "sortable": false,
+              "strictWidth": false,
+              "style": {
+                "classes": "Table/Column_Normal",
+                "paddingLeft": "20px"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {
+                "rowData": {
+                  "ID": "value"
+                }
+              },
+              "viewPath": "1_TEMPLATES/Placeholder",
+              "visible": false,
+              "width": 140
+            }
+          ],
+          "pager": {
+            "bottom": false,
+            "initialOption": 100
+          },
+          "rows": {
+            "highlight": {
+              "color": "#ccffff",
+              "enabled": false
+            },
+            "striped": {
+              "enabled": false
+            }
+          },
+          "selection": {
+            "style": {
+              "backgroundColor": "#9af4eb4d"
+            }
+          },
+          "style": {
+            "classes": "Background/Default"
+          }
+        },
+        "scripts": {
+          "customMethods": [],
+          "extensionFunctions": null,
+          "messageHandlers": [
+            {
+              "messageType": "tableToExcel",
+              "pageScope": true,
+              "script": "\t# implement your handler here\n\t\n\timport traceback\n\ttry:\n\t\t\n\t\tfilename \u003d \u0027WinterShelter_ColdWeatherReport_\u0027 + str(system.date.format(system.date.now(),\"yyyyMMdd\")) + \u0027.xls\u0027\n\t\tdataset \u003d self.custom.sqlData\n\t\tNewDataSet \u003d []\n\t\theaders \u003d [\"Day of the Week\",\"Date\",\"Overflow Shelter\",\"GH Beds\", \"GH Utilization\",\"Congregational Beds\", \"Congregational Bed Utilization\", \"Total Beds Capacity at RITI\", \"Total Beds Utilized at RITI\", \"Added Beds\", \"Unutilized Beds\",\"Notes\"]\n\t\tfor i in range(dataset.getRowCount()):\n\t\t\tmonthDate \u003d dataset.getValueAt(i,\u0027monthDate\u0027)\n\t\t\tif monthDate is not None:\n\t\t\t\tmonthDate \u003d system.date.format(monthDate, \u0027MM/dd/yyyy\u0027)\n\t\t\t\n\t\t\t\n\t\t\tNewDataSet.append([dataset.getValueAt(i,\u0027dayOfWeek\u0027),monthDate, dataset.getValueAt(i,\u0027overflowShelter\u0027), dataset.getValueAt(i,\u0027ghBeds\u0027),dataset.getValueAt(i,\u0027ghUtilization\u0027),dataset.getValueAt(i,\u0027congregationalBeds\u0027),dataset.getValueAt(i,\u0027congregationalBedsUtilization\u0027),dataset.getValueAt(i,\u0027totalBedsCapacityRITI\u0027),dataset.getValueAt(i,\u0027totalBedsUtilizedRITI\u0027),dataset.getValueAt(i,\u0027addedBeds\u0027),dataset.getValueAt(i,\u0027unUtilizedBeds\u0027),dataset.getValueAt(i,\u0027notes\u0027)])\t\n\t\t\n\t\t## add \tsummary row\n#\t\tNewDataSet.append([\u0027\u0027,\u0027\u0027,None,None,None, None, None, self.getSibling(\"Summary\").custom.totalBedsUtilizedAtRiti, self.getSibling(\"Summary\").custom.addedBeds, self.getSibling(\"Summary\").custom.unUtilizedBeds,\u0027\u0027])\n\t\tNewDataSet \u003d system.dataset.toDataSet(headers, NewDataSet)\n\n\t\txlFile \u003d system.dataset.toExcel(True,NewDataSet)\n\t\tsystem.perspective.download(filename, xlFile)\n\texcept:   \n\t\tlogger \u003d system.util.getLogger(\"Wintershelter ColdWeatherReport tableToExcel\")\n\t\tmsg \u003d traceback.format_exc()\n\t\tlogger.error(msg)",
+              "sessionScope": true,
+              "viewScope": true
+            },
+            {
+              "messageType": "ColdWeatherDay_updated",
+              "pageScope": true,
+              "script": "\t# implement your handler here\n\tself.refreshBinding(\"custom.sqlData\")",
+              "sessionScope": false,
+              "viewScope": false
+            },
+            {
+              "messageType": "tableToPDF",
+              "pageScope": true,
+              "script": "\timport traceback\n\ttry:\n\t\t#Generate the report\n\t\tisColdValue \u003d self.session.custom.filters.coldWeatherReport.isCold.value\n\t\t\n\t\tisCold \u003d 0\n\t\tif isColdValue \u003d\u003d 1:\n\t\t\tisCold \u003d 1\n\t\t\n\t\t## dateRange for display - derive from query string monthDate BETWEEN \u00272023-11-01\u0027 AND \u00272023-11-26\u0027\n\t\tdateRangeValue \u003d self.custom.dateRangeValue\n\t\tdatesArr \u003d dateRangeValue.replace(\"monthDate BETWEEN \", \"\").split(\"AND\")\n\t\tstartDateStr \u003d datesArr[0].replace(\"\u0027\",\"\").strip()\n\t\tendDateStr \u003d datesArr[1].replace(\"\u0027\",\"\").strip()\n\t\t\n\t\tstartDateReqd \u003d system.date.format(system.date.parse(startDateStr, \"yyyy-MM-dd\"), \u0027MM/dd/yy\u0027)\n\t\tendDateReqd \u003d  system.date.format(system.date.parse(endDateStr, \"yyyy-MM-dd\"), \u0027MM/dd/yy\u0027)\n\n\t\tDateRangeForDisplay \u003d startDateReqd + \" - \" + endDateReqd\n\t\tproject \u003d \"RITI\"\n\t\tpath \u003d \"WinterShelter/ColdWeatherReport\"\n\t\tparameters \u003d {\u0027DateRangeForQuery\u0027:self.custom.dateRangeValue, \n\t\t\u0027isCold\u0027:isCold, \n\t\t\u0027DateRangeForDisplay\u0027:DateRangeForDisplay,\n\t\t\u0027TotalUtilizedBedsRITI\u0027:self.getSibling(\"Summary\").custom.totalBedsUtilizedAtRiti,\n\t\t\u0027AddedBedsByRITI\u0027:self.getSibling(\"Summary\").custom.addedBeds, \n\t\t\u0027NotUtilizedBeds\u0027:self.getSibling(\"Summary\").custom.unUtilizedBeds}\n#\t\tsystem.perspective.print(parameters)\n\t\tpdfFile \u003d system.report.executeReport(path,project,parameters,fileType\u003d\u0027pdf\u0027)\n\t\tfilename \u003d \u0027Wintershelter_ColdWeatherReport_\u0027 + str(system.date.format(system.date.now(),\"yyyyMMddHHmmss\")) + \u0027.pdf\u0027\n\t\t\n\t\tsystem.perspective.download(filename, pdfFile)\n\texcept:   \n\t\tlogger \u003d system.util.getLogger(\"Wintershelter ColdWeatherReport tableToPDF\")\n\t\tmsg \u003d traceback.format_exc()\n\t\tlogger.error(msg)",
+              "sessionScope": true,
+              "viewScope": true
+            }
+          ]
+        },
+        "type": "ia.display.table"
+      },
+      {
+        "meta": {
+          "name": "Notes"
+        },
+        "position": {
+          "basis": "10%",
+          "grow": 1
+        },
+        "propConfig": {
+          "props.instances": {
+            "binding": {
+              "config": {
+                "path": "../Table.custom.sqlData"
+              },
+              "transforms": [
+                {
+                  "code": "\t\n\tinstances \u003d []\n\tinstanceStyle \u003d {\n\t    \"classes\": \"\"\n\t  }\n\tinstancePosition \u003d {}\n\t\n\tif value is not None and value.getRowCount() \u003e 0:\n\t\tfor i in range(value.getRowCount()):\n\t\t\tnote \u003d value.getValueAt(i,\u0027notes\u0027)\n\t\t\tif note is not None and note !\u003d \u0027\u0027:\n\t\t\t\tdayOfWeek \u003d value.getValueAt(i,\u0027dayOfWeek\u0027)\n\t\t\t\tdate \u003d value.getValueAt(i,\u0027monthDate\u0027)\n\t\t\t\tif date is not None:\n\t\t\t\t\tdate \u003d system.date.format(date, \u0027MM/dd/yy\u0027)\n\t\t\t\telse:\n\t\t\t\t\tdate \u003d \u0027\u0027\n\t\t\t\toneInstance \u003d {}\n\t\t\t\toneInstance[\u0027instanceStyle\u0027] \u003d instanceStyle\n\t\t\t\toneInstance[\u0027instancePosition\u0027] \u003d instancePosition\n\t\t\t\toneInstance[\u0027Note\u0027] \u003d dayOfWeek + \u0027 \u0027 + date + \u0027 \u0027 + note\n\t\t\t\tinstances.append(oneInstance)\n\treturn instances",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "direction": "column",
+          "path": "WinterShelter/ColdWeatherReport/Cards/NoteRow",
+          "style": {
+            "marginTop": "5px"
+          },
+          "useDefaultViewWidth": false
+        },
+        "type": "ia.display.flex-repeater"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column",
+      "style": {
+        "classes": "Background/Default"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

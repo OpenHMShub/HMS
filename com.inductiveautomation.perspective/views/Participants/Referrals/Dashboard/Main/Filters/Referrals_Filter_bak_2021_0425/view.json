@@ -1,0 +1,138 @@
+{
+  "custom": {},
+  "params": {},
+  "props": {
+    "defaultSize": {
+      "height": 40,
+      "width": 1817
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "Label"
+        },
+        "position": {
+          "basis": "250px",
+          "display": false
+        },
+        "propConfig": {
+          "props.text": {
+            "binding": {
+              "config": {
+                "path": "session.custom.filters"
+              },
+              "transforms": [
+                {
+                  "code": "\treturn filters.retrievePageFilters(value, self.page.props.pageId)",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "style": {
+            "classes": "Text/Error_Message"
+          }
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "meta": {
+          "name": "EmbeddedView"
+        },
+        "position": {
+          "basis": "1px",
+          "grow": 1
+        },
+        "props": {
+          "path": "1_TEMPLATES/Filtering/Filter_Placeholder"
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "lblSearch"
+        },
+        "position": {
+          "basis": "50px",
+          "shrink": 0
+        },
+        "props": {
+          "style": {
+            "classes": "Table/Filter_Header",
+            "textAlign": "end"
+          },
+          "text": "Search:"
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "meta": {
+          "name": "Search"
+        },
+        "position": {
+          "basis": "220px",
+          "shrink": 0
+        },
+        "props": {
+          "params": {
+            "column_name": "",
+            "placeholder": "Search",
+            "searchType": "full_text"
+          },
+          "path": "1_TEMPLATES/Filtering/Filters/DatasetFilter_Text",
+          "style": {
+            "classes": "Table/Search_Bar"
+          },
+          "useDefaultViewWidth": true
+        },
+        "type": "ia.display.view"
+      }
+    ],
+    "events": {
+      "system": {
+        "onStartup": {
+          "config": {
+            "script": "\timport traceback\n\ttry:\n\t\ttoday \u003d system.date.now()\n\t\tdob_min \u003d -1 * int(self.view.params.max_age)\n\t\tdob_max \u003d -1 * int(self.view.params.min_age )\n\t\tself.view.params.dob_start \u003d system.date.addYears(today,dob_min)\n\t\tself.view.params.dob_end \u003d system.date.addYears(today,dob_max)\n\t\tself.view.params.activity_end \u003d system.date.addDays(today,1)\n\t\tself.view.params.activity_begin \u003d system.date.addYears(today,-150)\n\texcept:\n\t\tlogger \u003d system.util.getLogger(\"Participants_Filter ParticipantDashboardAgeRange onStartup\")\n\t\tmsg \u003d traceback.format_exc()\n\t\tlogger.error(msg)"
+          },
+          "scope": "G",
+          "type": "script"
+        }
+      }
+    },
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "style": {
+        "classes": "Table/Filter_Header_Container",
+        "overflow": "hidden"
+      }
+    },
+    "scripts": {
+      "customMethods": [],
+      "extensionFunctions": null,
+      "messageHandlers": [
+        {
+          "messageType": "ReferralDashboardAgeRange",
+          "pageScope": true,
+          "script": "\timport traceback\n\ttry:\n\t\t#Get the min and max age from the message payload\n\t\tself.view.params.min_age \u003d payload[\u0027min\u0027]\n\t\tself.view.params.max_age \u003d payload[\u0027max\u0027]\n\t\t#Calculate the date of birth range\n\t\ttoday \u003d system.date.now()\n\t\tdob_min \u003d -1 * int(self.view.params.max_age)\n\t\tdob_max \u003d -1 * int(self.view.params.min_age )\n\t\tself.view.params.dob_start \u003d system.date.addYears(today,dob_min)\n\t\tself.view.params.dob_end \u003d system.date.addYears(today,dob_max)\n\texcept:\n\t\tlogger \u003d system.util.getLogger(\"Participants_Filter ParticipantDashboardAgeRange Message\")\n\t\tmsg \u003d traceback.format_exc()\n\t\tlogger.error(msg)",
+          "sessionScope": true,
+          "viewScope": true
+        },
+        {
+          "messageType": "ReferralDashboardActivityRange",
+          "pageScope": true,
+          "script": "\timport traceback\n\ttry:\n\t\t#Get the min and max age from the message payload\n\t\tself.view.params.activity_begin \u003d payload[\u0027min\u0027]\n\t\tself.view.params.activity_end \u003d payload[\u0027max\u0027]\n\t\t#logger \u003d system.util.getLogger(\"Activity Range Message\")\n\t\t#logger.error(str(payload[\u0027min\u0027]) + \u0027 \u0027 + str(payload[\u0027max\u0027]))\n\texcept:\n\t\tlogger \u003d system.util.getLogger(\"Participants_Filter ParticipantDashboardActivityRange Message\")\n\t\tmsg \u003d traceback.format_exc()\n\t\tlogger.error(msg)",
+          "sessionScope": false,
+          "viewScope": false
+        }
+      ]
+    },
+    "type": "ia.container.flex"
+  }
+}

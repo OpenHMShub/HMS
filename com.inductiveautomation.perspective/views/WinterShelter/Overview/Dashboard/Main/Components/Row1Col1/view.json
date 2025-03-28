@@ -1,0 +1,368 @@
+{
+  "custom": {
+    "ActiveCongregation_Current": 0,
+    "ActiveCongregation_Prev": 0,
+    "ActiveParticipant_Current": 0,
+    "ActiveParticipant_Prev": 0,
+    "TotalBeds_Current": 0,
+    "TotalBeds_Prev": 0,
+    "congregationNights_Current": 0,
+    "congregationNights_Prev": 0,
+    "currentSeason": 14,
+    "onsiteBeds_Current": 0,
+    "onsiteBeds_Prev": 0
+  },
+  "params": {
+    "seasonId": -1
+  },
+  "propConfig": {
+    "custom.ActiveCongregation_Current": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "seasonId": "{view.params.seasonId}"
+          },
+          "queryPath": "WinterShelter/Overview/GetNoOfCongregations",
+          "returnFormat": "dataset"
+        },
+        "transforms": [
+          {
+            "code": "\tif value is not None and value.getRowCount() \u003e 0:\n\t\treturn value.getValueAt(0,0)\n\telse:\n\t\treturn 0",
+            "type": "script"
+          }
+        ],
+        "type": "query"
+      },
+      "persistent": true
+    },
+    "custom.ActiveCongregation_Prev": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "seasonId": "{view.params.seasonId}"
+          },
+          "queryPath": "WinterShelter/Attendance/Get_Attendance_KPI_PreviousSeason"
+        },
+        "transforms": [
+          {
+            "code": "\tdataset \u003d value\t\n\tif dataset is not None and dataset.getRowCount() \u003e 0:\n\t\tactive_Congregations \u003d dataset.getValueAt(0,\u0027active_Congregations\u0027)\n\telse:\n\t\tactive_Congregations \u003d 0\n\treturn active_Congregations",
+            "type": "script"
+          }
+        ],
+        "type": "query"
+      },
+      "persistent": true
+    },
+    "custom.ActiveParticipant_Current": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "seasonId": "{view.params.seasonId}"
+          },
+          "queryPath": "WinterShelter/Overview/GetNoOfUniqueParticipants",
+          "returnFormat": "dataset"
+        },
+        "transforms": [
+          {
+            "code": "\tif value is not None and value.getRowCount() \u003e 0:\n\t\treturn value.getValueAt(0,0)\n\telse:\n\t\treturn 0",
+            "type": "script"
+          }
+        ],
+        "type": "query"
+      },
+      "persistent": true
+    },
+    "custom.ActiveParticipant_Prev": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "seasonId": "{view.params.seasonId}"
+          },
+          "queryPath": "WinterShelter/Attendance/Get_Attendance_KPI_PreviousSeason"
+        },
+        "transforms": [
+          {
+            "code": "\tdataset \u003d value\t\n\tif dataset is not None and dataset.getRowCount() \u003e 0:\n\t\tactive_Participants \u003d dataset.getValueAt(0,\u0027active_Participants\u0027)\n\telse:\n\t\tactive_Participants \u003d 0\n\treturn active_Participants",
+            "type": "script"
+          }
+        ],
+        "type": "query"
+      },
+      "persistent": true
+    },
+    "custom.TotalBeds_Current": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "seasonId": "{view.params.seasonId}"
+          },
+          "queryPath": "WinterShelter/Overview/GetTotalBeds"
+        },
+        "transforms": [
+          {
+            "code": "\tif value is not None and value.getRowCount() \u003e 0:\n\t\treturn value.getValueAt(0,0)\n\telse:\n\t\treturn 0",
+            "type": "script"
+          }
+        ],
+        "type": "query"
+      },
+      "persistent": true
+    },
+    "custom.TotalBeds_Prev": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "seasonId": "{view.params.seasonId}"
+          },
+          "queryPath": "WinterShelter/Attendance/Get_Attendance_KPI_PreviousSeason"
+        },
+        "transforms": [
+          {
+            "code": "\tdataset \u003d value\t\n\tif dataset is not None and dataset.getRowCount() \u003e 0:\n\t\ttotalBeds \u003d dataset.getValueAt(0,\u0027totalBeds\u0027)\n\telse:\n\t\ttotalBeds \u003d 0\n\treturn totalBeds",
+            "type": "script"
+          }
+        ],
+        "type": "query"
+      },
+      "persistent": true
+    },
+    "custom.congregationNights_Current": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "seasonId": "{view.params.seasonId}"
+          },
+          "queryPath": "WinterShelter/Overview/GetCongregationNights",
+          "returnFormat": "dataset"
+        },
+        "transforms": [
+          {
+            "code": "\tif value is not None and value.getRowCount() \u003e 0:\n\t\treturn value.getValueAt(0,0)\n\telse:\n\t\treturn 0",
+            "type": "script"
+          }
+        ],
+        "type": "query"
+      },
+      "persistent": true
+    },
+    "custom.congregationNights_Prev": {
+      "persistent": true
+    },
+    "custom.currentSeason": {
+      "binding": {
+        "config": {
+          "queryPath": "WinterShelterGlobal/getCurrentSeason"
+        },
+        "transforms": [
+          {
+            "code": "\treturn value.getValueAt(0,0)",
+            "type": "script"
+          }
+        ],
+        "type": "query"
+      },
+      "persistent": true
+    },
+    "custom.onsiteBeds_Current": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "season": "{view.params.seasonId}"
+          },
+          "queryPath": "WinterShelter/Overview/GetOnsiteBeds",
+          "returnFormat": "dataset"
+        },
+        "transforms": [
+          {
+            "code": "\tif value is not None and value.getRowCount() \u003e 0:\n\t\treturn value.getValueAt(0,0)\n\telse:\n\t\treturn 0",
+            "type": "script"
+          }
+        ],
+        "type": "query"
+      },
+      "persistent": true
+    },
+    "custom.onsiteBeds_Prev": {
+      "persistent": true
+    },
+    "params.seasonId": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 420,
+      "width": 210
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "KPI1"
+        },
+        "position": {
+          "basis": "20%",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.Value": {
+            "binding": {
+              "config": {
+                "expression": "if({view.params.seasonId}\u003c12,{view.custom.ActiveCongregation_Prev},{view.custom.ActiveCongregation_Current})"
+              },
+              "type": "expr"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "Title": "Congregations"
+          },
+          "path": "WinterShelter/Overview/Dashboard/Main/Cards/KPI/Total_Flex",
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "KPI2"
+        },
+        "position": {
+          "basis": "20%",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.Value": {
+            "binding": {
+              "config": {
+                "expression": "if({view.params.seasonId}\u003c12,{view.custom.ActiveParticipant_Prev},{view.custom.ActiveParticipant_Current})"
+              },
+              "type": "expr"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "Title": "Unique Participants"
+          },
+          "path": "WinterShelter/Overview/Dashboard/Main/Cards/KPI/Total_Flex",
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "KPI3"
+        },
+        "position": {
+          "basis": "20%",
+          "grow": 1,
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.Value": {
+            "binding": {
+              "config": {
+                "expression": "//if({view.params.seasonId} \u003c 12,{view.custom.TotalBeds_Prev},{view.custom.TotalBeds_Current})\r\nif({view.custom.TotalBeds_Current}!\u003dnull \u0026\u0026 {view.custom.TotalBeds_Current}!\u003d0, {view.custom.TotalBeds_Current}, {view.custom.TotalBeds_Prev})"
+              },
+              "type": "expr"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "Title": "TOTAL BEDS"
+          },
+          "path": "WinterShelter/Overview/Dashboard/Main/Cards/KPI/Total_Flex",
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "KPI4"
+        },
+        "position": {
+          "basis": "20%",
+          "grow": 1,
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.Value": {
+            "binding": {
+              "config": {
+                "expression": "if({view.params.seasonId} \u003c 12,{view.custom.congregationNights_Prev},{view.custom.congregationNights_Current})"
+              },
+              "type": "expr"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "Title": "Congregation Nights"
+          },
+          "path": "WinterShelter/Overview/Dashboard/Main/Cards/KPI/Total_Flex",
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "events": {
+          "dom": {
+            "onClick": {
+              "config": {
+                "script": "\tonSiteBedsValue  \u003d self.props.params.Value\n\t\n\tif onSiteBedsValue is not None and onSiteBedsValue !\u003d \u0027\u0027 and int(onSiteBedsValue) \u003e 0:\n\t\t## open popup\n\t\tsystem.perspective.openPopup(id\u003d\"OnsiteBeds\", view\u003d\u0027WinterShelter/Overview/OnsiteBeds/OnsiteBeds_Popup\u0027, params \u003d {\u0027seasonId\u0027: int(self.view.params.seasonId)},showCloseIcon \u003d False, resizable \u003d False, draggable \u003d False, title\u003dNone)"
+              },
+              "scope": "G",
+              "type": "script"
+            }
+          }
+        },
+        "meta": {
+          "name": "KPI5"
+        },
+        "position": {
+          "basis": "20%",
+          "grow": 1,
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.Value": {
+            "binding": {
+              "config": {
+                "expression": "if({view.params.seasonId} \u003c 12,{view.custom.onsiteBeds_Prev},{view.custom.onsiteBeds_Current})"
+              },
+              "type": "expr"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "Title": "Onsite Beds"
+          },
+          "path": "WinterShelter/Overview/Dashboard/Main/Cards/KPI/Total_Flex",
+          "style": {
+            "cursor": "pointer"
+          },
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "alignContent": "flex-start",
+      "direction": "column",
+      "style": {
+        "classes": "KPIs/KPI_Flex_Container",
+        "overflow": "hidden",
+        "overflowY": "hidden"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

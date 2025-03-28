@@ -1,0 +1,86 @@
+{
+  "custom": {},
+  "params": {},
+  "props": {
+    "loading": {
+      "mode": "blocking"
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "EmbeddedView_SelectionForm"
+        },
+        "position": {
+          "basis": "50px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.wherePlusOut": {
+            "access": "PUBLIC",
+            "persistent": false
+          }
+        },
+        "props": {
+          "path": "Shelter/Availabiliy/Cards/ActionView",
+          "style": {
+            "classes": "ActivityCards/Card"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "EmbeddedView_Table"
+        },
+        "position": {
+          "basis": "710px",
+          "grow": 1
+        },
+        "props": {
+          "params": {
+            "base": {},
+            "expo": null,
+            "query": {
+              "orderby": "[Facility].[facilityName], [Room].[roomName],[Bed].[bedName]",
+              "queryCore": "DECLARE @StartInterval date \u003d ? DECLARE @EndInterval date \u003d ? DECLARE @tbl TABLE (iterday DATE); ;WITH seq(n) AS ( SELECT 0 UNION ALL SELECT n + 1 FROM seq WHERE n \u003c DATEDIFF(DAY, @StartInterval, @EndInterval) ), d(d) AS ( SELECT DATEADD(DAY, n, @StartInterval) FROM seq ) INSERT INTO @tbl SELECT d OneDay FROM d ORDER BY d OPTION (MAXRECURSION 0); WITH r as ( SELECT [Reservation].[id] ,[Reservation].[bedId] ,CAST(reservationStart -0.5 AS date) startMinus12H ,CAST(reservationEnd - 0.5 AS date) endMinus12H FROM [RitiOps].[lodging].[Reservation] WHERE [Reservation].[timeRetired] IS NULL AND [Reservation].[timeCreated] \u003c GETDATE() AND [Reservation].[reservationStart] \u003c @EndInterval ) SELECT r.[id] ,r.[bedId] ,YEAR(t.iterday) * 10000 + MONTH(t.iterday) * 100 + DAY(t.iterday) iterday FROM r INNER JOIN @tbl t ON iterday\u003e\u003d startMinus12H AND iterday \u003c\u003d endMinus12H INNER JOIN [RitiOps].[lodging].[Bed] ON r.[bedId] \u003d [Bed].[id] INNER JOIN [RitiOps].[lodging].[Room] ON [Bed].[roomId] \u003d [Room].[id] INNER JOIN [RitiOps].[lodging].[Facility] ON [Room].[facilityId] \u003d [Facility].[id] WHERE 1\u003d1"
+            },
+            "useCndIn": false,
+            "wherePlusIn": [
+              {
+                "arg": "2021-01-20 00:00:00",
+                "type": "datetime"
+              },
+              {
+                "arg": "2021-02-19 00:00:00",
+                "type": "datetime"
+              },
+              {
+                "arg": -1
+              }
+            ],
+            "wherePlusOut": null
+          },
+          "path": "Shelter/Availabiliy/Table/Availability_Table",
+          "style": {
+            "marginLeft": 40,
+            "marginRight": 40
+          }
+        },
+        "type": "ia.display.view"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column",
+      "style": {
+        "classes": "Background/Alternative",
+        "overflow": "visible"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

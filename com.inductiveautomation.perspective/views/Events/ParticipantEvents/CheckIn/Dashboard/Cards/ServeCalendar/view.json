@@ -1,0 +1,99 @@
+{
+  "custom": {
+    "data": [],
+    "function": 0
+  },
+  "events": {
+    "system": {
+      "onStartup": {
+        "config": {
+          "script": "\tself.custom.function \u003d 0\n\tself.params.reservationId \u003d -1\n\tself.session.custom.dateRangeFromDate \u003d system.date.now()\n\tself.session.custom.dateRangeToDate \u003d system.date.now()"
+        },
+        "scope": "G",
+        "type": "script"
+      }
+    }
+  },
+  "params": {
+    "facilityID": 0,
+    "reservationId": -1
+  },
+  "propConfig": {
+    "custom.data": {
+      "persistent": true
+    },
+    "custom.function": {
+      "persistent": true
+    },
+    "params.facilityID": {
+      "onChange": {
+        "enabled": null,
+        "script": "\tif origin \u003d\u003d \"Browser\":\n\t\tif currentValue.value \u003e\u003d 0:\n\t\t\tself.custom.function \u003d 1"
+      },
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.reservationId": {
+      "paramDirection": "inout",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 450,
+      "width": 1020
+    },
+    "loading": {
+      "mode": "blocking"
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "EmbeddedView Header"
+        },
+        "position": {
+          "basis": "25px",
+          "shrink": 0
+        },
+        "props": {
+          "params": {
+            "Text": "Event Calendar"
+          },
+          "path": "1_globalTEMPLATES/Header/Header",
+          "style": {
+            "borderTopLeftRadius": "8px",
+            "borderTopRightRadius": "8px"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "CalenderView"
+        },
+        "position": {
+          "basis": "900px",
+          "grow": 1
+        },
+        "props": {
+          "path": "Events/ParticipantEvents/CheckIn/Dashboard/Components/CalenderView"
+        },
+        "type": "ia.display.view"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column",
+      "style": {
+        "borderBottomLeftRadius": "8px",
+        "borderBottomRightRadius": "8px",
+        "classes": "Background/Alternative"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

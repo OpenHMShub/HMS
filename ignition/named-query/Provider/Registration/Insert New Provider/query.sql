@@ -1,0 +1,33 @@
+
+Insert into organization.Provider (organizationId,
+	providerName,
+	providerTypeId,
+	street,
+	city,
+	state,
+	zipCode,
+	phone,
+	email,
+	website,
+	nationalProviderIdentifier,
+	locationDescription,
+	contactName,
+	contactPhone,
+	timeCreated
+)
+Values (:organizationID ,
+	:providerName,
+	:providerTypeId,
+	:addr,
+	:city,
+	:state,
+	:zip,
+	:phone,
+	:email,
+	:website,
+	:nationalProvID,
+	:locationDesc,
+	:contactName,
+	:contactPhone,
+	GetDate()
+)

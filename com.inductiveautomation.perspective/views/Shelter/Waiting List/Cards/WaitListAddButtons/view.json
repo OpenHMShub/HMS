@@ -1,0 +1,173 @@
+{
+  "custom": {},
+  "params": {
+    "dateadded": "2020-10-3 10:36:04",
+    "notes": "\"test\"",
+    "participantid": -1,
+    "programid": -1,
+    "wlid": -1
+  },
+  "propConfig": {
+    "params.dateadded": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.notes": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.participantid": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.programid": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.wlid": {
+      "paramDirection": "inout",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 51
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "custom": {
+          "dateadded": "value",
+          "notes": "notes",
+          "participantid": -1,
+          "programid": -1
+        },
+        "events": {
+          "dom": {
+            "onMouseUp": {
+              "config": {
+                "script": "\tif(self.view.params.wlid !\u003d -1):\n\t \tself.view.params.wlid \u003d -1"
+              },
+              "scope": "G",
+              "type": "script"
+            }
+          }
+        },
+        "meta": {
+          "name": "AddButton"
+        },
+        "position": {
+          "basis": "100px"
+        },
+        "props": {
+          "style": {
+            "classes": "Buttons/Secondary",
+            "marginLeft": 10
+          },
+          "text": "New"
+        },
+        "type": "ia.input.button"
+      },
+      {
+        "events": {
+          "dom": {
+            "onMouseUp": {
+              "config": {
+                "script": "\tif(self.view.params.wlid \u003d\u003d -1):\n\t\tsystem.db.runNamedQuery(\"Shelter/WaitList/AddToWaitList\", {\"participantid\":self.view.params.participantid, \"programid\":self.view.params.programid, \"dateadded\":self.view.params.dateadded, \"notes\":self.view.params.notes})\n\t\tsystem.perspective.sendMessage(\"refreshWaitlist\",payload \u003d {},scope\u003d\u0027page\u0027)\n\t\tself.view.params.wlid \u003d -1\n\telse: \n\t\tsystem.db.runNamedQuery(\"Shelter/WaitList/UpdateWaitList\", { \"wlid\": self.view.params.wlid, \"dateadded\":self.view.params.dateadded, \"details\":self.view.params.notes, \"programid\":self.view.params.programid, \"participantid\":self.view.params.participantid})\n\t\tsystem.perspective.sendMessage(\"refreshWaitlist\",payload \u003d {},scope\u003d\u0027page\u0027)"
+              },
+              "scope": "G",
+              "type": "script"
+            }
+          }
+        },
+        "meta": {
+          "name": "UpdateButton"
+        },
+        "position": {
+          "basis": "100px"
+        },
+        "props": {
+          "style": {
+            "classes": "Buttons/Main",
+            "marginLeft": 10
+          },
+          "text": "Save",
+          "textStyle": {
+            "marginLeft": 40,
+            "marginRight": 40
+          }
+        },
+        "type": "ia.input.button"
+      },
+      {
+        "events": {
+          "dom": {
+            "onMouseUp": {
+              "config": {
+                "script": "\tsystem.db.runNamedQuery(\"Shelter/WaitList/RemoveFromWaitList\", { \"wlid\": self.view.params.wlid})\n\tsystem.perspective.sendMessage(\"refreshWaitlist\",payload \u003d {},scope\u003d\u0027page\u0027)\n\tsystem.perspective.sendMessage(\"WaitListResetSelection\", \"\", scope\u003d\"page\")\n\tself.view.params.wlid \u003d -1"
+              },
+              "scope": "G",
+              "type": "script"
+            }
+          }
+        },
+        "meta": {
+          "name": "Remove"
+        },
+        "position": {
+          "basis": "100px"
+        },
+        "propConfig": {
+          "position.display": {
+            "binding": {
+              "config": {
+                "expression": "if({view.params.wlid} \u003d -1, false, true)"
+              },
+              "type": "expr"
+            }
+          }
+        },
+        "props": {
+          "image": {
+            "position": "right"
+          },
+          "style": {
+            "classes": "Buttons/Delete",
+            "marginLeft": 10,
+            "marginRight": 10
+          },
+          "text": "Delete"
+        },
+        "type": "ia.input.button"
+      }
+    ],
+    "custom": {
+      "dateadded": {
+        "$": [
+          "ts",
+          192,
+          1601739364039
+        ],
+        "$ts": 1601739364039
+      },
+      "notes": "\"test\"",
+      "participantid": -1,
+      "programid": -1,
+      "wlid": -1
+    },
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "style": {
+        "borderTopColor": "#9DB8D1",
+        "borderTopStyle": "solid",
+        "borderTopWidth": "1px",
+        "marginTop": "5px",
+        "paddingTop": "10px"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

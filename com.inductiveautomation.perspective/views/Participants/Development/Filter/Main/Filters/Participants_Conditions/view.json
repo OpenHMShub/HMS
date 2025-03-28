@@ -1,0 +1,352 @@
+{
+  "custom": {},
+  "params": {
+    "activity_range": 30,
+    "gender": null,
+    "race": null,
+    "veteran": null
+  },
+  "propConfig": {
+    "params.activity_range": {
+      "binding": {
+        "config": {
+          "path": "/root/ActivityRange.props.params.selection"
+        },
+        "transforms": [
+          {
+            "code": "\tif value \u003d\u003d 0 or value \u003d\u003d None:\n\t\treturn 36500\n\telse:\n\t\treturn value",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.gender": {
+      "binding": {
+        "config": {
+          "path": "/root/Gender.props.params.selection"
+        },
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.race": {
+      "binding": {
+        "config": {
+          "path": "/root/Race.props.params.selection"
+        },
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.veteran": {
+      "binding": {
+        "config": {
+          "path": "/root/Veteran.props.params.selection"
+        },
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 40,
+      "width": 1817
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "lblConditional"
+        },
+        "position": {
+          "basis": "70px",
+          "shrink": 0
+        },
+        "props": {
+          "style": {
+            "classes": "Filter/Header_Text"
+          },
+          "text": "Last Activity:"
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "meta": {
+          "name": "ActivityRange"
+        },
+        "position": {
+          "basis": "150px",
+          "shrink": 0
+        },
+        "props": {
+          "params": {
+            "options": {
+              "$": [
+                "ds",
+                192,
+                1615127132325
+              ],
+              "$columns": [
+                {
+                  "data": [
+                    1,
+                    7,
+                    14,
+                    30,
+                    60,
+                    90,
+                    180,
+                    365,
+                    730,
+                    1095,
+                    1460,
+                    1825,
+                    0
+                  ],
+                  "name": "id",
+                  "type": "Integer"
+                },
+                {
+                  "data": [
+                    "Yesterday",
+                    "7 Days",
+                    "14 Days",
+                    "30 Days",
+                    "60 Days",
+                    "90 Days",
+                    "180 Days",
+                    "1 Year",
+                    "2 Years",
+                    "3 Years",
+                    "4 Years",
+                    "5 Years",
+                    "All Time"
+                  ],
+                  "name": "activity_range",
+                  "type": "String"
+                }
+              ]
+            },
+            "placeholder": "Activity Range",
+            "selection": 30
+          },
+          "path": "1_TEMPLATES/Filtering/Conditionals/Conditional_SingleDropDown_NoClear",
+          "style": {
+            "classes": "Filter/Filter_Container"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Gender"
+        },
+        "position": {
+          "basis": "600px"
+        },
+        "propConfig": {
+          "props.params.options": {
+            "binding": {
+              "config": {
+                "queryPath": "Filter/getGenderId"
+              },
+              "type": "query"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "clear": false,
+            "placeholder": "(All Genders)",
+            "selection": null
+          },
+          "path": "1_TEMPLATES/Filtering/Conditionals/Conditional_MulitDropDown",
+          "style": {
+            "classes": "Filter/Filter_Container"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Race"
+        },
+        "position": {
+          "basis": "600px"
+        },
+        "propConfig": {
+          "props.params.options": {
+            "binding": {
+              "config": {
+                "queryPath": "Filter/getRaceId"
+              },
+              "type": "query"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "clear": false,
+            "placeholder": "(All Races)",
+            "selection": null
+          },
+          "path": "1_TEMPLATES/Filtering/Conditionals/Conditional_MulitDropDown",
+          "style": {
+            "classes": "Filter/Filter_Container"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Veteran"
+        },
+        "position": {
+          "basis": "600px"
+        },
+        "propConfig": {
+          "props.params.options": {
+            "binding": {
+              "config": {
+                "queryPath": "Filter/getVeteranStatusId"
+              },
+              "type": "query"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "clear": false,
+            "placeholder": "(All Veteran Status)",
+            "selection": null
+          },
+          "path": "1_TEMPLATES/Filtering/Conditionals/Conditional_MulitDropDown",
+          "style": {
+            "classes": "Filter/Filter_Container"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "events": {
+          "dom": {
+            "onClick": {
+              "config": {
+                "script": "\t#Clear the filter components\n\t#Exception is Activity Range as it causes a very big query\n\tself.getSibling(\"Gender\").props.params.clear \u003d True\n\tself.getSibling(\"Race\").props.params.clear \u003d True\n\tself.getSibling(\"Veteran\").props.params.clear \u003d True\n"
+              },
+              "scope": "G",
+              "type": "script"
+            }
+          }
+        },
+        "meta": {
+          "name": "clearConditions"
+        },
+        "position": {
+          "basis": "30px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.image.icon.color": {
+            "binding": {
+              "config": {
+                "expression": "hasChanged({../Gender.props.params.selection}) || \r\nhasChanged({../Race.props.params.selection}) ||\r\nhasChanged({../Veteran.props.params.selection})"
+              },
+              "transforms": [
+                {
+                  "code": "\tif self.getSibling(\"Gender\").props.params.selection !\u003d None:\n\t\tconditions \u003d True\n\telif self.getSibling(\"Race\").props.params.selection !\u003d None:\n\t\tconditions \u003d True\n\telif self.getSibling(\"Veteran\").props.params.selection !\u003d None:\n\t\tconditions \u003d True\n\telse:\n\t\tconditions \u003d False\n\tif conditions:\n\t\treturn \u0027#FF7A59\u0027\n\telse:\n\t\treturn \u0027#0C4E8B\u0027",
+                  "type": "script"
+                }
+              ],
+              "type": "expr"
+            }
+          },
+          "props.style.classes": {
+            "binding": {
+              "config": {
+                "path": "this.props.image.icon.color"
+              },
+              "transforms": [
+                {
+                  "code": "\t\n\tif value \u003d\u003d \"#FF7A59\":\n\t\treturn \u0027Filter/Filter_Border_Orange Filter/Filter_Container\u0027\n\telse:\n\t\treturn \u0027Filter/Filter_Border_Default Filter/Filter_Container\u0027",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "image": {
+            "height": 16,
+            "icon": {
+              "path": "material/clear"
+            },
+            "position": "center",
+            "width": 16
+          },
+          "style": {},
+          "text": "",
+          "textStyle": {
+            "classes": "GreyColor"
+          }
+        },
+        "type": "ia.input.button"
+      },
+      {
+        "meta": {
+          "name": "Placeholder"
+        },
+        "position": {
+          "basis": "1px",
+          "grow": 1
+        },
+        "props": {
+          "path": "1_TEMPLATES/Filtering/Filter_Placeholder"
+        },
+        "type": "ia.display.view"
+      }
+    ],
+    "events": {
+      "system": {
+        "onStartup": {
+          "config": {
+            "script": "\timport traceback\n\ttry:\n\t\ttoday \u003d system.date.now()\n\t\tdob_min \u003d -1 * int(self.view.params.max_age)\n\t\tdob_max \u003d -1 * int(self.view.params.min_age )\n\t\tself.view.params.dob_start \u003d system.date.addYears(today,dob_min)\n\t\tself.view.params.dob_end \u003d system.date.addYears(today,dob_max)\n\n\texcept:\n\t\tlogger \u003d system.util.getLogger(\"Participants_Filter ParticipantDashboardAgeRange onStartup\")\n\t\tmsg \u003d traceback.format_exc()\n\t\tlogger.error(msg)"
+          },
+          "scope": "G",
+          "type": "script"
+        }
+      }
+    },
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "style": {
+        "classes": "Filter/Header_Text"
+      }
+    },
+    "scripts": {
+      "customMethods": [],
+      "extensionFunctions": null,
+      "messageHandlers": [
+        {
+          "messageType": "ParticipantDashboardAgeRange",
+          "pageScope": true,
+          "script": "\timport traceback\n\ttry:\n\t\t#Get the min and max age from the message payload\n\t\tself.view.params.min_age \u003d payload[\u0027min\u0027]\n\t\tself.view.params.max_age \u003d payload[\u0027max\u0027]\n\t\t#Calculate the date of birth range\n\t\ttoday \u003d system.date.now()\n\t\tdob_min \u003d -1 * int(self.view.params.max_age)\n\t\tdob_max \u003d -1 * int(self.view.params.min_age )\n\t\tself.view.params.dob_start \u003d system.date.addYears(today,dob_min)\n\t\tself.view.params.dob_end \u003d system.date.addYears(today,dob_max)\n\texcept:\n\t\tlogger \u003d system.util.getLogger(\"Participants_Filter ParticipantDashboardAgeRange Message\")\n\t\tmsg \u003d traceback.format_exc()\n\t\tlogger.error(msg)",
+          "sessionScope": true,
+          "viewScope": true
+        }
+      ]
+    },
+    "type": "ia.container.flex"
+  }
+}

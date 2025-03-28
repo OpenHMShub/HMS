@@ -1,0 +1,141 @@
+{
+  "custom": {
+    "row_data": {
+      "IsResidential": false,
+      "active": -1,
+      "autoEnroll": -1,
+      "programDescription": "",
+      "programId": -1,
+      "programName": ""
+    },
+    "selectedRow": null,
+    "selection_data": []
+  },
+  "params": {},
+  "propConfig": {
+    "custom.row_data": {
+      "persistent": true
+    },
+    "custom.selectedRow": {
+      "binding": {
+        "config": {
+          "path": "/root/Table.props.params.selectedRow"
+        },
+        "type": "property"
+      },
+      "onChange": {
+        "enabled": null,
+        "script": "\tselectionData \u003d self.custom.selection_data\n\tselectedRow \u003d self.custom.selectedRow\n\tif len(selectionData) and selectedRow \u003e -1:\n\t\tself.custom.row_data.programId \u003d selectionData[0].programId\n\t\tif selectionData[0].active:\n\t\t\tself.custom.row_data.active \u003d 1\n\t\telse:\n\t\t\tself.custom.row_data.active \u003d 0\n\t\tif selectionData[0].autoEnroll:\n\t\t\tself.custom.row_data.autoEnroll \u003d 1\n\t\telse:\n\t\t\tself.custom.row_data.autoEnroll \u003d 0\n\t\tself.custom.row_data.programName \u003d selectionData[0].programName\n\t\tself.custom.row_data.programDescription \u003d selectionData[0].programDescription\n\t\tself.custom.row_data.IsResidential \u003d selectionData[0].IsResidential\n\telse:\n\t\tself.custom.row_data.programId \u003d -1\n\t\tself.custom.row_data.active \u003d -1\n\t\tself.custom.row_data.autoEnroll \u003d -1\n\t\tself.custom.row_data.programName \u003d \u0027\u0027\n\t\tself.custom.row_data.programDescription \u003d \u0027\u0027\n\t\tself.custom.row_data.IsResidential \u003d False\n\t"
+      },
+      "persistent": true
+    },
+    "custom.selection_data": {
+      "binding": {
+        "config": {
+          "path": "/root/Table.props.params.selection_data"
+        },
+        "type": "property"
+      },
+      "persistent": true
+    },
+    "custom.table_data": {
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "width": 1166
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "Edit"
+        },
+        "position": {
+          "basis": "210px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.row_data": {
+            "binding": {
+              "config": {
+                "path": "view.custom.row_data"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "path": "Settings/Programs/Dashboard/Main/Edit/ProgramSettingsEdit",
+          "style": {
+            "marginLeft": "40px",
+            "marginRight": "40px"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Filter"
+        },
+        "position": {
+          "basis": "30px"
+        },
+        "props": {
+          "params": {
+            "filter_active": 1
+          },
+          "path": "Settings/Programs/Dashboard/Main/Filters/ProgramSettingsFilter",
+          "style": {
+            "marginLeft": "40px",
+            "marginRight": "40px"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Table"
+        },
+        "position": {
+          "basis": "320px",
+          "grow": 1
+        },
+        "propConfig": {
+          "props.params.filter_active": {
+            "binding": {
+              "config": {
+                "path": "../Filter.props.params.filter_active"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "selectedRow": null,
+            "selection_data": []
+          },
+          "path": "Settings/Programs/Dashboard/Main/Tables/ProgramSettingsTable",
+          "style": {
+            "marginLeft": "40px",
+            "marginRight": "40px"
+          }
+        },
+        "type": "ia.display.view"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column",
+      "style": {
+        "classes": "Background/Alternative"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

@@ -1,0 +1,186 @@
+{
+  "custom": {},
+  "params": {
+    "employeeId": -1,
+    "participantID": 847378
+  },
+  "propConfig": {
+    "params.employeeId": {
+      "binding": {
+        "config": {
+          "path": "/root/Dropdown_0.props.value"
+        },
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.participantID": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 52
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "Label"
+        },
+        "position": {
+          "basis": "96px",
+          "shrink": 0
+        },
+        "props": {
+          "style": {
+            "classes": "Table/Filter_Header_Detail",
+            "paddingLeft": "40px"
+          },
+          "text": "Filter by:"
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "meta": {
+          "name": "Dropdown_0"
+        },
+        "position": {
+          "basis": "240px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.options": {
+            "binding": {
+              "config": {
+                "parameters": {
+                  "participantID": "{view.params.participantID}"
+                },
+                "queryPath": "Participants/CaseNotes/Select Filter Users",
+                "returnFormat": "json"
+              },
+              "type": "query"
+            }
+          }
+        },
+        "props": {
+          "placeholder": {
+            "text": "All users"
+          },
+          "style": {
+            "classes": "Dropdowns/DetailFilter"
+          },
+          "value": -1
+        },
+        "scripts": {
+          "customMethods": [],
+          "messageHandlers": [
+            {
+              "messageType": "refreshCaseNotes",
+              "pageScope": true,
+              "script": "\t###refreshCaseNotes\n\tself.refreshBinding(\"props.options\")",
+              "sessionScope": true,
+              "viewScope": true
+            }
+          ]
+        },
+        "type": "ia.input.dropdown"
+      },
+      {
+        "meta": {
+          "name": "Dropdown_1"
+        },
+        "position": {
+          "basis": "125px",
+          "shrink": 0
+        },
+        "props": {
+          "options": [
+            {
+              "label": "",
+              "value": ""
+            }
+          ],
+          "placeholder": {
+            "text": "All types"
+          },
+          "style": {
+            "classes": "Dropdowns/DetailFilter"
+          }
+        },
+        "scripts": {
+          "customMethods": [],
+          "messageHandlers": [
+            {
+              "messageType": "refreshCaseNotes",
+              "pageScope": true,
+              "script": "\t###refreshCaseNotes\n\tself.refreshBinding(\"props.options\")",
+              "sessionScope": true,
+              "viewScope": true
+            }
+          ]
+        },
+        "type": "ia.input.dropdown"
+      },
+      {
+        "meta": {
+          "name": "TextField",
+          "visible": false
+        },
+        "position": {
+          "basis": "175px"
+        },
+        "props": {
+          "style": {
+            "classes": "Table/Filter_Header_Search",
+            "marginBottom": "auto",
+            "marginLeft": "auto",
+            "marginTop": "auto"
+          }
+        },
+        "type": "ia.input.text-field"
+      },
+      {
+        "events": {
+          "dom": {
+            "onClick": {
+              "config": {
+                "script": "\tvisible \u003d self.getSibling(\"TextField\").meta.visible\n\tif visible:\n\t\tself.getSibling(\"TextField\").meta.visible \u003d False\n\telse:\n\t\tself.getSibling(\"TextField\").meta.visible \u003d True"
+              },
+              "scope": "G",
+              "type": "script"
+            }
+          }
+        },
+        "meta": {
+          "name": "Icon"
+        },
+        "position": {
+          "basis": "20px",
+          "shrink": 0
+        },
+        "props": {
+          "color": "#0C4E8B",
+          "path": "material/search",
+          "style": {
+            "cursor": "pointer",
+            "marginRight": "40px"
+          }
+        },
+        "type": "ia.display.icon"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "style": {
+        "classes": "Table/Filter_Header"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

@@ -1,0 +1,419 @@
+{
+  "custom": {
+    "IsRealtime": true,
+    "endDate": {
+      "$": [
+        "ts",
+        192,
+        1735538063471
+      ],
+      "$ts": 1735538399000
+    },
+    "selectedShelters": "(\u0027\u0027)",
+    "startDate": {
+      "$": [
+        "ts",
+        192,
+        1735538063471
+      ],
+      "$ts": 1735452000000
+    }
+  },
+  "events": {
+    "system": {
+      "onStartup": {
+        "config": {
+          "script": "\tstartDate \u003d system.date.format(system.date.setTime(system.date.now(), 00, 00, 00), \u0027MM/dd/yyyy\u0027)\n\tendDate \u003d system.date.format(system.date.setTime(system.date.now(), 23, 59, 59), \u0027MM/dd/yyyy\u0027)\n\tself.session.custom.dateRangeFromDate \u003d startDate\n\tself.session.custom.dateRangeToDate \u003d endDate"
+        },
+        "scope": "G",
+        "type": "script"
+      }
+    }
+  },
+  "params": {
+    "IsRealtime": true,
+    "endDate": {
+      "$": [
+        "ts",
+        192,
+        1735538063471
+      ],
+      "$ts": 1735538400000
+    },
+    "selectedPrograms": "(82,24,44,48,83,47,29,81,32,80,61,62,1,49,50,51,52,53,55,56,57,58,59,40,-1)",
+    "selectedShelters": "(\u0027\u0027)",
+    "startDate": {
+      "$": [
+        "ts",
+        192,
+        1735538063471
+      ],
+      "$ts": 1735452000000
+    }
+  },
+  "propConfig": {
+    "custom.IsRealtime": {
+      "binding": {
+        "config": {
+          "struct": {
+            "endDate": "{view.custom.endDate}",
+            "startDate": "{view.custom.startDate}"
+          },
+          "waitOnAll": true
+        },
+        "transforms": [
+          {
+            "code": "\tstartDate \u003d value[\u0027startDate\u0027]\n\tendDate \u003d value[\u0027endDate\u0027]\n\tcurrentDate \u003d system.date.now()\n#\treturn system.date.isBetween(currentDate, startDate, endDate)\n\tstartDateFormated \u003d system.date.parse(system.date.format(startDate,\u0027dd-MM-yyyy\u0027), \u0027dd-MM-yyyy\u0027)\n\tcurrentDateFormated \u003d system.date.parse(system.date.format(currentDate,\u0027dd-MM-yyyy\u0027), \u0027dd-MM-yyyy\u0027)\n\tif startDateFormated \u003c currentDateFormated:\n\t\treturn False\n\telse:\n\t\treturn True",
+            "type": "script"
+          }
+        ],
+        "type": "expr-struct"
+      },
+      "persistent": true
+    },
+    "custom.endDate": {
+      "binding": {
+        "config": {
+          "path": "/root/emvDateFilter.props.params.selectedDateRange"
+        },
+        "transforms": [
+          {
+            "code": "\tendDate \u003d (value.split(\u0027 to \u0027)[1]).strip()\n\tendDate \u003d system.date.parse(endDate,\u0027MM/dd/yyyy\u0027)\n\tendDate \u003d system.date.setTime(endDate, 23, 59, 59)\n\treturn endDate",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      },
+      "persistent": true
+    },
+    "custom.selectedShelters": {
+      "binding": {
+        "config": {
+          "path": "/root/emvShelter.props.params.selection"
+        },
+        "transforms": [
+          {
+            "code": "\tif value \u003d\u003d \u0027Apartments\u0027:\n\t\tfacility_filter \u003d \"facilityName like \u0027%Apartments%\u0027\" \n\telif value \u003d\u003d \u0027Guest House\u0027:\n\t\tfacility_filter \u003d \"facilityName not like \u0027%Apartments%\u0027 and facilityName not like \u0027%Welcome Dorm%\u0027\" \n\telif value \u003d\u003d \u0027Welcome\u0027:\n\t\tfacility_filter \u003d \"facilityName like \u0027%Welcome Dorm%\u0027\" \n\telif value \u003d\u003d \u0027All\u0027:\n\t\tfacility_filter \u003d \"1\u003d1\" \n\telse:\n\t\tfacility_filter \u003d \"1!\u003d1\" \n\t\n\tselectQ \u003d system.db.runPrepQuery(\"SELECT facilityName FROM lodging.Facility where timeRetired IS NULL and \" + facility_filter)\n\tselectedShelters \u003d \u0027\u0027\n\tif selectQ !\u003d None and selectQ.getRowCount()\u003e0:\n\t\tfor i in range(0,selectQ.getRowCount()):\n\t\t\tfacility \u003d selectQ.getValueAt(i,0)\n\t\t\tselectedShelters \u003d selectedShelters + \"\u0027\" + facility.replace(\"\u0027\",\"\u0027\u0027\") + \"\u0027,\"\n\t\tselectedShelters \u003d \"(\" + selectedShelters[:-1] + \")\"\n\t## if no shelter selected then keep empty bracket\n\tif selectedShelters \u003d\u003d \u0027\u0027:\n\t\tselectedShelters \u003d \"(\u0027\u0027)\"\n\treturn selectedShelters",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      },
+      "persistent": true
+    },
+    "custom.startDate": {
+      "binding": {
+        "config": {
+          "path": "/root/emvDateFilter.props.params.selectedDateRange"
+        },
+        "transforms": [
+          {
+            "code": "\tstartDate \u003d (value.split(\u0027 to \u0027)[0]).strip()\n\tstartDate \u003d system.date.parse(startDate,\u0027MM/dd/yyyy\u0027)\n\tstartDate \u003d system.date.setTime(startDate, 00, 00, 00)\n\treturn startDate",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      },
+      "persistent": true
+    },
+    "params.IsRealtime": {
+      "binding": {
+        "config": {
+          "path": "view.custom.IsRealtime"
+        },
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.endDate": {
+      "binding": {
+        "config": {
+          "path": "view.custom.endDate"
+        },
+        "transforms": [
+          {
+            "code": "\treturn system.date.addSeconds(value, 1)",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.selectedPrograms": {
+      "binding": {
+        "config": {
+          "struct": {
+            "allPrograms": "{/root/emvProgramName.props.params.options}",
+            "selectedProgram": "{/root/emvProgramName.props.params.selection}"
+          },
+          "waitOnAll": true
+        },
+        "transforms": [
+          {
+            "code": "\tselectedProgram \u003d \u0027\u0027\n\tselectedValue \u003d value[\u0027selectedProgram\u0027]\n\tif selectedValue !\u003d None and selectedValue !\u003d \u0027\u0027:\n\t\tfor one_program in selectedValue:\n\t\t\tselectedProgram \u003d selectedProgram + str(one_program) + \u0027,\u0027\n\t\tselectedProgram \u003d selectedProgram[:-1]\n\t\tselectedProgram \u003d \"(\" + selectedProgram + \")\"\n\t## if no program selected then add all programs\n\tif selectedProgram \u003d\u003d \u0027\u0027:\n\t\tall_programs \u003d self.getChild(\"root\").getChild(\"emvProgramName\").props.params.options\n\t\tfor i in range(all_programs.getRowCount()):\n\t\t\tone_program \u003d all_programs.getValueAt(i,0)\n\t\t\tselectedProgram \u003d selectedProgram + str(one_program) + \u0027,\u0027\n\t\t## add -1 if any shleter don\u0027t have program\n\t\tselectedProgram \u003d selectedProgram + \u0027-1\u0027\n\t\tselectedProgram \u003d \"(\" + selectedProgram + \")\"\n\treturn selectedProgram",
+            "type": "script"
+          }
+        ],
+        "type": "expr-struct"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.selectedShelters": {
+      "binding": {
+        "config": {
+          "path": "view.custom.selectedShelters"
+        },
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.startDate": {
+      "binding": {
+        "config": {
+          "path": "view.custom.startDate"
+        },
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 30,
+      "width": 1820
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "emvShelter"
+        },
+        "position": {
+          "basis": "150px"
+        },
+        "props": {
+          "params": {
+            "actionPerformedPulse": false,
+            "clear": false,
+            "multiSelect": false,
+            "options": [
+              {
+                "label": "Apartments",
+                "value": "Apartments"
+              },
+              {
+                "label": "Guest House",
+                "value": "Guest House"
+              },
+              {
+                "label": "Welcome",
+                "value": "Welcome"
+              },
+              {
+                "label": "All",
+                "value": "All"
+              }
+            ],
+            "placeholder": "Shelter",
+            "selection": null
+          },
+          "path": "Providers/Dashboard/Components/Filters/Conditional_DropDown",
+          "style": {
+            "classes": "Filter/Filter_Text_TeelBlue Filter/Filter_Container",
+            "marginLeft": "40px"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "emvProgramName"
+        },
+        "position": {
+          "basis": "250px"
+        },
+        "propConfig": {
+          "props.params.options": {
+            "binding": {
+              "config": {
+                "queryPath": "Participants/Dashboard/Get_participantProgram"
+              },
+              "type": "query"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "actionPerformedPulse": true,
+            "clear": false,
+            "multiSelect": true,
+            "placeholder": "(All Programs)",
+            "selection": null
+          },
+          "path": "Providers/Dashboard/Components/Filters/Conditional_DropDown",
+          "style": {
+            "classes": "Filter/Filter_Text_TeelBlue Filter/Filter_Container"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "emvDateFilter"
+        },
+        "position": {
+          "basis": "205px"
+        },
+        "props": {
+          "params": {
+            "selectedDateRange": " 12/29/2024 to 12/29/2024"
+          },
+          "path": "Shelter/Templates/DateRange/DateInput",
+          "style": {
+            "classes": "Filter/Filter_Container Filter/Header_Text",
+            "marginRight": "0px"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "events": {
+          "component": {
+            "onActionPerformed": {
+              "config": {
+                "script": "\troot \u003d self.parent\n\t\n\temvShelter \u003d self.getSibling(\"emvShelter\")\n\temvProgramName \u003d self.getSibling(\"emvProgramName\")\n\t\n\temvShelter.props.params.clear \u003d True\n\temvProgramName.props.params.clear \u003d True\n\t\n\tstartDate \u003d system.date.format(system.date.setTime(system.date.now(), 00, 00, 00), \u0027MM/dd/yyyy\u0027)\n\tendDate \u003d system.date.format(system.date.setTime(system.date.now(), 23, 59, 59), \u0027MM/dd/yyyy\u0027)\n\tself.session.custom.dateRangeFromDate \u003d startDate\n\tself.session.custom.dateRangeToDate \u003d endDate\n\t\n\tself.view.params.selectedShelters \u003d \"(\u0027\u0027)\""
+              },
+              "scope": "G",
+              "type": "script"
+            }
+          }
+        },
+        "meta": {
+          "name": "clearConditions"
+        },
+        "position": {
+          "basis": "25px",
+          "shrink": 0
+        },
+        "props": {
+          "image": {
+            "height": 14,
+            "icon": {
+              "color": "#0C4E8B",
+              "path": "material/close"
+            },
+            "position": "center",
+            "width": 14
+          },
+          "style": {
+            "classes": "Filter/Filter_Border_Default Filter/Filter_Container"
+          },
+          "text": "",
+          "textStyle": {
+            "classes": "GreyColor"
+          }
+        },
+        "type": "ia.input.button"
+      },
+      {
+        "meta": {
+          "name": "toExcel"
+        },
+        "position": {
+          "basis": "30px",
+          "shrink": 0
+        },
+        "props": {
+          "params": {
+            "dataset": {
+              "$": [
+                "ds",
+                192,
+                1630256694749
+              ],
+              "$columns": [
+                {
+                  "data": [
+                    4,
+                    5,
+                    1,
+                    0,
+                    3,
+                    2
+                  ],
+                  "name": "id",
+                  "type": "Integer"
+                },
+                {
+                  "data": [
+                    "Client refused",
+                    "Data not collected",
+                    "Female",
+                    "Male",
+                    "Transgender Female to Male",
+                    "Transgender Male to Female"
+                  ],
+                  "name": "gender",
+                  "type": "String"
+                }
+              ]
+            },
+            "defaultFilePrefix": "toExcel"
+          },
+          "path": "1_TEMPLATES/Tables/TableToExcel"
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Placeholder"
+        },
+        "position": {
+          "basis": "200px",
+          "grow": 1
+        },
+        "props": {
+          "path": "1_TEMPLATES/Filtering/Filter_Placeholder"
+        },
+        "type": "ia.display.view"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "style": {
+        "classes": "Background/Alternative",
+        "overflow": "hidden"
+      }
+    },
+    "scripts": {
+      "customMethods": [],
+      "extensionFunctions": null,
+      "messageHandlers": [
+        {
+          "messageType": "shelterSelected",
+          "pageScope": true,
+          "script": "\t## add shelter name to selctedShelter param\n\tselectedshelters \u003d self.view.params.selectedShelters\n\tselectedShelter_table \u003d payload[\u0027shelteName\u0027]\n\tselectedShelter_table \u003d selectedShelter_table.replace(\"\u0027\",\"\u0027\u0027\")\n\tif selectedshelters \u003d\u003d \"(\u0027\u0027)\":\n\t\tself.view.params.selectedShelters \u003d \"(\u0027\" + str(selectedShelter_table) + \"\u0027)\"\n\telse:\n\t\tself.view.params.selectedShelters \u003d selectedshelters[:-1] + \",\u0027\" + selectedShelter_table + \"\u0027)\"",
+          "sessionScope": false,
+          "viewScope": false
+        },
+        {
+          "messageType": "unselectShelter",
+          "pageScope": true,
+          "script": "\t## remove shelter name from selctedShelter param\n\tselectedshelters \u003d self.view.params.selectedShelters\n\tselectedShelter_table \u003d payload[\u0027shelteName\u0027]\n\tselectedShelter_table \u003d selectedShelter_table.replace(\"\u0027\",\"\u0027\u0027\")\n\tselectedShelter_table \u003d \"\u0027\" + selectedShelter_table + \"\u0027\"\n\t\n\tif \u0027,\u0027 in selectedshelters: #if multiple shelters then remove shelter name with comma as prefix/suffix\n\t\tselectedshelters_updated \u003d selectedshelters.replace(\u0027,\u0027+str(selectedShelter_table), \u0027\u0027)\n\t\tselectedshelters_updated \u003d selectedshelters_updated.replace(str(selectedShelter_table)+\u0027,\u0027, \u0027\u0027)\t\t\n\telse: #if single shelter in list then just replace it with empty string\n\t\tselectedshelters_updated \u003d selectedshelters.replace(str(selectedShelter_table), \"\u0027\u0027\")\n\t\t\n\tself.view.params.selectedShelters \u003d selectedshelters_updated",
+          "sessionScope": false,
+          "viewScope": false
+        }
+      ]
+    },
+    "type": "ia.container.flex"
+  }
+}

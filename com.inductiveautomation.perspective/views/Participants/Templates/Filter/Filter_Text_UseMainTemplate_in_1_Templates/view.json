@@ -1,0 +1,134 @@
+{
+  "custom": {},
+  "params": {
+    "placeholder": "",
+    "text": ""
+  },
+  "propConfig": {
+    "params.placeholder": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.text": {
+      "paramDirection": "inout",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 30,
+      "width": 291
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "events": {
+          "dom": {
+            "onClick": {
+              "config": {
+                "script": "\tprint \"Icon click\"\n\tself.view.params.text \u003d \"\""
+              },
+              "scope": "G",
+              "type": "script"
+            }
+          }
+        },
+        "meta": {
+          "name": "Icon"
+        },
+        "position": {
+          "basis": "16px",
+          "shrink": 0
+        },
+        "props": {
+          "color": "#0C4E8B",
+          "path": "material/close",
+          "style": {
+            "classes": "Table/Filter_Clear_Icon",
+            "marginTop": "9px"
+          }
+        },
+        "type": "ia.display.icon"
+      },
+      {
+        "meta": {
+          "name": "TextField"
+        },
+        "position": {
+          "basis": "120px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.placeholder": {
+            "binding": {
+              "config": {
+                "path": "view.params.placeholder"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.classes": {
+            "binding": {
+              "config": {
+                "path": "this.props.text"
+              },
+              "transforms": [
+                {
+                  "code": "\tif value \u003d\u003d \u0027\u0027 or value \u003d\u003d None:\n\t\treturn \"Dropdowns/DD_DefaultNoBorder\"\n\telse:\n\t\treturn \"Dropdowns/DD_TeelBlueNoBorder\"",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          },
+          "props.text": {
+            "binding": {
+              "config": {
+                "bidirectional": true,
+                "path": "view.params.text"
+              },
+              "type": "property"
+            },
+            "persistent": false
+          }
+        },
+        "props": {
+          "deferUpdates": false,
+          "style": {
+            "marginLeft": "5px",
+            "marginTop": "5px",
+            "textAlign": "left"
+          }
+        },
+        "type": "ia.input.text-field"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "propConfig": {
+      "props.style.classes": {
+        "binding": {
+          "config": {
+            "path": "./TextField.props.text"
+          },
+          "transforms": [
+            {
+              "code": "\tif value \u003d\u003d \u0027\u0027 or value \u003d\u003d None:\n\t\treturn \"Dropdowns/DD_Default\"\n\telse:\n\t\treturn \"Dropdowns/DD_TeelBlue\"",
+              "type": "script"
+            }
+          ],
+          "type": "property"
+        }
+      }
+    },
+    "props": {
+      "alignItems": "flex-start",
+      "style": {
+        "overflow": "hidden"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

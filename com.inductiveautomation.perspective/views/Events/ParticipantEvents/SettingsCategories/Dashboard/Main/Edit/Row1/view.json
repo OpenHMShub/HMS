@@ -1,0 +1,170 @@
+{
+  "custom": {},
+  "params": {
+    "CategoryName": "",
+    "Id": -1,
+    "color": "",
+    "isActive": false
+  },
+  "propConfig": {
+    "params.CategoryName": {
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.Id": {
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.color": {
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.isActive": {
+      "paramDirection": "inout",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 70,
+      "width": 1202
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "Embed_Name"
+        },
+        "position": {
+          "basis": "440px"
+        },
+        "propConfig": {
+          "props.params.text": {
+            "binding": {
+              "config": {
+                "bidirectional": true,
+                "path": "view.params.CategoryName"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "label": "Category Name",
+            "placeholder": "Start typing to add a category name..."
+          },
+          "path": "Settings/Templates/60px/top/Input_Text",
+          "style": {
+            "classes": "InputCards/InputCard_NoBorder",
+            "overflow": "hidden"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Embed_Placeholder"
+        },
+        "position": {
+          "basis": "1px",
+          "display": false,
+          "grow": 1
+        },
+        "props": {
+          "path": "Participants/Templates/Placeholder",
+          "style": {
+            "classes": "InputCards/InputCard"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "EmbeddedView_0"
+        },
+        "position": {
+          "basis": "250px"
+        },
+        "propConfig": {
+          "props.params.Color": {
+            "binding": {
+              "config": {
+                "bidirectional": true,
+                "path": "view.params.color"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "label": "Category Color"
+          },
+          "path": "1_TEMPLATES/Color Picker/Input Color Entry",
+          "style": {
+            "classes": "InputCards/InputCard_NoBorder",
+            "overflow": "hidden"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Input_Checkbox"
+        },
+        "position": {
+          "basis": "320px"
+        },
+        "propConfig": {
+          "props.params.checked": {
+            "binding": {
+              "config": {
+                "bidirectional": true,
+                "path": "view.params.isActive"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "text": "Active Event"
+          },
+          "path": "Events/ParticipantEvents/SettingsCategories/Dashboard/Main/Filters/Input_Checkbox"
+        },
+        "type": "ia.display.view"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "style": {
+        "classes": "Background/Default"
+      }
+    },
+    "scripts": {
+      "customMethods": [],
+      "extensionFunctions": null,
+      "messageHandlers": [
+        {
+          "messageType": "refreshCategorySettings",
+          "pageScope": true,
+          "script": "\tself.view.params.CategoryName \u003d \"\"\n\tself.view.params.color \u003d \"\"\n",
+          "sessionScope": false,
+          "viewScope": false
+        },
+        {
+          "messageType": "CategoryEdit",
+          "pageScope": true,
+          "script": "\tself.view.params.Id \u003d str(payload[\u0027Id\u0027])\n\tself.view.params.CategoryName \u003d str(payload[\u0027CategoryName\u0027])\n\tself.view.params.color \u003d str(payload[\u0027Color\u0027])\n\tself.view.params.isActive \u003d payload[\u0027isActive\u0027]\n\t",
+          "sessionScope": true,
+          "viewScope": true
+        }
+      ]
+    },
+    "type": "ia.container.flex"
+  }
+}

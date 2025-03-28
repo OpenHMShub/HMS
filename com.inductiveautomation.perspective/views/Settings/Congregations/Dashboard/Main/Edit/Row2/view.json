@@ -1,0 +1,117 @@
+{
+  "custom": {},
+  "params": {
+    "active": "",
+    "hostingSince": "",
+    "notes": ""
+  },
+  "propConfig": {
+    "params.hostingSince": {
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.notes": {
+      "paramDirection": "inout",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 83,
+      "width": 1421
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "Embed_HostingSince"
+        },
+        "position": {
+          "basis": "150px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.options": {
+            "binding": {
+              "config": {
+                "queryPath": "WinterShelterGlobal/getCurrentSeason"
+              },
+              "transforms": [
+                {
+                  "code": "#\tCurrentSeasonId \u003d value.getValueAt(0,\u0027id\u0027)\n\tCurrentSeason \u003d value.getValueAt(0,\u0027Seasons\u0027)\n#\tCurrentSeason \u003d \u00272023-2024\u0027\n\tstartYear \u003d \u00271985\u0027\n\tendYear \u003d CurrentSeason.split(\u0027-\u0027)[0]\n\tdiff \u003d int(endYear) - int(startYear)\n\tHostingSinceList \u003d []\n\tfor i in range(0,diff+1):\n\t\thostingSince \u003d str(startYear) + \u0027-\u0027 + str(int(startYear) + 1)\n\t\tHostingSinceList.append([hostingSince,hostingSince])\n\t\tstartYear \u003d int(startYear) + 1\n\tdataset \u003d system.dataset.toDataSet([\"ID\",\"Hosting Since\"], HostingSinceList)\n\treturn dataset",
+                  "type": "script"
+                }
+              ],
+              "type": "query"
+            }
+          },
+          "props.params.selection": {
+            "binding": {
+              "config": {
+                "bidirectional": true,
+                "path": "view.params.hostingSince"
+              },
+              "type": "property"
+            },
+            "onChange": {
+              "enabled": null,
+              "script": "\tpass\n#\tsystem.perspective.print(currentValue.value)\n#\tif currentValue.value !\u003d -1:\n#\t\tdata \u003d self.props.params.options #hostingSince\n#\t\tfor i in range(0,data.getRowCount()):\n#\t\t\tid \u003d data.getValueAt(i,\u0027ID\u0027)\n#\t\t\tif id \u003d\u003d currentValue.value:\n#\t\t\t\thostingSince \u003d data.getValueAt(i,\u0027Hosting Since\u0027)\n#\t\t\t\tsystem.perspective.print(hostingSince)\n#\t\t\t\tself.view.params.hostingSince \u003d hostingSince\n#\telse:\n#\t\tself.view.params.hostingSince \u003d \"\""
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "text": "Hosting Since"
+          },
+          "path": "Settings/Templates/60px/top/Input_DropDownSingle",
+          "style": {
+            "classes": "InputCards/InputCard_NoBorder"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Embed_Note"
+        },
+        "position": {
+          "basis": "800px",
+          "grow": 1,
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.text": {
+            "binding": {
+              "config": {
+                "bidirectional": true,
+                "path": "view.params.notes"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "label": "Notes",
+            "placeholder": ""
+          },
+          "path": "1_TEMPLATES/120px/top/Input_Text_MultiLine",
+          "style": {
+            "classes": "InputCards/InputCard_NoBorder"
+          }
+        },
+        "type": "ia.display.view"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "style": {
+        "classes": "Background/Default"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

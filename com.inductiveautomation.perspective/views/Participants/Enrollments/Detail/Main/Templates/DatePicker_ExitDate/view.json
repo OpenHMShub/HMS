@@ -1,0 +1,101 @@
+{
+  "custom": {},
+  "params": {
+    "colName": "value",
+    "row": "value",
+    "rowData": "value",
+    "value": "2022-06-02 00:00:00"
+  },
+  "propConfig": {
+    "params.colName": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.row": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.rowData": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.value": {
+      "paramDirection": "inout",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 30,
+      "width": 166
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "filter"
+        },
+        "position": {
+          "basis": "138px"
+        },
+        "propConfig": {
+          "props.value": {
+            "binding": {
+              "config": {
+                "expression": "toDate({view.params.value})"
+              },
+              "type": "expr"
+            },
+            "onChange": {
+              "enabled": null,
+              "script": "\t#\tsystem.perspective.print(\"datepicker row %s\"%self.view.params.row)\n#\tsystem.perspective.print(\"datpicker %s\"%origin)\n\tif origin \u003d\u003d \"Browser\":\n\t\tsystem.perspective.print(self.view.params.rowData)\n\t\tidToUpdate \u003d int(self.view.params.rowData[\u0027id\u0027])\n\t\tsystem.perspective.print(idToUpdate)\n\t\tupdateQ \u003d \"UPDATE participant.ProgramsHistory SET ExitDate \u003d ? WHERE id \u003d ?\"\n\t\tsystem.db.runPrepUpdate(updateQ, [currentValue.value, idToUpdate])"
+            }
+          }
+        },
+        "props": {
+          "format": "MM/DD/YYYY hh:mm a",
+          "formattedValue": "06/02/2022 12:00 am",
+          "inputProps": {
+            "style": {
+              "borderBottomLeftRadius": "5px",
+              "borderBottomRightRadius": "5px",
+              "borderColor": "#0C4E8B",
+              "borderStyle": "solid",
+              "borderTopLeftRadius": "5px",
+              "borderTopRightRadius": "5px",
+              "borderWidth": "1px",
+              "color": "#3ECED9",
+              "fontFamily": "Proxima NovaC Medium",
+              "fontSize": "15px",
+              "paddingLeft": "8px",
+              "textAlign": "left"
+            }
+          },
+          "minDate": {
+            "$": [
+              "ts",
+              0,
+              1630952039063
+            ],
+            "$ts": -1577944800000
+          },
+          "modalStyle": {
+            "classes": "DateTime/Add_Date"
+          },
+          "placeholder": "NO DATE"
+        },
+        "type": "ia.input.date-time-input"
+      }
+    ],
+    "meta": {
+      "name": "Filter"
+    },
+    "props": {
+      "style": {
+        "overflow": "hidden"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

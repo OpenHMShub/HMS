@@ -1,0 +1,1799 @@
+{
+  "custom": {
+    "filters": []
+  },
+  "params": {
+    "activity_range": 90,
+    "age_max": {
+      "$": [
+        "ds",
+        192,
+        1738306046607
+      ],
+      "$columns": [
+        {
+          "data": [
+            27,
+            34,
+            39
+          ],
+          "name": "value",
+          "type": "Integer"
+        },
+        {
+          "data": [
+            27,
+            34,
+            39
+          ],
+          "name": "label",
+          "type": "Integer"
+        }
+      ]
+    },
+    "age_min": {
+      "$": [
+        "ds",
+        192,
+        1738306046607
+      ],
+      "$columns": [
+        {
+          "data": [
+            27,
+            34,
+            39
+          ],
+          "name": "value",
+          "type": "Integer"
+        },
+        {
+          "data": [
+            27,
+            34,
+            39
+          ],
+          "name": "label",
+          "type": "Integer"
+        }
+      ]
+    },
+    "programs": {
+      "$": [
+        "ds",
+        192,
+        1738306046607
+      ],
+      "$columns": [
+        {
+          "data": [
+            24,
+            29,
+            47,
+            53,
+            58,
+            82
+          ],
+          "name": "value",
+          "type": "Integer"
+        },
+        {
+          "data": [
+            "Campus Store",
+            "Hope University",
+            "Guest House",
+            "Special Shelter",
+            "Veterans Service Intensive",
+            "ARP"
+          ],
+          "name": "label",
+          "type": "String"
+        }
+      ]
+    },
+    "providerTypes": {
+      "$": [
+        "ds",
+        192,
+        1738306046607
+      ],
+      "$columns": [
+        {
+          "data": [
+            0,
+            2,
+            7,
+            8
+          ],
+          "name": "value",
+          "type": "Integer"
+        },
+        {
+          "data": [
+            "Community Partner",
+            "Medical Facility",
+            "Staff",
+            "Congregation"
+          ],
+          "name": "label",
+          "type": "String"
+        }
+      ]
+    },
+    "providers": {
+      "$": [
+        "ds",
+        192,
+        1738306046607
+      ],
+      "$columns": [
+        {
+          "data": [
+            108,
+            143,
+            195,
+            281,
+            333,
+            364,
+            381,
+            385
+          ],
+          "name": "value",
+          "type": "Integer"
+        },
+        {
+          "data": [
+            "Antioch United Methodist Church",
+            "Forest Hills Baptist Church",
+            "Acklen Avenue Church of Christ",
+            "Room in the Inn",
+            "Argyle Apartments",
+            "Highland Apartments",
+            "Advanced Health Care Nashville",
+            "Nashville Christian Towers"
+          ],
+          "name": "label",
+          "type": "String"
+        }
+      ]
+    }
+  },
+  "propConfig": {
+    "custom.filters": {
+      "binding": {
+        "config": {
+          "path": "session.custom.filters"
+        },
+        "transforms": [
+          {
+            "code": "\treturn filters.retrievePageFilters(value, self.page.props.pageId)",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      },
+      "persistent": true
+    },
+    "params.activity_range": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.age_max": {
+      "binding": {
+        "config": {
+          "path": "/root/Table.props.data"
+        },
+        "transforms": [
+          {
+            "code": "\theaders \u003d [\"value\", \"label\"]\n\tdata \u003d []\n\tif value \u003d\u003d None:\n\t\tpass\n\telif value.getRowCount() \u003d\u003d 0:\n\t\tpass\n\telse:\n\t\ts \u003d set()\n\t\tfor item in range(value.getRowCount()):\n\t\t\t#for val in value[item].values():\n\t\t\t#\ts.add(val)\n\t\t\tval \u003d value.getValueAt(item, \"age\")\n\t\t\tif val \u003d\u003d \u0027\u0027 or val \u003d\u003d None:\n\t\t\t\tcontinue\n\t\t\telse:\n\t\t\t\tlabel \u003d val\n\t\t\tif val in s:\n\t\t\t\tcontinue\n\t\t\telse:\n\t\t\t\tlist \u003d [val,label]\n\t\t\t\tdata.append(list)\n\t\t\t\ts.add(val)\n\tdata.sort()\n\tdataset \u003d system.dataset.toDataSet(headers, data)\n\treturn dataset",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.age_min": {
+      "binding": {
+        "config": {
+          "path": "/root/Table.props.data"
+        },
+        "transforms": [
+          {
+            "code": "\theaders \u003d [\"value\", \"label\"]\n\tdata \u003d []\n\tif value \u003d\u003d None:\n\t\tpass\n\telif value.getRowCount() \u003d\u003d 0:\n\t\tpass\n\telse:\n\t\ts \u003d set()\n\t\tfor item in range(value.getRowCount()):\n\t\t\t#for val in value[item].values():\n\t\t   \t#\ts.add(val)\n\t\t\tval \u003d value.getValueAt(item, \"age\")\n\t\t\tif val \u003d\u003d \u0027\u0027 or val \u003d\u003d None:\n\t\t\t\tcontinue\n\t\t\telse:\n\t\t\t\tlabel \u003d val\n\t\t\tif val in s:\n\t\t\t\tcontinue\n\t\t\telse:\n\t\t\t\tlist \u003d [val,label]\n\t\t\t\tdata.append(list)\n\t\t\t\ts.add(val)\n\tdata.sort()\n\tdataset \u003d system.dataset.toDataSet(headers, data)\n\treturn dataset",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.programs": {
+      "binding": {
+        "config": {
+          "path": "/root/Table.props.data"
+        },
+        "transforms": [
+          {
+            "code": "\theaders \u003d [\"value\", \"label\"]\n\tdata \u003d []\n\tif value \u003d\u003d None:\n\t\tpass\n\telif value.getRowCount() \u003d\u003d 0:\n\t\tpass\n\telse:\n\t\ts \u003d set()\n\t\tfor item in range(value.getRowCount()):\n\t\t\t#for val in value[item].values():\n\t\t   \t#\ts.add(val)\n\t\t\tval \u003d value.getValueAt(item, \"programId\")\n\t\t\tif val \u003d\u003d \u0027\u0027 or val \u003d\u003d None:\n\t\t\t\tcontinue\n\t\t\telse:\n\t\t\t\tlabel \u003d value.getValueAt(item, \"programName\")\n\t\t\tif val in s:\n\t\t\t\tcontinue\n\t\t\telse:\n\t\t\t\tlist \u003d [val,label]\n\t\t\t\tdata.append(list)\n\t\t\t\ts.add(val)\n\tdata.sort()\n\tdataset \u003d system.dataset.toDataSet(headers, data)\n\treturn dataset",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.providerTypes": {
+      "binding": {
+        "config": {
+          "path": "/root/Table.props.data"
+        },
+        "transforms": [
+          {
+            "code": "\theaders \u003d [\"value\", \"label\"]\n\tdata \u003d []\n\tif value \u003d\u003d None:\n\t\tpass\n\telif value.getRowCount() \u003d\u003d 0:\n\t\tpass\n\telse:\n\t\ts \u003d set()\n\t\tfor item in range(value.getRowCount()):\n\t\t\t#for val in value[item].values():\n\t\t   \t#\ts.add(val)\n\t\t\tval \u003d value.getValueAt(item, \"providerTypeId\")\n\t\t\tif val \u003d\u003d \u0027\u0027 or val \u003d\u003d None:\n\t\t\t\tcontinue\n\t\t\telse:\n\t\t\t\tlabel \u003d value.getValueAt(item, \"providerType\")\n\t\t\tif val in s:\n\t\t\t\tcontinue\n\t\t\telse:\n\t\t\t\tlist \u003d [val,label]\n\t\t\t\tdata.append(list)\n\t\t\t\ts.add(val)\n\tdata.sort()\n\tdataset \u003d system.dataset.toDataSet(headers, data)\n\treturn dataset",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.providers": {
+      "binding": {
+        "config": {
+          "path": "/root/Table.props.data"
+        },
+        "transforms": [
+          {
+            "code": "\theaders \u003d [\"value\", \"label\"]\n\tdata \u003d []\n\tif value \u003d\u003d None:\n\t\tpass\n\telif value.getRowCount() \u003d\u003d 0:\n\t\tpass\n\telse:\n\t\ts \u003d set()\n\t\tfor item in range(value.getRowCount()):\n\t\t\t#for val in value[item].values():\n\t\t   \t#\ts.add(val)\n\t\t\tval \u003d value.getValueAt(item, \"providerId\")\n\t\t\tif val \u003d\u003d \u0027\u0027 or val \u003d\u003d None:\n\t\t\t\tcontinue\n\t\t\telse:\n\t\t\t\tlabel \u003d value.getValueAt(item, \"providerName\")\n\t\t\tif val in s:\n\t\t\t\tcontinue\n\t\t\telse:\n\t\t\t\tlist \u003d [val,label]\n\t\t\t\tdata.append(list)\n\t\t\t\ts.add(val)\n\tdata.sort()\n\tdataset \u003d system.dataset.toDataSet(headers, data)\n\treturn dataset",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 713,
+      "width": 2109
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "Label_0"
+        },
+        "position": {
+          "basis": "25px",
+          "display": false
+        },
+        "propConfig": {
+          "props.text": {
+            "binding": {
+              "config": {
+                "path": "../Table.props.data"
+              },
+              "transforms": [
+                {
+                  "code": "\tif value \u003d\u003d None:\n\t\t\toutput \u003d \u0027No Rows\u0027\n\telif value.getRowCount() \u003d\u003d 0:\n\t\toutput \u003d \u0027No Rows\u0027\n\telse:\n\t\toutput \u003d str(value.getRowCount()) + \u0027 Rows\u0027\n\treturn output",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "style": {
+            "classes": "Table/Filter_Header_Container Text/Error_Message"
+          }
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "events": {
+          "component": {
+            "onRowClick": {
+              "config": {
+                "script": "\timport traceback\n\ttry:\n\t\tselectedColumn \u003d self.props.selection.selectedColumn\n\t\tparticipantID \u003d self.props.data.getValueAt(event.row,\u0027participantId\u0027)\n\t\tisActive \u003d self.props.data.getValueAt(event.row,\u0027isActive\u0027)\n\t\tsystem.perspective.print(selectedColumn)\n\t\t#system.perspective.print(participantID)\n\t\tif selectedColumn \u003d\u003d \"participantId\": \n\t\t\t#Display the detail screen\n\t\t\t#system.perspective.print(\u0027Participant Detail\u0027)\n\t\t\ttab_id \u003d 30\n\t\t\tif isActive \u003d\u003d 1:\n\t\t\t\tsystem.perspective.navigate(\"Participants/Detail/\" + str(participantID) + \"/\" + str(tab_id))\n\t\t#elif selectedColumn \u003d\u003d \"Options\":\n\t\telif selectedColumn \u003d\u003d \"id\":\n\t\t\tid \u003d \"PreviewParticipant\" \n\t\t\tparams \u003d {\"participantID\":participantID,\u0027isActive\u0027:isActive}\n\t\t\tsystem.perspective.openDock(id\u003did,params\u003dparams)\n\t\telse:\n\t\t\tpass\n\texcept:\n\t\tlogger \u003d system.util.getLogger(\"Participants Referral Dashboard Table OnRowClick\")\n\t\tmsg \u003d traceback.format_exc()\n\t\tlogger.error(msg)"
+              },
+              "scope": "G",
+              "type": "script"
+            }
+          }
+        },
+        "meta": {
+          "name": "Table"
+        },
+        "position": {
+          "basis": "100%"
+        },
+        "propConfig": {
+          "custom.sqlData": {
+            "binding": {
+              "config": {
+                "parameters": {
+                  "activity_range": "{view.params.activity_range}",
+                  "birthdate": "{session.custom.filters.referralDashboard.BirthDate.where}",
+                  "firstname": "{session.custom.filters.referralDashboard.FirstName.where}",
+                  "lastname": "{session.custom.filters.referralDashboard.LastName.where}",
+                  "maxage": "{session.custom.filters.referralDashboard.MaxAge.where}",
+                  "middlename": "{session.custom.filters.referralDashboard.MiddleName.where}",
+                  "minage": "{session.custom.filters.referralDashboard.MinAge.where}",
+                  "nickname": "{session.custom.filters.referralDashboard.NickName.where}",
+                  "programid": "{session.custom.filters.referralDashboard.ProgramName.where}",
+                  "providerid": "{session.custom.filters.referralDashboard.ProviderName.where}",
+                  "providertypeid": "{session.custom.filters.referralDashboard.ProviderType.where}",
+                  "referraldate": "{session.custom.filters.referralDashboard.ReferralDate.where}",
+                  "referralstatus": "{session.custom.filters.referralDashboard.ReferralStatus.where}",
+                  "referraltype": "{session.custom.filters.referralDashboard.ReferralType.where}",
+                  "search": "{session.custom.filters.referralDashboard.Search.where}",
+                  "veteran": "{session.custom.filters.referralDashboard.Veteran.where}"
+                },
+                "queryPath": "Participants/Referrals/ReferralsDashboardSelect",
+                "returnFormat": "dataset"
+              },
+              "type": "query"
+            },
+            "onChange": {
+              "enabled": null,
+              "script": "\timport traceback\n\t\n\ttry:\n\t\tdataset \u003d currentValue.value\n\t\t\n\t\tif dataset \u003d\u003d None:\n\t\t\t#system.perspective.sendMessage(\"newParticipantsReferralsMonthly\", payload \u003d {\"newParticipantsReferralsMonthly\": 0}, scope \u003d \"page\")\n\t\t\treturn\n\t\t\n\t\t#Get selected participants\n\t\tidlist \u003d []\n\t\tapprovedCount \u003d 0\n\t\tcheckedInCount \u003d 0\n\t\tnumRows \u003d dataset.getRowCount()\n\t\tfor\ti in range(numRows):\n\t\t\tidlist.append(str(dataset.getValueAt(i, \"participantId\")))\n\t\t\trefStatus \u003d str(dataset.getValueAt(i, \"referralStatus\"))\n\t\t\t\n\t\t\tif refStatus \u003d\u003d \"Approved\" or refStatus \u003d\u003d \"No Show\" or refStatus \u003d\u003d \"Conditionally Approved\" or refStatus \u003d\u003d \"Approved / Other Arrangements Made\" or refStatus \u003d\u003d \"Approved / Already Discharged\":\n\t\t\t\tapprovedCount +\u003d 1\n\t\t\telif refStatus \u003d\u003d \"Checked In\":\n\t\t\t\tcheckedInCount +\u003d 1\n\t\t\t\tapprovedCount +\u003d 1\n\t\tif (numRows \u003e 0):\n\t\t\tpctApproved \u003d 100 * approvedCount / numRows\n\t\t\tpctCheckedIn \u003d 100 * checkedInCount / numRows\n\t\telse:\n\t\t\tpctApproved \u003d 0\n\t\t\tpctCheckedIn \u003d 0\n\t\tstrIdList \u003d \u0027,\u0027.join(idlist)\n\t\tparams \u003d {\"IdList\": strIdList}\n\n\t\t#KPI3 Interviews Monthly\n\t\tresult3 \u003d system.db.runNamedQuery(\"Participants/Referrals/KPI/NewReferralsMonthly\", params)\n\t\tMonthCount \u003d 6\n\t\tnewReferralsMonthly \u003d []\n\t\tnow \u003d system.date.now()\n\t\tfor i in reversed(range(MonthCount)):\n\t\t\timonthago \u003d system.date.addMonths(now, -i)\n\t\t\tcmonthago \u003d system.date.addMonths(imonthago, 1)\n\t\t\tmonth \u003d system.date.getMonth(imonthago) + 1\n\t\t\tdateMonth \u003d system.date.getMonth(imonthago)\n\t\t\tdateYear \u003d system.date.getYear(imonthago)\n\t\t\tdate \u003d system.date.getDate(dateYear, dateMonth, 01)\n\t\t\tdatetime \u003d system.date.setTime(date, 00, 00, 00)\n\t\t\tappend_item \u003d {\"time\": system.date.format(datetime, \"M/d/yyyy\") , \"Participants\": 0}\n\t\t\tresultMonths \u003d 0\n\t\t\tfor row in range(result3.getRowCount()):\n\t\t\t\tresultMonth \u003d result3.getValueAt(row, \"referral_month\")\n\t\t\t\tif month \u003d\u003d resultMonth:\n\t\t\t\t\tresultMonths +\u003d 1\n\t\t\t\t\t\n\t\t\tappend_item[\"Participants\"] \u003d resultMonths\n\t\t\tnewReferralsMonthly.append(append_item)\n\n\t\t\t#Update Applicants Per Month KPIs\n\t\t\tsystem.perspective.sendMessage(\"newParticipantsReferralsMonthly\", payload \u003d {\"newParticipantsReferralsMonthly\": newReferralsMonthly, \"referralCount\": numRows, \"pctApproved\": pctApproved, \"pctCheckedIn\": pctCheckedIn}, scope \u003d \"page\")\n\t\t\t\t\n\texcept:\n\t\tlogger \u003d system.util.getLogger(\"Participants Referral Dashboard Table custom.SQLData KPI\")\n\t\tmsg \u003d traceback.format_exc()\n\t\tlogger.error(msg)"
+            }
+          },
+          "props.data": {
+            "binding": {
+              "config": {
+                "path": "this.custom.sqlData"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "cells": {
+            "style": {
+              "classes": "Table/Cell_Dashboard_NoBG"
+            }
+          },
+          "columns": [
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "id",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header"
+                },
+                "title": " "
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "view",
+              "resizable": false,
+              "sort": "none",
+              "sortable": false,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {
+                "rowData": {
+                  "ID": "value"
+                }
+              },
+              "viewPath": "1_TEMPLATES/Tables/TableOptions",
+              "visible": true,
+              "width": 40
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "participantId",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header"
+                },
+                "title": " "
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "view",
+              "resizable": false,
+              "sort": "none",
+              "sortable": false,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {
+                "rowData": {
+                  "ID": "value",
+                  "isActive": "value"
+                }
+              },
+              "viewPath": "1_TEMPLATES/Tables/TableDetail",
+              "visible": true,
+              "width": 25
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "referralDate",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "center",
+                "style": {
+                  "classes": "Table/Column_Header"
+                },
+                "title": "Date"
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "date",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {
+                "rowData": {
+                  "ID": "value"
+                }
+              },
+              "viewPath": "1_TEMPLATES/Tables/TableDetail",
+              "visible": true,
+              "width": 100
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "referralType",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "center",
+                "style": {
+                  "classes": "Table/Column_Header"
+                },
+                "title": "Type"
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {
+                "rowData": {
+                  "ID": "value"
+                }
+              },
+              "viewPath": "",
+              "visible": true,
+              "width": 80
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "referralStatus",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "center",
+                "style": {
+                  "classes": "Table/Column_Header"
+                },
+                "title": "Status"
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {
+                "rowData": {
+                  "ID": "value"
+                }
+              },
+              "viewPath": "",
+              "visible": true,
+              "width": 100
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "name",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header",
+                  "color": "#0C4E8B",
+                  "fontFamily": "Proxima Nova ExCn Light",
+                  "fontSize": "20px"
+                },
+                "title": "Name"
+              },
+              "justify": "left",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": true,
+              "style": {
+                "color": "#0c4e85",
+                "cursor": "pointer",
+                "fontFamily": "Proxima Nova ExCn Medium",
+                "text-align": "left"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 200
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "NickName",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header"
+                },
+                "title": "Nickname"
+              },
+              "justify": "left",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 120
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "birthDate",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header"
+                },
+                "title": "Birth Date"
+              },
+              "justify": "left",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "date",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 100
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "age",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header"
+                },
+                "title": "Age"
+              },
+              "justify": "left",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 60
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "providerType",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header"
+                },
+                "title": "Provider Type"
+              },
+              "justify": "auto",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 200
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "providerName",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header"
+                },
+                "title": "Provider Name"
+              },
+              "justify": "auto",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 200
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "programName",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header"
+                },
+                "title": "Program Name"
+              },
+              "justify": "auto",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": false,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 240
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "SSN",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header"
+                },
+                "title": "SSN"
+              },
+              "justify": "auto",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": false,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": false,
+              "width": 240
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "ReasonForEntry",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header"
+                },
+                "title": "Reason for Entry"
+              },
+              "justify": "auto",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": false,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 180
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "latestReferalDate",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "center",
+                "style": {
+                  "classes": "Table/Column_Header"
+                },
+                "title": "Latest Referal Date"
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": false,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 150
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "latestReferalComment",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header"
+                },
+                "title": "Latest Referal Comment"
+              },
+              "justify": "auto",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": false,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 240
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "checkinDate",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header"
+                },
+                "title": "Check In"
+              },
+              "justify": "auto",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": false,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 100
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "checkOutDate",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header"
+                },
+                "title": "Check Out"
+              },
+              "justify": "auto",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": false,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 100
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "exitDestination",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header"
+                },
+                "title": "Exit Destination"
+              },
+              "justify": "auto",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": false,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 150
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "veteranId",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header"
+                },
+                "title": "veteranId"
+              },
+              "justify": "auto",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": false,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": false,
+              "width": 100
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "veteran",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header"
+                },
+                "title": "veteran"
+              },
+              "justify": "auto",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": false,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": false,
+              "width": 100
+            }
+          ],
+          "pager": {
+            "initialOption": 100
+          },
+          "rows": {
+            "highlight": {
+              "color": "#ccffff",
+              "enabled": false
+            },
+            "striped": {
+              "enabled": false
+            }
+          },
+          "selection": {
+            "enableColumnSelection": true,
+            "style": {
+              "backgroundColor": "#9af4eb4d"
+            }
+          },
+          "style": {
+            "classes": "Background/Default"
+          }
+        },
+        "scripts": {
+          "customMethods": [],
+          "extensionFunctions": null,
+          "messageHandlers": [
+            {
+              "messageType": "filterHandler",
+              "pageScope": true,
+              "script": "\tfrom datetime import datetime, date\n\t\n\tif(payload[\u0027key\u0027] \u003d\u003d \u0027gender\u0027):\n\t\tcurFilter \u003d str(self.view.params.gender)\n\t\t#If checkbox is checked, we\u0027re adding the payload\n\t\tif(payload[\u0027state\u0027]):\n\t\t\t#If not default, need to do on-purpose SQL injection\n\t\t\tif(curFilter !\u003d \u0027%\u0027):\n\t\t\t\tself.view.params.gender \u003d curFilter + \"%\u0027 OR [humans].[Human].[gender] LIKE \u0027\" + str(payload[\u0027val\u0027]) \n\t\t\t#Else, it\u0027s default, just set the value\n\t\t\telse:\n\t\t\t\tself.view.params.gender \u003d str(payload[\u0027val\u0027])\n\t\t#If checkbox isn\u0027t checked, we\u0027re removing the payload\n\t\telse:\n\t\t\t#If we already have a SQL injection, we need to remove the selected query\n\t\t\tif(\u0027LIKE\u0027 in curFilter):\n\t\t\t\tself.view.params.gender \u003d curFilter.replace(\"%\u0027 OR [humans].[Human].[gender] LIKE \u0027\" + str(payload[\u0027val\u0027]), \u0027\u0027)\n\t\t\t#If no SQL injection, set to default\n\t\t\telse:\n\t\t\t\tself.view.params.gender \u003d \u0027%\u0027\n\telif(payload[\u0027key\u0027] \u003d\u003d \u0027dobRange\u0027):\n\t\tcurStartDate \u003d str(self.view.params.startDOB)\n\t\tcurEndDate \u003d str(self.view.params.endDOB)\n\t\t\n\t\ttoday \u003d datetime.now()\n\t\t#If 55+ is selected, force it to 55-120\n\t\tageRange \u003d payload[\u0027val\u0027].replace(\u0027+\u0027,\u0027-120\u0027)\n\t\tdashPtr \u003d str(ageRange).find(\u0027-\u0027)\n\t\t\n\t\tstartAge \u003d int(ageRange[0:dashPtr])\n\t\tendAge \u003d int(ageRange[dashPtr + 1:])\n\t\t#Start date is now minus end age. End date is now minus start age\n\t\t#I would like to confess I spent 3 entire minutes remembering how dates worked on this part\n\t\tnewStartDOB \u003d today.replace(year \u003d datetime.now().year - endAge)\n\t\tnewEndDOB \u003d today.replace(year \u003d datetime.now().year - startAge)\n\t\t\n\t\t#If checkbox is checked, we\u0027re adding the payload\n\t\tif(payload[\u0027state\u0027]):\n\t\t\t#If not default, need to do on-purpose SQL injection\n\t\t\t#Note, added if not self check because saw weird instance where this happened from clicking too fast\n\t\t\tif(curEndDate !\u003d \"2110-01-01\" and  curEndDate !\u003d newEndDOB.strftime(\"%Y-%m-%d\")):\n\t\t\t\tnewEndQueryStr \u003d curEndDate + \"\u0027 OR [humans].[Human].[dob] BETWEEN \u0027\" + newStartDOB.strftime(\"%Y-%m-%d\") + \"\u0027 AND \u0027\" + newEndDOB.strftime(\"%Y-%m-%d\")\n\t\t\t\tself.view.params.startDOB \u003d curStartDate\n\t\t\t\tself.view.params.endDOB \u003d newEndQueryStr\n\t\t\t#Else, it\u0027s default, just add the range\n\t\t\telse:\n\t\t\t\tself.view.params.startDOB \u003d newStartDOB.strftime(\"%Y-%m-%d\")\n\t\t\t\tself.view.params.endDOB \u003d newEndDOB.strftime(\"%Y-%m-%d\")\n\t\t#If checkbox isn\u0027t checked, we\u0027re removing the payload\n\t\telse:\n\t\t\t#If we already have a SQL injection, we need to remove the selected query\n\t\t\tif(\u0027OR [humans]\u0027 in curEndDate):\n\t\t\t\tself.view.params.endDOB \u003d curEndDate.replace(\"\u0027 OR [humans].[Human].[dob] BETWEEN \u0027\" + newStartDOB.strftime(\"%Y-%m-%d\") + \"\u0027 AND \u0027\" + newEndDOB.strftime(\"%Y-%m-%d\"), \u0027\u0027)\n\t\t\t#If no SQL injection, set to default\n\t\t\telse:\n\t\t\t\tself.view.params.startDOB \u003d \u00271910-01-01\u0027\n\t\t\t\tself.view.params.endDOB \u003d \u00272110-01-01\u0027\n\t#Have to refresh the binding for the query to run again with the new query strings in the view params\n\tself.refreshBinding(\"props.data\")",
+              "sessionScope": true,
+              "viewScope": true
+            },
+            {
+              "messageType": "tableToExcel",
+              "pageScope": true,
+              "script": "\t# implement your handler here\n\timport traceback\n\ttry:\n\t\t#Send the dataset to Excel\n\t\tfilename \u003d \u0027Participants_referrals_\u0027 + str(system.date.format(system.date.now(),\"yyyyMMddHHmmss\")) + \u0027.xls\u0027\n\t\tdataset \u003d self.props.data\n\t\tNewDataSet \u003d []\n\t\theaders \u003d [\"Date\",\"Type\",\"Status\",\"Name\",\"Nickname\",\"BirthDate\",\"Age\",\"ProviderType\",\"ProviderName\",\"ProgramName\",\"Reason for Entry\",\"Latest Referal Date\",\"Latest Referal Comment\",\"Check In\",\"Check Out\"]\n#\t\tfor i in range(0,len(dataset)):\n#\t\t\tNewDataSet.append([dataset[i][\u0027name\u0027][\u0027value\u0027],dataset[i][\u0027eventStart\u0027][\u0027value\u0027],dataset[i][\u0027eventEnd\u0027][\u0027value\u0027],dataset[i][\u0027ExitDestination\u0027][\u0027value\u0027],dataset[i][\u0027gender\u0027][\u0027value\u0027],dataset[i][\u0027age\u0027][\u0027value\u0027],dataset[i][\u0027associatedProgram\u0027][\u0027value\u0027],dataset[i][\u0027facilityName\u0027][\u0027value\u0027],dataset[i][\u0027roomName\u0027][\u0027value\u0027],dataset[i][\u0027bedName\u0027][\u0027value\u0027]])\n\t\tfor i in range(dataset.getRowCount()):\n\t\t\tbirthDate \u003d dataset.getValueAt(i,\u0027birthDate\u0027)\n\t\t\tlatestReferalDate \u003d dataset.getValueAt(i,\u0027latestReferalDate\u0027)\n\t\t\tcheckInDate \u003d dataset.getValueAt(i,\u0027checkinDate\u0027)\n\t\t\tcheckOutDate \u003d dataset.getValueAt(i,\u0027checkOutDate\u0027)\n\t\t\tif birthDate !\u003d None and birthDate !\u003d \u0027\u0027:\n\t\t\t\tbirthDate \u003d system.date.format(birthDate, \u0027MM/dd/yyyy\u0027)\n\t\t\tif latestReferalDate !\u003d None and latestReferalDate !\u003d \u0027\u0027:\n\t\t\t\tlatestReferalDate \u003d system.date.format(latestReferalDate, \u0027MM/dd/yyyy\u0027)\n\t\t\tif checkInDate !\u003d None and checkInDate !\u003d \u0027\u0027:\n\t\t\t\tcheckInDate \u003d system.date.format(checkInDate, \u0027MM/dd/yyyy\u0027)\n\t\t\telse:\n\t\t\t\tcheckInDate \u003d None\n\t\t\tif checkOutDate !\u003d None and checkOutDate !\u003d \u0027\u0027:\n\t\t\t\tcheckOutDate \u003d system.date.format(checkOutDate, \u0027MM/dd/yyyy\u0027)\n\t\t\telse:\n\t\t\t\tcheckOutDate \u003d None\n\t\t\t\t\t\t\n\t\t\treferralDate \u003d dataset.getValueAt(i,\u0027referralDate\u0027)\n\t\t\treferralDate \u003d system.date.format(referralDate, \u0027MM/dd/yyyy\u0027)\n\t\t\tNewDataSet.append([referralDate,dataset.getValueAt(i,\u0027referralType\u0027),dataset.getValueAt(i,\u0027referralStatus\u0027),dataset.getValueAt(i,\u0027name\u0027),dataset.getValueAt(i,\u0027NickName\u0027),birthDate,dataset.getValueAt(i,\u0027age\u0027),dataset.getValueAt(i,\u0027providerType\u0027),dataset.getValueAt(i,\u0027providerName\u0027),dataset.getValueAt(i,\u0027programName\u0027),dataset.getValueAt(i,\u0027ReasonForEntry\u0027),latestReferalDate,dataset.getValueAt(i,\u0027latestReferalComment\u0027),checkInDate,checkOutDate])\t\n\t\t\t\n\t\tNewDataSet \u003d system.dataset.toDataSet(headers, NewDataSet)\n\n\t\txlFile \u003d system.dataset.toExcel(True,NewDataSet)\n\t\tsystem.perspective.download(filename, xlFile)\n\texcept:   \n\t\tlogger \u003d system.util.getLogger(\"Participants Referral Dashboard tableToExcel\")\n\t\tmsg \u003d traceback.format_exc()\n\t\tlogger.error(msg)",
+              "sessionScope": false,
+              "viewScope": true
+            }
+          ]
+        },
+        "type": "ia.display.table"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column"
+    },
+    "type": "ia.container.flex"
+  }
+}

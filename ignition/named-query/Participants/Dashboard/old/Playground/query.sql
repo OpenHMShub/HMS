@@ -1,0 +1,1 @@
+SELECT * FROM [participant].[Dashboard] WHERE reservation = 1

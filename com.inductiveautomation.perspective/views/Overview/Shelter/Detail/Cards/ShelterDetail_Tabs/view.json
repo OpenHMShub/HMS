@@ -1,0 +1,232 @@
+{
+  "custom": {
+    "shelter_detail_data": {}
+  },
+  "params": {
+    "selectedTab": "Activity",
+    "shelterID": 1
+  },
+  "propConfig": {
+    "custom.shelter_detail_data": {
+      "persistent": true
+    },
+    "custom.shelter_detail_data.selected_tab": {
+      "binding": {
+        "config": {
+          "bidirectional": true,
+          "path": "view.params.selectedTab"
+        },
+        "type": "property"
+      }
+    },
+    "custom.shelter_detail_data.shelter_id": {
+      "binding": {
+        "config": {
+          "bidirectional": true,
+          "path": "view.params.shelterID"
+        },
+        "type": "property"
+      }
+    },
+    "params.selectedTab": {
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.shelterID": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "width": 1087
+    },
+    "loading": {
+      "mode": "blocking"
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "Tabstrip"
+        },
+        "position": {
+          "basis": "55px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.selectedTab": {
+            "binding": {
+              "config": {
+                "path": "view.params.selectedTab"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "path": "Shelter/Detail/Components/TabStrip/TabStrip",
+          "style": {
+            "marginLeft": "285px"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Label"
+        },
+        "position": {
+          "basis": "4px"
+        },
+        "props": {
+          "style": {
+            "classes": "Background/Alternative"
+          }
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "children": [
+          {
+            "meta": {
+              "name": "ShelterInformation"
+            },
+            "position": {
+              "basis": "250px",
+              "shrink": 0
+            },
+            "propConfig": {
+              "props.params.shelterID": {
+                "binding": {
+                  "config": {
+                    "path": "view.params.shelterID"
+                  },
+                  "type": "property"
+                }
+              }
+            },
+            "props": {
+              "path": "Shelter/Detail/Cards/ShelterInformation",
+              "style": {
+                "overflow": "auto"
+              }
+            },
+            "type": "ia.display.view"
+          },
+          {
+            "meta": {
+              "name": "Content"
+            },
+            "position": {
+              "basis": "300px",
+              "grow": 1
+            },
+            "propConfig": {
+              "props.params.facilityId": {
+                "binding": {
+                  "config": {
+                    "path": "view.params.shelterID"
+                  },
+                  "type": "property"
+                }
+              },
+              "props.path": {
+                "binding": {
+                  "config": {
+                    "path": ".../Tabstrip.props.params.selectedTab"
+                  },
+                  "transforms": [
+                    {
+                      "fallback": null,
+                      "inputType": "scalar",
+                      "mappings": [
+                        {
+                          "input": "Activity",
+                          "output": "Shelter/Detail/Tabs/ActivityFeed"
+                        },
+                        {
+                          "input": "Current Residents",
+                          "output": "Shelter/Current Residents/Residents"
+                        },
+                        {
+                          "input": "Room Layout",
+                          "output": "Shelter/Room Layout/Tabs/RoomTabs"
+                        },
+                        {
+                          "input": "Waiting List",
+                          "output": null
+                        },
+                        {
+                          "input": "Reservations",
+                          "output": "Shelter/Reservation/Tabs/Reservations"
+                        }
+                      ],
+                      "outputType": "scalar",
+                      "type": "map"
+                    }
+                  ],
+                  "type": "property"
+                }
+              }
+            },
+            "props": {
+              "params": {
+                "facName": "Night Shift Dorm",
+                "facilityID": 5
+              }
+            },
+            "type": "ia.display.view"
+          },
+          {
+            "meta": {
+              "name": "SummaryInformation"
+            },
+            "position": {
+              "basis": "330px"
+            },
+            "propConfig": {
+              "props.params.shelterID": {
+                "binding": {
+                  "config": {
+                    "path": "view.params.shelterID"
+                  },
+                  "type": "property"
+                }
+              }
+            },
+            "props": {
+              "path": "Shelter/Detail/Cards/SummaryInformation",
+              "style": {
+                "overflow": "auto"
+              }
+            },
+            "type": "ia.display.view"
+          }
+        ],
+        "meta": {
+          "name": "Content"
+        },
+        "position": {
+          "basis": "700px",
+          "grow": 1
+        },
+        "props": {
+          "justify": "space-between"
+        },
+        "type": "ia.container.flex"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column",
+      "style": {
+        "classes": "Background/Default"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

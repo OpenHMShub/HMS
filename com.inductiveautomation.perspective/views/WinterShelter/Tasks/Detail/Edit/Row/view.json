@@ -1,0 +1,579 @@
+{
+  "custom": {},
+  "params": {
+    "Row_Data": {
+      "Created": "",
+      "Due Date": "",
+      "Location Name": "",
+      "Task": "",
+      "Task Type": "",
+      "completed": null,
+      "contact": "",
+      "id": "",
+      "locationId": "",
+      "notes": "",
+      "priority": "",
+      "priorityId": "",
+      "staffId": "",
+      "staffName": "",
+      "status": "Not Started",
+      "statusId": 1,
+      "taskTypeId": ""
+    }
+  },
+  "propConfig": {
+    "params.Row_Data": {
+      "paramDirection": "inout",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 200,
+      "width": 1100
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "children": [
+          {
+            "meta": {
+              "name": "Embed_Subject"
+            },
+            "position": {
+              "basis": "50%",
+              "shrink": 0
+            },
+            "propConfig": {
+              "props.params.text": {
+                "binding": {
+                  "config": {
+                    "bidirectional": true,
+                    "path": "view.params.Row_Data.Task"
+                  },
+                  "type": "property"
+                }
+              }
+            },
+            "props": {
+              "params": {
+                "label": "Subject",
+                "placeholder": "Enter subject"
+              },
+              "path": "WinterShelter/Templates/Input_Text"
+            },
+            "type": "ia.display.view"
+          },
+          {
+            "meta": {
+              "name": "Embed_Staff"
+            },
+            "position": {
+              "basis": "50%",
+              "shrink": 0
+            },
+            "propConfig": {
+              "props.params.options": {
+                "binding": {
+                  "config": {
+                    "queryPath": "WinterShelter/Tasks/GetStaff"
+                  },
+                  "type": "query"
+                }
+              },
+              "props.params.selection": {
+                "binding": {
+                  "config": {
+                    "bidirectional": true,
+                    "path": "view.params.Row_Data.staffId"
+                  },
+                  "type": "property"
+                }
+              }
+            },
+            "props": {
+              "params": {
+                "text": "Staff"
+              },
+              "path": "WinterShelter/Templates/Input_DropDownSingle",
+              "style": {
+                "marginRight": 20
+              }
+            },
+            "type": "ia.display.view"
+          }
+        ],
+        "meta": {
+          "name": "Col1"
+        },
+        "position": {
+          "basis": "200px"
+        },
+        "props": {
+          "direction": "column",
+          "style": {
+            "overflow": "hidden"
+          }
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "children": [
+          {
+            "meta": {
+              "name": "Embed_TaskType"
+            },
+            "position": {
+              "basis": "50%",
+              "shrink": 0
+            },
+            "propConfig": {
+              "props.params.options": {
+                "binding": {
+                  "config": {
+                    "queryPath": "WinterShelter/Tasks/Types"
+                  },
+                  "type": "query"
+                }
+              },
+              "props.params.selection": {
+                "binding": {
+                  "config": {
+                    "bidirectional": true,
+                    "path": "view.params.Row_Data.taskTypeId"
+                  },
+                  "type": "property"
+                }
+              }
+            },
+            "props": {
+              "params": {
+                "text": "Task Type"
+              },
+              "path": "WinterShelter/Templates/Input_DropDownSingle",
+              "useDefaultViewWidth": true
+            },
+            "type": "ia.display.view"
+          },
+          {
+            "meta": {
+              "name": "Embed_Priority"
+            },
+            "position": {
+              "basis": "50%",
+              "shrink": 0
+            },
+            "propConfig": {
+              "props.params.options": {
+                "binding": {
+                  "config": {
+                    "queryPath": "WinterShelter/Tasks/Priority"
+                  },
+                  "type": "query"
+                }
+              },
+              "props.params.selection": {
+                "binding": {
+                  "config": {
+                    "bidirectional": true,
+                    "path": "view.params.Row_Data.priorityId"
+                  },
+                  "type": "property"
+                }
+              }
+            },
+            "props": {
+              "params": {
+                "text": "Priority"
+              },
+              "path": "Participants/Templates/Input_DropDownSingle",
+              "useDefaultViewWidth": true
+            },
+            "type": "ia.display.view"
+          }
+        ],
+        "meta": {
+          "name": "Col2"
+        },
+        "position": {
+          "basis": "150px"
+        },
+        "props": {
+          "direction": "column",
+          "style": {
+            "overflow": "hidden"
+          }
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "children": [
+          {
+            "meta": {
+              "name": "Embed_Congregation"
+            },
+            "position": {
+              "basis": "50%",
+              "display": false,
+              "shrink": 0
+            },
+            "propConfig": {
+              "props.params.text": {
+                "binding": {
+                  "config": {
+                    "path": "view.params.Row_Data[\u0027Location Name\u0027]"
+                  },
+                  "type": "property"
+                }
+              }
+            },
+            "props": {
+              "params": {
+                "label": "Congregation"
+              },
+              "path": "WinterShelter/Templates/ReadOnly_Text"
+            },
+            "type": "ia.display.view"
+          },
+          {
+            "meta": {
+              "name": "Embed_Contact"
+            },
+            "position": {
+              "basis": "50%"
+            },
+            "propConfig": {
+              "props.params.text": {
+                "binding": {
+                  "config": {
+                    "bidirectional": true,
+                    "path": "view.params.Row_Data.contact"
+                  },
+                  "type": "property"
+                }
+              }
+            },
+            "props": {
+              "params": {
+                "label": "Contact",
+                "placeholder": "Enter name"
+              },
+              "path": "WinterShelter/Templates/Input_Text"
+            },
+            "type": "ia.display.view"
+          },
+          {
+            "meta": {
+              "name": "Embed_Status"
+            },
+            "position": {
+              "basis": "50%",
+              "shrink": 0
+            },
+            "propConfig": {
+              "props.params.options": {
+                "binding": {
+                  "config": {
+                    "queryPath": "WinterShelter/Tasks/Status"
+                  },
+                  "type": "query"
+                }
+              },
+              "props.params.selection": {
+                "binding": {
+                  "config": {
+                    "bidirectional": true,
+                    "path": "view.params.Row_Data.statusId"
+                  },
+                  "type": "property"
+                },
+                "onChange": {
+                  "enabled": null,
+                  "script": "\tif currentValue.value \u003d\u003d 3 and ( self.view.params.Row_Data.completed \u003d\u003d None or self.view.params.Row_Data.completed \u003d\u003d \"\") :\n\t\tself.parent.parent.getChild(\"Col5\").getChild(\"Embed_Completed\").props.params.date \u003d system.date.now()\n\telif currentValue.value !\u003d 3:\n\t\tself.parent.parent.getChild(\"Col5\").getChild(\"Embed_Completed\").props.params.date \u003d None\n\telse:\n\t\tself.parent.parent.getChild(\"Col5\").getChild(\"Embed_Completed\").props.params.date \u003d self.view.params.Row_Data.completed"
+                }
+              }
+            },
+            "props": {
+              "params": {
+                "text": "Status"
+              },
+              "path": "WinterShelter/Templates/Input_DropDownSingle",
+              "style": {
+                "paddingRight": 50
+              }
+            },
+            "type": "ia.display.view"
+          }
+        ],
+        "meta": {
+          "name": "Col3"
+        },
+        "position": {
+          "basis": "220px"
+        },
+        "props": {
+          "direction": "column",
+          "style": {
+            "overflow": "hidden"
+          }
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "children": [
+          {
+            "meta": {
+              "name": "Embed_Contact"
+            },
+            "position": {
+              "basis": "50%",
+              "display": false
+            },
+            "propConfig": {
+              "props.params.text": {
+                "binding": {
+                  "config": {
+                    "bidirectional": true,
+                    "path": "view.params.Row_Data.contact"
+                  },
+                  "type": "property"
+                }
+              }
+            },
+            "props": {
+              "params": {
+                "label": "Contact",
+                "placeholder": "Enter name"
+              },
+              "path": "WinterShelter/Templates/Input_Text"
+            },
+            "type": "ia.display.view"
+          },
+          {
+            "meta": {
+              "name": "Embed_Due"
+            },
+            "position": {
+              "basis": "50%",
+              "shrink": 0
+            },
+            "propConfig": {
+              "props.params.date": {
+                "binding": {
+                  "config": {
+                    "bidirectional": true,
+                    "path": "view.params.Row_Data[\u0027Due Date\u0027]"
+                  },
+                  "type": "property"
+                }
+              }
+            },
+            "props": {
+              "params": {
+                "text": "Due Date"
+              },
+              "path": "WinterShelter/Templates/Input_Date"
+            },
+            "type": "ia.display.view"
+          },
+          {
+            "meta": {
+              "name": "Embed_DateCreated"
+            },
+            "position": {
+              "basis": "50%"
+            },
+            "propConfig": {
+              "props.params.text": {
+                "binding": {
+                  "config": {
+                    "bidirectional": true,
+                    "path": "view.params.Row_Data.Created"
+                  },
+                  "type": "property"
+                }
+              }
+            },
+            "props": {
+              "params": {
+                "label": "Date Created",
+                "placeholder": ""
+              },
+              "path": "WinterShelter/Templates/Input_Text"
+            },
+            "type": "ia.display.view"
+          }
+        ],
+        "meta": {
+          "name": "Col4"
+        },
+        "position": {
+          "basis": "200px"
+        },
+        "props": {
+          "direction": "column",
+          "style": {
+            "overflow": "hidden"
+          }
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "children": [
+          {
+            "meta": {
+              "name": "Embed_DateCreated"
+            },
+            "position": {
+              "basis": "50%",
+              "display": false
+            },
+            "propConfig": {
+              "props.params.text": {
+                "binding": {
+                  "config": {
+                    "bidirectional": true,
+                    "path": "view.params.Row_Data.Created"
+                  },
+                  "type": "property"
+                }
+              }
+            },
+            "props": {
+              "params": {
+                "label": "Date Created",
+                "placeholder": ""
+              },
+              "path": "WinterShelter/Templates/Input_Text"
+            },
+            "type": "ia.display.view"
+          },
+          {
+            "meta": {
+              "name": "Embed_Note"
+            },
+            "position": {
+              "basis": "50%"
+            },
+            "propConfig": {
+              "props.params.text": {
+                "binding": {
+                  "config": {
+                    "bidirectional": true,
+                    "path": "view.params.Row_Data.notes"
+                  },
+                  "type": "property"
+                }
+              }
+            },
+            "props": {
+              "params": {
+                "label": "Notes",
+                "placeholder": "Start typing to create a Task..."
+              },
+              "path": "WinterShelter/Templates/Input_Text"
+            },
+            "type": "ia.display.view"
+          },
+          {
+            "meta": {
+              "name": "Embed_Completed"
+            },
+            "position": {
+              "basis": "50%",
+              "shrink": 0
+            },
+            "propConfig": {
+              "props.params.date": {
+                "binding": {
+                  "config": {
+                    "bidirectional": true,
+                    "path": "view.params.Row_Data.completed"
+                  },
+                  "type": "property"
+                }
+              }
+            },
+            "props": {
+              "params": {
+                "text": "Completed"
+              },
+              "path": "WinterShelter/Templates/Input_Date"
+            },
+            "type": "ia.display.view"
+          }
+        ],
+        "meta": {
+          "name": "Col5"
+        },
+        "position": {
+          "basis": "200px",
+          "grow": 1
+        },
+        "props": {
+          "direction": "column",
+          "style": {
+            "overflow": "hidden"
+          }
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "children": [
+          {
+            "meta": {
+              "name": "Embed_Note"
+            },
+            "position": {
+              "basis": "50%"
+            },
+            "propConfig": {
+              "props.params.text": {
+                "binding": {
+                  "config": {
+                    "bidirectional": true,
+                    "path": "view.params.Row_Data.notes"
+                  },
+                  "type": "property"
+                }
+              }
+            },
+            "props": {
+              "params": {
+                "label": "Notes",
+                "placeholder": "Start typing to create a Task..."
+              },
+              "path": "WinterShelter/Templates/Input_Text"
+            },
+            "type": "ia.display.view"
+          }
+        ],
+        "meta": {
+          "name": "Col6"
+        },
+        "position": {
+          "basis": "200px",
+          "display": false,
+          "grow": 1
+        },
+        "props": {
+          "direction": "column",
+          "style": {
+            "overflow": "hidden"
+          }
+        },
+        "type": "ia.container.flex"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "style": {
+        "classes": "Background/Default"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

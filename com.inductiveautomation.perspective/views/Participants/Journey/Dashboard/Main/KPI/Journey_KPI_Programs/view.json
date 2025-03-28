@@ -1,0 +1,278 @@
+{
+  "custom": {},
+  "params": {
+    "activity_range": 365,
+    "allSelection": 0
+  },
+  "propConfig": {
+    "params.activity_range": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.allSelection": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 185,
+      "width": 1470
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "KPI1"
+        },
+        "position": {
+          "basis": "288px",
+          "grow": 1,
+          "shrink": 0
+        },
+        "propConfig": {
+          "custom.valueUniqueParticipants": {
+            "binding": {
+              "config": {
+                "parameters": {
+                  "activity_range": "{view.params.activity_range}",
+                  "allSelection": "{view.params.allSelection}",
+                  "chronicHomelessDate": "{session.custom.filters.JourneyDashboard.chronicHomelessDate.where}",
+                  "firstName": "{session.custom.filters.JourneyDashboard.firstName.where}",
+                  "lastName": "{session.custom.filters.JourneyDashboard.lastName.where}",
+                  "middleName": "{session.custom.filters.JourneyDashboard.middleName.where}",
+                  "programId": "{session.custom.filters.JourneyDashboard.programId.value}",
+                  "search": "{session.custom.filters.JourneyDashboard.Search.where}",
+                  "serviceId": "{session.custom.filters.JourneyDashboard.serviceId.value}",
+                  "veteranStatusId": "{session.custom.filters.JourneyDashboard.veteranStatusId.value}"
+                },
+                "queryPath": "Participants/Journey/KPI/KPI_UniqueParticipants_ProgramsHistory",
+                "returnFormat": "scalar"
+              },
+              "type": "query"
+            },
+            "onChange": {
+              "enabled": null,
+              "script": "\tself.refreshBinding(\"props.params.Value\")"
+            }
+          },
+          "props.params.Value": {
+            "binding": {
+              "config": {
+                "path": "this.custom.valueUniqueParticipants"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "Title": "Unique Participants"
+          },
+          "path": "Participants/Dashboard/Cards/KPI/Metric_Flex",
+          "style": {
+            "classes": "KPIs/KPI_Card",
+            "marginLeft": "40px"
+          },
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "KPI2"
+        },
+        "position": {
+          "basis": "288px",
+          "grow": 1,
+          "shrink": 0
+        },
+        "propConfig": {
+          "custom.chartDataProgramEntries": {
+            "binding": {
+              "config": {
+                "parameters": {
+                  "activity_range": "{view.params.activity_range}",
+                  "allSelection": "{view.params.allSelection}",
+                  "chronicHomelessDate": "{session.custom.filters.JourneyDashboard.chronicHomelessDate.where}",
+                  "firstName": "{session.custom.filters.JourneyDashboard.firstName.where}",
+                  "lastName": "{session.custom.filters.JourneyDashboard.lastName.where}",
+                  "middleName": "{session.custom.filters.JourneyDashboard.middleName.where}",
+                  "programId": "{session.custom.filters.JourneyDashboard.programId.value}",
+                  "search": "{session.custom.filters.JourneyDashboard.Search.where}",
+                  "serviceId": "{session.custom.filters.JourneyDashboard.serviceId.value}",
+                  "veteranStatusId": "{session.custom.filters.JourneyDashboard.veteranStatusId.value}"
+                },
+                "queryPath": "Participants/Journey/KPI/KPI_LastNMonths_EntryDate_ProgramsHistory",
+                "returnFormat": "dataset"
+              },
+              "type": "query"
+            },
+            "onChange": {
+              "enabled": null,
+              "script": "\tself.refreshBinding(\"props.params.Value\")"
+            }
+          },
+          "props.params.Value": {
+            "binding": {
+              "config": {
+                "path": "this.custom.chartDataProgramEntries"
+              },
+              "transforms": [
+                {
+                  "code": "\tMonthCount \u003d 6\n\tnewCountsMonthly \u003d []\n\t\n\tnow \u003d system.date.now()\n\tfor i in range(MonthCount):\n\t\timonthago \u003d system.date.addMonths(now, -i)\n\t\tmonth \u003d system.date.getMonth(imonthago) + 1\n\t\tappend_item \u003d {\"time\": system.date.toMillis(imonthago), \"Participants\": 0}\n\t\tif value is not None:\n\t\t\tfor row in range( value.getRowCount()):\n\t\t\t\tif month \u003d\u003d value.getValueAt(row,\u0027monthValue\u0027):\n\t\t\t\t\tappend_item[\"Participants\"] \u003d value.getValueAt(row,\u0027countValue\u0027)\n\t\t\t\t\tbreak\n\t\t\n\t\t\tnewCountsMonthly.append(append_item)\n\t\t\n\tnewCountsMonthly.reverse()\n\treturn newCountsMonthly",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "Title": "Program Entries Monthly"
+          },
+          "path": "Participants/Dashboard/Cards/KPI/Graph_Flex _bar",
+          "style": {
+            "classes": "KPIs/KPI_Card"
+          },
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "KPI3"
+        },
+        "position": {
+          "basis": "288px",
+          "grow": 1,
+          "shrink": 0
+        },
+        "propConfig": {
+          "custom.chartDataProgramExits": {
+            "binding": {
+              "config": {
+                "parameters": {
+                  "activity_range": "{view.params.activity_range}",
+                  "allSelection": "{view.params.allSelection}",
+                  "chronicHomelessDate": "{session.custom.filters.JourneyDashboard.chronicHomelessDate.where}",
+                  "firstName": "{session.custom.filters.JourneyDashboard.firstName.where}",
+                  "lastName": "{session.custom.filters.JourneyDashboard.lastName.where}",
+                  "middleName": "{session.custom.filters.JourneyDashboard.middleName.where}",
+                  "programId": "{session.custom.filters.JourneyDashboard.programId.value}",
+                  "search": "{session.custom.filters.JourneyDashboard.Search.where}",
+                  "serviceId": "{session.custom.filters.JourneyDashboard.serviceId.value}",
+                  "veteranStatusId": "{session.custom.filters.JourneyDashboard.veteranStatusId.value}"
+                },
+                "queryPath": "Participants/Journey/KPI/KPI_LastNMonths_ExitDate_ProgramsHistory",
+                "returnFormat": "dataset"
+              },
+              "type": "query"
+            },
+            "onChange": {
+              "enabled": null,
+              "script": "\tself.refreshBinding(\"props.params.Value\")"
+            }
+          },
+          "props.params.Value": {
+            "binding": {
+              "config": {
+                "path": "this.custom.chartDataProgramExits"
+              },
+              "transforms": [
+                {
+                  "code": "\tMonthCount \u003d 6\n\tnewCountsMonthly \u003d []\n\t\n\tnow \u003d system.date.now()\n\tfor i in range(MonthCount):\n\t\timonthago \u003d system.date.addMonths(now, -i)\n\t\tmonth \u003d system.date.getMonth(imonthago) + 1\n\t\tappend_item \u003d {\"time\": system.date.toMillis(imonthago), \"Participants\": 0}\n\t\tif value is not None:\n\t\t\tfor row in range( value.getRowCount()):\n\t\t\t\tif month \u003d\u003d value.getValueAt(row,\u0027monthValue\u0027):\n\t\t\t\t\tappend_item[\"Participants\"] \u003d value.getValueAt(row,\u0027countValue\u0027)\n\t\t\t\t\tbreak\n\t\t\n\t\t\tnewCountsMonthly.append(append_item)\n\t\t\n\tnewCountsMonthly.reverse()\n\treturn newCountsMonthly",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "Title": "Program Exits Monthly"
+          },
+          "path": "Participants/Dashboard/Cards/KPI/Graph_Flex _bar",
+          "style": {
+            "classes": "KPIs/KPI_Card"
+          },
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "KPI4"
+        },
+        "position": {
+          "basis": "288px",
+          "grow": 1,
+          "shrink": 0
+        },
+        "propConfig": {
+          "custom.valueUniquePrograms": {
+            "binding": {
+              "config": {
+                "parameters": {
+                  "activity_range": "{view.params.activity_range}",
+                  "allSelection": "{view.params.allSelection}",
+                  "chronicHomelessDate": "{session.custom.filters.JourneyDashboard.chronicHomelessDate.where}",
+                  "firstName": "{session.custom.filters.JourneyDashboard.firstName.where}",
+                  "lastName": "{session.custom.filters.JourneyDashboard.lastName.where}",
+                  "middleName": "{session.custom.filters.JourneyDashboard.middleName.where}",
+                  "programId": "{session.custom.filters.JourneyDashboard.programId.value}",
+                  "search": "{session.custom.filters.JourneyDashboard.Search.where}",
+                  "serviceId": "{session.custom.filters.JourneyDashboard.serviceId.value}",
+                  "veteranStatusId": "{session.custom.filters.JourneyDashboard.veteranStatusId.value}"
+                },
+                "queryPath": "Participants/Journey/KPI/KPI_UniquePrograms_ProgramsHistory",
+                "returnFormat": "scalar"
+              },
+              "type": "query"
+            },
+            "onChange": {
+              "enabled": null,
+              "script": "\tself.refreshBinding(\"props.params.Value\")"
+            }
+          },
+          "props.params.Value": {
+            "binding": {
+              "config": {
+                "path": "this.custom.valueUniquePrograms"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "Title": "Unique Programs"
+          },
+          "path": "Participants/Dashboard/Cards/KPI/Metric_Flex",
+          "style": {
+            "classes": "KPIs/KPI_Card",
+            "marginLeft": "40px"
+          },
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "alignContent": "flex-start",
+      "alignItems": "center",
+      "style": {
+        "classes": "KPIs/KPI_Flex_Container",
+        "overflow": "hidden",
+        "overflowY": "hidden"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

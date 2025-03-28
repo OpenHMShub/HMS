@@ -1,0 +1,555 @@
+{
+  "custom": {
+    "Title": "\"Title\"",
+    "Value": 100000,
+    "eventID": null,
+    "eventInstances": {
+      "$": [
+        "ds",
+        192,
+        1617007296396
+      ],
+      "$columns": [
+        {
+          "data": [],
+          "name": "startDate",
+          "type": "Date"
+        },
+        {
+          "data": [],
+          "name": "endDate",
+          "type": "Date"
+        },
+        {
+          "data": [],
+          "name": "venue",
+          "type": "String"
+        },
+        {
+          "data": [],
+          "name": "room",
+          "type": "String"
+        },
+        {
+          "data": [],
+          "name": "instanceID",
+          "type": "Integer"
+        }
+      ]
+    }
+  },
+  "params": {
+    "Title": "Attendance Over Time",
+    "Value": 100000,
+    "instanceID": 22
+  },
+  "propConfig": {
+    "custom.Title": {
+      "persistent": true
+    },
+    "custom.Value": {
+      "persistent": true
+    },
+    "custom.eventID": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "instanceID": "{view.params.instanceID}"
+          },
+          "queryPath": "Calendar/EventInstance/GetEventInstanceByID"
+        },
+        "transforms": [
+          {
+            "code": "\treturn value.getValueAt(0,\"parentEventID\")",
+            "type": "script"
+          }
+        ],
+        "type": "query"
+      },
+      "persistent": true
+    },
+    "custom.eventInstances": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "eventID": "{view.custom.eventID}"
+          },
+          "queryPath": "Calendar/EventInstance/GetEventInstances"
+        },
+        "type": "query"
+      },
+      "persistent": true
+    },
+    "params.Title": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.Value": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.instanceID": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 140,
+      "width": 300
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "Attendance Over Time"
+        },
+        "position": {
+          "basis": "20%",
+          "grow": 1,
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.text": {
+            "binding": {
+              "config": {
+                "path": "view.params.Title"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "alignVertical": "bottom",
+          "style": {
+            "classes": "KPIs/KPI_Title",
+            "textAlign": "start"
+          }
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "meta": {
+          "name": "TimeSeriesChart"
+        },
+        "position": {
+          "basis": "80%",
+          "grow": 1,
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.series": {
+            "binding": {
+              "config": {
+                "path": "view.custom.eventInstances"
+              },
+              "transforms": [
+                {
+                  "code": "\t\n\tseries \u003d {\u0027name\u0027, \u0027data\u0027}\n\n\tdata \u003d {\u0027time\u0027, \u0027Attendance\u0027}\n\tdataArr \u003d []\n\t\n\tfor x in range(value.getRowCount()) :\n\t\tfacilitators \u003d system.db.runNamedQuery(\"Calendar/Event Instance People/GetInstanceFacilitators\", {\u0027instanceID\u0027 :value.getValueAt(x,\"instanceID\")})\n\t\tstaff \u003d system.db.runNamedQuery(\"Calendar/Event Instance People/GetInstanceStaff\", {\u0027instanceID\u0027 :value.getValueAt(x,\"instanceID\")})\n\t\tvolunteers \u003d system.db.runNamedQuery(\"Calendar/Event Instance People/GetInstanceVolunteers\", {\u0027eventInstanceID\u0027 :value.getValueAt(x,\"instanceID\")})\n\t\tnrPeople \u003d facilitators.getRowCount() + staff.getRowCount() + volunteers.getRowCount()\n\t\t\n\t\tdate \u003d value.getValueAt(x, \"startDate\")\n\t\ttimeLong \u003d system.date.toMillis(date)\n\t\tdata \u003d {\u0027time\u0027 : timeLong, \u0027Attendance\u0027: nrPeople}\n\t\tdataArr.append(data)\n\t\n\tseries \u003d {\u0027name\u0027 : \u0027Attendance\u0027,\u0027data\u0027 : dataArr}\n\tdata \u003d []\n\tdata.append(series)\n\t\n\treturn data",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "defaultStyles": {
+            "colorScheme": "Paired"
+          },
+          "plots": [
+            {
+              "axes": [
+                {
+                  "alignment": "left",
+                  "label": {
+                    "font": {
+                      "color": "",
+                      "size": 10
+                    },
+                    "offset": 0,
+                    "style": {
+                      "classes": ""
+                    },
+                    "text": "",
+                    "visible": true
+                  },
+                  "max": 50,
+                  "min": 0,
+                  "name": "Attendance",
+                  "style": {
+                    "classes": "",
+                    "opacity": "0"
+                  },
+                  "tick": {
+                    "color": "#BFBFBF00",
+                    "label": {
+                      "font": {
+                        "color": "",
+                        "size": 10
+                      },
+                      "style": {
+                        "classes": ""
+                      }
+                    },
+                    "style": {
+                      "classes": ""
+                    }
+                  },
+                  "width": 0
+                }
+              ],
+              "markers": [
+                {
+                  "axis": "Attendance",
+                  "line": {
+                    "color": "",
+                    "dashArray": 0,
+                    "label": {
+                      "font": {
+                        "color": "",
+                        "size": 10
+                      },
+                      "position": "right",
+                      "style": {
+                        "classes": ""
+                      },
+                      "text": ""
+                    },
+                    "opacity": 0.5,
+                    "style": {
+                      "classes": ""
+                    },
+                    "width": 0.1
+                  },
+                  "type": "line",
+                  "value": 10,
+                  "visible": true
+                },
+                {
+                  "axis": "Attendance",
+                  "line": {
+                    "color": "",
+                    "dashArray": 0,
+                    "label": {
+                      "font": {
+                        "color": "",
+                        "size": 10
+                      },
+                      "position": "right",
+                      "style": {
+                        "classes": ""
+                      },
+                      "text": ""
+                    },
+                    "opacity": 0.5,
+                    "style": {
+                      "classes": ""
+                    },
+                    "width": 0.1
+                  },
+                  "type": "line",
+                  "value": 20,
+                  "visible": true
+                },
+                {
+                  "axis": "Attendance",
+                  "line": {
+                    "color": "",
+                    "dashArray": 0,
+                    "label": {
+                      "font": {
+                        "color": "",
+                        "size": 10
+                      },
+                      "position": "left",
+                      "style": {
+                        "classes": ""
+                      },
+                      "text": ""
+                    },
+                    "opacity": 0.5,
+                    "style": {
+                      "classes": ""
+                    },
+                    "width": 0.1
+                  },
+                  "type": "line",
+                  "value": 30,
+                  "visible": true
+                },
+                {
+                  "axis": "Attendance",
+                  "line": {
+                    "color": "",
+                    "dashArray": 0,
+                    "label": {
+                      "font": {
+                        "color": "",
+                        "size": 10
+                      },
+                      "position": "left",
+                      "style": {
+                        "classes": ""
+                      },
+                      "text": ""
+                    },
+                    "opacity": 0.5,
+                    "style": {
+                      "classes": ""
+                    },
+                    "width": 0.1
+                  },
+                  "type": "line",
+                  "value": 40,
+                  "visible": true
+                },
+                {
+                  "axis": "Attendance",
+                  "line": {
+                    "color": "",
+                    "dashArray": 0,
+                    "label": {
+                      "font": {
+                        "color": "",
+                        "size": 10
+                      },
+                      "position": "right",
+                      "style": {
+                        "classes": ""
+                      },
+                      "text": ""
+                    },
+                    "opacity": 0.5,
+                    "style": {
+                      "classes": ""
+                    },
+                    "width": "0.1"
+                  },
+                  "type": "line",
+                  "value": 50,
+                  "visible": true
+                }
+              ],
+              "trends": [
+                {
+                  "axis": "Attendance",
+                  "baselines": [],
+                  "breakLine": true,
+                  "columns": [],
+                  "interpolation": "curveLinear",
+                  "radius": 2,
+                  "series": "Attendance",
+                  "stack": true,
+                  "type": "area",
+                  "visible": true
+                },
+                {
+                  "axis": "Attendance",
+                  "baselines": [],
+                  "breakLine": true,
+                  "columns": [
+                    {
+                      "color": "#4747FF",
+                      "key": "Enrollment",
+                      "styles": {
+                        "highlighted": {
+                          "fill": {
+                            "color": "",
+                            "opacity": null
+                          },
+                          "stroke": {
+                            "color": "",
+                            "dashArray": null,
+                            "opacity": null,
+                            "width": null
+                          }
+                        },
+                        "muted": {
+                          "fill": {
+                            "color": "",
+                            "opacity": null
+                          },
+                          "stroke": {
+                            "color": "",
+                            "dashArray": null,
+                            "opacity": null,
+                            "width": null
+                          }
+                        },
+                        "normal": {
+                          "fill": {
+                            "color": "",
+                            "opacity": null
+                          },
+                          "stroke": {
+                            "color": "",
+                            "dashArray": null,
+                            "opacity": null,
+                            "width": null
+                          }
+                        },
+                        "selected": {
+                          "fill": {
+                            "color": "",
+                            "opacity": null
+                          },
+                          "stroke": {
+                            "color": "",
+                            "dashArray": null,
+                            "opacity": null,
+                            "width": null
+                          }
+                        }
+                      }
+                    }
+                  ],
+                  "interpolation": "curveLinear",
+                  "radius": 2,
+                  "series": "Attendance",
+                  "stack": true,
+                  "type": "line",
+                  "visible": true
+                },
+                {
+                  "axis": "Attendance",
+                  "baselines": [],
+                  "breakLine": true,
+                  "columns": [
+                    {
+                      "color": "#4747FF",
+                      "key": "Enrollment",
+                      "styles": {
+                        "highlighted": {
+                          "fill": {
+                            "color": "",
+                            "opacity": null
+                          },
+                          "stroke": {
+                            "color": "",
+                            "dashArray": null,
+                            "opacity": null,
+                            "width": null
+                          }
+                        },
+                        "muted": {
+                          "fill": {
+                            "color": "",
+                            "opacity": null
+                          },
+                          "stroke": {
+                            "color": "",
+                            "dashArray": null,
+                            "opacity": null,
+                            "width": null
+                          }
+                        },
+                        "normal": {
+                          "fill": {
+                            "color": "",
+                            "opacity": null
+                          },
+                          "stroke": {
+                            "color": "#4747FF",
+                            "dashArray": null,
+                            "opacity": null,
+                            "width": 1
+                          }
+                        },
+                        "selected": {
+                          "fill": {
+                            "color": "",
+                            "opacity": null
+                          },
+                          "stroke": {
+                            "color": "",
+                            "dashArray": null,
+                            "opacity": null,
+                            "width": null
+                          }
+                        }
+                      }
+                    }
+                  ],
+                  "interpolation": "curveLinear",
+                  "radius": 2,
+                  "series": "Attendance",
+                  "stack": true,
+                  "type": "scatter",
+                  "visible": true
+                }
+              ]
+            }
+          ],
+          "style": {
+            "paddingBottom": 0,
+            "paddingLeft": 0,
+            "paddingTop": 0
+          },
+          "timeAxis": {
+            "color": "#BFBFBF00",
+            "height": 20,
+            "tick": {
+              "color": "#BFBFBF00",
+              "label": {
+                "font": {
+                  "color": "#3F94EB"
+                },
+                "format": "MMM",
+                "style": {
+                  "padding": 0,
+                  "textAlign": "start",
+                  "textTransform": "uppercase",
+                  "whiteSpace": "normal"
+                }
+              }
+            },
+            "tickCount": 4
+          },
+          "timeRange": {
+            "timeFormat": "HH:mm:ss",
+            "visible": false
+          },
+          "title": {
+            "font": {
+              "size": 13
+            },
+            "height": 40,
+            "style": {
+              "paddingBottom": 10,
+              "textAlign": "start",
+              "whiteSpace": "pre"
+            },
+            "text": "Title"
+          }
+        },
+        "type": "ia.chart.timeseries"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column",
+      "style": {
+        "backgroundColor": "#FFFFFF",
+        "paddingLeft": 5
+      }
+    },
+    "scripts": {
+      "customMethods": [],
+      "extensionFunctions": null,
+      "messageHandlers": [
+        {
+          "messageType": "refreshPeople",
+          "pageScope": true,
+          "script": "\t# implement your handler here\n\tself.view.refreshBinding(\"custom.eventInstances\")",
+          "sessionScope": true,
+          "viewScope": false
+        }
+      ]
+    },
+    "type": "ia.container.flex"
+  }
+}

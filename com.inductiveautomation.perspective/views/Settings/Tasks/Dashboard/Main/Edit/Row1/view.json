@@ -1,0 +1,267 @@
+{
+  "custom": {},
+  "params": {
+    "automatedTaskId": 0,
+    "note": null,
+    "taskDesc": "",
+    "taskIsActive": 0,
+    "taskType": ""
+  },
+  "propConfig": {
+    "params.automatedTaskId": {
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.taskDesc": {
+      "binding": {
+        "config": {
+          "path": "/root/TopRow/Embed_Description.props.params.text"
+        },
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.taskIsActive": {
+      "binding": {
+        "config": {
+          "path": "/root/TopRow/Embed_Active.props.params.selection"
+        },
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.taskType": {
+      "binding": {
+        "config": {
+          "path": "/root/TopRow/Embed_Task.props.params.text"
+        },
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 120,
+      "width": 1100
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "children": [
+          {
+            "meta": {
+              "name": "Embed_Task"
+            },
+            "position": {
+              "basis": "29%",
+              "shrink": 0
+            },
+            "propConfig": {
+              "props.params.text": {
+                "binding": {
+                  "config": {
+                    "expression": "if(isGood({/root.custom.taskDetails[0].type}),{/root.custom.taskDetails[0].type},\u0027\u0027)"
+                  },
+                  "type": "expr"
+                }
+              }
+            },
+            "props": {
+              "params": {
+                "label": "Task",
+                "placeholder": ""
+              },
+              "path": "1_TEMPLATES/120px/top/Input_Text"
+            },
+            "type": "ia.display.view"
+          },
+          {
+            "meta": {
+              "name": "Embed_Active"
+            },
+            "position": {
+              "basis": "130px",
+              "shrink": 0
+            },
+            "propConfig": {
+              "props.params.selection": {
+                "binding": {
+                  "config": {
+                    "path": "/root.custom.taskDetails[0].isActive"
+                  },
+                  "overlayOptOut": true,
+                  "transforms": [
+                    {
+                      "fallback": 0,
+                      "inputType": "scalar",
+                      "mappings": [
+                        {
+                          "input": true,
+                          "output": 1
+                        },
+                        {
+                          "input": false,
+                          "output": 0
+                        }
+                      ],
+                      "outputType": "scalar",
+                      "type": "map"
+                    }
+                  ],
+                  "type": "property"
+                }
+              }
+            },
+            "props": {
+              "params": {
+                "options": {
+                  "$": [
+                    "ds",
+                    192,
+                    1598408843993
+                  ],
+                  "$columns": [
+                    {
+                      "data": [
+                        0,
+                        1
+                      ],
+                      "name": "id",
+                      "type": "Integer"
+                    },
+                    {
+                      "data": [
+                        "No",
+                        "Yes"
+                      ],
+                      "name": "text",
+                      "type": "String"
+                    }
+                  ]
+                },
+                "text": "Active"
+              },
+              "path": "Participants/Templates/120px/top/Input_DropDownSingle"
+            },
+            "type": "ia.display.view"
+          },
+          {
+            "meta": {
+              "name": "Embed_Description"
+            },
+            "position": {
+              "basis": "24.6%",
+              "grow": 1,
+              "shrink": 0
+            },
+            "propConfig": {
+              "props.params.text": {
+                "binding": {
+                  "config": {
+                    "expression": "if(isGood({/root.custom.taskDetails[0].description}),{/root.custom.taskDetails[0].description},\u0027\u0027)"
+                  },
+                  "type": "expr"
+                }
+              }
+            },
+            "props": {
+              "params": {
+                "label": "Description",
+                "placeholder": ""
+              },
+              "path": "1_TEMPLATES/120px/top/Input_Text"
+            },
+            "type": "ia.display.view"
+          }
+        ],
+        "meta": {
+          "name": "TopRow"
+        },
+        "position": {
+          "basis": "100%"
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "children": [
+          {
+            "meta": {
+              "name": "Embed_Description"
+            },
+            "position": {
+              "basis": "100%",
+              "shrink": 0
+            },
+            "propConfig": {
+              "props.params.text": {
+                "binding": {
+                  "config": {
+                    "bidirectional": true,
+                    "path": "view.params.note"
+                  },
+                  "overlayOptOut": true,
+                  "type": "property"
+                }
+              }
+            },
+            "props": {
+              "params": {
+                "label": "NOTE",
+                "placeholder": "Start typing to create a case note..."
+              },
+              "path": "Participants/Templates/120px/top/Input_Text"
+            },
+            "type": "ia.display.view"
+          }
+        ],
+        "meta": {
+          "name": "BottomRow"
+        },
+        "position": {
+          "basis": "70%",
+          "display": false,
+          "grow": 1
+        },
+        "props": {
+          "direction": "column"
+        },
+        "type": "ia.container.flex"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "propConfig": {
+      "custom.taskDetails": {
+        "binding": {
+          "config": {
+            "parameters": {
+              "taskId": "{view.params.automatedTaskId}"
+            },
+            "queryPath": "Settings/Tasks/getAutomatedTaskById",
+            "returnFormat": "json"
+          },
+          "transforms": [
+            {
+              "code": "\tdata \u003d value\n\tif len(value)\u003c\u003d0:\n\t\tdata \u003d[\n\t\t\t  {\n\t\t\t    \"id\": -1,\n\t\t\t    \"type\": \u0027\u0027,\n\t\t\t    \"timeCreated\": None,\n\t\t\t    \"timeRetired\": None,\n\t\t\t    \"isActive\": None,\n\t\t\t    \"description\": \u0027\u0027\n\t\t\t  }\n\t\t\t]\n\treturn data",
+              "type": "script"
+            }
+          ],
+          "type": "query"
+        }
+      }
+    },
+    "props": {
+      "direction": "column",
+      "style": {
+        "classes": "Background/Default"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

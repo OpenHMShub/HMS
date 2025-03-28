@@ -1,0 +1,172 @@
+{
+  "custom": {
+    "data": [
+      {
+        "bed_name": "",
+        "end_date": "",
+        "facility_name": "No Shelter Entered Yet.",
+        "room_name": "",
+        "shelter_assinged": false,
+        "start_date": ""
+      }
+    ]
+  },
+  "params": {
+    "participantID": 1
+  },
+  "propConfig": {
+    "custom.data": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "participantID": "{view.params.participantID}"
+          },
+          "queryPath": "Participants/Preview/Select Last Shelter",
+          "returnFormat": "dataset"
+        },
+        "transforms": [
+          {
+            "code": "\t#data is the data object to return\n\tdata \u003d []\n\titem \u003d {}\n\tif value !\u003d None and value.getRowCount() \u003e 0:\n\t\titem[\u0027shelter_assinged\u0027] \u003d True\n\t\titem[\u0027facility_name\u0027] \u003d value.getValueAt(0, \"facility\")\n\t\titem[\u0027room_name\u0027] \u003d value.getValueAt(0,\u0027room\u0027)\n\t\titem[\u0027bed_name\u0027] \u003d value.getValueAt(0,\u0027bed\u0027)\n\t\t\n\t\ttype \u003d str(value.getValueAt(0,\u0027shelter_type\u0027))\n\t\titem[\u0027type\u0027] \u003d type\n\t\tif type \u003d\u003d \u0027reservation\u0027:\n\t\t\t\n\t\t\tstart_date \u003d value.getValueAt(0,\u0027start\u0027)\n\t\t\titem[\u0027start_date\u0027] \u003d system.date.format(start_date,\"MMM dd yyyy\")\n\t\t\t#End date may or may not have happened yet\n\t\t\tend_date \u003d value.getValueAt(0,\u0027end\u0027)\n\t\t\tif end_date !\u003d None:\n\t\t\t\titem[\u0027end_date\u0027] \u003d system.date.format(end_date,\"MMM dd yyyy\")\n\t\t\telse:\n\t\t\t\titem[\u0027end_date\u0027] \u003d \u0027\u0027\n\t\telse:\n\t\t\tstart_date \u003d value.getValueAt(0,\u0027start\u0027)\n\t\t\titem[\u0027start_date\u0027] \u003d system.date.format(start_date,\"MMM dd yyyy\")\n\t\t\t#End date may or may not have happened yet\n\t\t\tend_date \u003d value.getValueAt(0,\u0027end\u0027)\n\t\t\tif end_date !\u003d None:\n\t\t\t\titem[\u0027end_date\u0027] \u003d system.date.format(end_date,\"MMM dd yyyy\")\n\t\t\telse:\n\t\t\t\titem[\u0027end_date\u0027] \u003d \u0027(currently checked in)\u0027\n\telse:\n\t\titem[\u0027shelter_assinged\u0027] \u003d False\n\t\titem[\u0027facility_name\u0027] \u003d \"No Shelter Entered Yet.\"\n\t\titem[\u0027room_name\u0027] \u003d \u0027\u0027\n\t\titem[\u0027bed_name\u0027] \u003d \u0027\u0027\n\t\titem[\u0027start_date\u0027] \u003d \u0027\u0027\n\t\titem[\u0027end_date\u0027] \u003d \u0027\u0027\n\t\t\n\tdata.append(item)\n\t\n\treturn data",
+            "type": "script"
+          }
+        ],
+        "type": "query"
+      },
+      "persistent": true
+    },
+    "params.participantID": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 225,
+      "width": 600
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "Label_0"
+        },
+        "position": {
+          "basis": "25px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.text": {
+            "binding": {
+              "config": {
+                "expression": "If({view.custom.data[0].shelter_assinged},\r\n{view.custom.data[0].start_date} + \u0027 to \u0027 + {view.custom.data[0].end_date},\r\n\u0027\u0027)"
+              },
+              "transforms": [
+                {
+                  "code": "\tif self.view.custom.data[0].shelter_assinged:\n\t\tif self.view.custom.data[0].type \u003d\u003d \u0027reservation\u0027:\n\t\t\tvalue \u003d  str(value) + \u0027 (Reserved)\u0027\n\treturn value",
+                  "type": "script"
+                }
+              ],
+              "type": "expr"
+            }
+          }
+        },
+        "props": {
+          "style": {
+            "classes": "Text/About_description",
+            "paddingLeft": "20px"
+          }
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "meta": {
+          "name": "Label_3"
+        },
+        "position": {
+          "basis": "16px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.text": {
+            "binding": {
+              "config": {
+                "expression": "\u0027Facility: \u0027 + {view.custom.data[0].facility_name}"
+              },
+              "type": "expr"
+            }
+          }
+        },
+        "props": {
+          "style": {
+            "classes": "Text/About_info",
+            "paddingLeft": "20px"
+          }
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "meta": {
+          "name": "Label_1"
+        },
+        "position": {
+          "basis": "16px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.text": {
+            "binding": {
+              "config": {
+                "expression": "If({view.custom.data[0].shelter_assinged},\r\n\u0027Room: \u0027 + {view.custom.data[0].room_name},\r\n\u0027\u0027)"
+              },
+              "type": "expr"
+            }
+          }
+        },
+        "props": {
+          "style": {
+            "classes": "Text/About_info",
+            "paddingLeft": "20px"
+          }
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "meta": {
+          "name": "Label_4"
+        },
+        "position": {
+          "basis": "16px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.text": {
+            "binding": {
+              "config": {
+                "expression": "If({view.custom.data[0].shelter_assinged},\r\n\u0027Bed: \u0027 + {view.custom.data[0].bed_name},\r\n\u0027\u0027)"
+              },
+              "type": "expr"
+            }
+          }
+        },
+        "props": {
+          "style": {
+            "classes": "Text/About_info",
+            "paddingLeft": "20px"
+          }
+        },
+        "type": "ia.display.label"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column",
+      "style": {
+        "classes": "Background/Default"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

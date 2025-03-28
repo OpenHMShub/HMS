@@ -1,0 +1,1729 @@
+{
+  "custom": {},
+  "events": {
+    "system": {
+      "onShutdown": {
+        "config": {
+          "script": "\troot \u003d self.getChild(\"root\")\n\temvActivityRange \u003d root.getChild(\"emvActivityRange\")\n\temvCheckIO \u003d root.getChild(\"emvCheckIO\")\n\n\t#emvActivityRange.props.params.selection \u003d None\n\t#emvCheckIO.props.params.selection \u003d None\n\t\n\temvActivityRange.props.params.actionPerformedPulse \u003d False\n\temvCheckIO.props.params.actionPerformedPulse \u003d False"
+        },
+        "scope": "G",
+        "type": "script"
+      },
+      "onStartup": {
+        "config": {
+          "script": "\ttry:\n\t\t#system.perspective.print((\u0027page:\u0027,self.page.props.primaryView)) #items()))\n\t\t#system.perspective.print((\u0027session:\u0027,self.session.props.items()))\n\n\t\troot \u003d self.getChild(\"root\")\n\t\temvActivityRange \u003d root.getChild(\"emvActivityRange\")\n\t\temvCheckIO \u003d root.getChild(\"emvCheckIO\")\t\t\n\t\temvActivityRange.props.params.selection \u003d None\n\t\temvCheckIO.props.params.selection \u003d None\n\t\t\n\t\t#My way to check if script is executed in designer on Apply/Ok button click (not browser).\t\t\n\t\tif self.page.props.primaryView is None:\n\n#\t\t\temvActivityRange.props.params.actionPerformedPulse \u003d False\n\t\t\temvCheckIO.props.params.actionPerformedPulse \u003d False\t\n\t\t\t\n\t\telse:\n\t\t\tmidnight \u003d system.date.midnight(system.date.now())\n\t\t\tdateFrom \u003d system.date.addYears(midnight, -1)\n\t\t\tcheckIO \u003d 1\n\t\t\t\n\t\t\troot.setPropsDropdowns()\t\n\n\t\t\n#\t\t\temvActivityRange.props.params.actionPerformedPulse \u003d False\n\t\t\t#If following row is uncommented then qury will be fired 2 times\n\t\t\t#emvCheckIO.props.params.actionPerformedPulse \u003d False\n\t\t\n\t\t\n\texcept:\n\t\timport traceback\n\t\tlogger \u003d system.util.getLogger(\"Events\")\n\t\tmsg \u003d self.name + \u0027:\\n\u0027\n\t\tmsg +\u003d traceback.format_exc()\n\t\tlogger.error(msg)\t\t\t"
+        },
+        "scope": "G",
+        "type": "script"
+      }
+    }
+  },
+  "params": {
+    "ActivityRange": null,
+    "CalenderId": null,
+    "EventName": null
+  },
+  "propConfig": {
+    "params.ActivityRange": {
+      "binding": {
+        "config": {
+          "path": "/root/emvActivityRange.props.params.selection"
+        },
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.CalenderId": {
+      "binding": {
+        "config": {
+          "path": "/root/emvCalendarId.props.params.selection"
+        },
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.EventName": {
+      "binding": {
+        "config": {
+          "path": "/root/emvEventName.props.params.selection"
+        },
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 30,
+      "width": 1820
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "emvActivityRange"
+        },
+        "position": {
+          "basis": "150px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.actionPerformedPulse": {
+            "onChange": {
+              "enabled": null,
+              "script": "\troot \u003d self.parent\n\troot.sendMsgCondition()\t"
+            }
+          },
+          "props.params.selection": {
+            "onChange": {
+              "enabled": null,
+              "script": "\troot \u003d self.parent\n\troot.sendMsgCondition()\t"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "actionPerformedPulse": false,
+            "clear": false,
+            "multiSelect": false,
+            "options": [
+              {
+                "label": "Yesterday",
+                "value": {
+                  "$": [
+                    "ts",
+                    192,
+                    1682402208446
+                  ],
+                  "$ts": 1656738000000
+                }
+              },
+              {
+                "label": "7 Days",
+                "value": {
+                  "$": [
+                    "ts",
+                    192,
+                    1682402208446
+                  ],
+                  "$ts": 1656219600000
+                }
+              },
+              {
+                "label": "14 Days",
+                "value": {
+                  "$": [
+                    "ts",
+                    192,
+                    1682402208446
+                  ],
+                  "$ts": 1655614800000
+                }
+              },
+              {
+                "label": "30 Days",
+                "value": {
+                  "$": [
+                    "ts",
+                    192,
+                    1682402208446
+                  ],
+                  "$ts": 1654232400000
+                }
+              },
+              {
+                "label": "60 Days",
+                "value": {
+                  "$": [
+                    "ts",
+                    192,
+                    1682402208446
+                  ],
+                  "$ts": 1651640400000
+                }
+              },
+              {
+                "label": "90 Days",
+                "value": {
+                  "$": [
+                    "ts",
+                    192,
+                    1682402208446
+                  ],
+                  "$ts": 1649048400000
+                }
+              },
+              {
+                "label": "180 Days",
+                "value": {
+                  "$": [
+                    "ts",
+                    192,
+                    1682402208446
+                  ],
+                  "$ts": 1641276000000
+                }
+              },
+              {
+                "label": "1 Year",
+                "value": {
+                  "$": [
+                    "ts",
+                    192,
+                    1682402208446
+                  ],
+                  "$ts": 1625288400000
+                }
+              },
+              {
+                "label": "2 Years",
+                "value": {
+                  "$": [
+                    "ts",
+                    192,
+                    1682402208446
+                  ],
+                  "$ts": 1593752400000
+                }
+              },
+              {
+                "label": "3 Years",
+                "value": {
+                  "$": [
+                    "ts",
+                    192,
+                    1682402208446
+                  ],
+                  "$ts": 1562130000000
+                }
+              },
+              {
+                "label": "4 Years",
+                "value": {
+                  "$": [
+                    "ts",
+                    192,
+                    1682402208446
+                  ],
+                  "$ts": 1530594000000
+                }
+              },
+              {
+                "label": "5 Years",
+                "value": {
+                  "$": [
+                    "ts",
+                    192,
+                    1682402208446
+                  ],
+                  "$ts": 1499058000000
+                }
+              },
+              {
+                "label": "All Time",
+                "value": {
+                  "$": [
+                    "ts",
+                    192,
+                    1682402208446
+                  ],
+                  "$ts": -1498935600000
+                }
+              }
+            ],
+            "placeholder": "Activity Range",
+            "selection": null,
+            "selectionIn": null
+          },
+          "path": "Events/Templates/DropDown_TealBlue_ActivityRange",
+          "style": {
+            "classes": "Filter/Filter_Container",
+            "marginLeft": "40px"
+          }
+        },
+        "scripts": {
+          "customMethods": [
+            {
+              "name": "setOptions",
+              "params": [],
+              "script": "\tmidnight \u003d system.date.midnight(system.date.now())\n\t\n\tlstDateFrom \u003d \t[\n\t[\u0027Yesterday\u0027, \u0027Yesterday\u0027],\n\t[\u00277 Days\u0027, \u00277 Days\u0027],\n\t[\u002714 Days\u0027, \u002714 Days\u0027],\n\t[\u0027Month to Date\u0027,\u0027Month to Date\u0027],\n\t[\u002730 Days\u0027, \u002730 Days\u0027],\n\t[\u002760 Days\u0027, \u002760 Days\u0027],\n\t[\u002790 Days\u0027, \u002790 Days\u0027],\n\t[\u0027180 Days\u0027, \u0027180 Days\u0027],\n\t[\u0027Year to Date\u0027,\u0027Year to Date\u0027],\n\t[\u00271 Year\u0027, \u00271 Year\u0027],\n\t[\u00272 Years\u0027, \u00272 Years\u0027],\n\t[\u00273 Years\u0027, \u00273 Years\u0027],\n\t[\u00274 Years\u0027, \u00274 Years\u0027],\n\t[\u00275 Years\u0027, \u00275 Years\u0027],\n\t[\u0027All Time\u0027, \u0027All Time\u0027]\t\n\t]\n\t\t\n\tself.props.params.options \u003d [ dict(value \u003d x[0],label \u003d x[1]) for x in lstDateFrom]\n\n\tself.props.params.selectionIn \u003d \u00271 Year\u0027\n\t\t"
+            }
+          ],
+          "extensionFunctions": null,
+          "messageHandlers": []
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "emvCheckIO"
+        },
+        "position": {
+          "basis": "400px",
+          "display": false
+        },
+        "propConfig": {
+          "props.params.actionPerformedPulse": {
+            "onChange": {
+              "enabled": null,
+              "script": "\troot \u003d self.parent\n\troot.sendMsgCondition()\n"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "actionPerformedPulse": false,
+            "clear": false,
+            "multiSelect": false,
+            "options": [
+              {
+                "label": "checkout",
+                "value": 0
+              },
+              {
+                "label": "checkin",
+                "value": 1
+              }
+            ],
+            "placeholder": "Check-In / Out",
+            "selection": 1
+          },
+          "path": "Events/EventByProgram/Components/Filters/Conditional_DropDown_InitValue",
+          "style": {
+            "classes": "Filter/Filter_Container"
+          }
+        },
+        "scripts": {
+          "customMethods": [
+            {
+              "name": "setOptions",
+              "params": [],
+              "script": "\tquery \u003d \"\"\"\nSELECT 0, \u0027checkout\u0027\nUNION ALL \nSELECT 1, \u0027checkin\u0027\n\t\"\"\"\n\t\n\tresult \u003d system.db.runPrepQuery(query,[],\u0027RITIOps\u0027)\n\t\n\t# Version 1 set options as list of dictionaries\n\tself.props.params.options \u003d [ dict(value \u003d x[0],label \u003d x[1]) for x in result]\n\t\n\t# Version 2 set options as dataset\n\t#self.props.params.options \u003d result\n\t\n\tself.props.params.selection \u003d 1"
+            }
+          ],
+          "extensionFunctions": null,
+          "messageHandlers": []
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "emvDateRange"
+        },
+        "position": {
+          "basis": "200px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.BeginDate": {
+            "onChange": {
+              "enabled": null,
+              "script": "\troot \u003d self.parent\n\troot.sendMsgCondition()\t"
+            }
+          },
+          "props.params.EndDate": {
+            "onChange": {
+              "enabled": null,
+              "script": "\troot \u003d self.parent\n\troot.sendMsgCondition()\t"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "BeginDate": null,
+            "EndDate": null,
+            "placeholder": "Date Range"
+          },
+          "path": "Events/EventByProgram/Components/Filters/DateRangePicker",
+          "style": {
+            "classes": "Filter/Filter_Container"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "emvCalendarId"
+        },
+        "position": {
+          "basis": "400px"
+        },
+        "propConfig": {
+          "props.params.actionPerformedPulse": {
+            "onChange": {
+              "enabled": null,
+              "script": "\troot \u003d self.parent\n\troot.sendMsgCondition()\n"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "actionPerformedPulse": false,
+            "clear": false,
+            "multiSelect": false,
+            "options": [
+              {
+                "label": "Classes",
+                "value": 2
+              },
+              {
+                "label": "Daily Roles",
+                "value": 3
+              },
+              {
+                "label": "Main",
+                "value": 1
+              },
+              {
+                "label": "Orientation",
+                "value": 4
+              },
+              {
+                "label": "Other",
+                "value": 5
+              },
+              {
+                "label": "Special Events",
+                "value": 6
+              },
+              {
+                "label": "Training",
+                "value": 7
+              }
+            ],
+            "placeholder": "Calendar",
+            "selection": null
+          },
+          "path": "Events/EventByProgram/Components/Filters/Conditional_DropDown",
+          "style": {
+            "classes": "Filter/Filter_Container"
+          }
+        },
+        "scripts": {
+          "customMethods": [
+            {
+              "name": "setOptions",
+              "params": [],
+              "script": "\tquery \u003d \"\"\"\nSELECT [id]\n  ,[name]\nFROM [calendar].[calendars]\nORDER BY [name]\n\t\"\"\"\n\t\n\tresult \u003d system.db.runPrepQuery(query,[],\u0027RITIOps\u0027)\n\t\n\t# Version 1 set options as list of dictionaries\n\tself.props.params.options \u003d [ dict(value \u003d x[0],label \u003d x[1]) for x in result]\n\t\n\t# Version 2 set options as dataset\n\t#self.props.params.options \u003d result\n\t\n\t"
+            }
+          ],
+          "extensionFunctions": null,
+          "messageHandlers": []
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "emvMinAge"
+        },
+        "position": {
+          "basis": "400px",
+          "display": false
+        },
+        "propConfig": {
+          "props.params.actionPerformedPulse": {
+            "onChange": {
+              "enabled": null,
+              "script": "\troot \u003d self.parent\n\troot.sendMsgCondition()\n"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "actionPerformedPulse": false,
+            "clear": false,
+            "multiSelect": false,
+            "options": [
+              {
+                "label": 1,
+                "value": 1
+              },
+              {
+                "label": 2,
+                "value": 2
+              },
+              {
+                "label": 3,
+                "value": 3
+              },
+              {
+                "label": 4,
+                "value": 4
+              },
+              {
+                "label": 5,
+                "value": 5
+              },
+              {
+                "label": 6,
+                "value": 6
+              },
+              {
+                "label": 7,
+                "value": 7
+              },
+              {
+                "label": 8,
+                "value": 8
+              },
+              {
+                "label": 9,
+                "value": 9
+              },
+              {
+                "label": 10,
+                "value": 10
+              },
+              {
+                "label": 11,
+                "value": 11
+              },
+              {
+                "label": 12,
+                "value": 12
+              },
+              {
+                "label": 13,
+                "value": 13
+              },
+              {
+                "label": 14,
+                "value": 14
+              },
+              {
+                "label": 15,
+                "value": 15
+              },
+              {
+                "label": 16,
+                "value": 16
+              },
+              {
+                "label": 17,
+                "value": 17
+              },
+              {
+                "label": 18,
+                "value": 18
+              },
+              {
+                "label": 19,
+                "value": 19
+              },
+              {
+                "label": 20,
+                "value": 20
+              },
+              {
+                "label": 21,
+                "value": 21
+              },
+              {
+                "label": 22,
+                "value": 22
+              },
+              {
+                "label": 23,
+                "value": 23
+              },
+              {
+                "label": 24,
+                "value": 24
+              },
+              {
+                "label": 25,
+                "value": 25
+              },
+              {
+                "label": 26,
+                "value": 26
+              },
+              {
+                "label": 27,
+                "value": 27
+              },
+              {
+                "label": 28,
+                "value": 28
+              },
+              {
+                "label": 29,
+                "value": 29
+              },
+              {
+                "label": 30,
+                "value": 30
+              },
+              {
+                "label": 31,
+                "value": 31
+              },
+              {
+                "label": 32,
+                "value": 32
+              },
+              {
+                "label": 33,
+                "value": 33
+              },
+              {
+                "label": 34,
+                "value": 34
+              },
+              {
+                "label": 35,
+                "value": 35
+              },
+              {
+                "label": 36,
+                "value": 36
+              },
+              {
+                "label": 37,
+                "value": 37
+              },
+              {
+                "label": 38,
+                "value": 38
+              },
+              {
+                "label": 39,
+                "value": 39
+              },
+              {
+                "label": 40,
+                "value": 40
+              },
+              {
+                "label": 41,
+                "value": 41
+              },
+              {
+                "label": 42,
+                "value": 42
+              },
+              {
+                "label": 43,
+                "value": 43
+              },
+              {
+                "label": 44,
+                "value": 44
+              },
+              {
+                "label": 45,
+                "value": 45
+              },
+              {
+                "label": 46,
+                "value": 46
+              },
+              {
+                "label": 47,
+                "value": 47
+              },
+              {
+                "label": 48,
+                "value": 48
+              },
+              {
+                "label": 49,
+                "value": 49
+              },
+              {
+                "label": 50,
+                "value": 50
+              },
+              {
+                "label": 51,
+                "value": 51
+              },
+              {
+                "label": 52,
+                "value": 52
+              },
+              {
+                "label": 53,
+                "value": 53
+              },
+              {
+                "label": 54,
+                "value": 54
+              },
+              {
+                "label": 55,
+                "value": 55
+              },
+              {
+                "label": 56,
+                "value": 56
+              },
+              {
+                "label": 57,
+                "value": 57
+              },
+              {
+                "label": 58,
+                "value": 58
+              },
+              {
+                "label": 59,
+                "value": 59
+              },
+              {
+                "label": 60,
+                "value": 60
+              },
+              {
+                "label": 61,
+                "value": 61
+              },
+              {
+                "label": 62,
+                "value": 62
+              },
+              {
+                "label": 63,
+                "value": 63
+              },
+              {
+                "label": 64,
+                "value": 64
+              },
+              {
+                "label": 65,
+                "value": 65
+              },
+              {
+                "label": 66,
+                "value": 66
+              },
+              {
+                "label": 67,
+                "value": 67
+              },
+              {
+                "label": 68,
+                "value": 68
+              },
+              {
+                "label": 69,
+                "value": 69
+              },
+              {
+                "label": 70,
+                "value": 70
+              },
+              {
+                "label": 71,
+                "value": 71
+              },
+              {
+                "label": 72,
+                "value": 72
+              },
+              {
+                "label": 73,
+                "value": 73
+              },
+              {
+                "label": 74,
+                "value": 74
+              },
+              {
+                "label": 75,
+                "value": 75
+              },
+              {
+                "label": 76,
+                "value": 76
+              },
+              {
+                "label": 77,
+                "value": 77
+              },
+              {
+                "label": 78,
+                "value": 78
+              },
+              {
+                "label": 79,
+                "value": 79
+              },
+              {
+                "label": 80,
+                "value": 80
+              },
+              {
+                "label": 81,
+                "value": 81
+              },
+              {
+                "label": 82,
+                "value": 82
+              },
+              {
+                "label": 83,
+                "value": 83
+              },
+              {
+                "label": 84,
+                "value": 84
+              },
+              {
+                "label": 85,
+                "value": 85
+              },
+              {
+                "label": 86,
+                "value": 86
+              },
+              {
+                "label": 87,
+                "value": 87
+              },
+              {
+                "label": 88,
+                "value": 88
+              },
+              {
+                "label": 89,
+                "value": 89
+              },
+              {
+                "label": 90,
+                "value": 90
+              },
+              {
+                "label": 91,
+                "value": 91
+              },
+              {
+                "label": 92,
+                "value": 92
+              },
+              {
+                "label": 93,
+                "value": 93
+              },
+              {
+                "label": 94,
+                "value": 94
+              },
+              {
+                "label": 95,
+                "value": 95
+              },
+              {
+                "label": 96,
+                "value": 96
+              },
+              {
+                "label": 97,
+                "value": 97
+              },
+              {
+                "label": 98,
+                "value": 98
+              },
+              {
+                "label": 99,
+                "value": 99
+              }
+            ],
+            "placeholder": "Min Age",
+            "selection": null
+          },
+          "path": "Events/EventByProgram/Components/Filters/Conditional_DropDown",
+          "style": {
+            "classes": "Filter/Filter_Container"
+          }
+        },
+        "scripts": {
+          "customMethods": [
+            {
+              "name": "setOptions",
+              "params": [],
+              "script": "\t#query \u003d \"\"\"\n\t#\"\"\"\n\t\n\t#result \u003d system.db.runPrepQuery(query,[],\u0027RITIOps\u0027)\n\t\n\t# Version 1 set options as list of dictionaries\n\t#self.props.params.options \u003d [ dict(value \u003d x[0],label \u003d x[1]) for x in result]\n\tself.props.params.options \u003d [ dict(value \u003d x+1, label \u003d x+1) for x in range(99)]\n\t\n\t# Version 2 set options as dataset\n\t#self.props.params.options \u003d result\n\t\n\t"
+            }
+          ],
+          "extensionFunctions": null,
+          "messageHandlers": []
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "emvMaxAge"
+        },
+        "position": {
+          "basis": "400px",
+          "display": false
+        },
+        "propConfig": {
+          "props.params.actionPerformedPulse": {
+            "onChange": {
+              "enabled": null,
+              "script": "\troot \u003d self.parent\n\troot.sendMsgCondition()\n"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "actionPerformedPulse": false,
+            "clear": false,
+            "multiSelect": false,
+            "options": [
+              {
+                "label": 1,
+                "value": 1
+              },
+              {
+                "label": 2,
+                "value": 2
+              },
+              {
+                "label": 3,
+                "value": 3
+              },
+              {
+                "label": 4,
+                "value": 4
+              },
+              {
+                "label": 5,
+                "value": 5
+              },
+              {
+                "label": 6,
+                "value": 6
+              },
+              {
+                "label": 7,
+                "value": 7
+              },
+              {
+                "label": 8,
+                "value": 8
+              },
+              {
+                "label": 9,
+                "value": 9
+              },
+              {
+                "label": 10,
+                "value": 10
+              },
+              {
+                "label": 11,
+                "value": 11
+              },
+              {
+                "label": 12,
+                "value": 12
+              },
+              {
+                "label": 13,
+                "value": 13
+              },
+              {
+                "label": 14,
+                "value": 14
+              },
+              {
+                "label": 15,
+                "value": 15
+              },
+              {
+                "label": 16,
+                "value": 16
+              },
+              {
+                "label": 17,
+                "value": 17
+              },
+              {
+                "label": 18,
+                "value": 18
+              },
+              {
+                "label": 19,
+                "value": 19
+              },
+              {
+                "label": 20,
+                "value": 20
+              },
+              {
+                "label": 21,
+                "value": 21
+              },
+              {
+                "label": 22,
+                "value": 22
+              },
+              {
+                "label": 23,
+                "value": 23
+              },
+              {
+                "label": 24,
+                "value": 24
+              },
+              {
+                "label": 25,
+                "value": 25
+              },
+              {
+                "label": 26,
+                "value": 26
+              },
+              {
+                "label": 27,
+                "value": 27
+              },
+              {
+                "label": 28,
+                "value": 28
+              },
+              {
+                "label": 29,
+                "value": 29
+              },
+              {
+                "label": 30,
+                "value": 30
+              },
+              {
+                "label": 31,
+                "value": 31
+              },
+              {
+                "label": 32,
+                "value": 32
+              },
+              {
+                "label": 33,
+                "value": 33
+              },
+              {
+                "label": 34,
+                "value": 34
+              },
+              {
+                "label": 35,
+                "value": 35
+              },
+              {
+                "label": 36,
+                "value": 36
+              },
+              {
+                "label": 37,
+                "value": 37
+              },
+              {
+                "label": 38,
+                "value": 38
+              },
+              {
+                "label": 39,
+                "value": 39
+              },
+              {
+                "label": 40,
+                "value": 40
+              },
+              {
+                "label": 41,
+                "value": 41
+              },
+              {
+                "label": 42,
+                "value": 42
+              },
+              {
+                "label": 43,
+                "value": 43
+              },
+              {
+                "label": 44,
+                "value": 44
+              },
+              {
+                "label": 45,
+                "value": 45
+              },
+              {
+                "label": 46,
+                "value": 46
+              },
+              {
+                "label": 47,
+                "value": 47
+              },
+              {
+                "label": 48,
+                "value": 48
+              },
+              {
+                "label": 49,
+                "value": 49
+              },
+              {
+                "label": 50,
+                "value": 50
+              },
+              {
+                "label": 51,
+                "value": 51
+              },
+              {
+                "label": 52,
+                "value": 52
+              },
+              {
+                "label": 53,
+                "value": 53
+              },
+              {
+                "label": 54,
+                "value": 54
+              },
+              {
+                "label": 55,
+                "value": 55
+              },
+              {
+                "label": 56,
+                "value": 56
+              },
+              {
+                "label": 57,
+                "value": 57
+              },
+              {
+                "label": 58,
+                "value": 58
+              },
+              {
+                "label": 59,
+                "value": 59
+              },
+              {
+                "label": 60,
+                "value": 60
+              },
+              {
+                "label": 61,
+                "value": 61
+              },
+              {
+                "label": 62,
+                "value": 62
+              },
+              {
+                "label": 63,
+                "value": 63
+              },
+              {
+                "label": 64,
+                "value": 64
+              },
+              {
+                "label": 65,
+                "value": 65
+              },
+              {
+                "label": 66,
+                "value": 66
+              },
+              {
+                "label": 67,
+                "value": 67
+              },
+              {
+                "label": 68,
+                "value": 68
+              },
+              {
+                "label": 69,
+                "value": 69
+              },
+              {
+                "label": 70,
+                "value": 70
+              },
+              {
+                "label": 71,
+                "value": 71
+              },
+              {
+                "label": 72,
+                "value": 72
+              },
+              {
+                "label": 73,
+                "value": 73
+              },
+              {
+                "label": 74,
+                "value": 74
+              },
+              {
+                "label": 75,
+                "value": 75
+              },
+              {
+                "label": 76,
+                "value": 76
+              },
+              {
+                "label": 77,
+                "value": 77
+              },
+              {
+                "label": 78,
+                "value": 78
+              },
+              {
+                "label": 79,
+                "value": 79
+              },
+              {
+                "label": 80,
+                "value": 80
+              },
+              {
+                "label": 81,
+                "value": 81
+              },
+              {
+                "label": 82,
+                "value": 82
+              },
+              {
+                "label": 83,
+                "value": 83
+              },
+              {
+                "label": 84,
+                "value": 84
+              },
+              {
+                "label": 85,
+                "value": 85
+              },
+              {
+                "label": 86,
+                "value": 86
+              },
+              {
+                "label": 87,
+                "value": 87
+              },
+              {
+                "label": 88,
+                "value": 88
+              },
+              {
+                "label": 89,
+                "value": 89
+              },
+              {
+                "label": 90,
+                "value": 90
+              },
+              {
+                "label": 91,
+                "value": 91
+              },
+              {
+                "label": 92,
+                "value": 92
+              },
+              {
+                "label": 93,
+                "value": 93
+              },
+              {
+                "label": 94,
+                "value": 94
+              },
+              {
+                "label": 95,
+                "value": 95
+              },
+              {
+                "label": 96,
+                "value": 96
+              },
+              {
+                "label": 97,
+                "value": 97
+              },
+              {
+                "label": 98,
+                "value": 98
+              },
+              {
+                "label": 99,
+                "value": 99
+              }
+            ],
+            "placeholder": "Max Age",
+            "selection": null
+          },
+          "path": "Events/EventByProgram/Components/Filters/Conditional_DropDown",
+          "style": {
+            "classes": "Filter/Filter_Container"
+          }
+        },
+        "scripts": {
+          "customMethods": [
+            {
+              "name": "setOptions",
+              "params": [],
+              "script": "\t#query \u003d \"\"\"\n\t#\"\"\"\n\t\n\t#result \u003d system.db.runPrepQuery(query,[],\u0027RITIOps\u0027)\n\t\n\t# Version 1 set options as list of dictionaries\n\t#self.props.params.options \u003d [ dict(value \u003d x[0],label \u003d x[1]) for x in result]\n\tself.props.params.options \u003d [ dict(value \u003d x+1, label \u003d x+1) for x in range(99)]\n\t\n\t# Version 2 set options as dataset\n\t#self.props.params.options \u003d result\n\t\n\t"
+            }
+          ],
+          "extensionFunctions": null,
+          "messageHandlers": []
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "emvEventName"
+        },
+        "position": {
+          "basis": "400px"
+        },
+        "propConfig": {
+          "props.params.actionPerformedPulse": {
+            "onChange": {
+              "enabled": null,
+              "script": "\troot \u003d self.parent\n\troot.sendMsgCondition()\n"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "actionPerformedPulse": false,
+            "clear": false,
+            "multiSelect": false,
+            "options": [
+              {
+                "label": "+2",
+                "value": "+2"
+              },
+              {
+                "label": "Day Services",
+                "value": "Day Services"
+              },
+              {
+                "label": "Increment +1",
+                "value": "Increment +1"
+              },
+              {
+                "label": "Recovery",
+                "value": "Recovery"
+              },
+              {
+                "label": "Staff Training",
+                "value": "Staff Training"
+              },
+              {
+                "label": "UAT Event",
+                "value": "UAT Event"
+              },
+              {
+                "label": "UAT Event 2",
+                "value": "UAT Event 2"
+              },
+              {
+                "label": "Volunteer Orientation",
+                "value": "Volunteer Orientation"
+              },
+              {
+                "label": "Winter Shelter Volunteer Appreciation",
+                "value": "Winter Shelter Volunteer Appreciation"
+              }
+            ],
+            "placeholder": "Event Name",
+            "selection": null
+          },
+          "path": "Events/EventByProgram/Components/Filters/Conditional_DropDown",
+          "style": {
+            "classes": "Filter/Filter_Container"
+          }
+        },
+        "scripts": {
+          "customMethods": [
+            {
+              "name": "setOptions",
+              "params": [],
+              "script": "\tquery \u003d \"\"\"\nSELECT \n\t [name] AS [value]\n\t,[name] AS [label]\nFROM [calendar].[CalendarEvents]\nGROUP BY [name]\nORDER BY [name] \n\"\"\"\n\t\n\tresult \u003d system.db.runPrepQuery(query,[],\u0027RITIOps\u0027)\n\t\n\t# Version 1 set options as list of dictionaries\n\tself.props.params.options \u003d [ dict(value \u003d x[0],label \u003d x[1]) for x in result]\n\t\n\t# Version 2 set options as dataset\n\t#self.props.params.options \u003d result\n\t\n\t"
+            }
+          ],
+          "extensionFunctions": null,
+          "messageHandlers": []
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "emvGender"
+        },
+        "position": {
+          "basis": "400px"
+        },
+        "propConfig": {
+          "props.params.actionPerformedPulse": {
+            "onChange": {
+              "enabled": null,
+              "script": "\troot \u003d self.parent\n\troot.sendMsgCondition()\n"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "actionPerformedPulse": false,
+            "clear": false,
+            "multiSelect": false,
+            "options": [
+              {
+                "label": "Male",
+                "value": 0
+              },
+              {
+                "label": "Female",
+                "value": 1
+              },
+              {
+                "label": "Transgender Male to Female",
+                "value": 2
+              },
+              {
+                "label": "Transgender Female to Male",
+                "value": 3
+              },
+              {
+                "label": "Client refused",
+                "value": 4
+              },
+              {
+                "label": "Data not collected",
+                "value": 5
+              }
+            ],
+            "placeholder": "Gender",
+            "selection": null
+          },
+          "path": "Events/EventByProgram/Components/Filters/Conditional_DropDown",
+          "style": {
+            "classes": "Filter/Filter_Container"
+          }
+        },
+        "scripts": {
+          "customMethods": [
+            {
+              "name": "setOptions",
+              "params": [],
+              "script": "\tquery \u003d \"\"\"\nSELECT [id]\n\t  ,[genderName]\nFROM [humans].[Gender]\nORDER BY [id]\n\t\"\"\"\n\t\n\tresult \u003d system.db.runPrepQuery(query,[],\u0027RITIOps\u0027)\n\t\n\t# Version 1 set options as list of dictionaries\n\tself.props.params.options \u003d [ dict(value \u003d x[0],label \u003d x[1]) for x in result]\n\t\n\t# Version 2 set options as dataset\n\t#self.props.params.options \u003d result\n\t\n\t"
+            }
+          ],
+          "extensionFunctions": null,
+          "messageHandlers": []
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "children": [
+          {
+            "custom": {
+              "selecting": true
+            },
+            "events": {
+              "dom": {
+                "onClick": {
+                  "config": {
+                    "script": "\tmessageType \u003d \u0027selecting\u0027\n\tpayload \u003d {\u0027current\u0027: self.props.placeholder.text}\n\tsystem.perspective.sendMessage(messageType,payload)"
+                  },
+                  "scope": "G",
+                  "type": "script"
+                }
+              }
+            },
+            "meta": {
+              "name": "filter"
+            },
+            "position": {
+              "basis": "100%"
+            },
+            "propConfig": {
+              "props.options": {
+                "binding": {
+                  "config": {
+                    "queryPath": "Participants/Dashboard/Get_participantProgram"
+                  },
+                  "type": "query"
+                }
+              },
+              "props.style.classes": {
+                "binding": {
+                  "config": {
+                    "path": "this.props.value"
+                  },
+                  "transforms": [
+                    {
+                      "code": "\tif value \u003d\u003d -1 or value \u003d\u003d None:\n\t\treturn \"Dropdowns/DD_Default\"\n\telse:\n\t\treturn \"Dropdowns/DD_TeelBlue\"",
+                      "type": "script"
+                    }
+                  ],
+                  "type": "property"
+                }
+              },
+              "props.value": {
+                "onChange": {
+                  "enabled": null,
+                  "script": "\troot \u003d self.view.getChild(\"root\")\n\troot.sendMsgCondition()\t"
+                }
+              }
+            },
+            "props": {
+              "dropdownOptionStyle": {
+                "classes": "Dropdowns/DD_Options"
+              },
+              "placeholder": {
+                "text": "(All Programs)"
+              },
+              "search": {
+                "enabled": false
+              },
+              "showClearIcon": true,
+              "style": {},
+              "value": null,
+              "wrapMultiSelectValues": false
+            },
+            "type": "ia.input.dropdown"
+          }
+        ],
+        "meta": {
+          "name": "Programs"
+        },
+        "position": {
+          "basis": "500px"
+        },
+        "props": {
+          "direction": "column",
+          "style": {
+            "classes": "Filter/Filter_Container"
+          }
+        },
+        "scripts": {
+          "customMethods": [],
+          "extensionFunctions": null,
+          "messageHandlers": [
+            {
+              "messageType": "clearFilter",
+              "pageScope": true,
+              "script": "\tself.getChild(\"filter\").props.value \u003d None",
+              "sessionScope": false,
+              "viewScope": true
+            }
+          ]
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "events": {
+          "dom": {
+            "onClick": {
+              "config": {
+                "script": "\tsystem.perspective.sendMessage (\u0027mhExportToExcel\u0027, payload \u003d {})\n"
+              },
+              "scope": "G",
+              "type": "script"
+            }
+          }
+        },
+        "meta": {
+          "name": "toExcel"
+        },
+        "position": {
+          "basis": "30px",
+          "shrink": 0
+        },
+        "props": {
+          "params": {
+            "dataset": null,
+            "defaultFilePrefix": "Participants"
+          },
+          "path": "1_TEMPLATES/Tables/TableToExcel"
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Placeholder"
+        },
+        "position": {
+          "basis": "100px",
+          "grow": 1
+        },
+        "props": {
+          "path": "1_TEMPLATES/Filtering/Filter_Placeholder"
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "lblSearch"
+        },
+        "position": {
+          "basis": "80px",
+          "grow": 1
+        },
+        "props": {
+          "style": {
+            "classes": "Table/Filter_Header",
+            "paddingRight": "10px",
+            "textAlign": "right"
+          },
+          "text": "Search:"
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "meta": {
+          "name": "emvSearch"
+        },
+        "position": {
+          "basis": "220px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.keyUpPulse": {
+            "onChange": {
+              "enabled": null,
+              "script": "\troot \u003d self.parent\n\troot.sendMsgCondition()\t"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "actionPerformedPulse": false,
+            "clear": false,
+            "keyUpPulse": false,
+            "searchText": ""
+          },
+          "path": "Events/EventByProgram/Components/Filters/Search_Bar",
+          "style": {
+            "classes": "Table/Search_Bar"
+          },
+          "useDefaultViewWidth": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "events": {
+          "component": {
+            "onActionPerformed": {
+              "config": {
+                "script": "\troot \u003d self.parent\n\t\n\temvCalendarId \u003d root.getChild(\"emvCalendarId\")\n\temvEventName \u003d root.getChild(\"emvEventName\")\n\temvCheckIO \u003d root.getChild(\"emvCheckIO\")\n\temvActivityRange \u003d root.getChild(\"emvActivityRange\")\n\temvGender \u003d root.getChild(\"emvGender\")\n\temvMinAge \u003d root.getChild(\"emvMinAge\")\n\temvMaxAge \u003d root.getChild(\"emvMaxAge\")\n\temvSearch \u003d root.getChild(\"emvSearch\")\n\t\n\temvCalendarId.props.params.clear \u003d True\n\temvEventName.props.params.clear \u003d True\n\temvCheckIO.props.params.clear \u003d True\n\temvActivityRange.props.params.clear \u003d True\n\temvGender.props.params.clear \u003d True\n\temvMinAge.props.params.clear \u003d True\n\temvMaxAge.props.params.clear \u003d True\n\temvSearch.props.params.clear \u003d True\n\tself.getSibling(\"emvDateRange\").props.params.BeginDate \u003d None\n\tself.getSibling(\"emvDateRange\").props.params.EndDate \u003d None\n\tself.parent.getChild(\"Programs\").getChild(\"filter\").props.value \u003d None\n\tsystem.perspective.sendMessage(\"clearFilter\", payload \u003d {}, scope \u003d \u0027page\u0027)\n\n\n\tpayload \u003d {}\n\tpayload[\u0027calendarId\u0027] \u003d None\n\tpayload[\u0027calEventName\u0027] \u003d None\n\tpayload[\u0027checkIO\u0027] \u003d None\n\tpayload[\u0027activityRange\u0027] \u003d None\n\tpayload[\u0027genderId\u0027] \u003d None\n\tpayload[\u0027minAge\u0027] \u003d None\n\tpayload[\u0027maxAge\u0027] \u003d None\n\tpayload[\u0027searchText\u0027] \u003d None\n\tpayload[\u0027beginDate\u0027] \u003d None\n\tpayload[\u0027endDate\u0027] \u003d None\n\tpayload[\u0027programId\u0027] \u003d None\n\t\n\t\n\troot.sendMsgCondition(payload)"
+              },
+              "scope": "G",
+              "type": "script"
+            }
+          }
+        },
+        "meta": {
+          "name": "clearConditions"
+        },
+        "position": {
+          "basis": "30px",
+          "shrink": 0
+        },
+        "props": {
+          "image": {
+            "height": 16,
+            "icon": {
+              "color": "#0C4E8B",
+              "path": "material/close"
+            },
+            "position": "center",
+            "width": 16
+          },
+          "style": {
+            "classes": "Filter/Filter_Border_Default Filter/Filter_Container",
+            "marginRight": "37px"
+          },
+          "text": "",
+          "textStyle": {
+            "classes": "GreyColor"
+          }
+        },
+        "type": "ia.input.button"
+      }
+    ],
+    "custom": {
+      "_devClean": false,
+      "_devPulse": false,
+      "_isDev": false
+    },
+    "meta": {
+      "name": "root"
+    },
+    "propConfig": {
+      "custom._devClean": {
+        "onChange": {
+          "enabled": null,
+          "script": "\t\n\temvCalendarId \u003d self.getChild(\"emvCalendarId\")\n\temvEventName \u003d self.getChild(\"emvEventName\")\n\temvCheckIO \u003d self.getChild(\"emvCheckIO\")\n\temvActivityRange \u003d self.getChild(\"emvActivityRange\")\n\temvGender \u003d self.getChild(\"emvGender\")\n\temvMinAge \u003d self.getChild(\"emvMinAge\")\n\temvMaxAge \u003d self.getChild(\"emvMaxAge\")\n\temvSearch \u003d self.getChild(\"emvSearch\")\n\t\n\temvCalendarId.props.params.clear \u003d True\n\temvEventName.props.params.clear \u003d True\n\temvCheckIO.props.params.clear \u003d True\n\temvActivityRange.props.params.clear \u003d True\n\temvGender.props.params.clear \u003d True\n\temvMinAge.props.params.clear \u003d True\n\temvMaxAge.props.params.clear \u003d True\n\temvSearch.props.params.clear \u003d True\n\n\temvCalendarId.props.params.actionPerformedPulse \u003d False\n\temvEventName.props.params.actionPerformedPulse \u003d False\n\temvCheckIO.props.params.actionPerformedPulse \u003d False\n\temvActivityRange.props.params.actionPerformedPulse \u003d False\n\temvGender.props.params.actionPerformedPulse \u003d False\n\temvMinAge.props.params.actionPerformedPulse \u003d False\n\temvMaxAge.props.params.actionPerformedPulse \u003d False\n\temvSearch.props.params.actionPerformedPulse \u003d False\t\n\n\t\n\tif self.custom._devClean:\n\t\tself.custom._devClean \u003d False"
+        }
+      },
+      "custom._devPulse": {
+        "onChange": {
+          "enabled": null,
+          "script": "\t\n\temvCalendarId \u003d self.getChild(\"emvCalendarId\")\n\temvEventName \u003d self.getChild(\"emvEventName\")\n\temvCheckIO \u003d self.getChild(\"emvCheckIO\")\n\temvActivityRange \u003d self.getChild(\"emvActivityRange\")\n\temvGender \u003d self.getChild(\"emvGender\")\n\temvMinAge \u003d self.getChild(\"emvMinAge\")\n\temvMaxAge \u003d self.getChild(\"emvMaxAge\")\n\temvSearch \u003d self.getChild(\"emvSearch\")\n\n\n\t\n\t\n\tif self.custom._isDev:\n\t\tif currentValue.value is True:\n\t\t\tself.setPropsDropdowns()\n\t\telse:\n\t\t\temvCalendarId.props.params.options \u003d False\n\t\t\temvEventName.props.params.options \u003d False\n\t\t\temvCheckIO.props.params.options \u003d False\n\t\t\temvActivityRange.props.params.options \u003d False\n\t\t\temvGender.props.params.options \u003d False\n\t\t\temvMinAge.props.params.options \u003d False\n\t\t\temvMaxAge.props.params.options \u003d False\n\t\t\temvSearch.props.params.searchText \u003d None\n\t\t\t\n\temvCalendarId.props.params.actionPerformedPulse \u003d False\n\temvEventName.props.params.actionPerformedPulse \u003d False\n\temvCheckIO.props.params.actionPerformedPulse \u003d False\n\temvActivityRange.props.params.actionPerformedPulse \u003d False\n\temvGender.props.params.actionPerformedPulse \u003d False\n\temvMinAge.props.params.actionPerformedPulse \u003d False\n\temvMaxAge.props.params.actionPerformedPulse \u003d False\n\temvSearch.props.params.actionPerformedPulse \u003d False\t"
+        }
+      }
+    },
+    "props": {
+      "style": {
+        "classes": "Filter/Header_Text"
+      }
+    },
+    "scripts": {
+      "customMethods": [
+        {
+          "name": "setPropsDropdowns",
+          "params": [],
+          "script": "\temvCalendarId \u003d self.getChild(\"emvCalendarId\")\n\temvEventName \u003d self.getChild(\"emvEventName\")\n\temvCheckIO \u003d self.getChild(\"emvCheckIO\")\n\temvActivityRange \u003d self.getChild(\"emvActivityRange\")\n\temvGender \u003d self.getChild(\"emvGender\")\n\temvMinAge \u003d self.getChild(\"emvMinAge\")\n\temvMaxAge \u003d self.getChild(\"emvMaxAge\")\n\t\n\temvCalendarId.setOptions()\n\temvEventName.setOptions()\n\temvCheckIO.setOptions()\n\temvActivityRange.setOptions()\n\temvMinAge.setOptions()\t\n\temvMaxAge.setOptions()\n\temvGender.setOptions()"
+        },
+        {
+          "name": "sendMsgCondition",
+          "params": [
+            "payload\u003dNone"
+          ],
+          "script": "\t\n\n\temvActivityRange \u003d self.getChild(\"emvActivityRange\")\n\temvCalendarId \u003d self.getChild(\"emvCalendarId\")\n\temvEventName \u003d self.getChild(\"emvEventName\")\n\temvCheckIO \u003d self.getChild(\"emvCheckIO\")\n\temvGender \u003d self.getChild(\"emvGender\")\n\temvMinAge \u003d self.getChild(\"emvMinAge\")\n\temvMaxAge \u003d self.getChild(\"emvMaxAge\")\n\temvDateRange \u003d self.getChild(\"emvDateRange\")\n\temvProgramId \u003d self.getChild(\"Programs\").getChild(\"filter\")\n\temvSearch \u003d self.getChild(\"emvSearch\")\n\t#ystem.perspective.print((self.getChild(\"emvActivityRange\").props.params.selection))\n\t\n\t\n\tif payload is None:\n\t\tpayload \u003d {}\n\t\tpayload[\u0027calendarId\u0027] \u003d emvCalendarId.props.params.selection\n\t\tpayload[\u0027calEventName\u0027] \u003d emvEventName.props.params.selection\n\t\tpayload[\u0027checkIO\u0027] \u003d emvCheckIO.props.params.selection\n\t\tpayload[\u0027activityRange\u0027] \u003d emvActivityRange.props.params.selection\n\t\tpayload[\u0027genderId\u0027] \u003d emvGender.props.params.selection\n\t\tpayload[\u0027minAge\u0027] \u003d emvMinAge.props.params.selection\n\t\tpayload[\u0027maxAge\u0027] \u003d emvMaxAge.props.params.selection\n\t\tpayload[\u0027searchText\u0027] \u003d emvSearch.props.params.searchText\n\t\tpayload[\u0027beginDate\u0027] \u003d emvDateRange.props.params.BeginDate\n\t\tpayload[\u0027endDate\u0027] \u003d emvDateRange.props.params.EndDate\n\t\tpayload[\u0027programId\u0027] \u003d emvProgramId.props.value\n\t\tsystem.perspective.print(emvProgramId.props.value)\n\telse:\n\t\tpayload \u003d {}\n\t\t\n\t#ystem.perspective.print((\u0027mhByCondition\u0027,payload)) \n\t\n\tsystem.perspective.sendMessage(\u0027mhByCondition\u0027, payload \u003d payload)\n#\tsystem.perspective.sendMessage(\u0027SelectedFilters\u0027, payload \u003d payload)\n\n"
+        }
+      ],
+      "extensionFunctions": null,
+      "messageHandlers": [
+        {
+          "messageType": "XrefreshProviderTableFromFilter",
+          "pageScope": true,
+          "script": "\tself.sendMsgCondition()",
+          "sessionScope": false,
+          "viewScope": false
+        }
+      ]
+    },
+    "type": "ia.container.flex"
+  }
+}

@@ -1,0 +1,99 @@
+{
+  "custom": {},
+  "params": {},
+  "props": {
+    "defaultSize": {
+      "height": 25,
+      "width": 260
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "events": {
+          "dom": {
+            "onClick": {
+              "config": {
+                "script": "\tpass"
+              },
+              "scope": "G",
+              "type": "script"
+            }
+          }
+        },
+        "meta": {
+          "name": "Icon"
+        },
+        "position": {
+          "height": 20,
+          "rotate": {
+            "anchor": "50% 25%"
+          },
+          "width": 20,
+          "x": 6.998,
+          "y": 4
+        },
+        "propConfig": {
+          "meta.visible": {
+            "binding": {
+              "config": {
+                "expression": "len({../TextField.props.text}) \u003d 0"
+              },
+              "type": "expr"
+            }
+          }
+        },
+        "props": {
+          "color": "#AAAAAA",
+          "path": "material/search"
+        },
+        "type": "ia.display.icon"
+      },
+      {
+        "meta": {
+          "name": "TextField"
+        },
+        "position": {
+          "height": 26,
+          "width": 260,
+          "x": 0.002,
+          "y": 0.002
+        },
+        "propConfig": {
+          "props.text": {
+            "onChange": {
+              "enabled": null,
+              "script": "\t# No change, just a different origin trigger\n\tif previousValue is None or currentValue is None:\n\t\treturn\n\tif previousValue.value \u003d\u003d currentValue.value:\n\t\treturn\n\t\n\tpageId \u003d filters.sanitizePageID(self.page.props.pageId)\n\tsystem.perspective.print(\u0027Search: %s --\u003e %s\u0027 % (self.page.props.pageId, pageId))\n\t# Update the session\u0027s filter listing for this page\n\tself.session.custom.filters[pageId] \u003d filters.manageFilterList(\n\t\tself.session.custom.filters.get(pageId, []),\n\t\t\u0027full_text\u0027,\n\t\t\u0027\u0027,\n\t\tcurrentValue.value or None,\n\t\t\u0027auto\u0027\n\t\t)\n\t\n\t#system.perspective.print(\u0027Session filter: %r\u0027 % self.session.custom.filters)\n\t#filters.updateFilterListeners(\u0027auto\u0027, \u0027full_text\u0027, \u0027\u0027, currentValue.value or None)"
+            },
+            "persistent": false
+          }
+        },
+        "props": {
+          "deferUpdates": false,
+          "rejectUpdatesWhileFocused": false,
+          "style": {
+            "backgroundColor": "#FFFFFF00",
+            "borderBottomLeftRadius": "5px",
+            "borderBottomRightRadius": "5px",
+            "borderColor": "#D5D5D5",
+            "borderStyle": "solid",
+            "borderTopLeftRadius": "5px",
+            "borderTopRightRadius": "5px",
+            "borderWidth": "1px",
+            "classes": "Table/Filter_Header_Search"
+          }
+        },
+        "type": "ia.input.text-field"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "style": {
+        "overflow": "hidden"
+      }
+    },
+    "type": "ia.container.coord"
+  }
+}

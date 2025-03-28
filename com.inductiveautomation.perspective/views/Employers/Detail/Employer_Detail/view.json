@@ -1,0 +1,112 @@
+{
+  "custom": {
+    "ApplicantData": []
+  },
+  "events": {
+    "system": {
+      "onStartup": {
+        "config": {
+          "script": "#\tsystem.perspective.sendMessage(\"totalApplicantsDetail\", payload \u003d {\"totalApplicantsDetail\": 0}, scope \u003d \"session\")\n#\tsystem.perspective.sendMessage(\"hirePercentDetail\", payload \u003d {\"hirePercentDetail\": 0}, scope \u003d \"session\")\n\t\n\tdataset \u003d self.custom.ApplicantData\n\"\"\"\tif dataset \u003d\u003d None:\n\t\tsystem.perspective.sendMessage(\"totalApplicantsDetail\", payload \u003d {\"totalApplicantsDetail\": 0}, scope \u003d \"session\")\n\t\tsystem.perspective.sendMessage(\"hirePercentDetail\", payload \u003d {\"hirePercentDetail\": 0}, scope \u003d \"session\")\n\t\treturn\n\t\n\t#KPI1 Applicants\t\t\n\ttotalApplicants \u003d 0\n\thireDecisions \u003d 0\n\thiredApplicants \u003d 0\n\tfor i in range(len(dataset)):\n\t\tif self.custom.ApplicantData[i].value.applied_state:\n\t\t\ttotalApplicants +\u003d 1\n\t\tif self.custom.ApplicantData[i].value.hired_state is not None:\n\t\t\thireDecisions +\u003d 1\n\t\t\tif self.custom.ApplicantData[i].value.hired_state:\n\t\t\t\thiredApplicants +\u003d 1\n\t\n\thiredApplicantsfloat \u003d float(hiredApplicants)\n\thireDecisionsfloat \u003d float(hireDecisions)\n\tif hireDecisionsfloat \u003e 1:\n\t\thirePercent \u003d int((hiredApplicantsfloat/hireDecisionsfloat)*100)\n\telse:\n\t\thirePercent \u003d 0\n\tsystem.perspective.print(hiredApplicants)\n\tsystem.perspective.print(hireDecisions)\t\n\tsystem.perspective.print(hirePercent)\n\tsystem.perspective.print(\u0027Startup Script Ran\u0027)\n\t#hirePercent \u003d round(hiredApplicants/hireDecisions)\t\t\n\tsystem.perspective.sendMessage(\"totalApplicantsDetail\", payload \u003d {\"totalApplicantsDetail\": totalApplicants}, scope \u003d \"session\")\n\tsystem.perspective.sendMessage(\"hirePercentDetail\", payload \u003d {\"hirePercentDetail\": hirePercent}, scope \u003d \"session\")"
+        },
+        "scope": "G",
+        "type": "script"
+      }
+    }
+  },
+  "params": {
+    "tab_id": 1,
+    "trackID": null
+  },
+  "propConfig": {
+    "custom.ApplicantData": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "employerID": "{view.params.trackID}"
+          },
+          "queryPath": "Employers/Applicants/ApplicantsDetailsSelect"
+        },
+        "transforms": [
+          {
+            "code": "\t\"\"\"\n\t\t####THIS SECTION FOR INFORMATION ONLY####\n\t\t#Example Drug Screen Detail data object should look like this:\n\t\t{\n\t\t\t\"value\": {\n\t\t\t  \"row_id\": 0\n\t\t\t  \"employee_id\":0\n\t\t\t  \"employee_name\": \"Susan Jones\"\n\t\t\t  \"enrollment_id\":0\n\t\t\t  \"enrollment_name\": \"Hope University\"\n\t\t\t  \"type_id\":0\n\t\t\t  \"service_id\":0\n\t\t\t  \"service_name\": \"Resume\"\n\t\t\t  \"time_created\": \"07/30/2020\",\n\t\t\t \t }\n\t\t\t\"style\": {\n\t\t\t      \"classes\" \u003d \"Table/Cell_Detail\"\n\t\t\t\t  }\n\t\t\t}\n\t####END INFORMATION####\n\t\t\n\t####BEGIN ACTUAL SCRIPT####\n\t\"\"\"\n\tdef transformDate(inputDate):\n\t\tif inputDate is None:\n\t\t\treturn None\n\t\telse:\n\t\t\treturn system.date.format(inputDate, \"yyyy-MM-dd HH:mm:ss\")\t\n\t\n\t#table_data is the data object to return\n\ttable_data \u003d []\n\t\n\t#Iterate over the results of the query\n\tfor row in range(value.getRowCount()):\n\t\trow_struct \u003d {}\n\t\trow_data \u003d {}\n\t\tstyle \u003d {}\t\n\t\t#Map query results into correct attributes\n\t\trow_data[\u0027row_id\u0027] \u003d value.getValueAt(row, \"row_id\")\n\t\trow_data[\u0027participant_id\u0027] \u003d value.getValueAt(row, \"participant_id\")\n\t\trow_data[\u0027participant_name\u0027] \u003d value.getValueAt(row, \"participant_name\")\n\t\trow_data[\u0027position\u0027] \u003d value.getValueAt(row, \"position\")\n\t\trow_data[\u0027applied_state\u0027] \u003d bool(value.getValueAt(row, \"applied_state\"))\n\t\trow_data[\u0027applied_date\u0027] \u003d transformDate(value.getValueAt(row, \"applied_date\"))\n\t\trow_data[\u0027interviewed_state\u0027] \u003d bool(value.getValueAt(row, \"interviewed_state\"))\n\t\trow_data[\u0027interviewed_date\u0027] \u003d transformDate(value.getValueAt(row, \"interviewed_date\"))\n\t\trow_data[\u0027hired_state\u0027] \u003d value.getValueAt(row, \"hired_state\") if value.getValueAt(row, \"hired_state\") is not None else None\n\t\trow_data[\u0027hired_date\u0027] \u003d transformDate(value.getValueAt(row, \"hired_date\"))\n\t\trow_data[\u0027applied_comment\u0027] \u003d value.getValueAt(row, \"applied_comment\")\n\t\trow_data[\u0027interviewed_comment\u0027] \u003d value.getValueAt(row, \"interviewed_comment\")\n\t\trow_data[\u0027hired_comment\u0027] \u003d value.getValueAt(row, \"hired_comment\")\n\t\t\n\t\tif row_data[\u0027hired_date\u0027] is not None:\n\t\t\tlatestDate \u003d row_data[\u0027hired_date\u0027]\n\t\telif row_data[\u0027interviewed_date\u0027] is not None:\n\t\t\tlatestDate \u003d row_data[\u0027interviewed_date\u0027]\n\t\telse:\n\t\t\tlatestDate \u003d row_data[\u0027applied_date\u0027]\n\t\t\n\t\trow_data[\u0027last_update\u0027] \u003d latestDate \n\t\t#Set the default style for the row\n\t\tstyle[\u0027classes\u0027] \u003d \"Table/Cell_Dashboard\"\n\t\trow_struct[\u0027value\u0027] \u003d row_data\n\t\trow_struct[\u0027style\u0027] \u003d style\n\t\t#Append the individual row date to the table data object\n\t\ttable_data.append(row_struct)\n\t\t\t\t\n\treturn table_data\t",
+            "type": "script"
+          }
+        ],
+        "type": "query"
+      },
+      "persistent": true
+    },
+    "params.tab_id": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.trackID": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 974,
+      "width": 1273
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "Header"
+        },
+        "position": {
+          "basis": "90px",
+          "shrink": 0
+        },
+        "props": {
+          "path": "Employers/Detail/Cards/EmployerDetail_Header"
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "custom": {
+          "data": "value"
+        },
+        "meta": {
+          "name": "Tabs"
+        },
+        "position": {
+          "basis": "90%",
+          "grow": 1
+        },
+        "propConfig": {
+          "props.params.tab_id": {
+            "binding": {
+              "config": {
+                "path": "view.params.tab_id"
+              },
+              "type": "property"
+            }
+          },
+          "props.params.trackID": {
+            "binding": {
+              "config": {
+                "path": "view.params.trackID"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "path": "Employers/Detail/Cards/EmployerDetail_Tabs"
+        },
+        "type": "ia.display.view"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column"
+    },
+    "type": "ia.container.flex"
+  }
+}

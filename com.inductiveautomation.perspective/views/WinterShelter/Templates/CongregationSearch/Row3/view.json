@@ -1,0 +1,242 @@
+{
+  "custom": {},
+  "params": {
+    "gender": null,
+    "guests": null,
+    "nights": null,
+    "services": null
+  },
+  "propConfig": {
+    "params.gender": {
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.guests": {
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.nights": {
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.services": {
+      "paramDirection": "inout",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 40,
+      "width": 830
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "Embed_Nights"
+        },
+        "position": {
+          "basis": "200px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.selection": {
+            "binding": {
+              "config": {
+                "bidirectional": true,
+                "path": "view.params.nights"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "options": [
+              "Sunday",
+              "Monday",
+              "Tuesday",
+              "Wednesday",
+              "Thursday",
+              "Friday",
+              "Saturday"
+            ],
+            "placeholder": "Nights Hosting"
+          },
+          "path": "WinterShelter/Templates/Filter/Filter_SingleDropDown",
+          "style": {
+            "marginBottom": "2px",
+            "marginTop": "2px"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Embed_Guests"
+        },
+        "position": {
+          "basis": "140px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.selection": {
+            "binding": {
+              "config": {
+                "bidirectional": true,
+                "path": "view.params.guests"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "placeholder": "Number of Guests",
+            "text": ""
+          },
+          "path": "WinterShelter/Templates/Filter/Filter_Text",
+          "style": {
+            "marginBottom": "2px",
+            "marginLeft": "5px",
+            "marginTop": "2px"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Embed_Gender"
+        },
+        "position": {
+          "basis": "140px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.options": {
+            "binding": {
+              "config": {
+                "expression": "if(hasChanged({view.params.dob_year}),true,\r\nif(hasChanged({view.params.dob_month}),true,\r\nfalse))"
+              },
+              "transforms": [
+                {
+                  "code": "\timport calendar\n\t#Get the year from the dropdown\n\tif self.view.params.dob_year !\u003d None:\n\t\tselected_year \u003d self.view.params.dob_year\n\telse:\n\t\tselected_year \u003d int(system.date.getYear(system.date.now()))\n\tyear \u003d int(selected_year)\t\t\n\t#Get the month from the drop down\t\n\tif self.view.params.dob_month !\u003d None:\n\t\tif str(self.view.params.dob_month[1])\u003d\u003d \u00270\u0027:\n\t\t\tselected_month \u003d int(str(self.view.params.dob_month[1]))\n\t\telse:\n\t\t\tselected_month \u003d int(str(self.view.params.dob_month))\n\telse:\n\t\tselected_month \u003d 12\n\tmonth \u003d int(selected_month)\n\t#Get the number of days in the month\n\tdays_in_month \u003d calendar.monthrange(year,month)[1]\n\t#system.perspective.print(str(year) + \u0027,\u0027 + str(month) + \u0027,\u0027 + str(days_in_month))\n\t# Generate the Rows\n\trows \u003d []\n\tfor x in range(days_in_month):\n\t\toneRow \u003d [str(format(x+1,\u002702d\u0027)), x+1]\n\t\trows.append(oneRow)\n\t# Generate the DataSet\n\theaders \u003d [\"1\", \"2\"]\n\tdata \u003d system.dataset.toDataSet(headers, rows)\n\treturn data",
+                  "type": "script"
+                }
+              ],
+              "type": "expr"
+            }
+          },
+          "props.params.selection": {
+            "binding": {
+              "config": {
+                "bidirectional": true,
+                "path": "view.params.gender"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "placeholder": "Gender of Guests"
+          },
+          "path": "WinterShelter/Templates/Filter/Filter_SingleDropDown",
+          "style": {
+            "marginBottom": "2px",
+            "marginLeft": "5px",
+            "marginTop": "2px"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Embed_Services"
+        },
+        "position": {
+          "basis": "200px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.text": {
+            "binding": {
+              "config": {
+                "bidirectional": true,
+                "path": "view.params.ssn"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "placeholder": "Services"
+          },
+          "path": "Participants/Templates/Filter/Filter_Text",
+          "style": {
+            "marginBottom": "2px",
+            "marginLeft": "5px",
+            "marginTop": "2px"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Embed_Wheelchair"
+        },
+        "position": {
+          "basis": "100px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.text": {
+            "binding": {
+              "config": {
+                "bidirectional": true,
+                "path": "view.params.ssn"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "placeholder": "Wheelchair Accessible"
+          },
+          "path": "Participants/Templates/Filter/Filter_Text",
+          "style": {
+            "marginBottom": "2px",
+            "marginLeft": "5px",
+            "marginTop": "2px"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Embed_Placeholder"
+        },
+        "position": {
+          "basis": "1px",
+          "grow": 1
+        },
+        "props": {
+          "path": "Participants/Templates/Placeholder"
+        },
+        "type": "ia.display.view"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "style": {
+        "overflow": "hidden"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

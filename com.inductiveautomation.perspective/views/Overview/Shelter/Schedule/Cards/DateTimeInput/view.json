@@ -1,0 +1,166 @@
+{
+  "custom": {},
+  "events": {
+    "system": {
+      "onStartup": {
+        "config": {
+          "script": "\troot \u003d self.getChild(\"root\")\n\troot.setByJsonIn()\n\troot.setByJsonExpo()"
+        },
+        "scope": "G",
+        "type": "script"
+      }
+    }
+  },
+  "params": {
+    "jsonBase": "{\"cnd\":\"[lodging].[Reservation].[reservationStart] \u003e\u003d ?\"}",
+    "jsonExpo": "{\"Label.text\":\"Check-in Date\"}",
+    "jsonIn": "value",
+    "jsonOut": "{\"wherePlus\":[{\"arg\":\"Thu Apr 23 13:00:00 CDT 2020\",\"cnd\":\"[lodging].[Reservation].[reservationStart] \u003e\u003d ?\"}]}"
+  },
+  "propConfig": {
+    "params.jsonBase": {
+      "access": "PUBLIC",
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.jsonExpo": {
+      "access": "PUBLIC",
+      "onChange": {
+        "enabled": null,
+        "script": "\troot \u003d self.getChild(\"root\")\n\troot.setByJsonExpo()\t\t"
+      },
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.jsonIn": {
+      "access": "PUBLIC",
+      "onChange": {
+        "enabled": null,
+        "script": "\troot \u003d self.getChild(\"root\")\n\troot.setByJsonIn()\t"
+      },
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.jsonOut": {
+      "access": "PUBLIC",
+      "paramDirection": "output",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 50,
+      "width": 150
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "events": {
+          "component": {
+            "onActionPerformed": {
+              "config": {
+                "script": "\tsystem.perspective.print(\u0027abc\u0027)"
+              },
+              "scope": "G",
+              "type": "script"
+            }
+          }
+        },
+        "meta": {
+          "name": "Button"
+        },
+        "position": {
+          "basis": "34px"
+        },
+        "props": {
+          "style": {
+            "fontFamily": "Arial",
+            "fontSize": 9,
+            "fontWeight": "lighter"
+          }
+        },
+        "type": "ia.input.button"
+      },
+      {
+        "meta": {
+          "name": "Label"
+        },
+        "position": {
+          "basis": "25px"
+        },
+        "props": {
+          "style": {
+            "classes": "Text/Add_HeaderText"
+          },
+          "text": "Check-in Date"
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "meta": {
+          "name": "DateTimeInput"
+        },
+        "position": {
+          "basis": "32px"
+        },
+        "propConfig": {
+          "props.value": {
+            "onChange": {
+              "enabled": null,
+              "script": "\tsystem.perspective.print(\u0027enter\u0027)\n\t\n\tpyOut \u003d system.util.jsonDecode(self.view.params.jsonOut) \n\tpyBase \u003d system.util.jsonDecode(self.view.params.jsonBase)\n\t\n\t\n\t\n\tsystem.perspective.print((\u0027Dropdown  onvaluechanged jsonBase\u0027, self.view.params.jsonBase ))\n\tsystem.perspective.print((\u0027Dropdown  onvaluechanged jsonOut\u0027, self.view.params.jsonOut ))\n\t\n\tif not(isinstance(pyOut, dict)):\n\t\tpyOut \u003d {}\t\n\t\n\tformat \u003d \u0027yyyy-MM-dd HH:mm:ss\u0027\n\ttimeOffset \u003d system.date.getTimezoneOffset()\n\ttimeZone \u003d  system.date.getTimezone()\n\tstrTime \u003d system.date.format(currentValue.value,format)\n\t\n\tsystem.perspective.print((timeOffset,timeZone,strTime))\n\t\n\tsystem.date.format(currentValue.value,\u0027yyyy-MM-dd HH:mm:ss\u0027)\t\n\targ \u003d {\"value\":system.date.format(currentValue.value,format)}\n\tpyOut[\"wherePlus\"] \u003d [ {\u0027arg\u0027: str(currentValue.value), \u0027cnd\u0027: pyBase[\u0027cnd\u0027]} ]\n\t\n\tself.view.params.jsonOut \u003d system.util.jsonEncode(pyOut)\n\t\n\tsystem.perspective.print((\u0027Dropdown  onvaluechanged jsonOut\u0027, self.view.params.jsonOut ))\n\tsystem.perspective.print((\u0027orig sess\u0027, self.session.props.device.timezone.id, self.session.props.device.timezone.utcOffset))\n\t\n\treturn\n\t\n\tpyBase \u003d system.util.jsonDecode(self.view.params.jsonBase)\n\tpyOut \u003d system.util.jsonDecode(self.view.params.jsonOut) \n\n\tif not(isinstance(pyOut, dict)):\n\t\tpyOut \u003d {}\n\t\n\t# Add to jsonOut to node \u0027wherePlus\u0027 condition \u0027cnd\u0027 which is specified in jsonBase\n\t# \u0027cnd\u0027 is condition with full column name: \"[schema].[table].[column] \u003d ?\"\n\t# or if nothing is selected - special case \"always True\" like -1 \u003d ? (and arg is -1). \n\t# For example: \"cnd\":\"[lodging].[Room].[id] \u003d ?\"\n\t# example for jsonOut: {\"wherePlus\":[{\"arg\":7,\"cnd\":\"[lodging].[Room].[id] \u003d ?\"}]}\n\t# example for jsonOut: {\"wherePlus\":[{\"arg\": -1,\"cnd\":\"-1 \u003d ?\"}]}\n\n\tif currentValue.value \u003e 0:\n\t\tpyOut[\"wherePlus\"] \u003d [ {\u0027arg\u0027: currentValue.value, \u0027cnd\u0027: pyBase[\u0027cnd\u0027]} ]\n\telse:\n\t\tpyOut[\"wherePlus\"] \u003d [ {\u0027arg\u0027: currentValue.value, \u0027cnd\u0027: \u0027{} \u003d ?\u0027.format(currentValue.value)}]\n\t\n\tself.view.params.jsonOut \u003d system.util.jsonEncode(pyOut)\n\t\n\t#system.perspective.print((\u0027Dropdown  onvaluechanged jsonOut\u0027, self.view.params.jsonOut ))"
+            }
+          }
+        },
+        "props": {
+          "formattedValue": "Apr 23, 2020 8:00 PM",
+          "formattedValues": {
+            "date": "Apr 23, 2020",
+            "datetime": "Apr 23, 2020 8:00 PM",
+            "time": "8:00 PM"
+          },
+          "modalStyle": {
+            "classes": "DateTime/Add_Date"
+          },
+          "style": {
+            "classes": "DateTime/Add_Date"
+          },
+          "value": {
+            "$": [
+              "ts",
+              0,
+              1605653480643
+            ],
+            "$ts": 1587664800000
+          }
+        },
+        "type": "ia.input.date-time-input"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column",
+      "style": {
+        "overflow": "hidden"
+      }
+    },
+    "scripts": {
+      "customMethods": [
+        {
+          "name": "setByJsonIn",
+          "params": [],
+          "script": "\tpass"
+        },
+        {
+          "name": "setByJsonExpo",
+          "params": [],
+          "script": "\t# For example: jsonExpo \u003d \u0027{\"Label.text\":\"StartTime\"}\u0027\n\tpyExpo \u003d system.util.jsonDecode(self.view.params.jsonExpo)\n\t\n\t#system.perspective.print(self.view.params.jsonExpo)\n\t#system.perspective.print(pyExpo)\n\t\n\tif isinstance(pyExpo,dict):\n\t\tlbl \u003d self.getChild(\"Label\")\n\t\tlbl.props.text \u003d pyExpo.get(\u0027Label.text\u0027,\u0027x\u0027)\n"
+        }
+      ],
+      "messageHandlers": []
+    },
+    "type": "ia.container.flex"
+  }
+}

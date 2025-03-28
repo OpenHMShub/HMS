@@ -1,0 +1,121 @@
+{
+  "custom": {
+    "XdevPulse": false
+  },
+  "params": {
+    "trackID": ""
+  },
+  "propConfig": {
+    "custom.XdevPulse": {
+      "onChange": {
+        "enabled": false,
+        "script": "\troot \u003d self.getChild(\"root\")\n\tif currentValue.value is True:\n\t\tpayload \u003d {}\n\t\tpayload[\u0027providerId\u0027] \u003d 10\n\t\troot.doByPayload(payload)\n\telse:\n\t\troot.cleanKpis()\n\t\t\n"
+      },
+      "persistent": true
+    },
+    "params.trackID": {
+      "onChange": {
+        "enabled": null,
+        "script": "\troot \u003d self.getChild(\"root\")\n\t\n\ttry:\n\t\tpayload \u003d {}\n\t\tpayload[\u0027providerId\u0027] \u003d currentValue.value\n\t\troot.doByPayload(payload)\n\texcept:\n\t\troot.cleanKpis()"
+      },
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 110,
+      "width": 300
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "KPI1"
+        },
+        "position": {
+          "basis": "270px",
+          "grow": 1
+        },
+        "props": {
+          "params": {
+            "Title": "Total Referrals",
+            "Value": 0
+          },
+          "path": "Providers/Detail/Cards/Summary/KPI/Metric_Flex",
+          "style": {
+            "classes": "KPIs/KPI_Card_Provider"
+          },
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "KPI2"
+        },
+        "position": {
+          "basis": "270px",
+          "grow": 1
+        },
+        "props": {
+          "params": {
+            "Title": "Days Without Referrals",
+            "Value": 0
+          },
+          "path": "Providers/Detail/Cards/Summary/KPI/Metric_Flex",
+          "style": {
+            "classes": "KPIs/KPI_Card_Provider"
+          },
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "alignContent": "flex-start",
+      "alignItems": "center",
+      "style": {
+        "overflow": "hidden",
+        "overflowY": "hidden"
+      }
+    },
+    "scripts": {
+      "customMethods": [
+        {
+          "name": "setKpi1_TotalReferrals",
+          "params": [
+            "payload"
+          ],
+          "script": "\tkpi1 \u003d self.getChild(\"KPI1\")\n\n\tquery \u003d \"\"\"\nSELECT COUNT([Referral].[id]) totalReferrals\nFROM [participant].[Referral]\nWHERE [ProviderId] \u003d ?\n\"\"\"\n\tproviderId \u003d payload.get(\u0027providerId\u0027)\n\targs \u003d [providerId]\n\t\n\t# examples providerId :  9, 10, 24, 30\t\n\t# Expect providerId as  int \n\t\n\tkpi1.props.params.Title \u003d \u0027Total Referrals\u0027\n\tresult \u003d system.db.runScalarPrepQuery(query, args,\u0027RITIOps\u0027)\t\n\tkpi1.props.params.Value \u003d result if result else 0\n"
+        },
+        {
+          "name": "setKpi2_DaysWoReferrals",
+          "params": [
+            "payload"
+          ],
+          "script": "\t# Total Referrals (Year To Date): total count of referrals since 1/1 of the current year\n\t\n\tkpi2 \u003d self.getChild(\"KPI2\")\n\n\tquery \u003d \"\"\"\nSELECT TOP (1) DATEDIFF(day, [Referral].[timeCreated], GETDATE()) daysWithoutReferrals\nFROM [participant].[Referral]\nWHERE [ProviderId] \u003d ?\nORDER BY [Referral].[timeCreated] desc\n\"\"\"\n\n\tproviderId \u003d payload.get(\u0027providerId\u0027)\n\targs \u003d [providerId]\n\t# examples providerId :  9, 10, 24, 30\t\n\t# Expect providerId as  int \n\n\tkpi2.props.params.Title \u003d \u0027Days Without Referrals\u0027\n\t\n\tresult \u003d system.db.runScalarPrepQuery(query, args,\u0027RITIOps\u0027)\t\n\tkpi2.props.params.Value \u003d result if result else 0\n\t\n\n\n\t"
+        },
+        {
+          "name": "cleanKpis",
+          "params": [],
+          "script": "\tkpi1 \u003d self.getChild(\"KPI1\")\n\tkpi2 \u003d self.getChild(\"KPI2\")\n\n\tkpi1.props.params.Title \u003d \u0027\u0027\n\tkpi1.props.params.Value \u003d 0\n\t\t\n\tkpi2.props.params.Title \u003d \u0027\u0027\n\tkpi2.props.params.Value \u003d 0\n"
+        },
+        {
+          "name": "doByPayload",
+          "params": [
+            "payload"
+          ],
+          "script": "\tself.setKpi1_TotalReferrals(payload)\n\tself.setKpi2_DaysWoReferrals(payload)\n"
+        }
+      ],
+      "extensionFunctions": null,
+      "messageHandlers": []
+    },
+    "type": "ia.container.flex"
+  }
+}

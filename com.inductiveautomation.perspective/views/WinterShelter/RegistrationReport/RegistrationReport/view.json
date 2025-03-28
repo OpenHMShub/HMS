@@ -1,0 +1,169 @@
+{
+  "custom": {
+    "prevSeasonId": 12
+  },
+  "params": {
+    "tabId": 0
+  },
+  "propConfig": {
+    "custom.prevSeasonId": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "currentSeasonId": "{/root/Body/ReportFilter.props.params.selectedSeason}"
+          },
+          "queryPath": "WinterShelterGlobal/GetLastSeason_FromCurrentSeason"
+        },
+        "transforms": [
+          {
+            "code": "\tif value is not None and value.getRowCount() \u003e 0:\n\t\treturn value.getValueAt(0,\u0027id\u0027)\n\telse:\n\t\treturn -1",
+            "type": "script"
+          }
+        ],
+        "type": "query"
+      },
+      "persistent": true
+    },
+    "params.tabId": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 974,
+      "width": 1273
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "Header"
+        },
+        "position": {
+          "basis": "125px",
+          "shrink": 0
+        },
+        "props": {
+          "path": "WinterShelter/RegistrationReport/Cards/Report_Header",
+          "style": {
+            "paddingLeft": 0
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "FlexContainer"
+        },
+        "position": {
+          "basis": "10px"
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "children": [
+          {
+            "meta": {
+              "name": "ReportFilter"
+            },
+            "position": {
+              "basis": "25%",
+              "shrink": 0
+            },
+            "props": {
+              "params": {
+                "selectedLocation": null,
+                "selectedSeason": 13
+              },
+              "path": "WinterShelter/RegistrationReport/Cards/Filter/ReportFilter"
+            },
+            "type": "ia.display.view"
+          },
+          {
+            "meta": {
+              "name": "ReportViewer"
+            },
+            "position": {
+              "basis": "70%",
+              "grow": 1
+            },
+            "propConfig": {
+              "props.params.locationId": {
+                "binding": {
+                  "config": {
+                    "path": "../ReportFilter.props.params.selectedLocation"
+                  },
+                  "type": "property"
+                }
+              },
+              "props.params.previousSeasonId": {
+                "binding": {
+                  "config": {
+                    "path": "view.custom.prevSeasonId"
+                  },
+                  "type": "property"
+                }
+              },
+              "props.params.seasonId": {
+                "binding": {
+                  "config": {
+                    "path": "../ReportFilter.props.params.selectedSeason"
+                  },
+                  "type": "property"
+                }
+              }
+            },
+            "props": {
+              "controlStyle": {
+                "color": "#0d80e3"
+              },
+              "page": 1,
+              "pageCount": 2,
+              "params": {
+                "CalledFromPage": "Report"
+              },
+              "source": "WinterShelter/Registration Report",
+              "style": {
+                "backgroundColor": "#FFFFFF",
+                "marginBottom": "20px",
+                "marginLeft": "20px",
+                "paddingLeft": "0px",
+                "paddingRight": "0px",
+                "paddingTop": "30px"
+              },
+              "zoomLevel": 50
+            },
+            "type": "ia.reporting.report-viewer"
+          }
+        ],
+        "meta": {
+          "name": "Body"
+        },
+        "position": {
+          "basis": "100%",
+          "grow": 1
+        },
+        "props": {
+          "style": {
+            "marginLeft": "25px"
+          }
+        },
+        "type": "ia.container.flex"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column",
+      "justify": "space-around",
+      "style": {
+        "classes": "Background/Alternative",
+        "overflow": "hidden"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

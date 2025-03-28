@@ -1,0 +1,184 @@
+{
+  "custom": {},
+  "params": {
+    "Color": "#FFFFFF",
+    "label": "label"
+  },
+  "propConfig": {
+    "params.Color": {
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.label": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 60,
+      "width": 502
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "children": [
+          {
+            "meta": {
+              "name": "Label"
+            },
+            "position": {
+              "basis": "25px",
+              "shrink": 0
+            },
+            "propConfig": {
+              "props.text": {
+                "binding": {
+                  "config": {
+                    "path": "view.params.label"
+                  },
+                  "type": "property"
+                }
+              }
+            },
+            "props": {
+              "style": {
+                "classes": "Text/Add_HeaderText"
+              }
+            },
+            "type": "ia.display.label"
+          },
+          {
+            "meta": {
+              "name": "TextField"
+            },
+            "position": {
+              "basis": "126px"
+            },
+            "propConfig": {
+              "props.text": {
+                "binding": {
+                  "config": {
+                    "bidirectional": true,
+                    "path": "view.params.Color"
+                  },
+                  "type": "property"
+                }
+              }
+            },
+            "props": {
+              "placeholder": "Select Color",
+              "style": {
+                "classes": "Text/Add_InfoText",
+                "marginLeft": "10px"
+              }
+            },
+            "type": "ia.input.text-field"
+          }
+        ],
+        "meta": {
+          "name": "left"
+        },
+        "position": {
+          "basis": "100px"
+        },
+        "props": {
+          "direction": "column"
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "children": [
+          {
+            "meta": {
+              "name": "Label_0"
+            },
+            "position": {
+              "basis": "75%",
+              "shrink": 0
+            },
+            "propConfig": {
+              "props.style.backgroundColor": {
+                "binding": {
+                  "config": {
+                    "bidirectional": true,
+                    "path": "view.params.Color"
+                  },
+                  "type": "property"
+                }
+              }
+            },
+            "props": {
+              "style": {
+                "borderColor": "#D3D3D3",
+                "borderRadius": "25px",
+                "borderStyle": "solid",
+                "borderWidth": "1px"
+              }
+            },
+            "type": "ia.display.label"
+          }
+        ],
+        "meta": {
+          "name": "right"
+        },
+        "position": {
+          "basis": "40px"
+        },
+        "props": {
+          "style": {
+            "marginBottom": "15px",
+            "marginLeft": "0px",
+            "marginRight": "10px",
+            "marginTop": "15px",
+            "overflow": "hidden"
+          },
+          "wrap": "wrap"
+        },
+        "type": "ia.container.flex"
+      }
+    ],
+    "events": {
+      "dom": {
+        "onClick": {
+          "config": {
+            "draggable": true,
+            "id": "ColorPicker",
+            "modal": true,
+            "overlayDismiss": true,
+            "resizable": true,
+            "showCloseIcon": false,
+            "type": "open",
+            "viewPath": "1_TEMPLATES/Color Picker/Color Picker",
+            "viewportBound": false
+          },
+          "scope": "C",
+          "type": "popup"
+        }
+      }
+    },
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "style": {
+        "overflow": "visible"
+      }
+    },
+    "scripts": {
+      "customMethods": [],
+      "extensionFunctions": null,
+      "messageHandlers": [
+        {
+          "messageType": "CategoryColor",
+          "pageScope": true,
+          "script": "\tself.getChild(\"left\").getChild(\"TextField\").props.text \u003d str(payload[\u0027CategoryColor\u0027])\n\tself.getChild(\"right\").getChild(\"Label_0\").props.style.backgroundColor \u003d str(payload[\u0027CategoryColor\u0027])",
+          "sessionScope": true,
+          "viewScope": true
+        }
+      ]
+    },
+    "type": "ia.container.flex"
+  }
+}

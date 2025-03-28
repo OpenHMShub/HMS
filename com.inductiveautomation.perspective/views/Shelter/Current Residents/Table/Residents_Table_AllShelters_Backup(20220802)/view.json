@@ -1,0 +1,1974 @@
+{
+  "custom": {},
+  "events": {
+    "system": {
+      "onStartup": {
+        "config": {
+          "script": "\ttry:\n\t\tself.session.custom.dateRangeFromDate \u003d system.date.format(system.date.now(), \"MM/dd/yyyy\")\n\t\tself.session.custom.dateRangeToDate \u003d system.date.format(system.date.now(), \"MM/dd/yyyy\")\n\t\tsystem.perspective.sendMessage(messageType\u003d\"refreshReservations\", payload\u003d{}, scope\u003d\"session\")\n\t\tsystem.perspective.sendMessage(messageType\u003d\"currentResidentSelected\", payload\u003d{\"residentId\":-1}, scope\u003d\"session\")\n\t\tpass\n\texcept:\n\t\timport traceback\n\t\tlogger \u003d system.util.getLogger(\"{}\".format(\u0027Residents_Table onStartUp\u0027))\n\t\tmsg \u003d traceback.format_exc()\n\t\tlogger.error(msg)\t\n\n"
+        },
+        "scope": "G",
+        "type": "script"
+      }
+    }
+  },
+  "params": {
+    "fetch": null,
+    "resultRowCount": 8
+  },
+  "propConfig": {
+    "params.fetch": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.resultRowCount": {
+      "paramDirection": "output",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 1053,
+      "width": 1650
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "custom": {
+          "_devPulse": false,
+          "_devTxt": "",
+          "_isDev": false,
+          "jsonLastPayload": "{\"searchText\":null,\"shelter\":null,\"gender\":null,\"race\":null,\"maxAge\":null,\"minAge\":null,\"program\":null,\"dateRangeTo\":\"06/16/2021\",\"dateRangeFrom\":\"06/16/2021\"}",
+          "lastPayload": {
+            "dateRangeFrom": "06/16/2021",
+            "dateRangeTo": "06/16/2021",
+            "gender": null,
+            "maxAge": null,
+            "minAge": null,
+            "program": null,
+            "race": null,
+            "searchText": null,
+            "shelter": null
+          }
+        },
+        "events": {
+          "component": {
+            "onRowClick": {
+              "config": {
+                "script": "\tcurrentResidentBedLogId \u003d self.props.selection.data[0][\u0027bedLogId\u0027]\n\tsystem.perspective.sendMessage(messageType\u003d\"currentResidentSelected\", payload\u003d{\"residentId\":currentResidentBedLogId}, scope\u003d\"session\")\n\tselectedColumn \u003d self.props.selection.selectedColumn\n\tsystem.perspective.print(selectedColumn)\n\tfor item in range(len(self.props.data)):\n\t\tif item \u003d\u003d event.row:\n\t\t\tself.props.data[item].facilityId.style.classes \u003d \u0027Table/Row_Select\u0027\n\t\t\tself.props.data[item].gender.style.classes \u003d \u0027Table/Row_Select\u0027\n\t\t\tself.props.data[item].race.style.classes \u003d \u0027Table/Row_Select\u0027\n\t\t\tself.props.data[item].bedId.style.classes \u003d \u0027Table/Row_Select\u0027\n\t\t\tself.props.data[item].eventStart.style.classes \u003d \u0027Table/Row_Select\u0027\n\t\t\tself.props.data[item].associatedProgram.style.classes \u003d \u0027Table/Row_Select\u0027\n\t\t\tself.props.data[item].roomName.style.classes \u003d \u0027Table/Row_Select\u0027\n\t\t\tself.props.data[item].bedName.style.classes \u003d \u0027Table/Row_Select\u0027\n\t\t\tself.props.data[item].bedLogId.style.classes \u003d \u0027Table/Row_Select\u0027\n\t\t\tself.props.data[item].roomId.style.classes \u003d \u0027Table/Row_Select\u0027\n\t\t\tself.props.data[item].participantId.style.classes \u003d \u0027Table/Row_Select\u0027\n\t\t\tself.props.data[item].eventEnd.style.classes \u003d \u0027Table/Row_Select\u0027\n\t\t\tself.props.data[item].name.style.classes \u003d \u0027Table/Row_Select\u0027\n\t\t\tself.props.data[item].facilityName.style.classes \u003d \u0027Table/Row_Select\u0027\n\t\t\tself.props.data[item].age.style.classes \u003d \u0027Table/Row_Select\u0027\n\n\t\telse:\n\t\t\tself.props.data[item].facilityId.style.classes \u003d \u0027Table/Column_Normal\u0027\n\t\t\tself.props.data[item].gender.style.classes \u003d \u0027Table/Column_Normal\u0027\n\t\t\tself.props.data[item].race.style.classes \u003d \u0027Table/Column_Normal\u0027\n\t\t\tself.props.data[item].bedId.style.classes \u003d \u0027Table/Column_Normal\u0027\n\t\t\tself.props.data[item].eventStart.style.classes \u003d \u0027Table/Column_Normal\u0027\n\t\t\tself.props.data[item].associatedProgram.style.classes \u003d \u0027Table/Column_Normal\u0027\n\t\t\tself.props.data[item].roomName.style.classes \u003d \u0027Table/Column_Normal\u0027\n\t\t\tself.props.data[item].bedName.style.classes \u003d \u0027Table/Column_Normal\u0027\n\t\t\tself.props.data[item].bedLogId.style.classes \u003d \u0027Table/Column_Normallect\u0027\n\t\t\tself.props.data[item].roomId.style.classes \u003d \u0027Table/Column_Normal\u0027\n\t\t\tself.props.data[item].participantId.style.classes \u003d \u0027Table/Column_Normal\u0027\n\t\t\tself.props.data[item].eventEnd.style.classes \u003d \u0027Table/Column_Normal\u0027\n\t\t\tself.props.data[item].name.style.classes \u003d \u0027Table/Column_Normal\u0027\n\t\t\tself.props.data[item].facilityName.style.classes \u003d \u0027Table/Column_Normal\u0027\n\t\t\tself.props.data[item].age.style.classes \u003d \u0027Table/Column_Normal\u0027\n\n\tif selectedColumn \u003d\u003d \"facilityId\":\n\t\tparticipantID \u003d self.props.selection.data[0][\u0027participantId\u0027]\n\t\tsystem.perspective.print(\"participantID\" + str(participantID))\n\t\tid \u003d \"PreviewParticipant\" \n\t\tparams \u003d {\"participantID\":participantID}\n\t\tsystem.perspective.openDock(id\u003did,params\u003dparams)\n\t\t\n\telse:\n\t\tpass\n"
+              },
+              "scope": "G",
+              "type": "script"
+            }
+          }
+        },
+        "meta": {
+          "name": "Table"
+        },
+        "position": {
+          "basis": "100%",
+          "grow": 1,
+          "shrink": 0
+        },
+        "propConfig": {
+          "custom._devPulse": {
+            "onChange": {
+              "enabled": null,
+              "script": "\tif self.custom._isDev:\n\t\tif currentValue.value is True:\n\t\t\tpayload \u003d {}\n\t\t\t\n#\t\t\tpayload[\u0027countReferralFromTo\u0027] \u003d [1,5]\n#\t\t\tpayload[\u0027providerTypeId\u0027] \u003d [0,2]\n\t\t\tpayload[\u0027shelter\u0027] \u003d [\u0027Apartments\u0027] \n\t\t\tpayload[\u0027program\u0027] \u003d [\u0027Permanent Supportive Housing\u0027]\n\t\t\tpayload[\u0027gender\u0027] \u003d None\n\t\t\tpayload[\u0027race\u0027] \u003d None\n\t\t\tpayload[\u0027minAge\u0027] \u003d 18\n\t\t\tpayload[\u0027maxAge\u0027] \u003d 90\n\t\t\tpayload[\u0027dateRangeFrom\u0027] \u003d \u002706/01/2021\u0027 \n\t\t\tpayload[\u0027dateRangeTo\u0027] \u003d \u002706/11/2021\u0027\n\t\t\tpayload[\u0027searchText\u0027] \u003d self.custom._devTxt\n\t\t\t#payload[\u0027fetch\u0027] \u003d 12\n\t\t\t\n\t\t\tsystem.perspective.sendMessage(\u0027mhByCondition\u0027, payload \u003d payload)\n\t\t\tself.custom.jsonLastPayload \u003d system.util.jsonEncode(payload)\n\n\t\telse:\n\t\t\t#payload \u003d {}\n\t\t\t#payload[\u0027providerTypeId\u0027] \u003d [-1]\n\t\t\t#payload[\u0027searchText\u0027] \u003d self.custom._devTxt\n\t\t\t#payload[\u0027fetch\u0027] \u003d 12\n\t\t\t\n\t\t\t#system.perspective.sendMessage(\u0027mhByCondition\u0027, payload \u003d payload)\n\t\t\t#self.custom.jsonLastPayload \u003d system.util.jsonEncode(payload)\n\n\t\t\t#self.props.data \u003d [{key: \u0027\u0027 if key \u003d\u003d \u0027providerName\u0027 else None for key in self.props.data[0]}]\n\t\t\tself.props.data \u003d [{key: None for key in self.props.data[0]}]\n\t\t\tself.custom.jsonLastPayload \u003d None\n\n\n"
+            }
+          },
+          "props.filter.text": {
+            "access": "PUBLIC"
+          },
+          "props.selection.selectedRow": {
+            "onChange": {
+              "enabled": null,
+              "script": "\tself.session.custom.Selected_CurrentResident \u003d currentValue"
+            }
+          }
+        },
+        "props": {
+          "cells": {
+            "style": {
+              "classes": "Table/Cell_Dashboard_NoBG"
+            }
+          },
+          "columns": [
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "facilityId",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header"
+                },
+                "title": " "
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "view",
+              "resizable": false,
+              "sort": "none",
+              "sortable": false,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "1_TEMPLATES/Tables/TableOptions",
+              "visible": true,
+              "width": 40
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "name",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header"
+                },
+                "title": "Participant"
+              },
+              "justify": "left",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 200
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "eventStart",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header"
+                },
+                "title": "Check-in"
+              },
+              "justify": "left",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 100
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "eventEnd",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header"
+                },
+                "title": "Check-Out"
+              },
+              "justify": "left",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 120
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "gender",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header"
+                },
+                "title": "Gender"
+              },
+              "justify": "left",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 80
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "race",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header"
+                },
+                "title": "Race"
+              },
+              "justify": "left",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 150
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "age",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header"
+                },
+                "title": "Age"
+              },
+              "justify": "left",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 50
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "associatedProgram",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header"
+                },
+                "title": "Program"
+              },
+              "justify": "left",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 500
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "facilityName",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header"
+                },
+                "title": "Shelter"
+              },
+              "justify": "left",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 180
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "roomName",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header"
+                },
+                "title": "Room"
+              },
+              "justify": "left",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 140
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "bedName",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header"
+                },
+                "title": "Bed"
+              },
+              "justify": "left",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 130
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "participantId",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header"
+                },
+                "title": ""
+              },
+              "justify": "left",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": false,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": false,
+              "width": ""
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "bedLogId",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header"
+                },
+                "title": ""
+              },
+              "justify": "left",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": false,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": false,
+              "width": ""
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "roomId",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header"
+                },
+                "title": ""
+              },
+              "justify": "left",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": false,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": false,
+              "width": ""
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "bedId",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header"
+                },
+                "title": ""
+              },
+              "justify": "left",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": false,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": false,
+              "width": ""
+            }
+          ],
+          "data": [
+            {
+              "age": {
+                "style": {
+                  "classes": "Table/Row_Select"
+                },
+                "value": 35
+              },
+              "associatedProgram": {
+                "style": {
+                  "classes": "Table/Row_Select"
+                },
+                "value": "Permanent Supportive Housing"
+              },
+              "bedId": {
+                "style": {
+                  "classes": "Table/Row_Select"
+                },
+                "value": 8
+              },
+              "bedLogId": {
+                "style": {
+                  "classes": "Table/Row_Select"
+                },
+                "value": 92
+              },
+              "bedName": {
+                "style": {
+                  "classes": "Table/Row_Select"
+                },
+                "value": "Bed 1"
+              },
+              "eventEnd": {
+                "style": {
+                  "classes": "Table/Row_Select"
+                },
+                "value": ""
+              },
+              "eventStart": {
+                "style": {
+                  "classes": "Table/Row_Select"
+                },
+                "value": {
+                  "$": [
+                    "ts",
+                    192,
+                    1623833359527
+                  ],
+                  "$ts": 1618012800000
+                }
+              },
+              "facilityId": {
+                "style": {
+                  "classes": "Table/Row_Select"
+                },
+                "value": 1
+              },
+              "facilityName": {
+                "style": {
+                  "classes": "Table/Row_Select"
+                },
+                "value": "Apartments"
+              },
+              "gender": {
+                "style": {
+                  "classes": "Table/Row_Select"
+                },
+                "value": "Male"
+              },
+              "name": {
+                "style": {
+                  "classes": "Table/Row_Select",
+                  "color": "#0c4e85",
+                  "cursor": "pointer",
+                  "fontFamily": "Proxima Nova ExCn Medium",
+                  "text-align": "left"
+                },
+                "value": "Trevaughn Xaevita Hunter"
+              },
+              "participantId": {
+                "style": {
+                  "classes": "Table/Row_Select"
+                },
+                "value": 76
+              },
+              "race": {
+                "style": {
+                  "classes": "Table/Row_Select"
+                },
+                "value": "White"
+              },
+              "roomId": {
+                "style": {
+                  "classes": "Table/Row_Select"
+                },
+                "value": 4
+              },
+              "roomName": {
+                "style": {
+                  "classes": "Table/Row_Select"
+                },
+                "value": "Apartment 300"
+              }
+            },
+            {
+              "age": {
+                "style": {
+                  "classes": "Table/Column_Normal"
+                },
+                "value": 59
+              },
+              "associatedProgram": {
+                "style": {
+                  "classes": "Table/Column_Normal"
+                },
+                "value": "All Residential Programs"
+              },
+              "bedId": {
+                "style": {
+                  "classes": "Table/Column_Normal"
+                },
+                "value": 59
+              },
+              "bedLogId": {
+                "style": {
+                  "classes": "Table/Column_Normallect"
+                },
+                "value": 81
+              },
+              "bedName": {
+                "style": {
+                  "classes": "Table/Column_Normal"
+                },
+                "value": "Bed 9"
+              },
+              "eventEnd": {
+                "style": {
+                  "classes": "Table/Column_Normal"
+                },
+                "value": ""
+              },
+              "eventStart": {
+                "style": {
+                  "classes": "Table/Column_Normal"
+                },
+                "value": {
+                  "$": [
+                    "ts",
+                    192,
+                    1623833359527
+                  ],
+                  "$ts": 1615177200000
+                }
+              },
+              "facilityId": {
+                "style": {
+                  "classes": "Table/Column_Normal"
+                },
+                "value": 3
+              },
+              "facilityName": {
+                "style": {
+                  "classes": "Table/Column_Normal"
+                },
+                "value": "Hallway"
+              },
+              "gender": {
+                "style": {
+                  "classes": "Table/Column_Normal"
+                },
+                "value": "Male"
+              },
+              "name": {
+                "style": {
+                  "classes": "Table/Column_Normal",
+                  "color": "#0c4e85",
+                  "cursor": "pointer",
+                  "fontFamily": "Proxima Nova ExCn Medium",
+                  "text-align": "left"
+                },
+                "value": "Jeff Wayne Baker"
+              },
+              "participantId": {
+                "style": {
+                  "classes": "Table/Column_Normal"
+                },
+                "value": 273
+              },
+              "race": {
+                "style": {
+                  "classes": "Table/Column_Normal"
+                },
+                "value": "Client refused"
+              },
+              "roomId": {
+                "style": {
+                  "classes": "Table/Column_Normal"
+                },
+                "value": 45
+              },
+              "roomName": {
+                "style": {
+                  "classes": "Table/Column_Normal"
+                },
+                "value": "Hallway- Male"
+              }
+            },
+            {
+              "age": {
+                "style": {
+                  "classes": "Table/Column_Normal"
+                },
+                "value": 57
+              },
+              "associatedProgram": {
+                "style": {
+                  "classes": "Table/Column_Normal"
+                },
+                "value": "All Residential Programs"
+              },
+              "bedId": {
+                "style": {
+                  "classes": "Table/Column_Normal"
+                },
+                "value": 81
+              },
+              "bedLogId": {
+                "style": {
+                  "classes": "Table/Column_Normallect"
+                },
+                "value": 75
+              },
+              "bedName": {
+                "style": {
+                  "classes": "Table/Column_Normal"
+                },
+                "value": "Bed 1"
+              },
+              "eventEnd": {
+                "style": {
+                  "classes": "Table/Column_Normal"
+                },
+                "value": ""
+              },
+              "eventStart": {
+                "style": {
+                  "classes": "Table/Column_Normal"
+                },
+                "value": {
+                  "$": [
+                    "ts",
+                    192,
+                    1623833359527
+                  ],
+                  "$ts": 1614902400000
+                }
+              },
+              "facilityId": {
+                "style": {
+                  "classes": "Table/Column_Normal"
+                },
+                "value": 3
+              },
+              "facilityName": {
+                "style": {
+                  "classes": "Table/Column_Normal"
+                },
+                "value": "Hallway"
+              },
+              "gender": {
+                "style": {
+                  "classes": "Table/Column_Normal"
+                },
+                "value": "Female"
+              },
+              "name": {
+                "style": {
+                  "classes": "Table/Column_Normal",
+                  "color": "#0c4e85",
+                  "cursor": "pointer",
+                  "fontFamily": "Proxima Nova ExCn Medium",
+                  "text-align": "left"
+                },
+                "value": "Black Widow  (None)"
+              },
+              "participantId": {
+                "style": {
+                  "classes": "Table/Column_Normal"
+                },
+                "value": 3206
+              },
+              "race": {
+                "style": {
+                  "classes": "Table/Column_Normal"
+                },
+                "value": "White"
+              },
+              "roomId": {
+                "style": {
+                  "classes": "Table/Column_Normal"
+                },
+                "value": 46
+              },
+              "roomName": {
+                "style": {
+                  "classes": "Table/Column_Normal"
+                },
+                "value": "Hallway-Female"
+              }
+            },
+            {
+              "age": {
+                "style": {
+                  "classes": "Table/Column_Normal"
+                },
+                "value": 62
+              },
+              "associatedProgram": {
+                "style": {
+                  "classes": "Table/Column_Normal"
+                },
+                "value": "All Residential Programs"
+              },
+              "bedId": {
+                "style": {
+                  "classes": "Table/Column_Normal"
+                },
+                "value": 87
+              },
+              "bedLogId": {
+                "style": {
+                  "classes": "Table/Column_Normallect"
+                },
+                "value": 74
+              },
+              "bedName": {
+                "style": {
+                  "classes": "Table/Column_Normal"
+                },
+                "value": "Bed 3"
+              },
+              "eventEnd": {
+                "style": {
+                  "classes": "Table/Column_Normal"
+                },
+                "value": ""
+              },
+              "eventStart": {
+                "style": {
+                  "classes": "Table/Column_Normal"
+                },
+                "value": {
+                  "$": [
+                    "ts",
+                    192,
+                    1623833359527
+                  ],
+                  "$ts": 1614939540000
+                }
+              },
+              "facilityId": {
+                "style": {
+                  "classes": "Table/Column_Normal"
+                },
+                "value": 4
+              },
+              "facilityName": {
+                "style": {
+                  "classes": "Table/Column_Normal"
+                },
+                "value": "Next Steps Dorm"
+              },
+              "gender": {
+                "style": {
+                  "classes": "Table/Column_Normal"
+                },
+                "value": "Male"
+              },
+              "name": {
+                "style": {
+                  "classes": "Table/Column_Normal",
+                  "color": "#0c4e85",
+                  "cursor": "pointer",
+                  "fontFamily": "Proxima Nova ExCn Medium",
+                  "text-align": "left"
+                },
+                "value": "Magic  Johnson"
+              },
+              "participantId": {
+                "style": {
+                  "classes": "Table/Column_Normal"
+                },
+                "value": 4733
+              },
+              "race": {
+                "style": {
+                  "classes": "Table/Column_Normal"
+                },
+                "value": "Black or African American"
+              },
+              "roomId": {
+                "style": {
+                  "classes": "Table/Column_Normal"
+                },
+                "value": 47
+              },
+              "roomName": {
+                "style": {
+                  "classes": "Table/Column_Normal"
+                },
+                "value": "Next Steps Dorm"
+              }
+            },
+            {
+              "age": {
+                "style": {
+                  "classes": "Table/Column_Normal"
+                },
+                "value": 67
+              },
+              "associatedProgram": {
+                "style": {
+                  "classes": "Table/Column_Normal"
+                },
+                "value": "All Residential Programs"
+              },
+              "bedId": {
+                "style": {
+                  "classes": "Table/Column_Normal"
+                },
+                "value": 90
+              },
+              "bedLogId": {
+                "style": {
+                  "classes": "Table/Column_Normallect"
+                },
+                "value": 87
+              },
+              "bedName": {
+                "style": {
+                  "classes": "Table/Column_Normal"
+                },
+                "value": "Bed 6"
+              },
+              "eventEnd": {
+                "style": {
+                  "classes": "Table/Column_Normal"
+                },
+                "value": ""
+              },
+              "eventStart": {
+                "style": {
+                  "classes": "Table/Column_Normal"
+                },
+                "value": {
+                  "$": [
+                    "ts",
+                    192,
+                    1623833359527
+                  ],
+                  "$ts": 1616516940000
+                }
+              },
+              "facilityId": {
+                "style": {
+                  "classes": "Table/Column_Normal"
+                },
+                "value": 4
+              },
+              "facilityName": {
+                "style": {
+                  "classes": "Table/Column_Normal"
+                },
+                "value": "Next Steps Dorm"
+              },
+              "gender": {
+                "style": {
+                  "classes": "Table/Column_Normal"
+                },
+                "value": "Male"
+              },
+              "name": {
+                "style": {
+                  "classes": "Table/Column_Normal",
+                  "color": "#0c4e85",
+                  "cursor": "pointer",
+                  "fontFamily": "Proxima Nova ExCn Medium",
+                  "text-align": "left"
+                },
+                "value": "William Fred Washington"
+              },
+              "participantId": {
+                "style": {
+                  "classes": "Table/Column_Normal"
+                },
+                "value": 462
+              },
+              "race": {
+                "style": {
+                  "classes": "Table/Column_Normal"
+                },
+                "value": "Data not collected"
+              },
+              "roomId": {
+                "style": {
+                  "classes": "Table/Column_Normal"
+                },
+                "value": 47
+              },
+              "roomName": {
+                "style": {
+                  "classes": "Table/Column_Normal"
+                },
+                "value": "Next Steps Dorm"
+              }
+            },
+            {
+              "age": {
+                "style": {
+                  "classes": "Table/Column_Normal"
+                },
+                "value": 40
+              },
+              "associatedProgram": {
+                "style": {
+                  "classes": "Table/Column_Normal"
+                },
+                "value": "All Residential Programs"
+              },
+              "bedId": {
+                "style": {
+                  "classes": "Table/Column_Normal"
+                },
+                "value": 99
+              },
+              "bedLogId": {
+                "style": {
+                  "classes": "Table/Column_Normallect"
+                },
+                "value": 89
+              },
+              "bedName": {
+                "style": {
+                  "classes": "Table/Column_Normal"
+                },
+                "value": "Top Bunk 13"
+              },
+              "eventEnd": {
+                "style": {
+                  "classes": "Table/Column_Normal"
+                },
+                "value": ""
+              },
+              "eventStart": {
+                "style": {
+                  "classes": "Table/Column_Normal"
+                },
+                "value": {
+                  "$": [
+                    "ts",
+                    192,
+                    1623833359527
+                  ],
+                  "$ts": 1617021660000
+                }
+              },
+              "facilityId": {
+                "style": {
+                  "classes": "Table/Column_Normal"
+                },
+                "value": 4
+              },
+              "facilityName": {
+                "style": {
+                  "classes": "Table/Column_Normal"
+                },
+                "value": "Next Steps Dorm"
+              },
+              "gender": {
+                "style": {
+                  "classes": "Table/Column_Normal"
+                },
+                "value": "Male"
+              },
+              "name": {
+                "style": {
+                  "classes": "Table/Column_Normal",
+                  "color": "#0c4e85",
+                  "cursor": "pointer",
+                  "fontFamily": "Proxima Nova ExCn Medium",
+                  "text-align": "left"
+                },
+                "value": "Chris Edward McLaughlin"
+              },
+              "participantId": {
+                "style": {
+                  "classes": "Table/Column_Normal"
+                },
+                "value": 4676
+              },
+              "race": {
+                "style": {
+                  "classes": "Table/Column_Normal"
+                },
+                "value": "White"
+              },
+              "roomId": {
+                "style": {
+                  "classes": "Table/Column_Normal"
+                },
+                "value": 47
+              },
+              "roomName": {
+                "style": {
+                  "classes": "Table/Column_Normal"
+                },
+                "value": "Next Steps Dorm"
+              }
+            },
+            {
+              "age": {
+                "style": {
+                  "classes": "Table/Column_Normal"
+                },
+                "value": 53
+              },
+              "associatedProgram": {
+                "style": {
+                  "classes": "Table/Column_Normal"
+                },
+                "value": "All Residential Programs"
+              },
+              "bedId": {
+                "style": {
+                  "classes": "Table/Column_Normal"
+                },
+                "value": 106
+              },
+              "bedLogId": {
+                "style": {
+                  "classes": "Table/Column_Normallect"
+                },
+                "value": 77
+              },
+              "bedName": {
+                "style": {
+                  "classes": "Table/Column_Normal"
+                },
+                "value": "Bed 2"
+              },
+              "eventEnd": {
+                "style": {
+                  "classes": "Table/Column_Normal"
+                },
+                "value": ""
+              },
+              "eventStart": {
+                "style": {
+                  "classes": "Table/Column_Normal"
+                },
+                "value": {
+                  "$": [
+                    "ts",
+                    192,
+                    1623833359527
+                  ],
+                  "$ts": 1615618020000
+                }
+              },
+              "facilityId": {
+                "style": {
+                  "classes": "Table/Column_Normal"
+                },
+                "value": 6
+              },
+              "facilityName": {
+                "style": {
+                  "classes": "Table/Column_Normal"
+                },
+                "value": "Respite Dorm (Men)"
+              },
+              "gender": {
+                "style": {
+                  "classes": "Table/Column_Normal"
+                },
+                "value": "Male"
+              },
+              "name": {
+                "style": {
+                  "classes": "Table/Column_Normal",
+                  "color": "#0c4e85",
+                  "cursor": "pointer",
+                  "fontFamily": "Proxima Nova ExCn Medium",
+                  "text-align": "left"
+                },
+                "value": "Michael Eric Zimmerman"
+              },
+              "participantId": {
+                "style": {
+                  "classes": "Table/Column_Normal"
+                },
+                "value": 519
+              },
+              "race": {
+                "style": {
+                  "classes": "Table/Column_Normal"
+                },
+                "value": "White"
+              },
+              "roomId": {
+                "style": {
+                  "classes": "Table/Column_Normal"
+                },
+                "value": 49
+              },
+              "roomName": {
+                "style": {
+                  "classes": "Table/Column_Normal"
+                },
+                "value": "Men\u0027s Respite Dorm"
+              }
+            },
+            {
+              "age": {
+                "style": {
+                  "classes": "Table/Column_Normal"
+                },
+                "value": 38
+              },
+              "associatedProgram": {
+                "style": {
+                  "classes": "Table/Column_Normal"
+                },
+                "value": "All Residential Programs"
+              },
+              "bedId": {
+                "style": {
+                  "classes": "Table/Column_Normal"
+                },
+                "value": 124
+              },
+              "bedLogId": {
+                "style": {
+                  "classes": "Table/Column_Normallect"
+                },
+                "value": 68
+              },
+              "bedName": {
+                "style": {
+                  "classes": "Table/Column_Normal"
+                },
+                "value": "Bed 2"
+              },
+              "eventEnd": {
+                "style": {
+                  "classes": "Table/Column_Normal"
+                },
+                "value": ""
+              },
+              "eventStart": {
+                "style": {
+                  "classes": "Table/Column_Normal"
+                },
+                "value": {
+                  "$": [
+                    "ts",
+                    192,
+                    1623833359528
+                  ],
+                  "$ts": 1613890080000
+                }
+              },
+              "facilityId": {
+                "style": {
+                  "classes": "Table/Column_Normal"
+                },
+                "value": 7
+              },
+              "facilityName": {
+                "style": {
+                  "classes": "Table/Column_Normal"
+                },
+                "value": "Respite Dorm (Women)"
+              },
+              "gender": {
+                "style": {
+                  "classes": "Table/Column_Normal"
+                },
+                "value": "Female"
+              },
+              "name": {
+                "style": {
+                  "classes": "Table/Column_Normal",
+                  "color": "#0c4e85",
+                  "cursor": "pointer",
+                  "fontFamily": "Proxima Nova ExCn Medium",
+                  "text-align": "left"
+                },
+                "value": "Tamika R Bender"
+              },
+              "participantId": {
+                "style": {
+                  "classes": "Table/Column_Normal"
+                },
+                "value": 1882
+              },
+              "race": {
+                "style": {
+                  "classes": "Table/Column_Normal"
+                },
+                "value": "Data not collected"
+              },
+              "roomId": {
+                "style": {
+                  "classes": "Table/Column_Normal"
+                },
+                "value": 50
+              },
+              "roomName": {
+                "style": {
+                  "classes": "Table/Column_Normal"
+                },
+                "value": "Women\u0027s Respite Dorm"
+              }
+            }
+          ],
+          "pager": {
+            "initialOption": 100
+          },
+          "rows": {
+            "highlight": {
+              "color": "#ccffff"
+            },
+            "striped": {
+              "enabled": false
+            }
+          },
+          "selection": {
+            "data": [
+              {
+                "age": 35,
+                "associatedProgram": "Permanent Supportive Housing",
+                "bedId": 8,
+                "bedLogId": 92,
+                "bedName": "Bed 1",
+                "eventEnd": "",
+                "eventStart": "Sat Apr 10 2021 05:30:00 GMT+0530 (India Standard Time)",
+                "facilityId": 1,
+                "facilityName": "Apartments",
+                "gender": "Male",
+                "name": "Trevaughn Xaevita Hunter",
+                "participantId": 76,
+                "race": "White",
+                "roomId": 4,
+                "roomName": "Apartment 300"
+              }
+            ],
+            "selectedColumn": "facilityId",
+            "selectedRow": -1,
+            "style": {
+              "backgroundColor": "#9af4eb4d"
+            }
+          },
+          "style": {
+            "classes": "Background/Default",
+            "overflowX": "hidden"
+          }
+        },
+        "scripts": {
+          "customMethods": [
+            {
+              "name": "getDataDb",
+              "params": [
+                "payload"
+              ],
+              "script": "\timport extend.query\n\t\n\tdeclaration, queryCte, query, orderBy, fetchOffset \u003d self.getQuery()\n\n\targs \u003d []\t\n\n\t###############################################\n\t# This param must be java.util.Date or None. Not allowed empty string \u0027\u0027\n\tdateRangeFrom\u003d payload.get(\u0027dateRangeFrom\u0027)\n\targs +\u003d [dateRangeFrom]\n\n\t################################################\n\t# This param must be java.util.Date or None. Not allowed empty string \u0027\u0027\n\tdateRangeTo\u003d payload.get(\u0027dateRangeTo\u0027)\n\tdateRangeTo \u003d dateRangeTo + \" 23:59:59\"\n\targs +\u003d [dateRangeTo]\n\t\n\t###############################################\n\t# This param must be int or None. Not allowed empty string \u0027\u0027\n\tminAge\u003d payload.get(\u0027minAge\u0027)\n\targs +\u003d [minAge]\n\t\n\t###############################################\n\t# This param must be int or None. Not allowed empty string \u0027\u0027\n\tmaxAge\u003d payload.get(\u0027maxAge\u0027)\n\targs +\u003d [maxAge]\n\t\n\t###############################################\n\t# This param must be STRING or None. Not allowed empty string \u0027\u0027\n\tgender\u003d payload.get(\u0027gender\u0027)\n\targs +\u003d [gender]\n\n\t###############################################\n\t# This param must be STRING or None. Not allowed empty string \u0027\u0027\n\trace\u003d payload.get(\u0027race\u0027)\n\targs +\u003d [race]\n\t\n\t###############################################\n\tsearch_text \u003d payload.get(\u0027searchText\u0027)\n\t\n\tif search_text is None:\n\t\tsearch_text \u003d \u0027\u0027\n\t\n\targs +\u003d [search_text]\n\t\n\t################################################\n\t# shelterNames should be list [\u0027val1\u0027,\u0027val2\u0027]. If it is None whereInFix will be always true: 1 \u003d 1. \n\t# If it is single value will be [val]. \n\tshelterNames \u003d payload.get(\u0027shelter\u0027)\n\t\n\twhereIn \u003d \u0027TableJoin.[facilityName] in (*?)\u0027 # [0,2]   return: \u0027cteProvider.[providerTypeId] in (?,?)\u0027 , [0,2] \n\t#whereInFix, providerTypeIdsFix \u003d self.getWhereInParamFix(whereIn, providerTypeIds) \n\twhereInFix, shelterNamesFix \u003d extend.query.getWhereInParamFix(whereIn, shelterNames)\n\t\n\t#ystem.perspective.print((\u0027whereIn, whereInFix:\u0027,whereIn, whereInFix,providerTypeIds,providerTypeIdsFix))\n\t\n\tquery \u003d query.replace(whereIn, whereInFix)\n\targs +\u003d shelterNamesFix\n\n\t###############################################\n\t# programNames should be list [\u0027val1\u0027,\u0027val2\u0027]. If it is None whereInFix will be always true: 1 \u003d 1. \n\t# If it is single value will be [val]. \n\tprogramNames \u003d payload.get(\u0027program\u0027)\n\t\n\twhereIn \u003d \u0027TableJoin.[associatedProgram] in (*?)\u0027 # [0,2]   return: \u0027cteProvider.[providerTypeId] in (?,?)\u0027 , [0,2] \n\t#whereInFix, providerTypeIdsFix \u003d self.getWhereInParamFix(whereIn, providerTypeIds) \n\twhereInFix, programNamesFix \u003d extend.query.getWhereInParamFix(whereIn, programNames)\n\t\n\t#ystem.perspective.print((\u0027whereIn, whereInFix:\u0027,whereIn, whereInFix,providerTypeIds,providerTypeIdsFix))\n\t\n\tquery \u003d query.replace(whereIn, whereInFix)\n\targs +\u003d programNamesFix\n\t\n\t################################################\n\toffset \u003d payload.get(\u0027offset\u0027)\n\tfetch \u003d payload.get(\u0027fetch\u0027)\n\tif offset is not None and fetch is not None:\n\t\t#counterQuery \u003d \u0027{}; WITH cte AS ({}) SELECT COUNT(1) cnt FROM cte\u0027.format(declaration, query)\n\t\t# declaration, queryCte, query, orderBy, fetchOffset\n\t\tcounterQuery \u003d \u0027{} {} ,cte AS ({}) SELECT COUNT(1) cnt FROM cte\u0027.format(declaration, queryCte, query)\n\t\tresultRowCount \u003d system.db.runScalarPrepQuery(counterQuery, args, \u0027RITIOps\u0027)\n\t\targs +\u003d [offset]\n\t\targs +\u003d [fetch]\t\n\t\n\t\tquery \u003d \u0027{} {} {} {} {}\u0027.format(declaration, queryCte, query, orderBy, fetchOffset)\n#\t\tsystem.perspective.print(query)\n\t\tresult \u003d system.db.runPrepQuery(query, args, \u0027RITIOps\u0027)\n\t\n\telse:\n\t\tquery \u003d \u0027{} {} {} {}\u0027.format(declaration, queryCte, query, orderBy)\n#\t\tsystem.perspective.print(query)\n\t\tresult \u003d system.db.runPrepQuery(query, args, \u0027RITIOps\u0027)\t\n\t\tresultRowCount \u003d result.rowCount\n\t\n\tsystem.perspective.print((\u0027Exec: args\u0027,args)) \n\n\treturn result, resultRowCount\n"
+            },
+            {
+              "name": "getPropsColumns",
+              "params": [
+                "dataset"
+              ],
+              "script": "\tjsonDefaultColumn \u003d \"\"\"\n  {\n\t    \"field\": \"\",\n\t    \"visible\": true,\n\t    \"editable\": false,\n\t    \"render\": \"auto\",\n\t    \"justify\": \"left\",\n\t    \"align\": \"center\",\n\t    \"resizable\": true,\n\t    \"sortable\": true,\n\t    \"sort\": \"none\",\n\t    \"viewPath\": \"\",\n\t    \"viewParams\": {},\n\t    \"boolean\": \"checkbox\",\n\t    \"number\": \"value\",\n\t    \"progressBar\": {\n\t      \"max\": 100,\n\t      \"bar\": {\n\t        \"color\": \"#62A3F6\",\n\t        \"linecap\": \"round\",\n\t        \"width\": 5\n\t      },\n\t      \"track\": {\n\t        \"color\": \"#DADADA\",\n\t        \"linecap\": \"round\",\n\t        \"width\": 2\n\t      },\n\t      \"value\": {\n\t        \"color\": \"#7D7D7D\",\n\t        \"show\": true\n\t      }\n\t    },\n\t    \"toggleSwitch\": {\n\t      \"color\": {\n\t        \"selected\": \"#2196F3\",\n\t        \"unselected\": \"#FFFFFF\"\n\t      }\n\t    },\n\t    \"numberFormat\": \"0,0.##\",\n\t    \"dateFormat\": \"MM/DD/YYYY\",\n\t    \"width\": \"\",\n\t    \"strictWidth\": false,\n\t    \"header\": {\n\t      \"title\": \"\",\n\t      \"justify\": \"left\",\n\t      \"align\": \"center\",\n\t      \"style\": {\n\t        \"classes\": \"Table/Column_Header\"\n\t      }\n\t    },\n\t    \"footer\": {\n\t      \"title\": \"\",\n\t      \"justify\": \"left\",\n\t      \"align\": \"center\",\n\t      \"style\": {\n\t        \"classes\": \"\"\n\t      }\n\t    },\n\t    \"style\": {\n\t      \"classes\": \"Table/Column_Normal\"\n\t    }\n\t  },\t\n\t\"\"\"\n\n\tcolumnsForced \u003d [\n\t  \n\t  {\n\t    \"field\": \"bedLogId\",\n\t    \"width\": \u0027\u0027,\n\t    \"title\": \"\"\n\t  },\n\t  {\n\t    \"field\": \"name\",\n\t    \"width\": 210,\n\t    \"title\": \"Participant\"\n\t  },\n\t  {\n\t    \"field\": \"eventStart\",\n\t    \"width\": 110,\n\t    \"title\": \"Check-in\"\n\t  },\t  \n\t  {\n\t    \"field\": \"eventEnd\",\n\t    \"width\": 130,\n\t    \"title\": \"Check-Out\"\n\t  },\n\t  {\n\t    \"field\": \"gender\",\n\t    \"width\": 100,\n\t    \"title\": \"Gender\"\n\t  },\n\t  {\n\t    \"field\": \"race\",\n\t    \"width\": 160,\n\t    \"title\": \"Race\"\n\t  },\n\t  {\n\t    \"field\": \"age\",\n\t    \"width\": 80,\n\t    \"title\": \"Age\"\n\t  },\n\t  {\n\t    \"field\": \"associatedProgram\",\n\t    \"width\": 300,\n\t    \"title\": \"Program\"\n\t  },\n\t  {\n\t    \"field\": \"facilityName\",\n\t    \"width\": 200,\n\t    \"title\": \"Shelter\"\n\t  },\n\t  {\n\t\t\"field\": \"roomName\",\n\t\t\"width\": 170,\n\t\t\"title\": \"Room\"\n\t  },\n\t  {\n\t\t\"field\": \"roomId\",\n\t\t\"width\": \u0027\u0027,\n\t\t\"title\": \"\"\n\t  },\n\t  {\n\t\t\"field\": \"bedName\",\n\t\t\"width\": 150,\n\t\t\"title\": \"Bed\"\n\t  },\n\t  {\n\t\t\"field\": \"facilityId\",\n\t\t\"width\": 40,\n\t\t\"title\": \"\"\n\t  },\n\t  {\n\t\t\"field\": \"bedId\",\n\t\t\"width\": \u0027\u0027,\n\t\t\"title\": \"\"\n\t  },\n\t  {\n\t\t\"field\": \"participantId\",\n\t\t\"width\": \u0027\u0027,\n\t\t\"title\": \"\"\n\t  }\n\t]\n\n\tcolNames \u003d system.dataset.getColumnHeaders(dataset)\n\tsystem.perspective.print(colNames)\n\t_columns \u003d []\n\tfor col in colNames:\n\t\t# This conversion json_\u003edict create actually deepcopy\n\t\tpyColumn \u003d system.util.jsonDecode(jsonDefaultColumn)\n\t\t\n\t\t# Note: Field must contain only letters and numbers.\n\t\tpyColumn[\u0027field\u0027] \u003d col\n\t\t\n\t\t_dictCol \u003d None\n\t\tfor item in columnsForced:\n\t\t\tif item[\u0027field\u0027] \u003d\u003d pyColumn[\u0027field\u0027]:\n\t\t\t\t_dictCol \u003d item.copy() \n\t\t\t\n\t\t\n\t\t#ystem.perspective.print((_dictCol))\n\t\t\n\t\tpyColumn[\u0027header\u0027][\u0027title\u0027] \u003d _dictCol[\u0027title\u0027] if _dictCol else \u0027\u0027\n\t\t\n\t\tif _dictCol and _dictCol.get(\u0027width\u0027):\n\t\t\tpyColumn[\u0027width\u0027] \u003d _dictCol[\u0027width\u0027]\n\t\t\tpyColumn[\u0027strictWidth\u0027] \u003d True\n\n\t\tif col \u003d\u003d \u0027facilityId\u0027:\n\t\t\tpyColumn[\u0027header\u0027][\u0027title\u0027] \u003d \u0027 \u0027\n\t\t\tpyColumn[\"render\"] \u003d \"view\"\n\t\t\tpyColumn[\"justify\"] \u003d \"center\"\n\t\t\tpyColumn[\"resizable\"] \u003d False\n\t\t\tpyColumn[\"sortable\"] \u003d False\n\t\t\tpyColumn[\"viewPath\"] \u003d \"1_TEMPLATES/Tables/TableOptions\"\t\n\t\t\n\t\tif col \u003d\u003d \u0027participantId\u0027 or col \u003d\u003d \u0027bedId\u0027 or col \u003d\u003d \u0027roomId\u0027 or col \u003d\u003d \u0027bedLogId\u0027 or col \u003d\u003d \u0027race\u0027:\n\t\t\tpyColumn[\"visible\"] \u003d False\n\t\t\tpyColumn[\"editable\"] \u003d False\n\t\t\n\t\tif col \u003d\u003d \u0027bedName\u0027:\n\t\t\tpyColumn[\u0027strictWidth\u0027] \u003d False\n\t\t\n\t\t\t\t\t\n\t\t_columns.append(pyColumn)\n\t\n\t#ystem.perspective.print((\"_columns: \",_columns))\n\t\n\treturn _columns"
+            },
+            {
+              "name": "correctTimeForClient",
+              "params": [
+                "pyds",
+                "columnsToCorrect"
+              ],
+              "script": "\t\n\t# !!!!!!!!!!!  NOT TESTED !!!!!!!!!!!!!!!!!!!!!!!\n\t\n\t# Table automaticaly change datetime according to client timezone, \n\t# For this table we don\u0027t need automatic conversion, we must recorrect datetimes, according client timezone.\n\t# Actually to see same values like in db.\n\t\n\t# This is correction client against ignition server\n\t# TODO add correction to SQL server\n\tcorrectionTime \u003d int(60*(system.date.getTimezoneOffset() - self.session.props.device.timezone.utcOffset)) \n\t\n\tlistDateFix \u003d [[]*len(columnsToCorrect)]\n\tfor rowIndex, row in enumerate(pyds):\n\t\tfor colIndex, col in enumerate(columnsToCorrect):\n\t\t\tlistDateFix[colIndex].append(system.date.addMinutes(row[col], correctionTime))\n\t\n\n\tfor index, item in enumerate(listDateFix):\n\t\tcolNames \u003d system.dataset.getColumnHeaders(pyds)\n\t\tcolPosition \u003d colNames.index(columnsToCorrect[index])\n\t\tpyds \u003d system.dataset.filterColumns(pyds, [ x for x in colNames if x !\u003d columnsToCorrect[index]])\n\t\tpyds \u003d system.dataset.addColumn(pyds,colPosition,item,columnsToCorrect[index])\n\t\n\treturn pyds\n"
+            },
+            {
+              "name": "setMisc",
+              "params": [],
+              "script": "\t\n\tself.props.cells.style\u003d {\n\t    \"classes\": \"Table/Cell_Dashboard\"\n\t}\n\t\n\tself.props.style \u003d {\n\t  \"classes\": \"Background/Default\",\n\t  \"overflowX\": \"hidden\"\n\t}\n"
+            },
+            {
+              "name": "doByCondition",
+              "params": [
+                "payload"
+              ],
+              "script": "\timport java.lang\n\n\t# 1. Add fetch to payload if not exist. We can send from pager or use value self.view.params.fetch.\n\t# This should be step before offset\n\tfetch \u003d payload.get(\u0027fetch\u0027)\n\t\n\tif not(fetch):\n\t\tfetch \u003d self.view.params.fetch\n\t\n\t# If fetch value is integer greater then 0, pager exist\n\tif fetch and fetch \u003e 1:\n\t\tpayload[\u0027fetch\u0027] \u003d fetch\n\n\t\t#  2. If payload has \u0027offset\u0027, it means that comming from pager. Then take lastPayload \n\t\t# stored as json string, deserialize to python dict and  add node\u0027 offset\u0027\n\t\t# Else means payload is comming from conditions. Don\u0027t do anything just continue\n\t\tif payload.get(\u0027offset\u0027) is not None:\n\t\t\toffset \u003d payload[\u0027offset\u0027]\n\t\t\tpayload \u003d {}\n\t\t\tfor key in self.custom.lastPayload:\n\t\t\t\tpayload[key] \u003d self.custom.lastPayload[key]\n\t\t\t\n\t\t\t\n\t\t\tpayload[\u0027offset\u0027] \u003d offset\n\t\t\tpayload[\u0027fetch\u0027] \u003d fetch\n\t\telse:\n\t\t\tpayload[\u0027offset\u0027] \u003d 0\n\t\n\t# 3. Get data from DB. Data is dataset which contain only fetch number of rows. \n\t# _resultRowCount is scalar value which represent number of rows in case the that query is executed without  OFFSET ... FETCH...\n\t_data, _resultRowCount \u003d self.getDataDb(payload)\n\t\n\tself.view.params.resultRowCount \u003d _resultRowCount\n\n\t# 4. Set some misc props if necessary (explicit)\n\tself.setMisc()\n\n\t# 5. Step get columns props (explicit adjustment)\n\tself.props.columns \u003d self.getPropsColumns(_data)\n\n\t# 6. Correct values in datetime column according client timezone. (check comments inside function)\n\t#_data \u003d self.correctTimeForClient(_data, [\u0027dob\u0027])\n\n\t# 7. Send message to Kpis This is not needed for current residents\n\t#self.sendMessageToKpis(_data)\n\n\t# 8. Add dummy empty raw if result is empty dataset. Reason to do that is to avoid loosing focus on search cell in filters.\n\t_colNames \u003d system.dataset.getColumnHeaders(_data)\n\t\n\tif _data.rowCount \u003d\u003d 0:\n\t\t_lstData \u003d [{col: None for col in _colNames}]\n\telse:\n\t\t_pyds \u003d system.dataset.toPyDataSet(_data)\n\t\t_lstData \u003d [{col: row[col] for col in _colNames} for row in _pyds]\n\n\t#ystem.perspective.print((\u0027_lstData: \u0027,_lstData))\n\t\n\t_makeUped \u003d self.getMakeUpData(_lstData)\n\n\tself.props.data \u003d _makeUped\n\t\n\tself.custom.jsonLastPayload \u003d system.util.jsonEncode(payload)\n\t\n\t# Remove fetch and offset, it is not necessary to store.\n\tpayload.pop(\u0027offset\u0027,None)\n\tpayload.pop(\u0027fetch\u0027,None)\n\tself.custom.lastPayload \u003d payload\n\t\n\t\n\t\n\n\n"
+            },
+            {
+              "name": "getQuery",
+              "params": [],
+              "script": "\tdeclaration \u003d \t\"\"\"\nDECLARE \n\t @dateRangeFrom datetime \u003d ?\n\t,@dateRangeTo datetime \u003d ?\n\t,@minAge INT \u003d ?\n\t,@maxAge INT \u003d ?\n\t,@gender NVARCHAR(max) \u003d ?\n\t,@race NVARCHAR(max) \u003d ?\n\t,@search_text NVARCHAR(max) \u003d ?\n\t\"\"\"\n\t\n\tqueryCte \u003d \"\"\"\n;WITH TableResidents as (SELECT f.id as facilityId, f.facilityName, f.allResidential as allResidential, concat (p.firstName , \u0027 \u0027, p.middleName , \u0027 \u0027 , p.lastName) as name, bl.eventStart, bl.eventEnd,\nb.bedName, bl.participantId, bl.id as bedLogId, r.id as roomId, r.roomName, b.id as bedId, p.gender, p.race, datediff(year, BirthDate, getdate())  as age\nfrom\nlodging.BedLog bl, lodging.Bed b, lodging.Room r, lodging.Facility f, participant.Dashboard p\nwhere f.timeRetired is null \nand bl.bedId \u003d b.id \nand b.roomId \u003d r.id and r.facilityId \u003d f.id and bl.participantId \u003d p.id\nand (((bl.eventStart \u003e\u003d @dateRangeFrom and bl.eventStart \u003c\u003d @dateRangeTo) or (bl.eventEnd \u003e\u003d @dateRangeFrom and bl.eventEnd \u003c\u003d @dateRangeTo)) or ((bl.eventEnd is null or bl.eventEnd \u003d \u0027\u0027) and bl.eventStart \u003c\u003d @dateRangeTo))\n) ,\nTableAssociatedPrograms as (SELECT a.facilityId, STRING_AGG(b.ProgramName, \u0027, \u0027) AS AssociatedPrograms\nFROM (SELECT distinct facilityId, associatedProgramId FROM lodging.FacilityAssociatedPrograms WHERE timeRetired is null) a LEFT JOIN interaction.Program b\nON a.associatedProgramId \u003d b.id\nGROUP BY a.facilityId\n),\nTableJoin as (\nselect [TableResidents].facilityId, \n\t[TableResidents].name, \n\t[TableResidents].eventStart, \n\t[TableResidents].eventEnd,\n\t[TableResidents].gender, \n\t[TableResidents].race,\n\t[TableResidents].age,\n\tcase when [TableResidents].allResidential \u003d 0 \n\tthen \n\tCOALESCE([TableAssociatedPrograms].AssociatedPrograms, \u0027\u0027) \n\telse \u0027All Residential Programs\u0027\n\tend as associatedProgram,\n\t[TableResidents].facilityName, \n\t[TableResidents].roomName,\n\t[TableResidents].bedName, \n\t[TableResidents].participantId, \n\t[TableResidents].bedLogId, \n\t[TableResidents].roomId,  \n\t[TableResidents].bedId\n\tfrom [TableResidents]\n\tJOIN\n\t[TableAssociatedPrograms] ON [TableAssociatedPrograms].facilityId \u003d [TableResidents].facilityId\n\t)\n\"\"\"\n\n#REMOVED AND [cteProvider].[countReferral] \u003e 0 \n\tquery \u003d \"\"\"\n\tselect [TableJoin].facilityId, \n\t[TableJoin].name, \n\t[TableJoin].eventStart, \n\t[TableJoin].eventEnd,\n\t[TableJoin].gender, \n\t[TableJoin].race, \n\t[TableJoin].age,\n\t[TableJoin].associatedProgram,\n\t[TableJoin].facilityName,\n\t[TableJoin].roomName,\n\t[TableJoin].bedName, \n\t[TableJoin].participantId, \n\t[TableJoin].bedLogId, \n\t[TableJoin].roomId,  \n\t[TableJoin].bedId \n\tfrom [TableJoin]\n\tWHERE (1\u003d1) \n\tAND TableJoin.[facilityName] in (*?)\n\tAND TableJoin.[associatedProgram] in (*?)\n\tAND ( TableJoin.[gender] \u003d @gender OR @gender IS NULL)\n\tAND ( TableJoin.[race] \u003d @race OR @race IS NULL)\n\tAND ( TableJoin.[age] \u003e\u003d @minAge OR @minAge IS NULL)\n\tAND ( TableJoin.[age] \u003c\u003d @maxAge OR @maxAge IS NULL)\nAND (\n\t@search_text \u003d \u0027\u0027 \n\tOR [TableJoin].[name] LIKE CONCAT(\u0027%\u0027,@search_text,\u0027%\u0027) \n\tOR [TableJoin].[facilityName] LIKE CONCAT(\u0027%\u0027,@search_text,\u0027%\u0027) \n\tOR CAST([TableJoin].[age] AS VARCHAR(20))  LIKE CONCAT(\u0027%\u0027,@search_text,\u0027%\u0027) \n\tOR CONVERT(VARCHAR(10),[TableJoin].[eventStart],101) LIKE CONCAT(\u0027%\u0027,@search_text,\u0027%\u0027) \n\tOR CONVERT(VARCHAR(10),[TableJoin].[eventEnd],101) LIKE CONCAT(\u0027%\u0027,@search_text,\u0027%\u0027)\n\tOR [TableJoin].[associatedProgram] LIKE CONCAT(\u0027%\u0027,@search_text,\u0027%\u0027)\n\tOR [TableJoin].[roomName] LIKE CONCAT(\u0027%\u0027,@search_text,\u0027%\u0027)\n\tOR [TableJoin].[bedName] LIKE CONCAT(\u0027%\u0027,@search_text,\u0027%\u0027)\n\tOR [TableJoin].[race] LIKE CONCAT(\u0027%\u0027,@search_text,\u0027%\u0027)\n\tOR [TableJoin].[gender] LIKE CONCAT(\u0027%\u0027,@search_text,\u0027%\u0027)\n)\n\t\"\"\"\n\torderBy \u003d \"\"\"\nORDER BY [TableJoin].[facilityName]\n\t\"\"\"\n\n\tfetchOffset \u003d \"\"\"\nOFFSET ? ROWS \nFETCH NEXT ? ROWS ONLY;  \n\t\"\"\"\t\n\treturn declaration, queryCte, query, orderBy, fetchOffset\n\n\t\t"
+            },
+            {
+              "name": "sendMessageToKpis",
+              "params": [
+                "data"
+              ],
+              "script": "\t# Send message to KPIs\n\tpayload \u003d {}\n\t\n\t\n#\tif data.rowCount \u003e 0:\n#\t\tpayload[\u0027providerIds\u0027] \u003d []\n#\t\t#payload[\u0027totalReferralsYtd\u0027] \u003d 0\t\n#\t\tfor rowIndex, row in enumerate(system.dataset.toPyDataSet(data)):\n#\t\t\tpayload[\u0027providerIds\u0027].append(row[\u0027id\u0027])\n\t\n\tsystem.perspective.sendMessage(\u0027mhProviderDashboardKpiHeader\u0027,payload)\n\t\n\tsendMessageToKpis"
+            },
+            {
+              "name": "getMakeUpData",
+              "params": [
+                "lstData"
+              ],
+              "script": "\t\n\n\t_style \u003d {\t\"color\": \"#0c4e85\",\n\t\t\t\t\"cursor\": \"pointer\",\n\t\t\t\t\"fontFamily\": \"Proxima Nova ExCn Medium\",\n\t\t\t\t\"text-align\": \"left\"}\n\t_normalStyle \u003d {\"classes\":\"Table/Column_Normal\"}\t\t\t\n\n\n\tfor row in lstData:\n\t\tfor key in row:\n\t\t\tif key \u003d\u003d \u0027name\u0027:\n\t\t\t\trow[key] \u003d {\u0027value\u0027: row[key] if row[key] is not None else \u0027\u0027, \"style\": _style}\n\t\t\telse:\n\t\t\t\trow[key] \u003d {\u0027value\u0027: row[key] if row[key] is not None else \u0027\u0027, \"style\": _normalStyle}\n\treturn lstData"
+            }
+          ],
+          "extensionFunctions": null,
+          "messageHandlers": [
+            {
+              "messageType": "mhByCondition",
+              "pageScope": true,
+              "script": "\t#ystem.perspective.print((\u0027Msgstep1\u0027))\n\tself.doByCondition(payload)",
+              "sessionScope": false,
+              "viewScope": false
+            }
+          ]
+        },
+        "type": "ia.display.table"
+      }
+    ],
+    "custom": {
+      "_test": false
+    },
+    "meta": {
+      "name": "root"
+    },
+    "propConfig": {
+      "custom._test": {
+        "onChange": {
+          "enabled": null,
+          "script": "\tif previousValue is not None and currentValue is not None:\n\t\tif previousValue.value \u003d\u003d 0 and currentValue.value \u003d\u003d 1:\n\t\t\tself.getChild(\"Table\").doByCondition({})"
+        }
+      }
+    },
+    "props": {
+      "direction": "column",
+      "justify": "space-around",
+      "style": {
+        "overflow": "visible"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

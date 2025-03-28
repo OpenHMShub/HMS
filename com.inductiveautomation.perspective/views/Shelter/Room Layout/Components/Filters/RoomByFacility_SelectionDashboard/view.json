@@ -1,0 +1,436 @@
+{
+  "custom": {},
+  "events": {
+    "system": {
+      "onStartup": {
+        "config": {
+          "script": "\t\n\temvRoom \u003d self.getChild(\"root\").getChild(\"emvRoom\")\n\temvRoom.props.params.actionPerformedPulse \u003d False\n"
+        },
+        "scope": "G",
+        "type": "script"
+      }
+    }
+  },
+  "params": {
+    "facilityId": -1,
+    "printMode": true,
+    "version": 1
+  },
+  "propConfig": {
+    "params.facilityId": {
+      "onChange": {
+        "enabled": null,
+        "script": "\troot \u003d self.getChild(\"root\")\n\tif currentValue:\n\t\troot.setRoomsDropdown(currentValue.value)"
+      },
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.printMode": {
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.version": {
+      "binding": {
+        "config": {
+          "path": "/root/emvVersion.props.params.version"
+        },
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 32,
+      "width": 1820
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "emvFacility"
+        },
+        "position": {
+          "basis": "400px"
+        },
+        "propConfig": {
+          "position.display": {
+            "binding": {
+              "config": {
+                "expression": "if({../chb_IsMultiFacility.props.selected}\u003dTrue,False,True)"
+              },
+              "type": "expr"
+            }
+          },
+          "props.params.actionPerformedPulse": {
+            "onChange": {
+              "enabled": null,
+              "script": "\troot \u003d self.parent\n\t#root.sendMsgCondition()\n"
+            }
+          },
+          "props.params.options": {
+            "binding": {
+              "config": {
+                "queryPath": "Shelter/Dashboard/Select_Facility"
+              },
+              "transforms": [
+                {
+                  "code": "\tnewDataset \u003d system.dataset.addRow(value, 0, [-2,\u0027All Guest House\u0027])\n\treturn newDataset",
+                  "type": "script"
+                }
+              ],
+              "type": "query"
+            }
+          },
+          "props.params.selection": {
+            "onChange": {
+              "enabled": null,
+              "script": "#\tpass\t\n\troot \u003d self.parent\n\troot.setRoomsDropdown(currentValue.value)\n\t# set layout table to empty\n\troot.sendMsgCondition()"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "actionPerformedPulse": false,
+            "clear": false,
+            "multiSelect": false,
+            "placeholder": "(Select Facility)",
+            "selection": null,
+            "setSelection": null
+          },
+          "path": "Shelter/Room Layout/Components/Filters/Conditional_DropDown",
+          "style": {
+            "classes": "Filter/Filter_Container"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "emvRoom"
+        },
+        "position": {
+          "basis": "400px"
+        },
+        "propConfig": {
+          "position.display": {
+            "binding": {
+              "config": {
+                "expression": "if({../chb_IsMultiFacility.props.selected}\u003dTrue,False,True)"
+              },
+              "type": "expr"
+            }
+          },
+          "props.params.actionPerformedPulse": {
+            "onChange": {
+              "enabled": null,
+              "script": "\troot \u003d self.parent\n\t#root.sendMsgCondition()\n"
+            }
+          },
+          "props.params.selection": {
+            "onChange": {
+              "enabled": null,
+              "script": "\t\t\t\n\troot \u003d self.parent\n\troot.sendMsgCondition()"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "actionPerformedPulse": false,
+            "clear": false,
+            "multiSelect": false,
+            "options": [],
+            "placeholder": "(Select Room)",
+            "selection": null,
+            "setSelection": null
+          },
+          "path": "Shelter/Room Layout/Components/Filters/Conditional_DropDown",
+          "style": {
+            "classes": "Filter/Filter_Container"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "emvFacility_multi"
+        },
+        "position": {
+          "basis": "400px"
+        },
+        "propConfig": {
+          "position.display": {
+            "binding": {
+              "config": {
+                "expression": "if({../chb_IsMultiFacility.props.selected}\u003dTrue,True,False)"
+              },
+              "type": "expr"
+            }
+          },
+          "props.params.options": {
+            "binding": {
+              "config": {
+                "queryPath": "Shelter/Dashboard/Select_Facility"
+              },
+              "transforms": [
+                {
+                  "code": "\tnewDataset \u003d system.dataset.addRow(value, 0, [-2,\u0027All Guest House\u0027])\n\treturn newDataset",
+                  "type": "script"
+                }
+              ],
+              "type": "query"
+            }
+          },
+          "props.params.selection": {
+            "onChange": {
+              "enabled": null,
+              "script": "\troot \u003d self.parent\n\t# set layout table to empty\n\troot.sendMsgCondition()"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "actionPerformedPulse": true,
+            "clear": false,
+            "multiSelect": true,
+            "placeholder": "(Select Facility)",
+            "selection": null,
+            "setSelection": null
+          },
+          "path": "Shelter/Room Layout/Components/Filters/Conditional_DropDown",
+          "style": {
+            "classes": "Filter/Filter_Container"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "chb_IsMultiFacility"
+        },
+        "position": {
+          "basis": "160px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.selected": {
+            "onChange": {
+              "enabled": null,
+              "script": "\tself.getSibling(\"emvFacility\").props.params.selection \u003d None\n\tself.getSibling(\"emvFacility\").props.params.setSelection \u003d None\n\tself.getSibling(\"emvFacility\").props.params.clear \u003d True\n\t\n\tself.getSibling(\"emvRoom\").props.params.selection \u003d None\n\tself.getSibling(\"emvRoom\").props.params.setSelection \u003d None\n\tself.getSibling(\"emvRoom\").props.params.clear \u003d True\n\t\n\tself.getSibling(\"emvFacility_multi\").props.params.selection \u003d None\n\tself.getSibling(\"emvFacility_multi\").props.params.setSelection \u003d None\n\tself.getSibling(\"emvFacility_multi\").props.params.clear \u003d True"
+            }
+          }
+        },
+        "props": {
+          "style": {
+            "classes": "Background/Default Checkboxes/Checkbox_Table",
+            "paddingLeft": "10px",
+            "paddingRight": "10px"
+          },
+          "text": "multi-facility"
+        },
+        "type": "ia.input.checkbox"
+      },
+      {
+        "meta": {
+          "name": "emvVersion"
+        },
+        "position": {
+          "basis": "200px",
+          "display": false,
+          "grow": 1
+        },
+        "propConfig": {
+          "props.params.actionPerformedPulse": {
+            "onChange": {
+              "enabled": null,
+              "script": "\tself.getSibling(\"emvRoom\").props.params.clear \u003d True"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "actionPerformedPulse": false,
+            "version": 1
+          },
+          "path": "Shelter/Room Layout/Components/Filters/Version_Mtb"
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "events": {
+          "component": {
+            "onActionPerformed": {
+              "config": {
+                "script": "\tself.props.enabled\t\u003d False\n\troot \u003d self.parent\t\n\n\temvRoom \u003d root.getChild(\"emvRoom\")\n\n\troomId \u003d self.getSibling(\"emvRoom\").props.params.selection\n\tfacilityId \u003d self.getSibling(\"emvFacility\").props.params.selection\n\tmulti_facility \u003d self.getSibling(\"emvFacility_multi\").props.params.selection\n\tif multi_facility !\u003d None and multi_facility !\u003d \u0027\u0027 and multi_facility !\u003d -1:\n\t\tif len(multi_facility) \u003e 0:\n\t\t\tif -2 in multi_facility:\n\t\t\t\tmulti_facility \u003d [str(a) for a in multi_facility if a!\u003d-2]\n\t\t\t\tquery \u003d \"\"\"\n\t\t\t\t\t\tSELECT id FROM lodging.Facility WHERE facilityName IS NOT NULL AND facilityName NOT IN (\u0027Vine Hill\u0027,\u0027532 Apartments\u0027,\u0027705 Apartments\u0027) AND timeRetired IS NULL ORDER BY facilityName\n\t\t\t\t\t\t\"\"\"\n\t\t\t\tresult \u003d system.db.runPrepQuery(query,[],\u0027RITIOps\u0027)\n\t\t\t\tallGuestHouse_List \u003d [ str(x[0]) for x in result if str(x[0]) not in multi_facility]\n\t\t\t\tmulti_facility.extend(allGuestHouse_List)\n\t\t\telse:\n\t\t\t\tmulti_facility \u003d [str(a) for a in multi_facility]\n\t\telse:\n\t\t\tif facilityId !\u003d -2:\n\t\t\t\tmulti_facility \u003d -1\n\t\t\telse:\n\t\t\t\tquery \u003d \"\"\"\n\t\t\t\t\t\tSELECT id FROM lodging.Facility WHERE facilityName IS NOT NULL AND facilityName NOT IN (\u0027Vine Hill\u0027,\u0027532 Apartments\u0027,\u0027705 Apartments\u0027) AND timeRetired IS NULL ORDER BY facilityName\n\t\t\t\t\t\t\"\"\"\n\t\t\t\tresult \u003d system.db.runPrepQuery(query,[],\u0027RITIOps\u0027)\n\t\t\t\tmulti_facility \u003d [ str(x[0]) for x in result]\n\telse:\n\t\tif facilityId !\u003d -2:\n\t\t\tmulti_facility \u003d -1\n\t\telse:\n\t\t\tquery \u003d \"\"\"\n\t\t\t\t\tSELECT id FROM lodging.Facility WHERE facilityName IS NOT NULL AND facilityName NOT IN (\u0027Vine Hill\u0027,\u0027532 Apartments\u0027,\u0027705 Apartments\u0027) AND timeRetired IS NULL ORDER BY facilityName\n\t\t\t\t\t\"\"\"\n\t\t\tresult \u003d system.db.runPrepQuery(query,[],\u0027RITIOps\u0027)\n\t\t\tmulti_facility \u003d [ str(x[0]) for x in result]\n\t\n\tsystem.perspective.print(multi_facility)\t\n#\tfacilityId \u003d self.view.params.facilityId \n#\tif roomId \u003d\u003d -1:\n#\t\troomId \u003d None\n#\tif facilityId \u003d\u003d -1:\n#\t\tfacilityId \u003d None\n\t#emvVersion\u003d self.getChild(\"emvVersion\")\n\t\n\toneDay \u003d system.date.now()\n\troot.sendMsgCondition(roomId \u003d roomId, facilityId \u003d facilityId, oneDay \u003d oneDay, multi_facility \u003d str(multi_facility))\n"
+              },
+              "scope": "G",
+              "type": "script"
+            }
+          }
+        },
+        "meta": {
+          "name": "Button"
+        },
+        "position": {
+          "basis": "110px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "position.display": {
+            "binding": {
+              "config": {
+                "expression": "if({../chb_IsMultiFacility.props.selected}\u003dTrue || {../emvFacility.props.params.selection}\u003d-2, False, True)"
+              },
+              "type": "expr"
+            }
+          },
+          "props.text": {
+            "binding": {
+              "config": {
+                "expression": "//if(isNull({../emvRoom.props.params.selection}),\"View Facility\",\"View Room\")\r\n\u0027View\u0027"
+              },
+              "type": "expr"
+            }
+          }
+        },
+        "props": {
+          "style": {
+            "classes": "Buttons/Main",
+            "marginLeft": "10px",
+            "marginRight": "10px"
+          }
+        },
+        "type": "ia.input.button"
+      },
+      {
+        "events": {
+          "component": {
+            "onActionPerformed": {
+              "config": {
+                "script": "\tself.props.style.cursor \u003d \u0027wait\u0027\n\tfacilityId \u003d self.getSibling(\"emvFacility\").props.params.selection\n\troomId \u003d self.getSibling(\"emvRoom\").props.params.selection\n\tmulti_facility \u003d self.getSibling(\"emvFacility_multi\").props.params.selection\n\t\n\tif facilityId !\u003d None and facilityId !\u003d \u0027\u0027:\n\t\tfacilityId \u003d facilityId\n\telse:\n\t\tfacilityId \u003d -1\n\tif roomId !\u003d None and roomId !\u003d \u0027\u0027:\n\t\troomId \u003d roomId\n\telse:\n\t\troomId \u003d -1\n#\tif multi_facility !\u003d None and multi_facility !\u003d \u0027\u0027 and len(multi_facility) \u003e 0:\n#\t\tmulti_facility \u003d [int(a) for a in multi_facility]\n#\telse:\n#\t\tmulti_facility \u003d -1\n\t\t\n\tif multi_facility !\u003d None and multi_facility !\u003d \u0027\u0027 and multi_facility !\u003d -1:\n\t\tif len(multi_facility) \u003e 0:\n\t\t\tif -2 in multi_facility:\n\t\t\t\tmulti_facility \u003d [int(a) for a in multi_facility if a!\u003d-2]\n\t\t\t\tquery \u003d \"\"\"\n\t\t\t\t\t\tSELECT id FROM lodging.Facility WHERE facilityName IS NOT NULL AND facilityName NOT IN (\u0027Vine Hill\u0027,\u0027532 Apartments\u0027,\u0027705 Apartments\u0027) AND timeRetired IS NULL ORDER BY facilityName\n\t\t\t\t\t\t\"\"\"\n\t\t\t\tresult \u003d system.db.runPrepQuery(query,[],\u0027RITIOps\u0027)\n\t\t\t\tallGuestHouse_List \u003d [ int(x[0]) for x in result if str(x[0]) not in multi_facility]\n\t\t\t\tmulti_facility.extend(allGuestHouse_List)\n\t\t\telse:\n\t\t\t\tmulti_facility \u003d [int(a) for a in multi_facility]\n\t\telse:\n\t\t\tif facilityId !\u003d -2:\n\t\t\t\tmulti_facility \u003d -1\n\t\t\telse:\n\t\t\t\tquery \u003d \"\"\"\n\t\t\t\t\t\tSELECT id FROM lodging.Facility WHERE facilityName IS NOT NULL AND facilityName NOT IN (\u0027Vine Hill\u0027,\u0027532 Apartments\u0027,\u0027705 Apartments\u0027) AND timeRetired IS NULL ORDER BY facilityName\n\t\t\t\t\t\t\"\"\"\n\t\t\t\tresult \u003d system.db.runPrepQuery(query,[],\u0027RITIOps\u0027)\n\t\t\t\tmulti_facility \u003d [ int(x[0]) for x in result]\n\telse:\n\t\tif facilityId !\u003d -2:\n\t\t\tmulti_facility \u003d -1\n\t\telse:\n\t\t\tquery \u003d \"\"\"\n\t\t\t\t\tSELECT id FROM lodging.Facility WHERE facilityName IS NOT NULL AND facilityName NOT IN (\u0027Vine Hill\u0027,\u0027532 Apartments\u0027,\u0027705 Apartments\u0027) AND timeRetired IS NULL ORDER BY facilityName\n\t\t\t\t\t\"\"\"\n\t\t\tresult \u003d system.db.runPrepQuery(query,[],\u0027RITIOps\u0027)\n\t\t\tmulti_facility \u003d [ int(x[0]) for x in result]\n\t\t\n\tsystem.perspective.print(facilityId)\n\tsystem.perspective.print(roomId)\n\tsystem.perspective.print(str(multi_facility))\n\tparams \u003d {\"facilityId\":facilityId, \"roomId\":roomId, \u0027multi_facility\u0027:str(multi_facility)}\n\tbyteData \u003d system.report.executeReport(path\u003d\"RoomLayoutReport\", project\u003d\"RITI\", parameters\u003dparams, fileType\u003d\"pdf\")\n\t\n\t\n\tfilename \u003d \"RoomLayout.pdf\"\n\tsystem.perspective.download(filename, byteData)\n\tself.props.style.cursor \u003d \u0027pointer\u0027"
+              },
+              "scope": "G",
+              "type": "script"
+            }
+          }
+        },
+        "meta": {
+          "name": "Print"
+        },
+        "position": {
+          "basis": "110px",
+          "shrink": 0
+        },
+        "props": {
+          "style": {
+            "classes": "Buttons/Main",
+            "marginLeft": "10px",
+            "marginRight": "10px"
+          },
+          "text": "Print"
+        },
+        "type": "ia.input.button"
+      },
+      {
+        "meta": {
+          "name": "Label"
+        },
+        "position": {
+          "basis": "50px",
+          "grow": 1,
+          "shrink": 0
+        },
+        "type": "ia.display.label"
+      }
+    ],
+    "custom": {
+      "_devClean": false,
+      "_devPulse": true,
+      "_isDev": true
+    },
+    "meta": {
+      "name": "root"
+    },
+    "propConfig": {
+      "custom._devClean": {
+        "onChange": {
+          "enabled": null,
+          "script": "\t\n\temvRoom \u003d self.getChild(\"emvRoom\")\n\t\n\temvRoom.props.params.clear \u003d True\n\n\t\n\tif self.custom._devClean:\n\t\tself.custom._devClean \u003d False"
+        }
+      },
+      "custom._devPulse": {
+        "onChange": {
+          "enabled": null,
+          "script": "\t\n\temvRoom \u003d self.getChild(\"emvRoom\")\n\t\n\tif self.custom._isDev:\n\t\tif currentValue.value is True:\n\t\t\tfacilityId \u003d self.view.params.facilityId\n\t\t\tself.setRoomsDropdown(facilityId)\n\t\t\temvRoom.props.params.options \u003d []\n\t\telse:\n\t\t\temvRoom.props.params.options \u003d []\n\t\n\temvRoom.props.params.actionPerformedPulse \u003d False\n"
+        }
+      }
+    },
+    "props": {
+      "style": {
+        "classes": "Background/Default\nFilter/Header_Text"
+      }
+    },
+    "scripts": {
+      "customMethods": [
+        {
+          "name": "sendMsgCondition",
+          "params": [
+            "**kwargs"
+          ],
+          "script": "\troomId \u003d kwargs.get(\"roomId\")\n\tfacilityId \u003d kwargs.get(\"facilityId\")\n\toneDay \u003d kwargs.get(\u0027oneDay\u0027)\n\tmulti_facility \u003d kwargs.get(\u0027multi_facility\u0027)\n\tpayload \u003d {}\n\t\n\tif oneDay:\n\t\tpayload \u003d {\u0027oneDay\u0027: oneDay}\n\t\t\n\tif roomId or facilityId:\n\t\tif roomId:\n\t\t\tpayload[\u0027roomId\u0027] \u003d roomId\n\t\t\n\t\tif facilityId:\n\t\t\tpayload[\u0027facilityId\u0027] \u003d facilityId\t\n\tif multi_facility:\n\t\t\tpayload[\u0027multi_facility\u0027] \u003d multi_facility\n\n\n\tsystem.perspective.print((\u0027mhSetLayoutDesigner\u0027,payload)) \n\n\tsystem.perspective.sendMessage(\u0027mhSetLayoutDesigner\u0027, payload \u003d payload)\n\t\n"
+        },
+        {
+          "name": "XsendMsgCondition",
+          "params": [
+            "payload\u003dNone"
+          ],
+          "script": "\t\n\temvFacility \u003d self.getChild(\"emvFacility\")\n\temvRoom \u003d self.getChild(\"emvRoom\")\n\tsystem.perspective.print((\u0027sndmsg:\u0027,payload))\n\t\n\temvVersion\u003d self.getChild(\"emvVersion\")\n\tif payload is None:\n\t\tpayload \u003d {}\n\t\tpayload[\u0027oneDay\u0027] \u003d system.date.now()\n\n\t\tpayload[\u0027roomId\u0027] \u003d emvRoom.props.params.selection\n\t\t\n\t\tif not(payload[\u0027roomId\u0027]):\n\t\t\tpayload[\u0027facilityId\u0027] \u003d emvFacility.props.params.selection \t\t\n\n\tsystem.perspective.print((\u0027mhSetLayoutDesigner\u0027,payload)) \n\n\tsystem.perspective.sendMessage(\u0027mhSetLayoutDesigner\u0027, payload \u003d payload)\n\t\n"
+        },
+        {
+          "name": "XsetFacilityDropdown",
+          "params": [],
+          "script": "\temvFacility \u003d self.getChild(\"emvFacility\")\n\tquery \u003d \"\"\"\nSELECT \n\t [id]\n\t,[facilityName]\nFROM [lodging].[Facility]\nWHERE [timeRetired] IS NULL\nORDER BY [facilityName]\"\"\"\t\t\t\n\t\n\tresult \u003d system.db.runPrepQuery(query,[],\u0027RITIOps\u0027)\n\temvFacility.props.params.options \u003d [{\u0027value\u0027:row[\u0027id\u0027],\u0027label\u0027:row[\u0027facilityName\u0027]} for row in result]\n\t"
+        },
+        {
+          "name": "XsetFacilityDropdown1",
+          "params": [],
+          "script": "\temvFacility \u003d self.getChild(\"emvFacility\")\n\tquery \u003d \"\"\"\nSELECT \n\t [id]\n\t,[facilityName]\nFROM [lodging].[Facility]\nWHERE [timeRetired] IS NULL\nORDER BY [facilityName]\"\"\"\t\t\t\n\t\n\tresult \u003d system.db.runPrepQuery(query,[],\u0027RITIOps\u0027)\n\temvFacility.props.params.options \u003d [{\u0027value\u0027:row[\u0027id\u0027],\u0027label\u0027:row[\u0027facilityName\u0027]} for row in result]\n\t"
+        },
+        {
+          "name": "setRoomsDropdown",
+          "params": [
+            "facilityId"
+          ],
+          "script": "\tsystem.perspective.print((\u0027facilityId: \u0027,facilityId))\n#\tFacilityID \u003d self.getChild(\"emvFacility\").props.params.selection\n#\tsystem.perspective.print(FacilityID)\n\temvRoom \u003d self.getChild(\"emvRoom\")\n\tquery \u003d \"\"\"\nDECLARE @facilityId int \u003d ?;\nSELECT \n\t [id]\n\t,[roomName]\nFROM [lodging].[Room]\nWHERE [timeRetired] IS NULL\n\tAND [facilityId] \u003d @facilityId \n\t--AND @facilityId IS NOT NULL\nORDER BY [facilityId], [roomName]\"\"\"\t\t\t\n\t\n\tresult \u003d system.db.runPrepQuery(query,[facilityId],\u0027RITIOps\u0027)\n\temvRoom.props.params.options \u003d [{\u0027value\u0027:row[\u0027id\u0027],\u0027label\u0027:row[\u0027roomName\u0027]} for row in result]\n\n\tif result.rowCount \u003d\u003d 1:\n\t\temvRoom.props.params.setSelection \u003d result[0][\u0027id\u0027]\n\telse:\n\t\temvRoom.props.params.clear \u003d True"
+        },
+        {
+          "name": "setFacilityDropdown",
+          "params": [
+            "facilityId"
+          ],
+          "script": "\tsystem.perspective.print((\u0027facilityId: \u0027,facilityId))\n\t\n\temvRoom \u003d self.getChild(\"emvRoom\")\n\tquery \u003d \"\"\"\n--DECLARE @facilityId int \u003d ?;\nSELECT \n\t [id]\n\t,[facilityName]\nFROM [lodging].[Facility]\nWHERE [timeRetired] IS NULL\nORDER BY [facilityName]\"\"\"\t\t\t\n\t\n\tresult \u003d system.db.runPrepQuery(query,\u0027RITIOps\u0027)\n\tself.getChild(\"emvFacility\").props.params.options \u003d [{\u0027value\u0027:row[\u0027id\u0027],\u0027label\u0027:row[\u0027facilityName\u0027]} for row in result]\n\n\tif result.rowCount \u003d\u003d 1:\n\t\tself.getChild(\"emvFacility\").props.params.setSelection \u003d result[0][\u0027id\u0027]\n\telse:\n\t\tself.getChild(\"emvFacility\").props.params.clear \u003d True"
+        }
+      ],
+      "extensionFunctions": null,
+      "messageHandlers": [
+        {
+          "messageType": "XrefreshProviderTableFromFilter",
+          "pageScope": true,
+          "script": "\tself.sendMsgCondition()",
+          "sessionScope": false,
+          "viewScope": false
+        },
+        {
+          "messageType": "layoutSet",
+          "pageScope": true,
+          "script": "\t# implement your handler here\n\tself.getChild(\"Button\").props.enabled \u003d True",
+          "sessionScope": true,
+          "viewScope": true
+        }
+      ]
+    },
+    "type": "ia.container.flex"
+  }
+}

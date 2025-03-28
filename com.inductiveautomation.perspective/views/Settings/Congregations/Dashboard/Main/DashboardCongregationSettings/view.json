@@ -1,0 +1,140 @@
+{
+  "custom": {
+    "reset": false,
+    "rowData": {
+      "active": -1,
+      "congregationAddressLine1": "",
+      "congregationAddressLine2": "",
+      "congregationCity": "",
+      "congregationId": -1,
+      "congregationName": "",
+      "congregationPhone": "",
+      "congregationZipCode": "",
+      "leader": "",
+      "notes": "",
+      "providerId": -1
+    },
+    "selectionData": []
+  },
+  "events": {
+    "system": {
+      "onStartup": {
+        "config": {
+          "script": "#\tpass\n#\tCurrentSeasonQuery \u003d system.db.runNamedQuery(\"WinterShelterGlobal/getCurrentSeason\")\n#\tCurrentSeason \u003d CurrentSeasonQuery.getValueAt(0,\"Seasons\")\n\tself.custom.rowData \u003d {\n\t\t\t\t\t\"active\":-1,\n\t\t\t\t\t\"congregationId\":-1,\n\t\t\t\t\t\"providerId\":-1,\n\t\t\t\t\t\"congregationName\":\u0027\u0027,\n\t\t\t\t\t\"congregationAddressLine1\":\u0027\u0027,\n\t\t\t\t\t\"congregationAddressLine2\":\u0027\u0027,\n\t\t\t\t\t\"congregationCity\":\u0027\u0027,\n\t\t\t\t\t\"congregationZipCode\":\u0027\u0027,\n\t\t\t\t\t\"congregationPhone\":\u0027\u0027,\n\t\t\t\t\t\"leader\":\u0027\u0027,\n\t\t\t\t\t\"notes\":\u0027\u0027,\n\t\t\t\t\t\"hostingSince\":None,\n\t\t\t\t\t}"
+        },
+        "scope": "G",
+        "type": "script"
+      }
+    }
+  },
+  "params": {},
+  "propConfig": {
+    "custom.reset": {
+      "onChange": {
+        "enabled": null,
+        "script": "\tif currentValue.value:\n\t\tsystem.perspective.print(\u0027Congregation Data Reset\u0027)\n\t\tcongregationData \u003d self.custom.selectionData\n\t\tif len(congregationData) \u003e 0:\n\t\t\t#Data is selected, set row data to selection data\n\t\t\tif congregationData[0].active:\n\t\t\t\tactive \u003d 1\n\t\t\telse:\n\t\t\t\tactive \u003d 0\n#\t\t\thostingSince \u003d congregationData[0].hostingSince\n#\t\t\tif hostingSince \u003d\u003d None:\n#\t\t\t\tCurrentSeasonQuery \u003d system.db.runNamedQuery(\"WinterShelterGlobal/getCurrentSeason\")\n#\t\t\t\tCurrentSeason \u003d CurrentSeasonQuery.getValueAt(0,\"Seasons\")\n#\t\t\t\thostingSince \u003d CurrentSeason\n\t\t\tself.custom.rowData \u003d {\n\t\t\t\t\"active\":active,\n\t\t\t\t\"congregationId\":congregationData[0].congregationId,\n\t\t\t\t\"providerId\":congregationData[0].providerId,\n\t\t\t\t\"congregationName\":congregationData[0].congregationName,\n\t\t\t\t\"congregationAddressLine1\":congregationData[0].congregationAddressLine1,\n\t\t\t\t\"congregationAddressLine2\":congregationData[0].congregationAddressLine2,\n\t\t\t\t\"congregationCity\":congregationData[0].congregationCity,\n\t\t\t\t\"congregationZipCode\":congregationData[0].congregationZipCode,\n\t\t\t\t\"congregationPhone\":congregationData[0].congregationPhone,\n\t\t\t\t\"leader\":congregationData[0].leader,\n\t\t\t\t\"notes\":congregationData[0].notes,\n\t\t\t\t\"hostingSince\":congregationData[0].hostingSince,\n\t\t\t\t}\n\t\t\n\t\telse:\n\t\t\t#no Data selected, set to defaults\n\t\t\tself.custom.rowData \u003d {\n\t\t\t\t\"active\":-1,\n\t\t\t\t\"congregationId\":-1,\n\t\t\t\t\"providerId\":-1,\n\t\t\t\t\"congregationName\":\u0027\u0027,\n\t\t\t\t\"congregationAddressLine1\":\u0027\u0027,\n\t\t\t\t\"congregationAddressLine2\":\u0027\u0027,\n\t\t\t\t\"congregationCity\":\u0027\u0027,\n\t\t\t\t\"congregationZipCode\":\u0027\u0027,\n\t\t\t\t\"congregationPhone\":\u0027\u0027,\n\t\t\t\t\"leader\":\u0027\u0027,\n\t\t\t\t\"notes\":\u0027\u0027,\n\t\t\t\t}\n\n\tself.custom.reset \u003d False"
+      },
+      "persistent": true
+    },
+    "custom.selectionData": {
+      "binding": {
+        "config": {
+          "path": "/root/Table.props.params.selectionData"
+        },
+        "type": "property"
+      },
+      "onChange": {
+        "enabled": null,
+        "script": "\tself.custom.reset \u003d True"
+      },
+      "persistent": true
+    },
+    "custom.table_data": {
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "width": 1680
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "Edit"
+        },
+        "position": {
+          "basis": "265px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.rowData": {
+            "binding": {
+              "config": {
+                "path": "view.custom.rowData"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "path": "Settings/Congregations/Dashboard/Main/Edit/CongregationSettingsEdit",
+          "style": {
+            "marginLeft": "40px",
+            "marginRight": "40px"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Filter"
+        },
+        "position": {
+          "basis": "30px",
+          "shrink": 0
+        },
+        "props": {
+          "path": "Settings/Congregations/Dashboard/Main/Filter/TableFilter_Congregations",
+          "style": {
+            "marginLeft": "40px",
+            "marginRight": "40px",
+            "marginTop": "5px"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Table"
+        },
+        "position": {
+          "basis": "320px",
+          "grow": 1
+        },
+        "props": {
+          "params": {
+            "selectionData": []
+          },
+          "path": "Settings/Congregations/Dashboard/Main/Tables/CongregationSettingsTable",
+          "style": {
+            "marginLeft": "40px",
+            "marginRight": "40px"
+          }
+        },
+        "type": "ia.display.view"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column",
+      "style": {
+        "classes": "Background/Alternative"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

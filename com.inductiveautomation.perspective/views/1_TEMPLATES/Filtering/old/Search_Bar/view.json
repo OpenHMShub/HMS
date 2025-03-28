@@ -1,0 +1,122 @@
+{
+  "custom": {},
+  "params": {
+    "clear": false
+  },
+  "propConfig": {
+    "params.clear": {
+      "onChange": {
+        "enabled": null,
+        "script": "\tif self.params.clear:\n\t\tself.getChild(\"root\").getChild(\"TextField\").props.text \u003d \u0027\u0027\n\tself.params.clear \u003d False"
+      },
+      "paramDirection": "inout",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 30,
+      "width": 189
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "events": {
+          "dom": {
+            "onBlur": {
+              "config": {
+                "script": "\tmessageType \u003d \u0027datasetFilter\u0027\n\tpayload \u003d {\u0027searchText\u0027:self.props.text}\n\t\t\t \n\t\t# Send the message, pass the payload, limit the scope to the view\n\tsystem.perspective.sendMessage(messageType, payload, scope \u003d \u0027session\u0027 )"
+              },
+              "scope": "G",
+              "type": "script"
+            },
+            "onKeyDown": {
+              "config": {
+                "script": "\tif event.key \u003d\u003d \"Enter\":\n\t\tmessageType \u003d \u0027datasetFilter\u0027\n\t\tpayload \u003d {\u0027searchText\u0027:self.props.text}\t \n\t\t# Send the message, pass the payload, limit the scope to the view\n\t\tsystem.perspective.sendMessage(messageType, payload, scope \u003d \u0027session\u0027 )"
+              },
+              "scope": "G",
+              "type": "script"
+            }
+          }
+        },
+        "meta": {
+          "name": "TextField"
+        },
+        "position": {
+          "height": 1,
+          "width": 1
+        },
+        "propConfig": {
+          "props.text": {
+            "onChange": {
+              "enabled": null,
+              "script": "\t# No change, just a different origin trigger\n\tif previousValue is None or currentValue is None:\n\t\treturn\n\tif previousValue.value \u003d\u003d currentValue.value:\n\t\treturn\n\t\n\tself.session.custom.searchText \u003d self.props.text"
+            },
+            "persistent": false
+          }
+        },
+        "props": {
+          "deferUpdates": false,
+          "placeholder": "Search",
+          "style": {
+            "backgroundColor": "#FFFFFF",
+            "color": "#0C4E8B",
+            "fontFamily": "Proxima NovaC Medium",
+            "fontSize": 14,
+            "paddingLeft": 30
+          }
+        },
+        "type": "ia.input.text-field"
+      },
+      {
+        "events": {
+          "dom": {
+            "onClick": {
+              "config": {
+                "script": "\tprint \"Icon click\"\n\tmessageType \u003d \u0027datasetFilter\u0027\n\tpayload \u003d {\u0027searchText\u0027:self.getSibling(\"TextField\").props.text}\n\tprint (\"#######\" + self.getSibling(\"TextField\").props.text)\n\tprint \"payload\" \n\t\t# Send the message, pass the payload, limit the scope to the view\n\tsystem.perspective.sendMessage(messageType, payload, scope \u003d \u0027session\u0027 )\t"
+              },
+              "scope": "G",
+              "type": "script"
+            }
+          }
+        },
+        "meta": {
+          "name": "Icon"
+        },
+        "position": {
+          "height": 1,
+          "rotate": {
+            "anchor": "0% 0%"
+          },
+          "width": 0.1,
+          "x": 0.025
+        },
+        "props": {
+          "color": "#0C4E8B",
+          "path": "material/search"
+        },
+        "type": "ia.display.icon"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "mode": "percent",
+      "style": {
+        "backgroundColor": "#FFFFFF",
+        "borderBottomLeftRadius": 5,
+        "borderBottomRightRadius": 5,
+        "borderColor": "#0C4E8B",
+        "borderStyle": "solid",
+        "borderTopLeftRadius": 5,
+        "borderTopRightRadius": 5,
+        "borderWidth": "1px",
+        "margin": 2,
+        "overflow": "hidden"
+      }
+    },
+    "type": "ia.container.coord"
+  }
+}

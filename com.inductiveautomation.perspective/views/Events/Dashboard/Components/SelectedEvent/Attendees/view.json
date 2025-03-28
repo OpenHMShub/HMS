@@ -1,0 +1,192 @@
+{
+  "custom": {
+    "numberFacilitators": 0,
+    "numberStaff": 0,
+    "numberVolunteers": 0
+  },
+  "params": {
+    "eventID": 1
+  },
+  "propConfig": {
+    "custom.numberFacilitators": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "instanceID": "{view.params.eventID}"
+          },
+          "queryPath": "Calendar/Event Instance People/GetInstanceFacilitators"
+        },
+        "transforms": [
+          {
+            "code": "\treturn value.getRowCount()",
+            "type": "script"
+          }
+        ],
+        "type": "query"
+      },
+      "persistent": true
+    },
+    "custom.numberStaff": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "instanceID": "{view.params.eventID}"
+          },
+          "queryPath": "Calendar/Event Instance People/GetInstanceStaff"
+        },
+        "transforms": [
+          {
+            "code": "\treturn value.getRowCount()",
+            "type": "script"
+          }
+        ],
+        "type": "query"
+      },
+      "persistent": true
+    },
+    "custom.numberVolunteers": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "eventInstanceID": "{view.params.eventID}"
+          },
+          "queryPath": "Calendar/Event Instance People/GetInstanceVolunteers"
+        },
+        "transforms": [
+          {
+            "code": "\treturn value.getRowCount()",
+            "type": "script"
+          }
+        ],
+        "type": "query"
+      },
+      "persistent": true
+    },
+    "params.eventID": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 84,
+      "width": 275
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "children": [
+          {
+            "meta": {
+              "name": "Image"
+            },
+            "position": {
+              "height": 0.8072,
+              "width": 0.3214,
+              "x": -0.0135,
+              "y": -0.0889
+            },
+            "props": {
+              "fit": {
+                "height": 40,
+                "mode": "absolute",
+                "width": 50
+              },
+              "source": "/system/images/SVGs/No Picture.svg",
+              "style": {
+                "classes": "Rounded_Image",
+                "marginTop": "10px"
+              }
+            },
+            "type": "ia.display.image"
+          },
+          {
+            "meta": {
+              "name": "Image_0"
+            },
+            "position": {
+              "height": 0.8072,
+              "width": 0.3214,
+              "x": 0.0866,
+              "y": -0.0889
+            },
+            "props": {
+              "fit": {
+                "height": 40,
+                "mode": "absolute",
+                "width": 50
+              },
+              "source": "/system/images/SVGs/No Picture.svg",
+              "style": {
+                "classes": "Rounded_Image",
+                "marginTop": "10px"
+              }
+            },
+            "type": "ia.display.image"
+          },
+          {
+            "meta": {
+              "name": "Image_1"
+            },
+            "position": {
+              "height": 0.8072,
+              "width": 0.3214,
+              "x": 0.22,
+              "y": -0.0889
+            },
+            "props": {
+              "fit": {
+                "height": 40,
+                "mode": "absolute",
+                "width": 50
+              },
+              "source": "/system/images/SVGs/No Picture.svg",
+              "style": {
+                "classes": "Rounded_Image",
+                "marginTop": "10px"
+              }
+            },
+            "type": "ia.display.image"
+          }
+        ],
+        "meta": {
+          "name": "CoordinateContainer"
+        },
+        "position": {
+          "basis": "150px"
+        },
+        "props": {
+          "mode": "percent"
+        },
+        "type": "ia.container.coord"
+      },
+      {
+        "meta": {
+          "name": "Label"
+        },
+        "propConfig": {
+          "props.text": {
+            "binding": {
+              "config": {
+                "expression": "{view.custom.numberFacilitators} + {view.custom.numberStaff} + {view.custom.numberVolunteers} + \" + Attending\""
+              },
+              "type": "expr"
+            }
+          }
+        },
+        "props": {
+          "style": {
+            "classes": "Event/Event_Text",
+            "marginLeft": -50
+          }
+        },
+        "type": "ia.display.label"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "type": "ia.container.flex"
+  }
+}

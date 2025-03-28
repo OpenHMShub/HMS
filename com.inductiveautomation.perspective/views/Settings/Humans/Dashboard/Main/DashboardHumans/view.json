@@ -1,0 +1,143 @@
+{
+  "custom": {},
+  "events": {
+    "system": {
+      "onStartup": {
+        "config": {
+          "script": "\tself.session.custom.filters.settingsHumans.Activity.value \u003d 2"
+        },
+        "scope": "G",
+        "type": "script"
+      }
+    }
+  },
+  "params": {},
+  "props": {
+    "defaultSize": {
+      "width": 1992
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "Label"
+        },
+        "position": {
+          "basis": "25px",
+          "display": false,
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.text": {
+            "binding": {
+              "config": {
+                "path": "session.custom.filters"
+              },
+              "transforms": [
+                {
+                  "code": "\toutput \u003d \"First Name: \" + str(self.session.custom.filters.settingsHumans.FirstName.where)\n\toutput +\u003d \", Middle Name: \" +str(self.session.custom.filters.settingsHumans.MiddleName.where)\n\toutput +\u003d \", Last Name: \" +str(self.session.custom.filters.settingsHumans.LastName.where)\n\toutput +\u003d \", Nick Name: \" +str(self.session.custom.filters.settingsHumans.NickName.where)\n\toutput +\u003d \", SSN: \" + str(self.session.custom.filters.settingsHumans.SSN.where)\n\toutput +\u003d \", DOB Year: \" + str(self.session.custom.filters.settingsHumans.dobYear.where)\n\toutput +\u003d \", Race ID: \" + str(self.session.custom.filters.settingsHumans.RaceId.where)\n\toutput +\u003d \", Search: \" +str(self.session.custom.filters.settingsHumans.Search.where)\n\treturn output",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "alignVertical": "bottom",
+          "style": {
+            "classes": "Text/Error_Message",
+            "textAlign": "left"
+          }
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "meta": {
+          "name": "Filter"
+        },
+        "position": {
+          "basis": "30px",
+          "shrink": 0
+        },
+        "props": {
+          "params": {
+            "dob_month": null,
+            "dob_year": null,
+            "first_name": null,
+            "last_name": null,
+            "race": null,
+            "ssn": null
+          },
+          "path": "Settings/Humans/Dashboard/Main/Filter/TableFilter_Humans",
+          "style": {
+            "marginLeft": "20px"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Table"
+        },
+        "position": {
+          "basis": "320px",
+          "grow": 1
+        },
+        "propConfig": {
+          "props.params.dob_month": {
+            "binding": {
+              "config": {
+                "path": "../Filter.props.params.dob_month"
+              },
+              "type": "property"
+            }
+          },
+          "props.params.dob_year": {
+            "binding": {
+              "config": {
+                "path": "../Filter.props.params.dob_year"
+              },
+              "type": "property"
+            }
+          },
+          "props.params.race": {
+            "binding": {
+              "config": {
+                "path": "../Filter.props.params.race"
+              },
+              "type": "property"
+            }
+          },
+          "props.params.ssn": {
+            "binding": {
+              "config": {
+                "path": "../Filter.props.params.ssn"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "first_name": null,
+            "last_name": null
+          },
+          "path": "Settings/Humans/Dashboard/Main/Table/Humans_Table"
+        },
+        "type": "ia.display.view"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column",
+      "style": {
+        "classes": "Background/Alternative"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

@@ -1,0 +1,417 @@
+{
+  "custom": {
+    "participant_search": false,
+    "row_data": {},
+    "selection_data": [],
+    "table_data": []
+  },
+  "params": {},
+  "propConfig": {
+    "custom.participant_search": {
+      "persistent": true
+    },
+    "custom.row_data": {
+      "persistent": true
+    },
+    "custom.row_data.employee_id": {
+      "binding": {
+        "config": {
+          "path": "view.custom.selection_data"
+        },
+        "overlayOptOut": true,
+        "transforms": [
+          {
+            "code": "\tif len(value) and \"employee_id\" in value[0]:\n\t\treturn value[0].employee_id\n\telse:\n\t\treturn self.session.custom.loggedInStaffEmployeeID",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      }
+    },
+    "custom.row_data.employee_name": {
+      "binding": {
+        "config": {
+          "path": "view.custom.selection_data"
+        },
+        "overlayOptOut": true,
+        "transforms": [
+          {
+            "code": "\tif len(value):\n\t\tif \"employee_name\" in value[0]:\n\t\t\treturn value[0].employee_name\n\t\telse:\n\t\t\treturn \"\"\n\telse:\n\t\treturn \"\"",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      }
+    },
+    "custom.row_data.endTime": {
+      "binding": {
+        "config": {
+          "path": "view.custom.selection_data"
+        },
+        "overlayOptOut": true,
+        "transforms": [
+          {
+            "code": "\tif len(value) and \"endTime\" in value[0]:\n\t\treturn value[0].endTime\n\telse:\n\t\t## change as per ticket 301\n\t\treturn system.date.addMinutes(system.date.now(), 15)",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      }
+    },
+    "custom.row_data.hmis": {
+      "binding": {
+        "config": {
+          "path": "view.custom.selection_data"
+        },
+        "overlayOptOut": true,
+        "transforms": [
+          {
+            "code": "\tif len(value) and \"hmis\" in value[0]:\t\t\t# this line used to be `if value[0].hmis:`\n\t\tif value[0].hmis \u003d\u003d False:\n\t\t\treturn 0\n\t\telse:\n\t\t\treturn 1\n\telse:\n\t\treturn 0\n#\t\treturn -1",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      }
+    },
+    "custom.row_data.note": {
+      "binding": {
+        "config": {
+          "path": "view.custom.selection_data"
+        },
+        "overlayOptOut": true,
+        "transforms": [
+          {
+            "code": "\tif len(value) and \"note\" in value[0]:\n\t\treturn value[0].note\n\telse:\n\t\treturn \"\"",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      }
+    },
+    "custom.row_data.note_id": {
+      "binding": {
+        "config": {
+          "path": "view.custom.selection_data"
+        },
+        "overlayOptOut": true,
+        "transforms": [
+          {
+            "code": "\tif len(value) and \"note_id\" in value[0]:\n\t\treturn value[0].note_id\n\telse:\n\t\treturn -1",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      }
+    },
+    "custom.row_data.note_type": {
+      "binding": {
+        "config": {
+          "path": "view.custom.selection_data"
+        },
+        "overlayOptOut": true,
+        "transforms": [
+          {
+            "code": "\tif len(value) and \"note_type\" in value[0]:\n\t\treturn value[0].note_type\n\telse:\n\t\treturn \"\"",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      }
+    },
+    "custom.row_data.note_type_id": {
+      "binding": {
+        "config": {
+          "path": "view.custom.selection_data"
+        },
+        "overlayOptOut": true,
+        "transforms": [
+          {
+            "code": "\tselectedNoteTypes \u003d []\n\tif len(value) and \"note_type_id\" in value[0]:\n\t\tselectedNoteTypesStr \u003d value[0].note_type_id.split(\",\")\n\t\tselectedNoteTypes \u003d [int(x) for x in selectedNoteTypesStr]\n\t\n\treturn selectedNoteTypes",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      }
+    },
+    "custom.row_data.notifyStaffId": {
+      "binding": {
+        "config": {
+          "path": "view.custom.selection_data"
+        },
+        "transforms": [
+          {
+            "code": "\treturnValue \u003d []\n\tif len(value) and \"notifyStaffId\" in value[0]:\n\t\t# notifyStaffId is , spearated list of multiple ids\n\t\tnotifyStaffId \u003d value[0].notifyStaffId\n\t\tif notifyStaffId is not None and notifyStaffId !\u003d \"\":\n\t\t\treturnValue \u003d map(int,notifyStaffId.split(\",\"))\n\t\t\n\t\t\t\n\treturn returnValue",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      }
+    },
+    "custom.row_data.participant_id": {
+      "binding": {
+        "config": {
+          "path": "view.custom.selection_data"
+        },
+        "overlayOptOut": true,
+        "transforms": [
+          {
+            "code": "\tif len(value):\n\t\t# if value[0].participant_id:\n\t\t#\treturn value[0].participant_id\n\t\t#\t\tchanged by yfedas on 6/25/22\n\t\tif \"participant_id\" in value[0]:\n\t\t\treturn value[0].participant_id\n\t\telse:\n\t\t\treturn -1\n\telse:\n\t\treturn -1",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      }
+    },
+    "custom.row_data.participant_name": {
+      "binding": {
+        "config": {
+          "path": "view.custom.selection_data"
+        },
+        "overlayOptOut": true,
+        "transforms": [
+          {
+            "code": "\tif len(value) and \"participant_name\" in value[0]:\n\t\treturn value[0].participant_name\n\telse:\n\t\treturn \"\"",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      }
+    },
+    "custom.row_data.services": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "case_note_id": "{view.custom.row_data.note_id}",
+            "participant_id": "{view.custom.row_data.participant_id}",
+            "program": "{session.custom.filters.caseNotesDashboard.program.where}",
+            "service": "{session.custom.filters.caseNotesDashboard.service.where}"
+          },
+          "queryPath": "Participants/CaseNotes/CaseNotesServiceSelect"
+        },
+        "transforms": [
+          {
+            "code": "\timport traceback\n\ttry:\n\t\tservices_data \u003d value\n\t\tservice_list \u003d []\n\t\t\n\t\tRowNumber \u003d 0\n\t\tif services_data is not None:\n\t\t\tif services_data.getRowCount() \u003e 0:\n\t\t\t\tfor s_row in range(services_data.getRowCount()):\n\t\t\t\t\tservice \u003d {}\n\t\t\t\t\tservice[\u0027participant_id\u0027] \u003d services_data.getValueAt(s_row,\u0027participantId\u0027)\n\t\t\t\t\tservice[\u0027employee_id\u0027] \u003d services_data.getValueAt(s_row,\u0027employeeID\u0027)\n\t\t\t\t\tservice[\u0027employee_name\u0027] \u003d services_data.getValueAt(s_row,\u0027employeeName\u0027)\n\t\t\t\t\tservice[\u0027enrollment_id\u0027] \u003d services_data.getValueAt(s_row,\u0027programId\u0027)\n\t\t\t\t\tservice[\u0027enrollment_name\u0027] \u003d services_data.getValueAt(s_row,\u0027programName\u0027)\n\t\t\t\t\tservice[\u0027service_location_id\u0027] \u003d services_data.getValueAt(s_row,\u0027service_location_id\u0027)\n\t\t\t\t\tservice[\u0027service_id\u0027] \u003d services_data.getValueAt(s_row,\u0027serviceId\u0027)\n\t\t\t\t\tservice[\u0027service_name\u0027] \u003d services_data.getValueAt(s_row,\u0027serviceName\u0027)\n\t\t\t\t\tservice[\u0027HMIS\u0027] \u003d services_data.getValueAt(s_row,\u0027HMIS\u0027)\n\t\t\t\t\tservice[\u0027quantity\u0027] \u003d services_data.getValueAt(s_row,\u0027quantity\u0027)\n\t\t\t\t\tservice[\u0027comment\u0027] \u003d services_data.getValueAt(s_row,\u0027comment\u0027)\n\t\t\t\t\tservice[\u0027row_num\u0027] \u003d RowNumber\n\t\t\t\t\t\n\t\t\t\t\tservice_list.append(service)\n\t\t\t\t\tRowNumber +\u003d 1\n\t\t\t\t\n\t\t\t\t\n\t\treturn service_list\n\texcept:\n\t\tlogger \u003d system.util.getLogger(\"Participants Case Notes Dashboard selection Data\")\n\t\tmsg \u003d traceback.format_exc()\n\t\tlogger.error(msg)",
+            "type": "script"
+          }
+        ],
+        "type": "query"
+      }
+    },
+    "custom.row_data.startTime": {
+      "binding": {
+        "config": {
+          "path": "view.custom.selection_data"
+        },
+        "overlayOptOut": true,
+        "transforms": [
+          {
+            "code": "\tif len(value) and \"startTime\" in value[0]:\n\t\treturn value[0].startTime\n\telse:\n\t\t## as per ticket 301 , updated to send current time\n\t\treturn system.date.now()",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      }
+    },
+    "custom.selection_data": {
+      "binding": {
+        "config": {
+          "path": "/root/Table.props.params.selection_data"
+        },
+        "overlayOptOut": true,
+        "type": "property"
+      },
+      "persistent": true
+    },
+    "custom.table_data": {
+      "binding": {
+        "config": {
+          "path": "/root/Table.props.params.table_data"
+        },
+        "overlayOptOut": true,
+        "type": "property"
+      },
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 828,
+      "width": 1604
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "Embed_Top"
+        },
+        "position": {
+          "shrink": 0
+        },
+        "propConfig": {
+          "position.basis": {
+            "binding": {
+              "config": {
+                "path": "this.props.params.view_height"
+              },
+              "type": "property"
+            }
+          },
+          "props.params.participant_search": {
+            "binding": {
+              "config": {
+                "bidirectional": true,
+                "path": "view.custom.participant_search"
+              },
+              "type": "property"
+            }
+          },
+          "props.params.row_data": {
+            "binding": {
+              "config": {
+                "path": "view.custom.row_data"
+              },
+              "overlayOptOut": true,
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "output_id": "",
+            "output_name": "",
+            "view_height": "370px"
+          },
+          "path": "Participants/Case Notes/Dashboard/Main/Top",
+          "style": {
+            "classes": "ActivityCards/Card"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Label"
+        },
+        "position": {
+          "basis": "32px",
+          "display": false
+        },
+        "propConfig": {
+          "props.text": {
+            "binding": {
+              "config": {
+                "path": "session.custom.filters"
+              },
+              "transforms": [
+                {
+                  "code": "\toutput \u003d \"\"\n\toutput \u003d \"Note Date: \" + str(self.session.custom.filters.caseNotesDashboard.NoteDate.where)\n#\toutput +\u003d \", Start: \" + str(self.session.custom.filters.caseNotesDashboard.NoteDate.value)\n\t#output +\u003d \", HMIS: \" + str(self.session.custom.filters.caseNotesDashboard.hmis.where)\n\t#output +\u003d \", Entered By: \" + str(self.session.custom.filters.caseNotesDashboard.EnteredBy.where)\n\toutput +\u003d \", Type: \" + str(self.session.custom.filters.caseNotesDashboard.NoteType.where)\n\toutput +\u003d \", Type: \" + str(self.session.custom.filters.caseNotesDashboard.NoteType.value)\n#\toutput +\u003d \", Program: \" + str(self.session.custom.filters.caseNotesDashboard.program.where)\n#\toutput +\u003d \", Service: \" + str(self.session.custom.filters.caseNotesDashboard.service.where)\n\t#output +\u003d \", First Name: \" + str(self.session.custom.filters.caseNotesDashboard.FirstName.where)\n\t#output +\u003d \", Middle Name: \" +str(self.session.custom.filters.caseNotesDashboard.MiddleName.where)\n\t#output +\u003d \", Last Name: \" +str(self.session.custom.filters.caseNotesDashboard.LastName.where)\n\t#output +\u003d \", Nick Name: \" +str(self.session.custom.filters.caseNotesDashboard.NickName.where)\n\n\treturn output",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "style": {
+            "classes": "Text/Error_Message"
+          }
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "meta": {
+          "name": "Filter_Row1"
+        },
+        "position": {
+          "basis": "30px",
+          "shrink": 0
+        },
+        "props": {
+          "params": {
+            "activity_range": 90
+          },
+          "path": "Participants/Case Notes/Dashboard/Main/Filters/CaseNotes_Filter_Row1",
+          "style": {
+            "marginLeft": "40px",
+            "marginRight": "40px"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Filter_Row2"
+        },
+        "position": {
+          "basis": "30px",
+          "shrink": 0
+        },
+        "props": {
+          "params": {
+            "Xrace": "",
+            "Xveteran": "",
+            "activity_range": 60
+          },
+          "path": "Participants/Case Notes/Dashboard/Main/Filters/CaseNotes_Filter_Row2",
+          "style": {
+            "marginLeft": "40px",
+            "marginRight": "40px"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Table"
+        },
+        "position": {
+          "basis": "200px",
+          "grow": 1
+        },
+        "propConfig": {
+          "props.params.activity_range": {
+            "binding": {
+              "config": {
+                "path": "../Filter_Row1.props.params.activity_range"
+              },
+              "type": "property"
+            }
+          },
+          "props.params.participant_search": {
+            "binding": {
+              "config": {
+                "bidirectional": true,
+                "path": "view.custom.participant_search"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "selection_data": [],
+            "table_data": []
+          },
+          "path": "Participants/Case Notes/Dashboard/Main/Tables/CaseNotesTableDashboard",
+          "style": {
+            "marginLeft": "40px",
+            "marginRight": "40px"
+          }
+        },
+        "type": "ia.display.view"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column",
+      "style": {
+        "classes": "Background/Alternative"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

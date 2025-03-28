@@ -1,0 +1,322 @@
+{
+  "custom": {},
+  "events": {
+    "system": {
+      "onStartup": {
+        "config": {
+          "script": "\ttry:\n\t\troot \u003d self.getChild(\"root\")\n\t\temvStatus \u003d root.getChild(\"emvStatus\")\n\t\temvStatus.props.params.actionPerformedPulse \u003d False\n\t\troot.setPropsDropdowns()\n\t\troot.clearAll()\n\t\t#payload \u003d {}\n\t\t#root.sendMsgCondition(payload)\n\t\t#emvSearch \u003d root.getChild(\"emvSearch\")\n\t\t#emvSearch.props.params.keyUpPulse \u003d False\n\texcept:\n\t\timport traceback\n\t\tlogger \u003d system.util.getLogger(\"Providers\")\n\t\tmsg \u003d self.name + \u0027:\\n\u0027\n\t\tmsg +\u003d traceback.format_exc()\n\t\tlogger.error(msg)\t\t\t"
+        },
+        "scope": "G",
+        "type": "script"
+      }
+    }
+  },
+  "params": {},
+  "props": {
+    "defaultSize": {
+      "height": 34,
+      "width": 1820
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "emvStatus"
+        },
+        "position": {
+          "basis": "140px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.actionPerformedPulse": {
+            "onChange": {
+              "enabled": null,
+              "script": "\troot \u003d self.parent\n\troot.sendMsgCondition()\t"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "actionPerformedPulse": false,
+            "clear": false,
+            "multiSelect": false,
+            "options": [
+              {
+                "label": "Applied",
+                "value": [
+                  "appliedState",
+                  1
+                ]
+              },
+              {
+                "label": "Interviewed",
+                "value": [
+                  "interviewedState",
+                  1
+                ]
+              },
+              {
+                "label": "Hired",
+                "value": [
+                  "hiredState",
+                  1
+                ]
+              },
+              {
+                "label": "Not Hired",
+                "value": [
+                  "hiredState",
+                  0
+                ]
+              }
+            ],
+            "placeholder": "Status",
+            "selection": null
+          },
+          "path": "Employers/Applicants/Dashboard/Main/Filters/Conditional_DropDown",
+          "style": {
+            "classes": "Filter/Filter_Container",
+            "marginLeft": "40px"
+          }
+        },
+        "scripts": {
+          "customMethods": [
+            {
+              "name": "setOptions",
+              "params": [],
+              "script": "\t\n\tlstDateFrom \u003d \t[\n\t[(\u0027appliedState\u0027,1), \u0027Applied\u0027],\n\t[(\u0027interviewedState\u0027,1), \u0027Interviewed\u0027],\n\t[(\u0027hiredState\u0027,1), \u0027Hired\u0027],\n\t[(\u0027hiredState\u0027,0), \u0027Not Hired\u0027]\n\t]\n\t\n\t\n\tself.props.params.options \u003d [ dict(value \u003d x[0],label \u003d x[1]) for x in lstDateFrom]\n"
+            }
+          ],
+          "extensionFunctions": null,
+          "messageHandlers": []
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "custom": {
+          "_devPulse": false,
+          "_isDev": false
+        },
+        "events": {
+          "system": {
+            "onShutdown": {
+              "config": {
+                "script": "\t\n\tself.session.custom.dateRangeFromDate \u003d None\n\tself.session.custom.dateRangeToDate \u003d None\n\tself.session.custom.selectedDateRange \u003d None"
+              },
+              "scope": "G",
+              "type": "script"
+            }
+          }
+        },
+        "meta": {
+          "name": "emvDateRange"
+        },
+        "position": {
+          "basis": "300px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "custom._devPulse": {
+            "onChange": {
+              "enabled": null,
+              "script": "\tif self.custom._isDev:\n\t\tif currentValue.value:\n\t\t\ttry:\n\t\t\t\tself.props.params.dateFrom \u003d system.date.addDays(self.props.params.dateFrom,-1)\n\t\t\texcept:\n\t\t\t\tself.props.params.dateFrom \u003d system.date.now()\n\t\t\telse:\n\t\t\t\tself.props.params.dateFrom \u003d None"
+            }
+          },
+          "props.params.interval": {
+            "onChange": {
+              "enabled": null,
+              "script": "\troot \u003d self.parent\n\temvStatus \u003d self.getSibling(\"emvStatus\")\n\temvDateRange \u003d self.getSibling(\"emvDateRange\")\n\temvSearch \u003d self.getSibling(\"emvSearch\")\n\n\tpayload \u003d {}\n\t\n\t_selectionStatus \u003d emvStatus.props.params.selection if emvStatus.props.params.selection else (None,None)\n\tsystem.perspective.print((\"_selectionStatus: \",_selectionStatus))\n\t_argName \u003d _selectionStatus[0]\n\t_argValue \u003d _selectionStatus[1]\n\t\n\tif _argName:\n\t\tpayload[_argName] \u003d _argValue \n\n\t\t\n\t_dateFrom \u003d self.props.params.interval.dateFrom # emvDateRange.props.params.interval.dateFrom #self.session.custom.dateRangeFromDate\n\t_dateTo \u003d self.props.params.interval.dateTo #emvDateRange.props.params.interval.dateTo #self.session.custom.dateRangeToDate\n\n\t_selectedDateRange \u003d self.props.params.interval.selectedDateRange #emvDateRange.props.params.interval.selectedDateRange #self.session.custom.selectedDateRange\n\tsystem.perspective.print((\"_selectedDateRange: \",_selectedDateRange))\n\t\t\n\tif _selectedDateRange \u003d\u003d \u0027appliedDate\u0027:\n\t\tpayload[\u0027appliedFrom\u0027] \u003d _dateFrom\n\t\tpayload[\u0027appliedTo\u0027] \u003d _dateTo\n\telif _selectedDateRange \u003d\u003d \u0027interviewedDate\u0027:\n\t\tpayload[\u0027interviewedFrom\u0027] \u003d _dateFrom\n\t\tpayload[\u0027interviewedTo\u0027] \u003d _dateTo\n\telif _selectedDateRange \u003d\u003d \u0027hiredDate\u0027:\n\t\tpayload[\u0027hiredFrom\u0027] \u003d _dateFrom\n\t\tpayload[\u0027hiredTo\u0027] \u003d _dateTo\n\t\n\tif \temvSearch.props.params.searchText:\n\t\tpayload[\u0027searchText\u0027] \u003d emvSearch.props.params.searchText \n\n\troot.sendMsgCondition(payload)\t\n\n\t\t"
+            }
+          },
+          "props.params.interval.dateFrom": {
+            "binding": {
+              "config": {
+                "path": "session.custom.dateRangeFromDate"
+              },
+              "type": "property"
+            }
+          },
+          "props.params.interval.dateTo": {
+            "binding": {
+              "config": {
+                "path": "session.custom.dateRangeToDate"
+              },
+              "type": "property"
+            }
+          },
+          "props.params.interval.selectedDateRange": {
+            "binding": {
+              "config": {
+                "path": "session.custom.selectedDateRange"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "interval": {},
+            "placeholder": "(Date Range)"
+          },
+          "path": "Employers/Templates/DateRange/DateInput",
+          "style": {
+            "classes": "Filter/Filter_Container"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Placeholder"
+        },
+        "position": {
+          "basis": "10px",
+          "grow": 1
+        },
+        "props": {
+          "path": "1_TEMPLATES/Filtering/Filter_Placeholder"
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "lblSearch"
+        },
+        "position": {
+          "basis": "50px"
+        },
+        "props": {
+          "style": {
+            "classes": "Table/Filter_Header",
+            "textAlign": "end"
+          },
+          "text": "Search:"
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "meta": {
+          "name": "emvSearch"
+        },
+        "position": {
+          "basis": "220px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.keyUpPulse": {
+            "onChange": {
+              "enabled": null,
+              "script": "\troot \u003d self.parent\n\troot.sendMsgCondition()\t"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "clear": false,
+            "keyUpPulse": false,
+            "searchText": ""
+          },
+          "path": "Employers/Applicants/Dashboard/Main/Filters/Search_Bar",
+          "style": {
+            "classes": "Table/Search_Bar"
+          },
+          "useDefaultViewWidth": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "events": {
+          "component": {
+            "onActionPerformed": {
+              "config": {
+                "script": "\troot \u003d self.parent \n\n\troot.clearAll()"
+              },
+              "scope": "G",
+              "type": "script"
+            }
+          }
+        },
+        "meta": {
+          "name": "clearConditions"
+        },
+        "position": {
+          "basis": "30px",
+          "shrink": 0
+        },
+        "props": {
+          "image": {
+            "height": 16,
+            "icon": {
+              "color": "#0C4E8B",
+              "path": "material/close"
+            },
+            "position": "center",
+            "width": 16
+          },
+          "style": {
+            "classes": "Filter/Filter_Border_Default Filter/Filter_Container",
+            "marginRight": "37px"
+          },
+          "text": "",
+          "textStyle": {
+            "classes": "GreyColor"
+          }
+        },
+        "type": "ia.input.button"
+      }
+    ],
+    "custom": {
+      "_devPulse": false,
+      "_isDev": false
+    },
+    "meta": {
+      "name": "root"
+    },
+    "propConfig": {
+      "custom._devPulse": {
+        "onChange": {
+          "enabled": null,
+          "script": "\t\n\temvActivityRange \u003d self.getChild(\"emvActivityRange\")\n\temvBusinessDescription \u003d self.getChild(\"emvBusinessDescription\")\n\temvCity \u003d self.getChild(\"emvCity\")\n\temvQualifier \u003d self.getChild(\"emvQualifier\")\n\temvSearch \u003d self.getChild(\"emvSearch\")\n\t\n\t\n\tif self.custom._isDev:\n\t\tif currentValue.value is True:\n\t\t\tself.setPropsDropdowns()\n\t\telse:\n\t\t\temvActivityRange.props.params.options \u003d []\n\t\t\temvBusinessDescription.props.params.options \u003d []\n\t\t\temvCity.props.params.options \u003d []\n\t\t\temvQualifier.props.params.options \u003d []\n\n\temvActivityRange.props.params.actionPerformedPulse \u003d False\t\n\temvBusinessDescription.props.params.actionPerformedPulse \u003d False\n\temvCity.props.params.actionPerformedPulse \u003d False\n\temvQualifier.props.params.actionPerformedPulse \u003d False\n\t\n\temvSearch.props.params.keyUpPulse \u003d False"
+        }
+      }
+    },
+    "props": {
+      "style": {
+        "classes": "Filter/Header_Text"
+      }
+    },
+    "scripts": {
+      "customMethods": [
+        {
+          "name": "setPropsDropdowns",
+          "params": [],
+          "script": "\temvStatus \u003d self.getChild(\"emvStatus\")\n\temvStatus.setOptions()\n\n"
+        },
+        {
+          "name": "sendMsgCondition",
+          "params": [
+            "payload\u003dNone"
+          ],
+          "script": "\t\n\temvStatus \u003d self.getChild(\"emvStatus\")\n\temvDateRange \u003d self.getChild(\"emvDateRange\")\n\temvSearch \u003d self.getChild(\"emvSearch\")\n\t\n\tif payload is None:\n\t\tpayload \u003d {}\n\t\t\n\t\t_selectionStatus \u003d emvStatus.props.params.selection if emvStatus.props.params.selection else (None,None)\n\t\tsystem.perspective.print((\"_selectionStatus: \",_selectionStatus))\n\t\t_argName \u003d _selectionStatus[0]\n\t\t_argValue \u003d _selectionStatus[1]\n\t\t\n\t\tif _argName:\n\t\t\tpayload[_argName] \u003d _argValue \n\n\t\t\t\n\t\t_dateFrom \u003d emvDateRange.props.params.interval.dateFrom #self.session.custom.dateRangeFromDate\n\t\t_dateTo \u003d emvDateRange.props.params.interval.dateTo #self.session.custom.dateRangeToDate\n\n\t\t_selectedDateRange \u003d emvDateRange.props.params.interval.selectedDateRange #self.session.custom.selectedDateRange\n\t\tsystem.perspective.print((\"_selectedDateRange: \",_selectedDateRange))\n\t\t\n\t\tif _selectedDateRange \u003d\u003d \u0027appliedDate\u0027:\n\t\t\tpayload[\u0027appliedFrom\u0027] \u003d _dateFrom\n\t\t\tpayload[\u0027appliedTo\u0027] \u003d _dateTo\n\t\telif _selectedDateRange \u003d\u003d \u0027interviewedDate\u0027:\n\t\t\tpayload[\u0027interviewedFrom\u0027] \u003d _dateFrom\n\t\t\tpayload[\u0027interviewedTo\u0027] \u003d _dateTo\n\t\telif _selectedDateRange \u003d\u003d \u0027hiredDate\u0027:\n\t\t\tpayload[\u0027hiredFrom\u0027] \u003d _dateFrom\n\t\t\tpayload[\u0027hiredTo\u0027] \u003d _dateTo\n\t\t\n\t\tif \temvSearch.props.params.searchText:\n\t\t\tpayload[\u0027searchText\u0027] \u003d emvSearch.props.params.searchText \n\t\n\tsystem.perspective.print((\u0027mhByCondition\u0027,payload)) \n\t\n\tsystem.perspective.sendMessage(\u0027mhByCondition\u0027, payload \u003d payload)\n\t\n"
+        },
+        {
+          "name": "clearAll",
+          "params": [],
+          "script": "\t\n\troot \u003d self\n\temvStatus \u003d self.getChild(\"emvStatus\")\n\n\temvSearch \u003d self.getChild(\"emvSearch\")\n\n\temvStatus.props.params.clear \u003d True\n\temvSearch.props.params.clear \u003d True\n\n\tself.session.custom.dateRangeFromDate \u003d None\n\tself.session.custom.dateRangeToDate \u003d None\n\tself.session.custom.selectedDateRange \u003d None\n\n\tpayload \u003d {}\n\n\troot.sendMsgCondition(payload)"
+        }
+      ],
+      "extensionFunctions": null,
+      "messageHandlers": [
+        {
+          "messageType": "mhSetEmployerTableByFilter",
+          "pageScope": true,
+          "script": "\tself.sendMsgCondition()",
+          "sessionScope": false,
+          "viewScope": false
+        }
+      ]
+    },
+    "type": "ia.container.flex"
+  }
+}

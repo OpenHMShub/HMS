@@ -1,0 +1,201 @@
+{
+  "custom": {},
+  "params": {
+    "wherePlusOut": [
+      {
+        "arg": "2022-10-01 00:00:00",
+        "type": "datetime"
+      },
+      {
+        "arg": -1,
+        "cnd": "-1 \u003d ?"
+      }
+    ]
+  },
+  "propConfig": {
+    "params.wherePlusOut": {
+      "access": "PUBLIC",
+      "paramDirection": "output",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 50,
+      "width": 600
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "EmbeddedView_StartDate"
+        },
+        "position": {
+          "basis": "320px"
+        },
+        "propConfig": {
+          "props.params.base": {
+            "access": "PUBLIC"
+          },
+          "props.params.expo": {
+            "access": "PUBLIC"
+          },
+          "props.params.wherePlusIn": {
+            "access": "PUBLIC"
+          },
+          "props.params.wherePlusOut": {
+            "access": "PUBLIC",
+            "onChange": {
+              "enabled": null,
+              "script": "\troot \u003d self.parent\n\troot.setWherePlusOut()\n"
+            },
+            "persistent": false
+          }
+        },
+        "props": {
+          "params": {
+            "base": {
+              "cnd": null,
+              "fixedTime": 0
+            },
+            "expo": {
+              "Dropdown_props_showClearIcon": true,
+              "Label_props_text": "Start Date"
+            },
+            "wherePlusIn": [
+              {
+                "arg": -1,
+                "cnd": "-1 \u003d ?"
+              }
+            ]
+          },
+          "path": "Shelter/Schedule/Components/DateTimeInput"
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "EmbeddedView_Facility"
+        },
+        "position": {
+          "basis": "320px",
+          "grow": 3
+        },
+        "propConfig": {
+          "props.params.expo": {
+            "access": "PUBLIC"
+          },
+          "props.params.query": {
+            "access": "PUBLIC"
+          },
+          "props.params.useCndIn": {
+            "access": "PUBLIC"
+          },
+          "props.params.wherePlusIn": {
+            "access": "PUBLIC"
+          },
+          "props.params.wherePlusOut": {
+            "access": "PUBLIC",
+            "onChange": {
+              "enabled": null,
+              "script": "\troot \u003d self.parent\n\troot.setWherePlusOut()\n"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "base": "value",
+            "expo": {
+              "Dropdown_props_multiSelect": true,
+              "Dropdown_props_showClearIcon": true,
+              "Label_props_text": "Facility"
+            },
+            "query": {
+              "orderby": "[facilityName]",
+              "queryCore": "SELECT [id] AS facilityID, [facilityName] AS Facility FROM [lodging].[Facility] WHERE ([timeRetired] IS NULL)"
+            },
+            "useCndIn": false,
+            "wherePlusIn": [],
+            "wherePlusOut": [
+              {
+                "arg": -1,
+                "cnd": "-1 \u003d ?"
+              }
+            ]
+          },
+          "path": "Shelter/Schedule/Components/DropdownInput"
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "EmbeddedView_PlaceHolder_1"
+        },
+        "position": {
+          "basis": "320px",
+          "grow": 1
+        },
+        "props": {
+          "path": "Shelter/Schedule/Components/Placeholder",
+          "style": {
+            "classes": "Background/Default"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "events": {
+          "component": {
+            "onActionPerformed": {
+              "config": {
+                "script": "\t\n\tstartDate \u003d u\u00272021-01-06 00:00:00\u0027 \n\tendDate \u003d u\u00272021-02-07 00:00:00\u0027\n\twherePlusIn \u003d [{\"arg\":startDate,\"type\":\"datetime\"},{\"arg\":endDate,\"type\":\"datetime\"},{\"arg\":-1}]\n\t\n\t# [{u\u0027arg\u0027: u\u00272021-01-23 00:00:00\u0027, u\u0027type\u0027: u\u0027datetime\u0027}], [{u\u0027arg\u0027: -1L, u\u0027cnd\u0027: u\u0027-1 \u003d ?\u0027}]\n\t\n\t_sd \u003d self.getSibling(\"EmbeddedView_StartDate\").props.params.wherePlusOut\n\tstartDate \u003d _sd[0][\u0027arg\u0027]\n\t_ed \u003d system.date.addDays(system.date.parse(startDate), 30)\n\tendDate \u003d system.date.format(_ed, \u0027yyyy-MM-dd HH:mm:ss\u0027)\n\t_f \u003d self.getSibling(\"EmbeddedView_Facility\").props.params.wherePlusOut\n\tfacilityId \u003d _f[0][\u0027arg\u0027]\n\twherePlusIn \u003d [{\"arg\": startDate,\"type\":\"datetime\"},{\"arg\":endDate,\"type\":\"datetime\"},{\"arg\": facilityId}]\n\t\n\tpayload \u003d dict(wherePlusIn \u003d wherePlusIn)\n\t\n\tsystem.perspective.sendMessage(\u0027mhSetScheduleData\u0027, payload) #, scope \u003d \u0027page\u0027)"
+              },
+              "scope": "G",
+              "type": "script"
+            }
+          }
+        },
+        "meta": {
+          "name": "btnView"
+        },
+        "position": {
+          "basis": "100px"
+        },
+        "props": {
+          "style": {
+            "classes": "Buttons/Main",
+            "marginBottom": "5px",
+            "marginLeft": "10px",
+            "marginTop": "5px"
+          },
+          "text": "View"
+        },
+        "type": "ia.input.button"
+      }
+    ],
+    "custom": {
+      "facilityIdForReservation": null
+    },
+    "meta": {
+      "name": "root"
+    },
+    "scripts": {
+      "customMethods": [
+        {
+          "name": "setWherePlusOut",
+          "params": [],
+          "script": "\t\n\tembViewNames \u003d [\"EmbeddedView_StartDate\",\"EmbeddedView_Facility\"]\n\t\n\tpyWherePlusOut \u003d []\n\tfor _name in embViewNames:\n\t\tembWherePlusOut \u003d self.getChild(_name).props.params.wherePlusOut\n\n\t\t# Sum several list to one list\n\t\tpyWherePlusOut +\u003d embWherePlusOut\n\t\n\tself.view.params.wherePlusOut \u003d pyWherePlusOut\n\t\n\t#ystem.perspective.print((\"jsonWherePlusOut:\", self.view.params.jsonWherePlusOut))"
+        },
+        {
+          "name": "setWherePlusOutNull",
+          "params": [],
+          "script": "\tself.view.params.wherePlusOut \u003d None\n\t\n\t#ystem.perspective.print((\"jsonWherePlusOut:\", self.view.params.jsonWherePlusOut))"
+        }
+      ],
+      "extensionFunctions": null,
+      "messageHandlers": []
+    },
+    "type": "ia.container.flex"
+  }
+}

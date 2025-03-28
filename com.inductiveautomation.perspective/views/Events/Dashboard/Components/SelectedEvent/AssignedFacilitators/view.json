@@ -1,0 +1,212 @@
+{
+  "custom": {
+    "facilitators": [
+      {
+        "facilitatorID": 0
+      }
+    ],
+    "filteredData": {
+      "$": [
+        "ds",
+        192,
+        1616149422980
+      ],
+      "$columns": [
+        {
+          "data": [
+            0
+          ],
+          "name": "id",
+          "type": "Integer"
+        },
+        {
+          "data": [
+            0
+          ],
+          "name": "facilitatorID",
+          "type": "Integer"
+        },
+        {
+          "data": [
+            "Martina Condron"
+          ],
+          "name": "name",
+          "type": "String"
+        }
+      ]
+    },
+    "filters": [],
+    "query": {
+      "$": [
+        "ds",
+        192,
+        1616149422979
+      ],
+      "$columns": [
+        {
+          "data": [
+            0
+          ],
+          "name": "id",
+          "type": "Integer"
+        },
+        {
+          "data": [
+            0
+          ],
+          "name": "facilitatorID",
+          "type": "Integer"
+        },
+        {
+          "data": [
+            "Martina Condron"
+          ],
+          "name": "name",
+          "type": "String"
+        }
+      ]
+    }
+  },
+  "params": {
+    "eventID": 24
+  },
+  "propConfig": {
+    "custom.facilitators": {
+      "binding": {
+        "config": {
+          "path": "view.custom.filteredData"
+        },
+        "transforms": [
+          {
+            "code": "\tinstances \u003d []\n\tfor val in range(value.getRowCount()) :\n\t\t\tinstances.append({\u0027facilitatorID\u0027 : value.getValueAt(val, \"id\")})\n\n\t\n\treturn instances",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      },
+      "persistent": true
+    },
+    "custom.filteredData": {
+      "binding": {
+        "config": {
+          "struct": {
+            "filters": "{this.custom.filters}",
+            "source": "hasChanged({this.custom.query})"
+          },
+          "waitOnAll": true
+        },
+        "transforms": [
+          {
+            "code": "\t\n\treturn filters.applyFiltersOnDataset(self.custom.query, self.custom.filters)",
+            "type": "script"
+          }
+        ],
+        "type": "expr-struct"
+      },
+      "persistent": true
+    },
+    "custom.filters": {
+      "binding": {
+        "config": {
+          "path": "session.custom.filters"
+        },
+        "transforms": [
+          {
+            "code": "\tfilter \u003d filters.retrievePageFilters(value, self.page.props.pageId)\n\titems \u003d []\n\tfor x in filter:\n\t\tif x.key \u003d\u003d \"People\":\n\t\t\titems.append(x)\n\treturn items",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      },
+      "persistent": true
+    },
+    "custom.query": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "instanceID": "{view.params.eventID}"
+          },
+          "queryPath": "Calendar/Event Instance People/GetInstanceFacilitators"
+        },
+        "type": "query"
+      },
+      "persistent": true
+    },
+    "params.eventID": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 132,
+      "width": 258
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "Hosts"
+        },
+        "props": {
+          "style": {
+            "classes": "Event/Event_DateText"
+          },
+          "text": "Facilitators"
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "meta": {
+          "name": "FlexRepeater"
+        },
+        "position": {
+          "grow": 1
+        },
+        "propConfig": {
+          "props.instances": {
+            "binding": {
+              "config": {
+                "path": "view.custom.facilitators"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "path": "Events/Dashboard/Components/SelectedEvent/FacilitatorPicture"
+        },
+        "type": "ia.display.flex-repeater"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "alignItems": "flex-start",
+      "direction": "column"
+    },
+    "scripts": {
+      "customMethods": [],
+      "extensionFunctions": null,
+      "messageHandlers": [
+        {
+          "messageType": "searchPeople",
+          "pageScope": true,
+          "script": "\t# implement your handler here\n\tself.view.custom.searchPeopleValue \u003d payload\n\tself.view.refreshBinding(\"custom.facilitators\")",
+          "sessionScope": true,
+          "viewScope": false
+        },
+        {
+          "messageType": "refreshPeople",
+          "pageScope": false,
+          "script": "\t# implement your handler here\n\tself.view.refreshBinding(\"custom.facilitators\")",
+          "sessionScope": true,
+          "viewScope": false
+        }
+      ]
+    },
+    "type": "ia.container.flex"
+  }
+}

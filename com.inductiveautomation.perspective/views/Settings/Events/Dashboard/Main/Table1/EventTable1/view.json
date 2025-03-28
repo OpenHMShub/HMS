@@ -1,0 +1,262 @@
+{
+  "custom": {},
+  "params": {
+    "searchText": "\u0027%%\u0027",
+    "where": "1\u003d1"
+  },
+  "propConfig": {
+    "params.searchText": {
+      "binding": {
+        "config": {
+          "path": "session.custom.filters.settingsEvents.search.value"
+        },
+        "transforms": [
+          {
+            "code": "\tif value is not None and value !\u003d \"\" and value !\u003d \u0027null\u0027:\n\t\treturn \"\u0027%\" + str(value) + \"%\u0027\"\n\telse:\n\t\treturn \"\u0027%%\u0027\"",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.where": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 385,
+      "width": 420
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "Filler1"
+        },
+        "position": {
+          "basis": "34px"
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "children": [
+          {
+            "events": {
+              "component": {
+                "onEditCellCommit": {
+                  "config": {
+                    "script": "\tr \u003d event[\u0027row\u0027]\n#\tc \u003d event[\u0027column\u0027]\n#\tv \u003d event[\u0027value\u0027]\n\tpoints \u003d event[\u0027value\u0027]\n\tsystem.perspective.print(str((self.props.data).getValueAt(r,\u0027eventName\u0027)))\n\tname \u003d (self.props.data).getValueAt(r,\u0027eventName\u0027)\n\tparams \u003d {\"points\":points, \"name\":name}\n\t\n\t# check whether event exist in calendar.CalendarEventsPointCounts table\n\tresult \u003d system.db.runPrepQuery(\"SELECT * FROM calendar.CalendarEventsPointCounts WHERE name \u003d ?\", [name])\n\tsystem.perspective.print(str(result.getRowCount()))\n\t# if event exist then update point count\n\tif (result.getRowCount())\u003e0:\n\t\tsystem.db.runNamedQuery(\"Settings/Events/Update_EventPoints\", params)\n\t# if event not exist then insert new record\n\telse:\n\t\tsystem.db.runNamedQuery(\"Settings/Events/Insert_EventPoints\", params)\n\tself.refreshBinding(\"props.data\")"
+                  },
+                  "scope": "G",
+                  "type": "script"
+                }
+              }
+            },
+            "meta": {
+              "name": "Table"
+            },
+            "position": {
+              "basis": "375px"
+            },
+            "propConfig": {
+              "props.data": {
+                "binding": {
+                  "config": {
+                    "parameters": {
+                      "dateRange": "{view.params.where}",
+                      "searchText": "{view.params.searchText}"
+                    },
+                    "queryPath": "Settings/Events/Get_DistinctEventName"
+                  },
+                  "type": "query"
+                }
+              }
+            },
+            "props": {
+              "cells": {
+                "allowEditOn": "single-click"
+              },
+              "columns": [
+                {
+                  "align": "center",
+                  "boolean": "checkbox",
+                  "dateFormat": "MM/DD/YYYY",
+                  "editable": false,
+                  "field": "eventName",
+                  "footer": {
+                    "align": "center",
+                    "justify": "left",
+                    "style": {
+                      "classes": ""
+                    },
+                    "title": ""
+                  },
+                  "header": {
+                    "align": "center",
+                    "justify": "left",
+                    "style": {
+                      "classes": "Table/Column_Header_Detail"
+                    },
+                    "title": "Event Names"
+                  },
+                  "justify": "left",
+                  "number": "value",
+                  "numberFormat": "0,0.##",
+                  "progressBar": {
+                    "bar": {
+                      "color": "#62A3F6",
+                      "linecap": "round",
+                      "width": 5
+                    },
+                    "max": 100,
+                    "track": {
+                      "color": "#DADADA",
+                      "linecap": "round",
+                      "width": 2
+                    },
+                    "value": {
+                      "color": "#7D7D7D",
+                      "show": true
+                    }
+                  },
+                  "render": "auto",
+                  "resizable": true,
+                  "sort": "none",
+                  "sortable": false,
+                  "strictWidth": false,
+                  "style": {
+                    "classes": ""
+                  },
+                  "toggleSwitch": {
+                    "color": {
+                      "selected": "#2196F3",
+                      "unselected": "#FFFFFF"
+                    }
+                  },
+                  "viewParams": {},
+                  "viewPath": "",
+                  "visible": true,
+                  "width": 100
+                },
+                {
+                  "align": "center",
+                  "boolean": "checkbox",
+                  "dateFormat": "MM/DD/YYYY",
+                  "editable": true,
+                  "field": "points",
+                  "footer": {
+                    "align": "center",
+                    "justify": "left",
+                    "style": {
+                      "classes": ""
+                    },
+                    "title": ""
+                  },
+                  "header": {
+                    "align": "center",
+                    "justify": "center",
+                    "style": {
+                      "classes": "Table/Column_Header_Detail"
+                    },
+                    "title": "Points"
+                  },
+                  "justify": "center",
+                  "number": "value",
+                  "numberFormat": "0,0.##",
+                  "progressBar": {
+                    "bar": {
+                      "color": "#62A3F6",
+                      "linecap": "round",
+                      "width": 5
+                    },
+                    "max": 100,
+                    "track": {
+                      "color": "#DADADA",
+                      "linecap": "round",
+                      "width": 2
+                    },
+                    "value": {
+                      "color": "#7D7D7D",
+                      "show": true
+                    }
+                  },
+                  "render": "auto",
+                  "resizable": true,
+                  "sort": "none",
+                  "sortable": false,
+                  "strictWidth": false,
+                  "style": {
+                    "classes": ""
+                  },
+                  "toggleSwitch": {
+                    "color": {
+                      "selected": "#2196F3",
+                      "unselected": "#FFFFFF"
+                    }
+                  },
+                  "viewParams": {},
+                  "viewPath": "",
+                  "visible": true,
+                  "width": 100
+                }
+              ],
+              "pager": {
+                "bottom": false,
+                "initialOption": 100,
+                "options": [
+                  10,
+                  15,
+                  25,
+                  50,
+                  100
+                ]
+              },
+              "rows": {
+                "highlight": {
+                  "color": "#CCFFFF"
+                },
+                "striped": {
+                  "color": {
+                    "even": "#8AFFFF"
+                  },
+                  "enabled": false
+                },
+                "style": {
+                  "classes": "Table/Cell_Detail"
+                }
+              },
+              "selection": {
+                "style": {
+                  "backgroundColor": "#9af4eb4d"
+                }
+              },
+              "style": {
+                "classes": "Background/Default"
+              }
+            },
+            "type": "ia.display.table"
+          }
+        ],
+        "meta": {
+          "name": "Filler2"
+        },
+        "position": {
+          "basis": "368px"
+        },
+        "props": {
+          "direction": "column"
+        },
+        "type": "ia.container.flex"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "type": "ia.container.flex"
+  }
+}

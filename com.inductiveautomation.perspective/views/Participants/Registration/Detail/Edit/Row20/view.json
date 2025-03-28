@@ -1,0 +1,471 @@
+{
+  "custom": {},
+  "params": {
+    "biracial_id": "",
+    "dob": {
+      "$": [
+        "ts",
+        201,
+        1693293013436
+      ],
+      "$ts": -2208945600000
+    },
+    "dob_quality_id": 6,
+    "ethnicity_id": "",
+    "gender_id": null,
+    "hoh_relationship_id": "",
+    "race_id": ""
+  },
+  "propConfig": {
+    "params.biracial_id": {
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.dob": {
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.dob_quality_id": {
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.ethnicity_id": {
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.gender_id": {
+      "paramDirection": "inout"
+    },
+    "params.hoh_relationship_id": {
+      "paramDirection": "inout"
+    },
+    "params.race_id": {
+      "paramDirection": "inout",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 60,
+      "width": 1416
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "Embed_DOB"
+        },
+        "position": {
+          "basis": "180px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.IsEditable": {
+            "binding": {
+              "config": {
+                "expression": "{session.custom.isSupportCoordinator} || {session.custom.isWSSupportCoordinator} || {session.custom.isManager} || {session.custom.isWSManager} || {session.custom.isAdministrator}"
+              },
+              "type": "expr"
+            }
+          },
+          "props.params.date": {
+            "binding": {
+              "config": {
+                "bidirectional": true,
+                "path": "view.params.dob"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "text": "Date of Birth"
+          },
+          "path": "Participants/Templates/60px/top/Input_Date_WithColorCoding_WithEnableDisableSetting",
+          "style": {
+            "classes": "InputCards/InputCard"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Embed_DOBQuality"
+        },
+        "position": {
+          "basis": "190px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.IsEditable": {
+            "binding": {
+              "config": {
+                "expression": "{session.custom.isSupportCoordinator} || {session.custom.isWSSupportCoordinator} || {session.custom.isManager} || {session.custom.isWSManager} || {session.custom.isAdministrator}"
+              },
+              "type": "expr"
+            }
+          },
+          "props.params.highlight": {
+            "binding": {
+              "config": {
+                "path": "this.props.params.selection"
+              },
+              "transforms": [
+                {
+                  "code": "\tif value \u003d\u003d 6:\n\t\treturn True\n\telse:\n\t\treturn False",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          },
+          "props.params.options": {
+            "binding": {
+              "config": {
+                "queryPath": "Participants/Registration/GetDOBQuality"
+              },
+              "type": "query"
+            }
+          },
+          "props.params.selection": {
+            "binding": {
+              "config": {
+                "bidirectional": true,
+                "path": "view.params.dob_quality_id"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "text": "Date of Birth Quality"
+          },
+          "path": "Participants/Templates/60px/top/Input_DropDownSingle_Mandatory_WithEnableDisableSetting",
+          "style": {
+            "classes": "InputCards/InputCard"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Embed_Ethnicity"
+        },
+        "position": {
+          "basis": "160px",
+          "display": false,
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.IsEditable": {
+            "binding": {
+              "config": {
+                "expression": "{session.custom.isSupportCoordinator} || {session.custom.isWSSupportCoordinator} || {session.custom.isManager} || {session.custom.isWSManager} || {session.custom.isAdministrator}"
+              },
+              "type": "expr"
+            }
+          },
+          "props.params.highlight": {
+            "binding": {
+              "config": {
+                "path": "this.props.params.selection"
+              },
+              "transforms": [
+                {
+                  "code": "\tif value \u003d\u003d 4:\n\t\treturn True\n\telse:\n\t\treturn False",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          },
+          "props.params.options": {
+            "binding": {
+              "config": {
+                "queryPath": "Participants/Registration/GetEthnicity"
+              },
+              "type": "query"
+            }
+          },
+          "props.params.selection": {
+            "binding": {
+              "config": {
+                "bidirectional": true,
+                "path": "view.params.ethnicity_id"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "text": "Ethnicty"
+          },
+          "path": "Participants/Templates/60px/top/Input_DropDownSingle_WithEnableDisableSetting",
+          "style": {
+            "classes": "InputCards/InputCard"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Embed_Placeholder"
+        },
+        "position": {
+          "basis": "1px",
+          "display": false,
+          "grow": 1
+        },
+        "props": {
+          "path": "Participants/Templates/Placeholder",
+          "style": {
+            "classes": "InputCards/InputCard"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Embed_Race"
+        },
+        "position": {
+          "basis": "190px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.IsEditable": {
+            "binding": {
+              "config": {
+                "expression": "{session.custom.isSupportCoordinator} || {session.custom.isWSSupportCoordinator} || {session.custom.isManager} || {session.custom.isWSManager} || {session.custom.isAdministrator}"
+              },
+              "type": "expr"
+            }
+          },
+          "props.params.highlight": {
+            "binding": {
+              "config": {
+                "path": "this.props.params.selection"
+              },
+              "transforms": [
+                {
+                  "code": "\tif value \u003d\u003d 8:\n\t\treturn True\n\telse:\n\t\treturn False",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          },
+          "props.params.options": {
+            "binding": {
+              "config": {
+                "queryPath": "Participants/Registration/GetRaces"
+              },
+              "type": "query"
+            }
+          },
+          "props.params.selection": {
+            "binding": {
+              "config": {
+                "bidirectional": true,
+                "path": "view.params.race_id"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "text": "Race and Ethnicity"
+          },
+          "path": "Participants/Templates/60px/top/Input_DropDownSingle_Mandatory_WithEnableDisableSetting",
+          "style": {
+            "classes": "InputCards/InputCard"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Embed_Biracial"
+        },
+        "position": {
+          "basis": "190px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.IsEditable": {
+            "binding": {
+              "config": {
+                "expression": "{session.custom.isSupportCoordinator} || {session.custom.isWSSupportCoordinator} || {session.custom.isManager} || {session.custom.isWSManager} || {session.custom.isAdministrator}"
+              },
+              "type": "expr"
+            }
+          },
+          "props.params.options": {
+            "binding": {
+              "config": {
+                "queryPath": "Participants/Registration/GetBiRacialOptions"
+              },
+              "type": "query"
+            }
+          },
+          "props.params.selection": {
+            "binding": {
+              "config": {
+                "bidirectional": true,
+                "path": "view.params.biracial_id"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "highlight": false,
+            "text": "Biracial"
+          },
+          "path": "Participants/Templates/60px/top/Input_DropDownSingle_WithEnableDisableSetting",
+          "style": {
+            "classes": "InputCards/InputCard"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Embed_Gender"
+        },
+        "position": {
+          "basis": "190px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.IsEditable": {
+            "binding": {
+              "config": {
+                "expression": "{session.custom.isSupportCoordinator} || {session.custom.isWSSupportCoordinator} || {session.custom.isManager} || {session.custom.isWSManager} || {session.custom.isAdministrator}"
+              },
+              "type": "expr"
+            }
+          },
+          "props.params.highlight": {
+            "binding": {
+              "config": {
+                "path": "this.props.params.selection"
+              },
+              "transforms": [
+                {
+                  "code": "\tif value \u003d\u003d 5:\n\t\treturn True\n\telse:\n\t\treturn False",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          },
+          "props.params.options": {
+            "binding": {
+              "config": {
+                "queryPath": "Participants/Registration/GetGender"
+              },
+              "type": "query"
+            }
+          },
+          "props.params.selection": {
+            "binding": {
+              "config": {
+                "bidirectional": true,
+                "path": "view.params.gender_id"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "text": "Gender"
+          },
+          "path": "Participants/Templates/60px/top/Input_DropDownSingle_Mandatory_WithEnableDisableSetting",
+          "style": {
+            "classes": "InputCards/InputCard"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Embed_FamilyRelationship"
+        },
+        "position": {
+          "basis": "190px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.IsEditable": {
+            "binding": {
+              "config": {
+                "expression": "{session.custom.isSupportCoordinator} || {session.custom.isWSSupportCoordinator} || {session.custom.isManager} || {session.custom.isWSManager} || {session.custom.isAdministrator}"
+              },
+              "type": "expr"
+            }
+          },
+          "props.params.options": {
+            "binding": {
+              "config": {
+                "queryPath": "Participants/Registration/GetRHOH"
+              },
+              "type": "query"
+            }
+          },
+          "props.params.selection": {
+            "binding": {
+              "config": {
+                "bidirectional": true,
+                "path": "view.params.hoh_relationship_id"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "text": "Family Relationship"
+          },
+          "path": "Participants/Templates/Input_DropDownSingle_WithEnableDisableSetting",
+          "style": {
+            "classes": "InputCards/InputCard"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Embed_Placeholder_0"
+        },
+        "position": {
+          "basis": "1px",
+          "grow": 1
+        },
+        "props": {
+          "path": "Participants/Templates/Placeholder",
+          "style": {
+            "classes": "InputCards/InputCard"
+          }
+        },
+        "type": "ia.display.view"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "style": {
+        "classes": "Background/Default"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

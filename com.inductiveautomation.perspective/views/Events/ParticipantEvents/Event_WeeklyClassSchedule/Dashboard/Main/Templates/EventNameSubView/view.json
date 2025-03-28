@@ -1,0 +1,355 @@
+{
+  "custom": {
+    "eventDesc": "",
+    "eventFacilitator": "(David)"
+  },
+  "params": {
+    "value": "(David)Financial Peace University-color-#00FF00-desc-"
+  },
+  "propConfig": {
+    "custom.eventDesc": {
+      "binding": {
+        "config": {
+          "path": "view.params.value"
+        },
+        "transforms": [
+          {
+            "code": "\teventName \u003d value.split(\u0027-desc-\u0027)[-1]\n\treturn eventName",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      },
+      "persistent": true
+    },
+    "custom.eventFacilitator": {
+      "binding": {
+        "config": {
+          "path": "view.params.value"
+        },
+        "transforms": [
+          {
+            "code": "\tif \")\" in value:\n\t\tvalue \u003d value.split(\")\")[0]\n\t\tvalue \u003d value + \")\"\n\t\treturn value\n\telse:\n\t\treturn \"\"",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      },
+      "persistent": true
+    },
+    "params.value": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "props.defaultSize.height": {
+      "binding": {
+        "config": {
+          "expression": "if({view.custom.eventDesc} !\u003d None \u0026\u0026 {view.custom.eventDesc} !\u003d \u0027\u0027, 80,35)"
+        },
+        "type": "expr"
+      }
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "width": 100
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "children": [
+          {
+            "meta": {
+              "name": "name"
+            },
+            "propConfig": {
+              "props.text": {
+                "binding": {
+                  "config": {
+                    "path": "view.params.value"
+                  },
+                  "transforms": [
+                    {
+                      "code": "\tif \")\" in value:\n\t\tvalue \u003d value.split(\")\")[1]\n\teventName \u003d value.split(\u0027-color-\u0027)[0]\n\treturn eventName",
+                      "type": "script"
+                    }
+                  ],
+                  "type": "property"
+                }
+              }
+            },
+            "props": {
+              "style": {
+                "cursor": "pointer",
+                "marginLeft": "5px"
+              }
+            },
+            "type": "ia.display.label"
+          },
+          {
+            "meta": {
+              "name": "color"
+            },
+            "position": {
+              "basis": "14px"
+            },
+            "propConfig": {
+              "position.display": {
+                "binding": {
+                  "config": {
+                    "path": "view.params.value"
+                  },
+                  "transforms": [
+                    {
+                      "code": "\tcolor \u003d (value.split(\u0027-color-\u0027)[-1]).split(\u0027-note-\u0027)[0]\n\tif color !\u003d \u0027None\u0027 and color !\u003d \u0027 \u0027:\n\t\treturn True\n\telse:\n\t\treturn False",
+                      "type": "script"
+                    }
+                  ],
+                  "type": "property"
+                }
+              },
+              "props.style.backgroundColor": {
+                "binding": {
+                  "config": {
+                    "path": "view.params.value"
+                  },
+                  "transforms": [
+                    {
+                      "code": "\tcolor \u003d (value.split(\u0027-color-\u0027)[-1]).split(\u0027-desc-\u0027)[0]\n\tif color !\u003d \u0027None\u0027 and color !\u003d \u0027\u0027:\n\t\treturn color\n\telse:\n\t\treturn \u0027\u0027",
+                      "type": "script"
+                    }
+                  ],
+                  "type": "property"
+                }
+              },
+              "props.style.marginBottom": {
+                "binding": {
+                  "config": {
+                    "expression": "if({view.custom.eventDesc} !\u003d None \u0026\u0026 {view.custom.eventDesc} !\u003d \u0027\u0027, \u00277px\u0027,\u00278px\u0027)"
+                  },
+                  "type": "expr"
+                }
+              },
+              "props.style.marginLeft": {
+                "binding": {
+                  "config": {
+                    "expression": "if({view.custom.eventDesc} !\u003d None \u0026\u0026 {view.custom.eventDesc} !\u003d \u0027\u0027, \u00277px\u0027,\u00278px\u0027)"
+                  },
+                  "type": "expr"
+                }
+              },
+              "props.style.marginTop": {
+                "binding": {
+                  "config": {
+                    "expression": "if({view.custom.eventDesc} !\u003d None \u0026\u0026 {view.custom.eventDesc} !\u003d \u0027\u0027, \u00277px\u0027,\u00278px\u0027)"
+                  },
+                  "type": "expr"
+                }
+              }
+            },
+            "props": {
+              "style": {
+                "borderBottomLeftRadius": "100px",
+                "borderBottomRightRadius": "100px",
+                "borderColor": "#000000",
+                "borderStyle": "solid",
+                "borderTopLeftRadius": "100px",
+                "borderTopRightRadius": "100px",
+                "borderWidth": "0.1px"
+              },
+              "text": ""
+            },
+            "type": "ia.input.button"
+          }
+        ],
+        "events": {
+          "dom": {
+            "onClick": {
+              "config": {
+                "script": "\t\n\teventName \u003d self.getChild(\"name\").props.text\n\tif eventName !\u003d None and eventName !\u003d \u0027 \u0027:\n\t\t\tif \"\u0027\" in eventName:\n\t\t\t\teventName \u003d eventName.replace(\"\u0027\",\"\u0027\u0027\")\n\t\t\tnamedQ \u003d \"select id from [participant].[Events] where timeRetired is NULL and name \u003d \u0027\" + str(eventName)  + \"\u0027\"\n\t\t\tsystem.perspective.print(namedQ)\n\t\t\tresult \u003d system.db.runPrepQuery(namedQ)\n\t\t\teventId \u003d result.getValueAt(0,0)\n\t\t\ttab_id \u003d 2 # registration\n\t\t\tsystem.perspective.navigate(\"/Events/Detail/\" + str(eventId) + \"/\" + str(tab_id) + \"/Weekly Schedule\")"
+              },
+              "scope": "G",
+              "type": "script"
+            }
+          }
+        },
+        "meta": {
+          "name": "EventName"
+        },
+        "propConfig": {
+          "position.basis": {
+            "binding": {
+              "config": {
+                "expression": "if({view.custom.eventDesc} !\u003d None \u0026\u0026 {view.custom.eventDesc} !\u003d \u0027\u0027, \u002735%\u0027,\u002785%\u0027)"
+              },
+              "type": "expr"
+            }
+          },
+          "position.display": {
+            "binding": {
+              "config": {
+                "path": "view.params.value"
+              },
+              "transforms": [
+                {
+                  "code": "\tif value !\u003d None and value !\u003d \u0027 \u0027:\n\t\treturn True\n\telse:\n\t\treturn False",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "justify": "center",
+          "style": {
+            "overflow": "hidden"
+          }
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "children": [
+          {
+            "meta": {
+              "name": "desc"
+            },
+            "position": {
+              "basis": "100%"
+            },
+            "propConfig": {
+              "props.text": {
+                "binding": {
+                  "config": {
+                    "path": "view.custom.eventDesc"
+                  },
+                  "type": "property"
+                }
+              }
+            },
+            "props": {
+              "alignVertical": "top",
+              "style": {
+                "classes": "Text/Event_Description",
+                "cursor": "default",
+                "marginLeft": "2px",
+                "marginRight": "2px"
+              },
+              "textStyle": {
+                "overflowWrap": "break-word",
+                "textAlign": "left"
+              }
+            },
+            "type": "ia.display.label"
+          }
+        ],
+        "meta": {
+          "name": "EventDesc"
+        },
+        "position": {
+          "basis": "65%"
+        },
+        "propConfig": {
+          "position.display": {
+            "binding": {
+              "config": {
+                "path": "view.custom.eventDesc"
+              },
+              "transforms": [
+                {
+                  "code": "\treturn False\n#\tif value !\u003d None and value !\u003d \u0027\u0027:\n#\t\treturn True\n#\telse:\n#\t\treturn False",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "style": {
+            "overflow": "hidden",
+            "paddingBottom": "5px"
+          }
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "children": [
+          {
+            "meta": {
+              "name": "desc"
+            },
+            "position": {
+              "basis": "100%"
+            },
+            "propConfig": {
+              "props.text": {
+                "binding": {
+                  "config": {
+                    "path": "view.custom.eventFacilitator"
+                  },
+                  "type": "property"
+                }
+              }
+            },
+            "props": {
+              "alignVertical": "top",
+              "style": {
+                "classes": "Text/Error_Message",
+                "cursor": "default",
+                "marginLeft": "2px",
+                "marginRight": "2px"
+              },
+              "textStyle": {
+                "overflowWrap": "break-word",
+                "textAlign": "center"
+              }
+            },
+            "type": "ia.display.label"
+          }
+        ],
+        "meta": {
+          "name": "EventFacilitator"
+        },
+        "position": {
+          "basis": "65%"
+        },
+        "propConfig": {
+          "position.display": {
+            "binding": {
+              "config": {
+                "path": "view.custom.eventFacilitator"
+              },
+              "transforms": [
+                {
+                  "code": "\tif value !\u003d None and value !\u003d \u0027\u0027:\n\t\treturn True\n\telse:\n\t\treturn False",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "style": {
+            "overflow": "hidden",
+            "paddingBottom": "5px"
+          }
+        },
+        "type": "ia.container.flex"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column",
+      "justify": "center",
+      "style": {
+        "overflow": "hidden"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

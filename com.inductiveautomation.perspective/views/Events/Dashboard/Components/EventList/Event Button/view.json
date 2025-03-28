@@ -1,0 +1,601 @@
+{
+  "custom": {
+    "lastSelectedEvent": false
+  },
+  "params": {
+    "EventID": 45,
+    "InstanceID": "",
+    "Selected": false
+  },
+  "propConfig": {
+    "custom.lastSelectedEvent": {
+      "persistent": true
+    },
+    "params.EventID": {
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.InstanceID": {
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.Selected": {
+      "binding": {
+        "config": {
+          "bidirectional": true,
+          "path": "/root/FlexContainer.custom.Selected"
+        },
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "props.defaultSize.height": {
+      "binding": {
+        "config": {
+          "path": "/root/FlexContainer/Title.custom.Dataset"
+        },
+        "overlayOptOut": true,
+        "transforms": [
+          {
+            "code": "\theight \u003d 70\n\ttitle \u003d value.getValueAt(0,\u0027title\u0027)\n\ttitleLength \u003d len(title)\n\tnumberOfLines \u003d titleLength//18\n\tfinalHeight \u003d 70+numberOfLines*30\n\t\n\treturn finalHeight",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      }
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "width": 435
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "children": [
+          {
+            "events": {
+              "dom": {
+                "onClick": {
+                  "config": {
+                    "script": "\t\n\t\n\t\n\tif self.parent.custom.Selected \u003d\u003d False : \n\t\tmessageType \u003d \u0027Selected_Event\u0027\n\t\tpayload \u003d {\u0027lastSelectedEvent\u0027:  self.view.params.InstanceID, \u0027lastSelectedEventID\u0027: self.view.params.EventID}\n\t\tsystem.perspective.sendMessage(messageType,payload, scope \u003d \u0027page\u0027)\n\telse :\n\t\tself.parent.custom.Selected \u003d False\n\t"
+                  },
+                  "scope": "G",
+                  "type": "script"
+                }
+              }
+            },
+            "meta": {
+              "name": "FlexContainer"
+            },
+            "position": {
+              "basis": "375px",
+              "display": false,
+              "grow": 1
+            },
+            "props": {
+              "alignItems": "center",
+              "style": {
+                "borderBottomColor": "#9db8d1",
+                "borderBottomStyle": "solid",
+                "borderBottomWidth": 1,
+                "borderTopColor": "#9db8d1",
+                "borderTopStyle": "solid",
+                "borderTopWidth": 1
+              }
+            },
+            "scripts": {
+              "customMethods": [],
+              "extensionFunctions": null,
+              "messageHandlers": [
+                {
+                  "messageType": "Selected_Event",
+                  "pageScope": true,
+                  "script": "\t# implement your handler here\n\n\tif self.view.params.InstanceID \u003d\u003d payload[\u0027lastSelectedEvent\u0027] :\n\t\tself.view.params.Selected \u003d True\n\telse :\n\t\tself.view.params.Selected \u003d False\n",
+                  "sessionScope": false,
+                  "viewScope": false
+                },
+                {
+                  "messageType": "RefreshEventList",
+                  "pageScope": false,
+                  "script": "\t# implement your handler here\n\ttry :\n\t\tself.getChild(\"Title\").refreshBinding(\"custom.Dataset\")\n\texcept:\n\t\tpass",
+                  "sessionScope": true,
+                  "viewScope": false
+                }
+              ]
+            },
+            "type": "ia.container.flex"
+          },
+          {
+            "children": [
+              {
+                "meta": {
+                  "name": "Image"
+                },
+                "position": {
+                  "shrink": 0
+                },
+                "propConfig": {
+                  "props.source": {
+                    "binding": {
+                      "config": {
+                        "parameters": {
+                          "eventID": "{view.params.EventID}"
+                        },
+                        "queryPath": "Calendar/GetEventByID"
+                      },
+                      "transforms": [
+                        {
+                          "code": "\treturn value.getValueAt(0,\"Category\")",
+                          "type": "script"
+                        },
+                        {
+                          "fallback": "",
+                          "inputType": "scalar",
+                          "mappings": [
+                            {
+                              "input": "Social Event",
+                              "output": "/system/images/SVGs/Categories/Social Event.svg"
+                            },
+                            {
+                              "input": "Seminar",
+                              "output": "/system/images/SVGs/Categories/Seminar.svg"
+                            },
+                            {
+                              "input": "Classes \u0026 Workshops",
+                              "output": "/system/images/SVGs/Categories/Classes.svg"
+                            },
+                            {
+                              "input": "Fundraising",
+                              "output": "/system/images/SVGs/Categories/Fundraising.svg"
+                            },
+                            {
+                              "input": "Faith Meetings",
+                              "output": "/system/images/SVGs/Categories/Faith Meeting.svg"
+                            },
+                            {
+                              "input": "Personal Growth",
+                              "output": "/system/images/SVGs/Categories/Personal Growth.svg"
+                            }
+                          ],
+                          "outputType": "scalar",
+                          "type": "map"
+                        }
+                      ],
+                      "type": "query"
+                    }
+                  },
+                  "props.tint.color": {
+                    "binding": {
+                      "config": {
+                        "path": "view.params.Selected"
+                      },
+                      "transforms": [
+                        {
+                          "fallback": "#9DB8D1",
+                          "inputType": "scalar",
+                          "mappings": [
+                            {
+                              "input": true,
+                              "output": "#3EC3D9"
+                            },
+                            {
+                              "input": false,
+                              "output": "#9DB8D1"
+                            }
+                          ],
+                          "outputType": "color",
+                          "type": "map"
+                        }
+                      ],
+                      "type": "property"
+                    }
+                  }
+                },
+                "props": {
+                  "fit": {
+                    "height": 40,
+                    "mode": "absolute",
+                    "width": 40
+                  },
+                  "tint": {
+                    "enabled": true
+                  }
+                },
+                "type": "ia.display.image"
+              }
+            ],
+            "meta": {
+              "name": "FlexContainer_Image"
+            },
+            "position": {
+              "basis": "60px"
+            },
+            "props": {
+              "alignItems": "center",
+              "justify": "center"
+            },
+            "type": "ia.container.flex"
+          },
+          {
+            "children": [
+              {
+                "meta": {
+                  "name": "Subcategory"
+                },
+                "position": {
+                  "shrink": 0
+                },
+                "propConfig": {
+                  "props.text": {
+                    "binding": {
+                      "config": {
+                        "expression": "{parent.custom.Dataset}"
+                      },
+                      "transforms": [
+                        {
+                          "code": "\treturn value.getValueAt(0,\"Subcategory\")",
+                          "type": "script"
+                        }
+                      ],
+                      "type": "expr"
+                    }
+                  }
+                },
+                "props": {
+                  "alignVertical": "bottom",
+                  "style": {
+                    "classes": "Text/Event_Category",
+                    "fontSize": 15
+                  }
+                },
+                "type": "ia.display.label"
+              },
+              {
+                "meta": {
+                  "name": "Label"
+                },
+                "position": {
+                  "shrink": 0
+                },
+                "propConfig": {
+                  "props.text": {
+                    "binding": {
+                      "config": {
+                        "expression": "{parent.custom.Dataset}"
+                      },
+                      "transforms": [
+                        {
+                          "code": "\treturn value.getValueAt(0,\"title\")",
+                          "type": "script"
+                        }
+                      ],
+                      "type": "expr"
+                    }
+                  }
+                },
+                "props": {
+                  "style": {
+                    "backgroundColor": "#FFFFFF00",
+                    "classes": "Text/Event_Info",
+                    "cursor": "pointer",
+                    "fontSize": 28,
+                    "marginLeft": -5
+                  }
+                },
+                "type": "ia.display.label"
+              }
+            ],
+            "events": {
+              "dom": {
+                "onClick": {
+                  "config": {
+                    "script": "\n\tif self.parent.custom.Selected \u003d\u003d False : \n\t\tmessageType \u003d \u0027Selected_Event\u0027\n\t\tpayload \u003d {\u0027lastSelectedEvent\u0027:  self.view.params.InstanceID, \u0027lastSelectedEventID\u0027: self.view.params.EventID}\n\t\tsystem.perspective.sendMessage(messageType,payload, scope \u003d \u0027page\u0027)\n\telse :\n\t\tself.parent.custom.Selected \u003d False\n\t"
+                  },
+                  "scope": "G",
+                  "type": "script"
+                }
+              }
+            },
+            "meta": {
+              "name": "Title"
+            },
+            "position": {
+              "basis": "150px",
+              "grow": 1
+            },
+            "propConfig": {
+              "custom.Dataset": {
+                "binding": {
+                  "config": {
+                    "parameters": {
+                      "eventID": "{view.params.EventID}"
+                    },
+                    "queryPath": "Calendar/GetEventByID"
+                  },
+                  "type": "query"
+                }
+              }
+            },
+            "props": {
+              "direction": "column",
+              "justify": "center",
+              "style": {
+                "cursor": "pointer",
+                "overflow": "hidden",
+                "paddingLeft": 10
+              }
+            },
+            "scripts": {
+              "customMethods": [],
+              "extensionFunctions": null,
+              "messageHandlers": [
+                {
+                  "messageType": "RefreshEventList",
+                  "pageScope": false,
+                  "script": "\t# implement your handler here\n\ttry:\n\t\tself.custom.refreshBinding(\"Dataset\")\n\texcept :\n\t\tpass",
+                  "sessionScope": true,
+                  "viewScope": false
+                },
+                {
+                  "messageType": "Selected_Event",
+                  "pageScope": true,
+                  "script": "\t# implement your handler here\n\n\tif self.view.params.InstanceID \u003d\u003d payload[\u0027lastSelectedEvent\u0027] :\n\t\tself.view.params.Selected \u003d True\n\telse :\n\t\tself.view.params.Selected \u003d False\n",
+                  "sessionScope": false,
+                  "viewScope": false
+                },
+                {
+                  "messageType": "RefreshEventList",
+                  "pageScope": true,
+                  "script": "\t# implement your handler here\n\ttry :\n\t\tself.refreshBinding(\"custom.Dataset\")\n\texcept:\n\t\tpass",
+                  "sessionScope": false,
+                  "viewScope": false
+                }
+              ]
+            },
+            "type": "ia.container.flex"
+          },
+          {
+            "children": [
+              {
+                "meta": {
+                  "name": "Start Time"
+                },
+                "position": {
+                  "grow": 1
+                },
+                "propConfig": {
+                  "props.text": {
+                    "binding": {
+                      "config": {
+                        "expression": "{.../Title.custom.Dataset}"
+                      },
+                      "transforms": [
+                        {
+                          "code": "\thour \u003d system.date.getHour12(value.getValueAt(0,\"startDate\"))\n\tmin \u003d system.date.getMinute(value.getValueAt(0,\"startDate\"))\n\tam_pm \u003d system.date.getAMorPM(value.getValueAt(0,\"startDate\"))\n\tstr_am_pm \u003d \"AM\"\n\tstr_min \u003d str(min)\n\tif am_pm :\n\t\tstr_am_pm \u003d \"PM\"\t\n\tif min \u003c 10 :\n\t\tstr_min \u003d \"0\" +str_min\n\t\t\n\treturnStr \u003d str(hour) + \":\" + str_min + \" \" + str_am_pm + \" -\"\n\treturn returnStr",
+                          "type": "script"
+                        }
+                      ],
+                      "type": "expr"
+                    }
+                  }
+                },
+                "props": {
+                  "alignVertical": "bottom"
+                },
+                "type": "ia.display.label"
+              },
+              {
+                "meta": {
+                  "name": "End Time"
+                },
+                "position": {
+                  "grow": 1
+                },
+                "propConfig": {
+                  "props.text": {
+                    "binding": {
+                      "config": {
+                        "expression": "{.../Title.custom.Dataset}"
+                      },
+                      "transforms": [
+                        {
+                          "code": "\thour \u003d system.date.getHour12(value.getValueAt(0,\"endDate\"))\n\tmin \u003d system.date.getMinute(value.getValueAt(0,\"endDate\"))\n\tam_pm \u003d system.date.getAMorPM(value.getValueAt(0,\"endDate\"))\n\tstr_am_pm \u003d \"AM\"\n\tstr_min \u003d str(min)\n\tif am_pm :\n\t\tstr_am_pm \u003d \"PM\"\t\n\tif min \u003c 10 :\n\t\tstr_min \u003d  \"0\" +str_min\n\t\t\n\treturnStr \u003d str(hour) + \":\" + str_min + \" \" + str_am_pm\n\treturn returnStr",
+                          "type": "script"
+                        }
+                      ],
+                      "type": "expr"
+                    }
+                  }
+                },
+                "props": {
+                  "alignVertical": "top",
+                  "style": {
+                    "paddingRight": 8
+                  }
+                },
+                "type": "ia.display.label"
+              }
+            ],
+            "meta": {
+              "name": "Time"
+            },
+            "position": {
+              "basis": "80px",
+              "shrink": 0
+            },
+            "props": {
+              "alignItems": "center",
+              "direction": "column",
+              "style": {
+                "classes": "Text/Event_Category"
+              }
+            },
+            "type": "ia.container.flex"
+          },
+          {
+            "children": [
+              {
+                "events": {
+                  "component": {
+                    "onActionPerformed": {
+                      "config": {
+                        "script": "\tparamDict \u003d {\n\t\u0027eventId\u0027: self.view.params.EventID,\n\t\u0027isUpdateEvent\u0027: True\n\t}\n\tsystem.perspective.openDock(\"AddEvent\", params \u003d paramDict)"
+                      },
+                      "scope": "G",
+                      "type": "script"
+                    }
+                  }
+                },
+                "meta": {
+                  "name": "Edit Button"
+                },
+                "position": {
+                  "basis": "30px"
+                },
+                "props": {
+                  "image": {
+                    "height": 18,
+                    "icon": {
+                      "color": "#9db8d1",
+                      "path": "material/create"
+                    },
+                    "position": "center",
+                    "width": 18
+                  },
+                  "style": {
+                    "classes": "Buttons/Btn_Event"
+                  },
+                  "text": ""
+                },
+                "type": "ia.input.button"
+              },
+              {
+                "events": {
+                  "component": {
+                    "onActionPerformed": {
+                      "config": {
+                        "script": "\tsystem.db.runNamedQuery(\"Calendar/Event Instance People/DeleteInstanceStaff\",{\u0027instanceID\u0027 : self.view.params.InstanceID})\n\tsystem.db.runNamedQuery(\"Calendar/Event Instance People/DeleteInstanceVolunteer\",{\u0027instanceID\u0027 : self.view.params.InstanceID})\n\tsystem.db.runNamedQuery(\"Calendar/Event Instance People/DeleteInstanceFacilitator\",{\u0027instanceID\u0027 : self.view.params.InstanceID})\n\tsystem.db.runNamedQuery(\"Calendar/EventInstance/DeleteEventInstance\",{\u0027instanceID\u0027 : self.view.params.InstanceID})\n\tpayload \u003d {\u0027Refresh\u0027 : True}\n\tsystem.perspective.sendMessage(\u0027RefreshEventList\u0027, payload, scope \u003d \u0027session\u0027)\n\tpayload \u003d None\n\tsystem.perspective.sendMessage(\u0027CreateCalendarEvent\u0027, payload, scope \u003d \u0027session\u0027)\n\tsystem.perspective.closeDock(\"AddEvent\")"
+                      },
+                      "scope": "G",
+                      "type": "script"
+                    }
+                  }
+                },
+                "meta": {
+                  "name": "Remove Button"
+                },
+                "position": {
+                  "basis": "30px"
+                },
+                "props": {
+                  "image": {
+                    "height": 18,
+                    "icon": {
+                      "color": "#9db8d1",
+                      "path": "material/delete"
+                    },
+                    "position": "center",
+                    "width": 18
+                  },
+                  "style": {
+                    "classes": "Buttons/Btn_Event"
+                  },
+                  "text": ""
+                },
+                "type": "ia.input.button"
+              }
+            ],
+            "meta": {
+              "name": "Buttons"
+            },
+            "position": {
+              "basis": "30px",
+              "shrink": 0
+            },
+            "propConfig": {
+              "meta.visible": {
+                "binding": {
+                  "config": {
+                    "path": "parent.custom.Selected"
+                  },
+                  "type": "property"
+                }
+              }
+            },
+            "props": {
+              "alignItems": "center",
+              "direction": "column",
+              "justify": "center",
+              "style": {
+                "classes": "Buttons/Btn_Event"
+              }
+            },
+            "type": "ia.container.flex"
+          }
+        ],
+        "custom": {
+          "Selected": false
+        },
+        "meta": {
+          "name": "FlexContainer"
+        },
+        "position": {
+          "basis": "390px",
+          "grow": 1
+        },
+        "propConfig": {
+          "props.style.classes": {
+            "binding": {
+              "config": {
+                "path": "this.custom.Selected"
+              },
+              "transforms": [
+                {
+                  "fallback": "Event/Event_Unselected",
+                  "inputType": "scalar",
+                  "mappings": [
+                    {
+                      "input": false,
+                      "output": "Event/Event_Unselected"
+                    },
+                    {
+                      "input": true,
+                      "output": "Event/Event_Selected"
+                    }
+                  ],
+                  "outputType": "style-list",
+                  "type": "map"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "style": {
+            "overflow": "hidden"
+          }
+        },
+        "type": "ia.container.flex"
+      }
+    ],
+    "events": {
+      "dom": {
+        "onDoubleClick": {
+          "config": {
+            "script": "\t#system.perspective.sendMessage(\"eventDetails\", payload \u003d {\"id\":self.view.params.InstanceID}, scope \u003d \"session\")\n\tsystem.perspective.navigate(\"/Events/Detail/\" + str(self.view.params.InstanceID))"
+          },
+          "scope": "G",
+          "type": "script"
+        }
+      }
+    },
+    "meta": {
+      "name": "root"
+    },
+    "type": "ia.container.flex"
+  }
+}

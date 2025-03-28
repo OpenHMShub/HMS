@@ -1,0 +1,1 @@
+SELECT * FROM [participant].[TaskActivityLog] where id = :id

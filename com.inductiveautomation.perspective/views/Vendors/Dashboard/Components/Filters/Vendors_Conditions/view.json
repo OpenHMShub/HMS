@@ -1,0 +1,379 @@
+{
+  "custom": {},
+  "events": {
+    "system": {
+      "onStartup": {
+        "config": {
+          "script": "\ttry:\n\t\troot \u003d self.getChild(\"root\")\n\t\troot.setPropsDropdowns()\n\t\troot.clearAll()\n\t\t#payload \u003d {}\n\t\t#root.sendMsgCondition(payload)\n\t\t#emvSearch \u003d root.getChild(\"emvSearch\")\n\t\t#emvSearch.props.params.keyUpPulse \u003d False\n\texcept:\n\t\timport traceback\n\t\tlogger \u003d system.util.getLogger(\"Vendors\")\n\t\tmsg \u003d self.name + \u0027:\\n\u0027\n\t\tmsg +\u003d traceback.format_exc()\n\t\tlogger.error(msg)\t\t\t"
+        },
+        "scope": "G",
+        "type": "script"
+      }
+    }
+  },
+  "params": {
+    "businessId": -1,
+    "city": null,
+    "searchText": "\u0027%%\u0027"
+  },
+  "propConfig": {
+    "params.businessId": {
+      "binding": {
+        "config": {
+          "path": "/root/emvBusinessDescription.props.params.selection"
+        },
+        "transforms": [
+          {
+            "code": "\tif value is None :\n\t\treturn -1\n\telse:\n\t\treturn value",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.city": {
+      "binding": {
+        "config": {
+          "path": "/root/emvCity.props.params.selection"
+        },
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.searchText": {
+      "binding": {
+        "config": {
+          "path": "/root/emvSearch.props.params.searchText"
+        },
+        "transforms": [
+          {
+            "code": "\tif value is None:\n\t\treturn \"\u0027%%\u0027\"\n\telse:\n\t\treturn \"\u0027%\" + str(value) + \"%\u0027\"",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 30,
+      "width": 1820
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "emvBusinessDescription"
+        },
+        "position": {
+          "basis": "200px"
+        },
+        "props": {
+          "params": {
+            "actionPerformedPulse": false,
+            "clear": false,
+            "multiSelect": false,
+            "options": [
+              {
+                "label": "Access / Doors",
+                "value": 12
+              },
+              {
+                "label": "Electrical / Lighting",
+                "value": 10
+              },
+              {
+                "label": "Furniture",
+                "value": 3
+              },
+              {
+                "label": "HVAC",
+                "value": 6
+              },
+              {
+                "label": "Internet / Cable",
+                "value": 11
+              },
+              {
+                "label": "Kitchen",
+                "value": 5
+              },
+              {
+                "label": "Landscaping",
+                "value": 15
+              },
+              {
+                "label": "Life \u0026 Safety",
+                "value": 1
+              },
+              {
+                "label": "Other",
+                "value": 8
+              },
+              {
+                "label": "Pest Control",
+                "value": 4
+              },
+              {
+                "label": "Phones",
+                "value": 2
+              },
+              {
+                "label": "Plumbing",
+                "value": 9
+              },
+              {
+                "label": "Security / Cameras",
+                "value": 13
+              },
+              {
+                "label": "Sound System",
+                "value": 14
+              },
+              {
+                "label": "Washer / Dryers",
+                "value": 7
+              }
+            ],
+            "placeholder": "All Business Description",
+            "selection": null
+          },
+          "path": "Vendors/Dashboard/Components/Filters/Conditional_DropDown",
+          "style": {
+            "classes": "Filter/Filter_Container",
+            "marginLeft": "40px"
+          }
+        },
+        "scripts": {
+          "customMethods": [
+            {
+              "name": "setOptions",
+              "params": [],
+              "script": "\tquery \u003d \"\"\"\nSELECT \n\t [BusinessDescriptionID]\n\t,[BusinessDescription]\nFROM [organization].[VendorBusinessDescription]\nORDER BY [BusinessDescription]\n\"\"\"\n\t\n\tresult \u003d system.db.runPrepQuery(query,[],\u0027RITIOps\u0027)\n\t\n\t# Version 1 set options as list of dictionaries\n\tself.props.params.options \u003d [ dict(value \u003d x[\u0027BusinessDescriptionID\u0027],label \u003d x[\u0027BusinessDescription\u0027]) for x in result]\t\n\n\n\t\n\t"
+            }
+          ],
+          "extensionFunctions": null,
+          "messageHandlers": []
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "emvCity"
+        },
+        "position": {
+          "basis": "150px"
+        },
+        "props": {
+          "params": {
+            "actionPerformedPulse": false,
+            "clear": false,
+            "multiSelect": false,
+            "options": [
+              {
+                "label": "Brentwood",
+                "value": "Brentwood"
+              },
+              {
+                "label": "Cordova",
+                "value": "Cordova"
+              },
+              {
+                "label": "Hendersonville",
+                "value": "Hendersonville"
+              },
+              {
+                "label": "Knoxville",
+                "value": "Knoxville"
+              },
+              {
+                "label": "Mount Juliet",
+                "value": "Mount Juliet"
+              },
+              {
+                "label": "Murfreesboro",
+                "value": "Murfreesboro"
+              },
+              {
+                "label": "Nash",
+                "value": "Nash"
+              },
+              {
+                "label": "Nashville",
+                "value": "Nashville"
+              }
+            ],
+            "placeholder": "All Cities",
+            "selection": null
+          },
+          "path": "Vendors/Dashboard/Components/Filters/Conditional_DropDown",
+          "style": {
+            "classes": "Filter/Filter_Container"
+          }
+        },
+        "scripts": {
+          "customMethods": [
+            {
+              "name": "setOptions",
+              "params": [],
+              "script": "\tcities \u003d [\n\t\"Brentwood\"\n\t,\"Cordova\"\n\t,\"Hendersonville\"\n\t,\"Knoxville\"\n\t,\"Mount Juliet\"\n\t,\"Murfreesboro\"\n\t,\"Nash\"\n\t,\"Nashville\"\n]\n\t\n\t# Version 1 set options as list of dictionaries\n\tself.props.params.options \u003d [ dict(value \u003d x, label \u003d x) for x in cities]\n\n\t"
+            }
+          ],
+          "extensionFunctions": null,
+          "messageHandlers": []
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Placeholder"
+        },
+        "position": {
+          "basis": "10px",
+          "grow": 1
+        },
+        "props": {
+          "path": "1_TEMPLATES/Filtering/Filter_Placeholder"
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "lblSearch"
+        },
+        "position": {
+          "basis": "50px"
+        },
+        "props": {
+          "style": {
+            "classes": "Table/Filter_Header",
+            "textAlign": "end"
+          },
+          "text": "Search:"
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "meta": {
+          "name": "emvSearch"
+        },
+        "position": {
+          "basis": "220px",
+          "shrink": 0
+        },
+        "props": {
+          "params": {
+            "clear": false,
+            "keyUpPulse": false,
+            "searchText": ""
+          },
+          "path": "Vendors/Dashboard/Components/Filters/Search_Bar",
+          "style": {
+            "classes": "Table/Search_Bar"
+          },
+          "useDefaultViewWidth": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "events": {
+          "component": {
+            "onActionPerformed": {
+              "config": {
+                "script": "\troot \u003d self.parent \n\n\troot.clearAll()"
+              },
+              "scope": "G",
+              "type": "script"
+            }
+          }
+        },
+        "meta": {
+          "name": "clearConditions"
+        },
+        "position": {
+          "basis": "30px",
+          "shrink": 0
+        },
+        "props": {
+          "image": {
+            "height": 16,
+            "icon": {
+              "color": "#0C4E8B",
+              "path": "material/close"
+            },
+            "position": "center",
+            "width": 16
+          },
+          "style": {
+            "classes": "Filter/Filter_Border_Default Filter/Filter_Container",
+            "marginRight": "37px"
+          },
+          "text": "",
+          "textStyle": {
+            "classes": "GreyColor"
+          }
+        },
+        "type": "ia.input.button"
+      }
+    ],
+    "custom": {
+      "_devPulse": false,
+      "_isDev": false
+    },
+    "meta": {
+      "name": "root"
+    },
+    "propConfig": {
+      "custom._devPulse": {
+        "onChange": {
+          "enabled": null,
+          "script": "\t\n\temvActivityRange \u003d self.getChild(\"emvActivityRange\")\n\temvBusinessDescription \u003d self.getChild(\"emvBusinessDescription\")\n\temvCity \u003d self.getChild(\"emvCity\")\n\temvQualifier \u003d self.getChild(\"emvQualifier\")\n\temvSearch \u003d self.getChild(\"emvSearch\")\n\t\n\t\n\tif self.custom._isDev:\n\t\tif currentValue.value is True:\n\t\t\tself.setPropsDropdowns()\n\t\telse:\n\t\t\temvActivityRange.props.params.options \u003d []\n\t\t\temvBusinessDescription.props.params.options \u003d []\n\t\t\temvCity.props.params.options \u003d []\n\t\t\temvQualifier.props.params.options \u003d []\n\n\temvActivityRange.props.params.actionPerformedPulse \u003d False\t\n\temvBusinessDescription.props.params.actionPerformedPulse \u003d False\n\temvCity.props.params.actionPerformedPulse \u003d False\n\temvQualifier.props.params.actionPerformedPulse \u003d False\n\t\n\temvSearch.props.params.keyUpPulse \u003d False"
+        }
+      }
+    },
+    "props": {
+      "style": {
+        "classes": "Filter/Header_Text"
+      }
+    },
+    "scripts": {
+      "customMethods": [
+        {
+          "name": "setPropsDropdowns",
+          "params": [],
+          "script": "\temvBusinessDescription \u003d self.getChild(\"emvBusinessDescription\")\n\temvCity \u003d self.getChild(\"emvCity\")\n\t\n\temvBusinessDescription.setOptions()\n\temvCity.setOptions()\n\t\n"
+        },
+        {
+          "name": "sendMsgCondition",
+          "params": [
+            "payload\u003dNone"
+          ],
+          "script": "\t\n\t\n\temvBusinessDescription \u003d self.getChild(\"emvBusinessDescription\")\n\temvCity \u003d self.getChild(\"emvCity\")\n\temvSearch \u003d self.getChild(\"emvSearch\")\n\t\n\tif payload is None:\n\t\tpayload \u003d {}\n\n\t\tpayload[\u0027businessDescriptionId\u0027] \u003d emvBusinessDescription.props.params.selection\n\t\tpayload[\u0027city\u0027] \u003d emvCity.props.params.selection\n\t\tpayload[\u0027searchText\u0027] \u003d emvSearch.props.params.searchText\n\t\n\n\tsystem.perspective.sendMessage(\u0027mhByCondition\u0027, payload \u003d payload)\n\t\n"
+        },
+        {
+          "name": "clearAll",
+          "params": [],
+          "script": "\t\n\troot \u003d self\n\t\n\temvBusinessDescription \u003d root.getChild(\"emvBusinessDescription\")\n\temvCity \u003d root.getChild(\"emvCity\")\n\temvSearch \u003d root.getChild(\"emvSearch\")\n\n\t\n\temvBusinessDescription.props.params.clear \u003d True\n\temvCity.props.params.clear \u003d True\n\temvSearch.props.params.clear \u003d True\n\n\tpayload \u003d {}\n\n\t\n\tpayload[\u0027businessDescriptionId\u0027] \u003d None\n\tpayload[\u0027city\u0027] \u003d None\n\tpayload[\u0027searchText\u0027] \u003d None\n\n\troot.sendMsgCondition(payload)"
+        }
+      ],
+      "extensionFunctions": null,
+      "messageHandlers": [
+        {
+          "messageType": "refreshVendorTableFromFilter",
+          "pageScope": true,
+          "script": "\tself.sendMsgCondition()",
+          "sessionScope": false,
+          "viewScope": false
+        }
+      ]
+    },
+    "type": "ia.container.flex"
+  }
+}

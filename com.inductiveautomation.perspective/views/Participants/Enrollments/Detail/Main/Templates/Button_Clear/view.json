@@ -1,0 +1,92 @@
+{
+  "custom": {
+    "historyRecord": [
+      {
+        "EntryDate": 1679346047073,
+        "ExitDate": null,
+        "ParticipantID": 432819,
+        "ProgramID": 29,
+        "activeStatus": "Active",
+        "id": 234,
+        "programName": "Hope University",
+        "staffName": " "
+      }
+    ]
+  },
+  "params": {
+    "value": 234
+  },
+  "propConfig": {
+    "custom.historyRecord": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "recordId": "{view.params.value}"
+          },
+          "queryPath": "Participants/Enrollments/getProgramsHistory_WithID",
+          "returnFormat": "json"
+        },
+        "type": "query"
+      },
+      "persistent": true
+    },
+    "params.value": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 30,
+      "width": 30
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "events": {
+          "dom": {
+            "onClick": {
+              "config": {
+                "script": "\t\n\t## Ticket 308 - Yogini Marathe - Call a named query to insert the audit log\n\tif self.view.custom.historyRecord\t is not None and len(self.view.custom.historyRecord) \u003e 0:\n\t\tparticipant_id \u003d self.view.custom.historyRecord[0].ParticipantID\n\t\tprogram_id \u003d self.view.custom.historyRecord[0].ProgramID\n\t\tquery_insert_log \u003d \"Participants/Enrollments/AddEnrollmentLog\"\n\t\tquery_insert_log_params \u003d {\"participantId\": participant_id, \"programId\": program_id, \"action\":\"Delete History\", \"userName\":self.session.props.auth.user.userName}\n\t\tsystem.db.runNamedQuery(query_insert_log, query_insert_log_params)\n\t\n\t## End Ticket 308\n\t\n\tlogID \u003d self.view.params.value\n\tdeleteQ \u003d \"DELETE FROM participant.ProgramsHistory WHERE id \u003d ?\"\n\tsystem.db.runPrepUpdate(deleteQ, [logID])\n\tsystem.perspective.sendMessage(\"refreshSelectedEnrollments\", payload\u003d{}, scope\u003d\"session\")"
+              },
+              "scope": "G",
+              "type": "script"
+            }
+          }
+        },
+        "meta": {
+          "name": "Button_0"
+        },
+        "position": {
+          "basis": "24px"
+        },
+        "props": {
+          "image": {
+            "height": 16,
+            "icon": {
+              "color": "#0c4e8b",
+              "path": "material/close"
+            },
+            "position": "center",
+            "width": 20
+          },
+          "style": {
+            "classes": "Buttons/Detail_Action"
+          },
+          "text": ""
+        },
+        "type": "ia.input.button"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "alignItems": "center",
+      "direction": "column",
+      "justify": "center"
+    },
+    "type": "ia.container.flex"
+  }
+}

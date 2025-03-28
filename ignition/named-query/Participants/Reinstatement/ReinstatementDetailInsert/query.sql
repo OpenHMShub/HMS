@@ -1,0 +1,24 @@
+INSERT INTO	participant.ReinstatementLog 
+	(
+	participantId,
+	suspensionId,
+	Comment,
+	userName,
+	timeCreated,
+	duration,
+	suspensionTypeId,
+	timeBegin,
+	timeEnd 
+	)
+VALUES
+	(
+ 	:participant_id, 
+  	:suspension_id, 
+  	:comment,
+    :user_name,
+    :time_created,
+    :duration,
+    :suspension_type_id,
+    :time_begin,
+    :time_end 
+	)

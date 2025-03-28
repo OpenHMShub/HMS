@@ -1,0 +1,187 @@
+{
+  "custom": {},
+  "params": {
+    "tab_id": "Weekly Schedule"
+  },
+  "propConfig": {
+    "params.tab_id": {
+      "paramDirection": "inout",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "width": 1600
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "children": [
+          {
+            "meta": {
+              "name": "Tabstrip"
+            },
+            "position": {
+              "basis": "320px",
+              "grow": 1
+            },
+            "propConfig": {
+              "props.params.selectedTab": {
+                "binding": {
+                  "config": {
+                    "bidirectional": true,
+                    "path": "view.params.tab_id"
+                  },
+                  "type": "property"
+                }
+              }
+            },
+            "props": {
+              "path": "Events/ParticipantEvents/Overview/Dashboard/Components/TabStrip/TabStrip"
+            },
+            "type": "ia.display.view"
+          },
+          {
+            "children": [
+              {
+                "events": {
+                  "dom": {
+                    "onClick": {
+                      "config": {
+                        "script": "\tsystem.perspective.openDock(\u0027EventSearch\u0027)"
+                      },
+                      "scope": "G",
+                      "type": "script"
+                    }
+                  }
+                },
+                "meta": {
+                  "name": "New_Event"
+                },
+                "position": {
+                  "basis": "320px"
+                },
+                "propConfig": {
+                  "position.display": {
+                    "binding": {
+                      "config": {
+                        "expression": "If({.../Tabstrip.props.params.selectedTab} \u003d \u0027Overview\u0027 \u0026\u0026 ({session.custom.isAdministrator} || {session.custom.isWSManager} || {session.custom.isManager} || {session.custom.isWSSupportCoordinator} || {session.custom.isSupportCoordinator} || {session.custom.isCareCoordinator}),true,false)"
+                      },
+                      "type": "expr"
+                    }
+                  }
+                },
+                "props": {
+                  "params": {
+                    "Text": "NEW EVENT"
+                  },
+                  "path": "Events/ParticipantEvents/Overview/Dashboard/Components/Buttons/New_Event",
+                  "style": {
+                    "paddingLeft": 4
+                  },
+                  "useDefaultViewHeight": true,
+                  "useDefaultViewWidth": true
+                },
+                "type": "ia.display.view"
+              }
+            ],
+            "meta": {
+              "name": "Controls"
+            },
+            "position": {
+              "basis": "300px"
+            },
+            "props": {
+              "alignItems": "flex-end",
+              "direction": "column",
+              "style": {
+                "classes": "Background/Default",
+                "marginRight": "40px"
+              }
+            },
+            "type": "ia.container.flex"
+          }
+        ],
+        "meta": {
+          "name": "Tabs_Header"
+        },
+        "position": {
+          "basis": "45px",
+          "shrink": 0
+        },
+        "props": {
+          "direction": "column",
+          "justify": "flex-end",
+          "style": {
+            "classes": "Background/Default",
+            "overflow": "hidden"
+          },
+          "wrap": "wrap"
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "meta": {
+          "name": "Content"
+        },
+        "position": {
+          "basis": "320px",
+          "grow": 1
+        },
+        "propConfig": {
+          "props.path": {
+            "binding": {
+              "config": {
+                "path": "../Tabs_Header/Tabstrip.props.params.selectedTab"
+              },
+              "transforms": [
+                {
+                  "fallback": null,
+                  "inputType": "scalar",
+                  "mappings": [
+                    {
+                      "input": "Overview",
+                      "output": "Events/ParticipantEvents/Overview/Dashboard/Components/Tab/Overview_Tabs"
+                    },
+                    {
+                      "input": "Attendance_Old",
+                      "output": "Events/AttendanceHistory/AttendanceHistory"
+                    },
+                    {
+                      "input": "Staff Attendance",
+                      "output": "Events/StaffAttendance/AttendanceHistory"
+                    },
+                    {
+                      "input": "Weekly Schedule",
+                      "output": "Events/ParticipantEvents/Event_WeeklyClassSchedule/Dashboard/Main/Event_WeeklyClassSchedule"
+                    },
+                    {
+                      "input": "Check-In",
+                      "output": "Events/ParticipantEvents/CheckIn/Dashboard/Event_CheckIn"
+                    },
+                    {
+                      "input": "Attendance",
+                      "output": "Events/ParticipantEvents/Attendance/Dashboard/AttendanceHistory"
+                    }
+                  ],
+                  "outputType": "scalar",
+                  "type": "map"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "type": "ia.display.view"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column"
+    },
+    "type": "ia.container.flex"
+  }
+}

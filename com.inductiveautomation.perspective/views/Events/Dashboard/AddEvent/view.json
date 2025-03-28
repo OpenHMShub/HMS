@@ -1,0 +1,196 @@
+{
+  "custom": {
+    "blankArray": [],
+    "eventFacilitators": [],
+    "eventParams": {
+      "audienceMen": null,
+      "audienceMinors": null,
+      "audienceParticipants": null,
+      "audienceStaff": null,
+      "audienceVolunteers": null,
+      "audienceWomen": null,
+      "bymonth": null,
+      "bymonthday": null,
+      "bysetpos": null,
+      "byweekday": null,
+      "category": null,
+      "description": null,
+      "endDate": null,
+      "frequency": null,
+      "friday": null,
+      "interval": null,
+      "monday": null,
+      "monthlyType": null,
+      "room": null,
+      "saturday": null,
+      "staffNeeded": null,
+      "startDate": null,
+      "subCategory": null,
+      "sunday": null,
+      "thursday": null,
+      "title": null,
+      "tuesday": null,
+      "venue": null,
+      "volunteersNeeded": null,
+      "wednesday": null,
+      "yearlyType": null
+    },
+    "eventStaff": [],
+    "eventVolunteers": []
+  },
+  "params": {
+    "eventId": 3327,
+    "isUpdateEvent": false
+  },
+  "propConfig": {
+    "custom.blankArray": {
+      "persistent": true
+    },
+    "custom.eventFacilitators": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "eventID": "{view.params.eventId}"
+          },
+          "queryPath": "Calendar/GetEventFacilitators"
+        },
+        "transforms": [
+          {
+            "code": "\tarray \u003d []\n\tfor row in range(value.getRowCount()):\n\t\tname \u003d value.getValueAt(row, \"name\")\n\t\tid \u003d value.getValueAt(row, \"id\")\n\t\tarray.append({\u0027text\u0027: name, \u0027id\u0027: id})\n\treturn array",
+            "type": "script"
+          }
+        ],
+        "type": "query"
+      },
+      "persistent": true
+    },
+    "custom.eventParams": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "eventID": "{view.params.eventId}"
+          },
+          "queryPath": "Calendar/GetEventByID"
+        },
+        "transforms": [
+          {
+            "code": "\tdef getByWeekDay(row):\n\t\tweekDayDict \u003d {\n\t\t\u0027mo\u0027: value.getValueAt(row, \"monday\"),\n\t\t\u0027tu\u0027: value.getValueAt(row, \"tuesday\"),\n\t\t\u0027we\u0027: value.getValueAt(row, \"wednesday\"),\n\t\t\u0027th\u0027: value.getValueAt(row, \"thursday\"),\n\t\t\u0027fr\u0027: value.getValueAt(row, \"friday\"),\n\t\t\u0027sa\u0027: value.getValueAt(row, \"saturday\"),\n\t\t\u0027su\u0027: value.getValueAt(row, \"sunday\")}\n\t\t\t\n\t\tbyweekday \u003d []\n\t\tfor key in [\u0027mo\u0027, \u0027tu\u0027, \u0027we\u0027, \u0027th\u0027, \u0027fr\u0027, \u0027sa\u0027, \u0027su\u0027,]:\n\t\t\tif weekDayDict[key]:\n\t\t\t\tbyweekday.append(key)\n\t\t\t\n\t\treturn byweekday\n\t\n\teventParams \u003d {}\n\tif value.getRowCount() \u003d\u003d 0:\n\t\treturn {\n\t\t\u0027category\u0027: None,\n\t\t\u0027subCategory\u0027: None,\n\t\t\u0027title\u0027: None,\n\t\t\u0027description\u0027: None,\n\t\t\u0027audienceMen\u0027: None,\n\t\t\u0027audienceMinors\u0027: None,\n\t\t\u0027audienceParticipants\u0027: None,\n\t\t\u0027audienceStaff\u0027: None,\n\t\t\u0027audienceVolunteers\u0027: None,\n\t\t\u0027audienceWomen\u0027: None,\n\t\t\u0027venue\u0027: None,\n\t\t\u0027room\u0027: None,\n\t\t\u0027volunteersNeeded\u0027: None,\n\t\t\u0027staffNeeded\u0027: None,\n\t\t\u0027frequency\u0027: None,\n\t\t\u0027monday\u0027: None,\n\t\t\u0027tuesday\u0027: None,\n\t\t\u0027wednesday\u0027: None,\n\t\t\u0027thursday\u0027: None,\n\t\t\u0027friday\u0027: None,\n\t\t\u0027saturday\u0027: None,\n\t\t\u0027sunday\u0027: None,\n\t\t\u0027bysetpos\u0027: None,\n\t\t\u0027startDate\u0027: None,\n\t\t\u0027endDate\u0027: None,\n\t\t\u0027byweekday\u0027: None,\n\t\t\u0027bymonthday\u0027: None,\n\t\t\u0027bymonth\u0027: None,\n\t\t\u0027interval\u0027: None,\n\t\t\u0027yearlyType\u0027: None,\n\t\t\u0027monthlyType\u0027: None\n\t\t}\n\t\n\teventParams[\u0027category\u0027] \u003d value.getValueAt(0, \u0027category\u0027)\n\teventParams[\u0027subCategory\u0027] \u003d value.getValueAt(0, \u0027subCategory\u0027)\n\teventParams[\u0027title\u0027] \u003d value.getValueAt(0, \u0027title\u0027)\n\teventParams[\u0027description\u0027] \u003d value.getValueAt(0, \u0027description\u0027)\n\teventParams[\u0027audienceMen\u0027] \u003d value.getValueAt(0, \u0027audienceMen\u0027)\n\teventParams[\u0027audienceMinors\u0027] \u003d value.getValueAt(0, \u0027audienceMinors\u0027)\n\teventParams[\u0027audienceParticipants\u0027] \u003d value.getValueAt(0, \u0027audienceParticipants\u0027)\n\teventParams[\u0027audienceStaff\u0027] \u003d value.getValueAt(0, \u0027audienceStaff\u0027)\n\teventParams[\u0027audienceVolunteers\u0027] \u003d value.getValueAt(0, \u0027audienceVolunteers\u0027)\n\teventParams[\u0027audienceWomen\u0027] \u003d value.getValueAt(0, \u0027audienceWomen\u0027)\n\teventParams[\u0027venue\u0027] \u003d value.getValueAt(0, \u0027venue\u0027)\n\teventParams[\u0027room\u0027] \u003d value.getValueAt(0, \u0027room\u0027)\n\teventParams[\u0027volunteersNeeded\u0027] \u003d value.getValueAt(0, \u0027volunteersNeeded\u0027)\n\teventParams[\u0027staffNeeded\u0027] \u003d value.getValueAt(0, \u0027staffNeeded\u0027)\n\teventParams[\u0027frequency\u0027] \u003d value.getValueAt(0, \u0027freq\u0027)\n\teventParams[\u0027monday\u0027] \u003d value.getValueAt(0, \u0027monday\u0027)\n\teventParams[\u0027tuesday\u0027] \u003d value.getValueAt(0, \u0027tuesday\u0027)\n\teventParams[\u0027wednesday\u0027] \u003d value.getValueAt(0, \u0027wednesday\u0027)\n\teventParams[\u0027thursday\u0027] \u003d value.getValueAt(0, \u0027thursday\u0027)\n\teventParams[\u0027friday\u0027] \u003d value.getValueAt(0, \u0027friday\u0027)\n\teventParams[\u0027saturday\u0027] \u003d value.getValueAt(0, \u0027saturday\u0027)\n\teventParams[\u0027sunday\u0027] \u003d value.getValueAt(0, \u0027sunday\u0027)\n\teventParams[\u0027bysetpos\u0027] \u003d value.getValueAt(0, \u0027bysetpos\u0027)\n\teventParams[\u0027startDate\u0027] \u003d startDate \u003d value.getValueAt(0, \u0027startDate\u0027)\n\teventParams[\u0027endDate\u0027] \u003d endDate \u003d value.getValueAt(0, \u0027endDate\u0027)\n\teventParams[\u0027byweekday\u0027] \u003d byweekday \u003d getByWeekDay(0)\n\teventParams[\u0027bymonthday\u0027] \u003d system.date.getDayOfMonth(startDate)\n\teventParams[\u0027bymonth\u0027] \u003d value.getValueAt(0, \u0027bymonth\u0027)\n\teventParams[\u0027interval\u0027] \u003d value.getValueAt(0, \u0027interval\u0027)\n\tif len(byweekday) \u003d\u003d 0:\n\t\teventParams[\u0027yearlyType\u0027] \u003d \u0027yearlydate\u0027\n\t\teventParams[\u0027monthlyType\u0027] \u003d \u0027monthlydate\u0027\n\telse:\n\t\teventParams[\u0027yearlyType\u0027] \u003d \u0027yearlyday\u0027\n\t\teventParams[\u0027monthlyType\u0027] \u003d \u0027monthlyday\u0027\n\t\n\t\n\treturn eventParams",
+            "type": "script"
+          }
+        ],
+        "type": "query"
+      },
+      "persistent": true
+    },
+    "custom.eventStaff": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "eventID": "{view.params.eventId}"
+          },
+          "queryPath": "Calendar/GetEventStaff"
+        },
+        "transforms": [
+          {
+            "code": "\tarray \u003d []\n\tfor row in range(value.getRowCount()):\n\t\tname \u003d value.getValueAt(row, \"name\")\n\t\tid \u003d value.getValueAt(row, \"id\")\n\t\tarray.append({\u0027text\u0027: name, \u0027id\u0027: id})\n\treturn array",
+            "type": "script"
+          }
+        ],
+        "type": "query"
+      },
+      "persistent": true
+    },
+    "custom.eventVolunteers": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "eventID": "{view.params.eventId}"
+          },
+          "queryPath": "Calendar/GetEventVolunteers"
+        },
+        "transforms": [
+          {
+            "code": "\tarray \u003d []\n\tfor row in range(value.getRowCount()):\n\t\tname \u003d value.getValueAt(row, \"name\")\n\t\tid \u003d value.getValueAt(row, \"id\")\n\t\tarray.append({\u0027text\u0027: name, \u0027id\u0027: id})\n\treturn array",
+            "type": "script"
+          }
+        ],
+        "type": "query"
+      },
+      "persistent": true
+    },
+    "params.eventId": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.isUpdateEvent": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 1673,
+      "width": 600
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "Header"
+        },
+        "position": {
+          "basis": "62px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.text": {
+            "binding": {
+              "config": {
+                "expression": "if({view.params.isUpdateEvent}, \"Update Event\", \"Add Event\") "
+              },
+              "type": "expr"
+            }
+          }
+        },
+        "props": {
+          "path": "Overview/Dashboard/EventPopupHeader",
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "EmbeddedView"
+        },
+        "position": {
+          "basis": "1611px"
+        },
+        "props": {
+          "params": {
+            "eventId": 3327,
+            "isUpdateEvent": false
+          },
+          "path": "Events/Dashboard/AddEventDetails"
+        },
+        "type": "ia.display.view"
+      }
+    ],
+    "custom": {
+      "bottom-margin": "5px",
+      "left-margin": "25px",
+      "right-margin": "25px",
+      "top-margin": "5px"
+    },
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column",
+      "style": {
+        "classes": "Background/Default"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

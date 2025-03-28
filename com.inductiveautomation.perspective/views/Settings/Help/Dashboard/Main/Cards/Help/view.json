@@ -1,0 +1,208 @@
+{
+  "custom": {},
+  "params": {},
+  "props": {
+    "defaultSize": {
+      "width": 1436
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "Header"
+        },
+        "position": {
+          "basis": "27px"
+        },
+        "props": {
+          "params": {
+            "Text": "Help"
+          },
+          "path": "1_TEMPLATES/Header/Header",
+          "style": {
+            "borderTopLeftRadius": "8px",
+            "borderTopRightRadius": "8px"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "meta": {
+                  "name": "participantTrainingUrl"
+                },
+                "position": {
+                  "basis": "320px",
+                  "grow": 1
+                },
+                "propConfig": {
+                  "props.params.text": {
+                    "binding": {
+                      "config": {
+                        "parameters": {
+                          "linkName": "\u0027DiscoveryTraining_Participants\u0027"
+                        },
+                        "queryPath": "RITILinks/GetLink_FromName"
+                      },
+                      "transforms": [
+                        {
+                          "code": "\ttrainingParticipant_url \u003d \u0027\u0027\n\tif (value !\u003d None) and (value !\u003d \u0027\u0027) and (value.getRowCount() \u003e 0):\n\t\ttrainingParticipant_url \u003d value.getValueAt(0,\u0027url\u0027)\n\treturn trainingParticipant_url",
+                          "type": "script"
+                        }
+                      ],
+                      "type": "query"
+                    }
+                  }
+                },
+                "props": {
+                  "params": {
+                    "label": "Discovery Training Participants URL",
+                    "placeholder": "placeholder"
+                  },
+                  "path": "Settings/Help/Dashboard/Main/Template/Input_Text_BoldHeader"
+                },
+                "type": "ia.display.view"
+              }
+            ],
+            "meta": {
+              "name": "Row1"
+            },
+            "position": {
+              "basis": "80px"
+            },
+            "props": {
+              "style": {
+                "classes": "ActivityCards/Card",
+                "overflow": "hidden"
+              }
+            },
+            "type": "ia.container.flex"
+          }
+        ],
+        "meta": {
+          "name": "Settings"
+        },
+        "position": {
+          "basis": "700px"
+        },
+        "props": {
+          "direction": "column",
+          "style": {
+            "overflow": "hidden"
+          }
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "children": [
+          {
+            "events": {
+              "dom": {
+                "onClick": {
+                  "config": {
+                    "script": "\timport time\n\t\n\turl \u003d self.parent.parent.getChild(\"Settings\").getChild(\"Row1\").getChild(\"participantTrainingUrl\").props.params.text\n\t\t\n\ttry:\n\t\tGetLink \u003d system.db.runNamedQuery(\"RITILinks/Update_HelpSettings\", {\u0027settingName\u0027:\u0027DiscoveryTraining_Participants\u0027, \u0027settingValue\u0027:url})\n\t\tself.parent.parent.getChild(\"Error\").props.text \u003d \"Setting updated successfully!\"\n\texcept Exception as e:\n\t\tsystem.perspective.print(str(e))\n\t\tself.parent.parent.getChild(\"Error\").props.text \u003d \"Update error. Try again ...\"\n\t\n\ttime.sleep(3)\n\t## clear the message\n\tself.parent.parent.getChild(\"Error\").props.text \u003d \"\"\n\t\t\t\n\t\t\t\n\t\t\n\t\t\n\t\t"
+                  },
+                  "scope": "G",
+                  "type": "script"
+                }
+              }
+            },
+            "meta": {
+              "name": "Update"
+            },
+            "position": {
+              "basis": "100px"
+            },
+            "props": {
+              "style": {
+                "classes": "Buttons/Main",
+                "margin": 2
+              },
+              "text": "Update"
+            },
+            "type": "ia.input.button"
+          },
+          {
+            "meta": {
+              "name": "Filler"
+            },
+            "position": {
+              "basis": "200px"
+            },
+            "type": "ia.container.flex"
+          },
+          {
+            "events": {
+              "dom": {
+                "onClick": {
+                  "config": {
+                    "script": "\tself.parent.parent.getChild(\"Settings\").getChild(\"Row1\").getChild(\"participantTrainingUrl\").refreshBinding(\u0027props.params.text\u0027)"
+                  },
+                  "scope": "G",
+                  "type": "script"
+                }
+              }
+            },
+            "meta": {
+              "name": "Clear"
+            },
+            "position": {
+              "basis": "100px"
+            },
+            "props": {
+              "style": {
+                "classes": "Buttons/Delete",
+                "margin": 2
+              },
+              "text": "CANCEL"
+            },
+            "type": "ia.input.button"
+          }
+        ],
+        "meta": {
+          "name": "Buttons"
+        },
+        "position": {
+          "basis": "40px"
+        },
+        "props": {
+          "style": {
+            "classes": "ActivityCards/Card",
+            "overflow": "hidden",
+            "paddingLeft": 13,
+            "paddingRight": 13
+          }
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "meta": {
+          "name": "Error"
+        },
+        "position": {
+          "basis": "25px"
+        },
+        "props": {
+          "style": {
+            "classes": "Text/Error_Message"
+          }
+        },
+        "type": "ia.display.label"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column",
+      "style": {
+        "classes": "ActivityCards/Card"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

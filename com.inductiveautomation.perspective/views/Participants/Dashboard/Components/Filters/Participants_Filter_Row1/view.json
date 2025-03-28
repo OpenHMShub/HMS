@@ -1,0 +1,582 @@
+{
+  "custom": {},
+  "events": {
+    "system": {
+      "onStartup": {
+        "config": {
+          "script": "\tself.getChild(\"root\").getChild(\"Billing\").props.value \u003d None"
+        },
+        "scope": "G",
+        "type": "script"
+      }
+    }
+  },
+  "params": {
+    "activity_range": 365,
+    "exportDataset": {
+      "$": [
+        "ds",
+        192,
+        1630256994190
+      ],
+      "$columns": [
+        {
+          "data": [
+            4,
+            5,
+            1,
+            0,
+            3,
+            2
+          ],
+          "name": "id",
+          "type": "Integer"
+        },
+        {
+          "data": [
+            "Client refused",
+            "Data not collected",
+            "Female",
+            "Male",
+            "Transgender Female to Male",
+            "Transgender Male to Female"
+          ],
+          "name": "gender",
+          "type": "String"
+        }
+      ]
+    },
+    "partial": [
+      {
+        "label": "Partial",
+        "value": 1
+      }
+    ],
+    "selectedProgram": null,
+    "whereBilling": "1\u003d1"
+  },
+  "propConfig": {
+    "params.activity_range": {
+      "binding": {
+        "config": {
+          "path": "/root/ActivityRange.props.params.selection"
+        },
+        "transforms": [
+          {
+            "code": "\tif value \u003d\u003d 0 or value \u003d\u003d None:\n\t\treturn 36500\n\telse:\n\t\treturn value",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.exportDataset": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.partial": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.selectedProgram": {
+      "binding": {
+        "config": {
+          "path": "/root/Programs/filter.props.value"
+        },
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.whereBilling": {
+      "binding": {
+        "config": {
+          "path": "/root/Billing.props.value"
+        },
+        "transforms": [
+          {
+            "code": "#\t(select programName FROM participant.Enrollments e left join interaction.Program i on e.programId \u003d i.id where e.particpantId \u003d [participant].[Dashboard].[ID])\n\twhere \u003d \"1\u003d1\"\n\tif value \u003d\u003d None or value \u003d\u003d \u0027\u0027:\n\t\twhere \u003d \"1\u003d1\"\n\telif value \u003d\u003d \u0027Everyone\u0027:\n\t\tallGPD \u003d self.getChild(\"root\").getChild(\"Billing\").props.options\n\t\twhere \u003d \u0027\u0027\n\t\tfor i in range(0,allGPD.getRowCount()):\n\t\t\tprogram \u003d allGPD.getValueAt(i,\u0027value\u0027)\n\t\t\tbilling \u003d  allGPD.getValueAt(i,\u0027label\u0027)\n\t\t\tif billing !\u003d \u0027Everyone\u0027 and billing !\u003d \u0027Any GPD\u0027:\n\t\t\t\tprevWhere \u003d where+\u0027 OR \u0027 if where!\u003d\u0027\u0027 else where\n\t\t\t\twhere \u003d prevWhere + \"\u0027\" + str(program) + \"\u0027 in (select programName FROM participant.Enrollments e left join interaction.Program i on e.programId \u003d i.id where e.particpantId \u003d x.[ID])\"\n\t\twhere \u003d \"(\" + where + \")\"\n\telif value \u003d\u003d \u0027Any GPD\u0027:\n\t\tallGPD \u003d self.getChild(\"root\").getChild(\"Billing\").props.options\n\t\twhere \u003d \u0027\u0027\n\t\tfor i in range(0,allGPD.getRowCount()):\n\t\t\tprogram \u003d allGPD.getValueAt(i,\u0027value\u0027)\n\t\t\tbilling \u003d  allGPD.getValueAt(i,\u0027label\u0027)\n\t\t\tif billing !\u003d \u0027Everyone\u0027 and billing !\u003d \u0027Any GPD\u0027 and billing !\u003d \u0027ARP\u0027:\n\t\t\t\tprevWhere \u003d where+\u0027 OR \u0027 if where!\u003d\u0027\u0027 else where\n\t\t\t\twhere \u003d prevWhere + \"\u0027\" + str(program) + \"\u0027 in (select programName FROM participant.Enrollments e left join interaction.Program i on e.programId \u003d i.id where e.particpantId \u003d x.[ID])\"\n\t\twhere \u003d \"(\" + where + \")\"\n\telse:\n\t\twhere \u003d \"\u0027\" + str(value) + \"\u0027 in (select programName FROM participant.Enrollments e left join interaction.Program i on e.programId \u003d i.id where e.particpantId \u003d x.[ID])\"\n\t\t\n\treturn where",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 30,
+      "width": 1817
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "lblConditional"
+        },
+        "position": {
+          "basis": "70px",
+          "display": false,
+          "shrink": 0
+        },
+        "props": {
+          "style": {
+            "classes": "Filter/Header_Text"
+          },
+          "text": "Last Activity:"
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "meta": {
+          "name": "ActivityRange"
+        },
+        "position": {
+          "basis": "150px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "custom.sqlData": {
+            "binding": {
+              "config": {
+                "parameters": {
+                  "activity_range": "{view.params.activity_range}",
+                  "dobyear": "{session.custom.filters.participantDashboard.BirthDate.where}",
+                  "firstname": "{session.custom.filters.participantDashboard.FirstName.where}",
+                  "fullRegistration": "{session.custom.filters.participantDashboard.FullRegistration.where}",
+                  "genderid": "{session.custom.filters.participantDashboard.GenderId.where}",
+                  "lastname": "{session.custom.filters.participantDashboard.LastName.where}",
+                  "maxage": "{session.custom.filters.participantDashboard.MaxAge.where}",
+                  "middlename": "{session.custom.filters.participantDashboard.MiddleName.where}",
+                  "minage": "{session.custom.filters.participantDashboard.MinAge.where}",
+                  "nickname": "{session.custom.filters.participantDashboard.NickName.where}",
+                  "raceid": "{session.custom.filters.participantDashboard.RaceId.where}",
+                  "search": "{session.custom.filters.participantDashboard.Search.where}",
+                  "shelter": "{session.custom.filters.participantDashboard.Shelter.where}",
+                  "veteranid": "{session.custom.filters.participantDashboard.VeteranId.where}"
+                },
+                "queryPath": "Participants/Dashboard/ParticipantsDashboardSelect",
+                "returnFormat": "dataset"
+              },
+              "type": "query"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "placeholder": "Activity Range",
+            "selection": 365,
+            "selection_in": 365
+          },
+          "path": "1_TEMPLATES/Filtering/Conditionals/Conditional_SingleDropDown_NoClear_ActivityRange",
+          "style": {
+            "classes": "Filter/Filter_Container"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Partial"
+        },
+        "position": {
+          "basis": "150px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.options": {
+            "binding": {
+              "config": {
+                "path": "view.params.partial"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "column_name": "fullRegistration",
+            "filter": "participantDashboard",
+            "key": "FullRegistration",
+            "placeholder": "(All Registrations)",
+            "searchType": "notEqualOrNull"
+          },
+          "path": "1_TEMPLATES/Filtering/Session/SingleDropDown",
+          "style": {
+            "classes": "Filter/Filter_Container"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Race"
+        },
+        "position": {
+          "basis": "400px",
+          "grow": 1
+        },
+        "propConfig": {
+          "props.params.options": {
+            "binding": {
+              "config": {
+                "queryPath": "Filter/getRaceId"
+              },
+              "type": "query"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "column_name": "RaceId",
+            "filter": "participantDashboard",
+            "key": "RaceId",
+            "placeholder": "(All Races and Ethnicities)",
+            "searchType": "equals"
+          },
+          "path": "1_TEMPLATES/Filtering/Session/MultiDropDown",
+          "style": {
+            "classes": "Filter/Filter_Container"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Gender"
+        },
+        "position": {
+          "basis": "300px",
+          "grow": 1
+        },
+        "propConfig": {
+          "props.params.options": {
+            "binding": {
+              "config": {
+                "queryPath": "Filter/getGenderId"
+              },
+              "type": "query"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "column_name": "GenderId",
+            "filter": "participantDashboard",
+            "key": "GenderId",
+            "placeholder": "(All Genders)",
+            "searchType": "equals"
+          },
+          "path": "1_TEMPLATES/Filtering/Session/MultiDropDown",
+          "style": {
+            "classes": "Filter/Filter_Container"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Veteran"
+        },
+        "position": {
+          "basis": "300px",
+          "grow": 1
+        },
+        "propConfig": {
+          "props.params.options": {
+            "binding": {
+              "config": {
+                "queryPath": "Filter/getVeteranStatusId"
+              },
+              "type": "query"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "column_name": "VeteranId",
+            "filter": "participantDashboard",
+            "key": "VeteranId",
+            "placeholder": "(All Veteran Status)",
+            "searchType": "equals"
+          },
+          "path": "1_TEMPLATES/Filtering/Session/MultiDropDown",
+          "style": {
+            "classes": "Filter/Filter_Container"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "children": [
+          {
+            "custom": {
+              "selecting": true
+            },
+            "events": {
+              "dom": {
+                "onClick": {
+                  "config": {
+                    "script": "\tmessageType \u003d \u0027selecting\u0027\n\tpayload \u003d {\u0027current\u0027: self.props.placeholder.text}\n\tsystem.perspective.sendMessage(messageType,payload)"
+                  },
+                  "scope": "G",
+                  "type": "script"
+                }
+              }
+            },
+            "meta": {
+              "name": "filter"
+            },
+            "position": {
+              "basis": "100%"
+            },
+            "propConfig": {
+              "props.options": {
+                "binding": {
+                  "config": {
+                    "queryPath": "Participants/Dashboard/Get_participantProgram"
+                  },
+                  "type": "query"
+                }
+              },
+              "props.style.classes": {
+                "binding": {
+                  "config": {
+                    "path": "this.props.value"
+                  },
+                  "transforms": [
+                    {
+                      "code": "\tif value \u003d\u003d -1 or value \u003d\u003d None:\n\t\treturn \"Dropdowns/DD_Default\"\n\telse:\n\t\treturn \"Dropdowns/DD_TeelBlue\"",
+                      "type": "script"
+                    }
+                  ],
+                  "type": "property"
+                }
+              }
+            },
+            "props": {
+              "dropdownOptionStyle": {
+                "classes": "Dropdowns/DD_Options"
+              },
+              "multiSelect": true,
+              "placeholder": {
+                "text": "(All Programs)"
+              },
+              "search": {
+                "enabled": false
+              },
+              "showClearIcon": true,
+              "style": {},
+              "value": null,
+              "wrapMultiSelectValues": false
+            },
+            "type": "ia.input.dropdown"
+          }
+        ],
+        "meta": {
+          "name": "Programs"
+        },
+        "position": {
+          "basis": "400px"
+        },
+        "props": {
+          "direction": "column",
+          "style": {
+            "classes": "Filter/Filter_Container"
+          }
+        },
+        "scripts": {
+          "customMethods": [],
+          "extensionFunctions": null,
+          "messageHandlers": [
+            {
+              "messageType": "clearFilter",
+              "pageScope": true,
+              "script": "\tself.getChild(\"filter\").props.value \u003d None",
+              "sessionScope": false,
+              "viewScope": true
+            }
+          ]
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "meta": {
+          "name": "Family"
+        },
+        "position": {
+          "basis": "600px",
+          "display": false,
+          "grow": 1
+        },
+        "propConfig": {
+          "props.params.options": {
+            "binding": {
+              "config": {
+                "queryPath": "Participants/Registration/GetFamilies"
+              },
+              "type": "query"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "column_name": "x.familyId",
+            "filter": "participantDashboard",
+            "key": "familyId",
+            "placeholder": "(All Family)",
+            "searchType": "equals"
+          },
+          "path": "1_TEMPLATES/Filtering/Session/MultiDropDownWithSearch",
+          "style": {
+            "classes": "Filter/Filter_Container"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "custom": {
+          "selecting": true
+        },
+        "meta": {
+          "name": "Billing"
+        },
+        "position": {
+          "basis": "300px"
+        },
+        "propConfig": {
+          "props.options": {
+            "binding": {
+              "config": {
+                "queryPath": "Participants/Dashboard/Get_participantBilling"
+              },
+              "type": "query"
+            }
+          },
+          "props.style.classes": {
+            "binding": {
+              "config": {
+                "path": "this.props.value"
+              },
+              "transforms": [
+                {
+                  "code": "\tif value \u003d\u003d -1 or value \u003d\u003d None:\n\t\treturn \"Dropdowns/DD_Default\"\n\telse:\n\t\treturn \"Dropdowns/DD_TeelBlue\"",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "dropdownOptionStyle": {
+            "classes": "Dropdowns/DD_Options"
+          },
+          "placeholder": {
+            "text": "(Billing)"
+          },
+          "search": {
+            "enabled": false
+          },
+          "showClearIcon": true,
+          "style": {},
+          "value": null,
+          "wrapMultiSelectValues": false
+        },
+        "scripts": {
+          "customMethods": [],
+          "extensionFunctions": null,
+          "messageHandlers": [
+            {
+              "messageType": "clearFilter",
+              "pageScope": true,
+              "script": "\t# implement your handler here\n\tself.props.value \u003d None",
+              "sessionScope": false,
+              "viewScope": true
+            }
+          ]
+        },
+        "type": "ia.input.dropdown"
+      },
+      {
+        "meta": {
+          "name": "Placeholder"
+        },
+        "position": {
+          "basis": "1px",
+          "grow": 1
+        },
+        "props": {
+          "path": "1_TEMPLATES/Filtering/Filter_Placeholder"
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "toExcel"
+        },
+        "position": {
+          "basis": "30px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.dataset": {
+            "binding": {
+              "config": {
+                "path": "view.params.exportDataset"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "defaultFilePrefix": "Participants"
+          },
+          "path": "1_TEMPLATES/Tables/TableToExcel"
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "toPDF"
+        },
+        "position": {
+          "basis": "30px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.dataset": {
+            "binding": {
+              "config": {
+                "path": "view.params.exportDataset"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "defaultFilePrefix": "Participants"
+          },
+          "path": "1_TEMPLATES/Tables/TableToPDF"
+        },
+        "type": "ia.display.view"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "style": {
+        "classes": "Filter/Header_Text"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

@@ -1,0 +1,123 @@
+{
+  "custom": {},
+  "params": {
+    "facName": "Apartments",
+    "facilityID": 1
+  },
+  "propConfig": {
+    "params.facName": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "FacID": "{view.params.facilityID}"
+          },
+          "queryPath": "Shelter/Room Layout/qryFacName",
+          "returnFormat": "scalar"
+        },
+        "type": "query"
+      },
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.facilityID": {
+      "binding": {
+        "config": {
+          "fallbackDelay": 2.5,
+          "mode": "direct",
+          "tagPath": "[default]RITI/Facilities/ShelterFacID"
+        },
+        "type": "tag"
+      },
+      "paramDirection": "inout",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 891,
+      "width": 615
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "Button"
+        },
+        "position": {
+          "basis": "34px"
+        },
+        "props": {
+          "text": "Print Room Layout"
+        },
+        "type": "ia.input.button"
+      },
+      {
+        "meta": {
+          "name": "Label"
+        },
+        "position": {
+          "basis": "32px"
+        },
+        "propConfig": {
+          "props.text": {
+            "binding": {
+              "config": {
+                "path": "view.params.facName"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "style": {
+            "classes": "ActivityCards/Card_Title ActivityCards/Header_Card",
+            "fontFamily": "inherit",
+            "fontSize": 24,
+            "fontWeight": "600",
+            "textAlign": "center"
+          }
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "meta": {
+          "name": "FlexRepeater"
+        },
+        "position": {
+          "basis": "782px"
+        },
+        "propConfig": {
+          "props.instances": {
+            "binding": {
+              "config": {
+                "parameters": {
+                  "FacID": "{view.params.facilityID}"
+                },
+                "queryPath": "Shelter/Room Layout/qryRoomList",
+                "returnFormat": "json"
+              },
+              "type": "query"
+            }
+          }
+        },
+        "props": {
+          "elementStyle": {
+            "borderStyle": "solid"
+          },
+          "path": "Shelter/Room Layout/Templates/Room",
+          "useDefaultViewHeight": false,
+          "wrap": "wrap"
+        },
+        "type": "ia.display.flex-repeater"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column"
+    },
+    "type": "ia.container.flex"
+  }
+}

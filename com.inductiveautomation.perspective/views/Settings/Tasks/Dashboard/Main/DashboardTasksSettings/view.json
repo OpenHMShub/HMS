@@ -1,0 +1,173 @@
+{
+  "custom": {
+    "row_data": {
+      "active": -1,
+      "autocomplete": false,
+      "description": "",
+      "due_date_hours": 24,
+      "name": "task1",
+      "priority": "",
+      "subject": "",
+      "trigger_hours": 72,
+      "type": -1
+    },
+    "selectedRow": null,
+    "selection_data": []
+  },
+  "params": {},
+  "propConfig": {
+    "custom.row_data": {
+      "persistent": true
+    },
+    "custom.selectedRow": {
+      "binding": {
+        "config": {
+          "path": "/root/TasksSettingsTable.props.params.selectedRow"
+        },
+        "type": "property"
+      },
+      "onChange": {
+        "enabled": false,
+        "script": "\tselectionData \u003d self.custom.selection_data\n\tselectedRow \u003d self.custom.selectedRow\n\tif len(selectionData) and selectedRow \u003e -1:\n\t\tself.custom.row_data.programId \u003d selectionData[0].programId\n\t\tif selectionData[0].active:\n\t\t\tself.custom.row_data.active \u003d 1\n\t\telse:\n\t\t\tself.custom.row_data.active \u003d 0\n\t\tif selectionData[0].autoEnroll:\n\t\t\tself.custom.row_data.autoEnroll \u003d 1\n\t\telse:\n\t\t\tself.custom.row_data.autoEnroll \u003d 0\n\t\tself.custom.row_data.programName \u003d selectionData[0].programName\n\t\tself.custom.row_data.programDescription \u003d selectionData[0].programDescription\n\t\tself.custom.row_data.IsResidential \u003d selectionData[0].IsResidential\n\telse:\n\t\tself.custom.row_data.programId \u003d -1\n\t\tself.custom.row_data.active \u003d -1\n\t\tself.custom.row_data.autoEnroll \u003d -1\n\t\tself.custom.row_data.programName \u003d \u0027\u0027\n\t\tself.custom.row_data.programDescription \u003d \u0027\u0027\n\t\tself.custom.row_data.IsResidential \u003d False\n\t"
+      },
+      "persistent": true
+    },
+    "custom.selection_data": {
+      "binding": {
+        "config": {
+          "path": "/root/TasksSettingsTable.props.params.selection_data"
+        },
+        "type": "property"
+      },
+      "persistent": true
+    },
+    "custom.table_data": {
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "width": 1166
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "Label"
+        },
+        "position": {
+          "basis": "32px",
+          "display": false
+        },
+        "props": {
+          "style": {
+            "classes": "Text/About_Title"
+          },
+          "text": "Coming Soon !",
+          "textStyle": {
+            "textAlign": "start"
+          }
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "meta": {
+          "name": "TasksSettingsEdit"
+        },
+        "position": {
+          "shrink": 0
+        },
+        "propConfig": {
+          "position.basis": {
+            "binding": {
+              "config": {
+                "path": "this.props.params.view_height"
+              },
+              "type": "property"
+            }
+          },
+          "props.params.row_data": {
+            "binding": {
+              "config": {
+                "path": "../TasksSettingsTable.props.params.selection_data"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "view_height": "370px"
+          },
+          "path": "Settings/Tasks/Dashboard/Main/Edit/TasksSettingsEdit",
+          "style": {
+            "marginLeft": "40px",
+            "marginRight": "40px"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "TasksSettingsFilter"
+        },
+        "position": {
+          "basis": "30px"
+        },
+        "props": {
+          "params": {
+            "filter_active": 1
+          },
+          "path": "Settings/Tasks/Dashboard/Main/Filters/TasksSettingsFilter",
+          "style": {
+            "marginLeft": "40px",
+            "marginRight": "40px"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "TasksSettingsTable"
+        },
+        "position": {
+          "basis": "320px",
+          "grow": 1
+        },
+        "propConfig": {
+          "props.params.filter_active": {
+            "binding": {
+              "config": {
+                "path": "../TasksSettingsFilter.props.params.filter_active"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "selectedRow": null,
+            "selection_data": []
+          },
+          "path": "Settings/Tasks/Dashboard/Main/Tables/TasksSettingsTable",
+          "style": {
+            "marginLeft": "40px",
+            "marginRight": "40px"
+          }
+        },
+        "type": "ia.display.view"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column",
+      "style": {
+        "classes": "Background/Alternative"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

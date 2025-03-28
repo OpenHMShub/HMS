@@ -1,0 +1,3 @@
+SELECT DISTINCT Special_Services_Offered_Check_all_that_apply AS Services
+FROM shelter.TotalTable
+WHERE Special_Services_Offered_Check_all_that_apply is not Null 

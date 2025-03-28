@@ -1,0 +1,1527 @@
+{
+  "custom": {},
+  "events": {
+    "system": {
+      "onStartup": {
+        "config": {
+          "script": "\tsystem.perspective.sendMessage(\"ResetSearch\", payload\u003d{}, scope\u003d\"session\")\n\tsystem.perspective.sendMessage(\"ResetRegistration\", payload\u003d{}, scope\u003d\"session\")"
+        },
+        "scope": "G",
+        "type": "script"
+      }
+    }
+  },
+  "params": {
+    "dob_day": null,
+    "dob_month": null,
+    "dob_year": null,
+    "first_name": null,
+    "last_name": null,
+    "middle_name": null,
+    "nick_name": "",
+    "race_id": null,
+    "search_active": false,
+    "ssn": null
+  },
+  "propConfig": {
+    "params.dob_day": {
+      "binding": {
+        "config": {
+          "path": "/root/QueryFields/Embed_Day.props.params.selection"
+        },
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.dob_month": {
+      "binding": {
+        "config": {
+          "path": "/root/QueryFields/Embed_Month.props.params.selection"
+        },
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.dob_year": {
+      "binding": {
+        "config": {
+          "path": "/root/QueryFields/Embed_Year.props.params.selection"
+        },
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.first_name": {
+      "binding": {
+        "config": {
+          "path": "/root/QueryFields/Embed_FirstName.props.params.text"
+        },
+        "transforms": [
+          {
+            "expression": "if(len({value}) \u003e 0, {value}, null)",
+            "type": "expression"
+          }
+        ],
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.last_name": {
+      "binding": {
+        "config": {
+          "path": "/root/QueryFields/Embed_LastName.props.params.text"
+        },
+        "transforms": [
+          {
+            "expression": "if(len({value}) \u003e 0, {value}, null)",
+            "type": "expression"
+          }
+        ],
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.middle_name": {
+      "binding": {
+        "config": {
+          "path": "/root/QueryFields/Embed_MiddleName.props.params.text"
+        },
+        "transforms": [
+          {
+            "expression": "if(len({value}) \u003e 0, {value}, null)",
+            "type": "expression"
+          }
+        ],
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.nick_name": {
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.race_id": {
+      "binding": {
+        "config": {
+          "path": "/root/QueryFields/Embed_Race.props.params.selection"
+        },
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.search_active": {
+      "binding": {
+        "config": {
+          "expression": "if(isNull(coalesce({view.params.dob_day}\r\n,{view.params.dob_month}\r\n,{view.params.dob_year}\r\n,{view.params.first_name}\r\n,{view.params.last_name}\r\n,{view.params.race_id}\r\n,{view.params.ssn}\r\n)),false,true)"
+        },
+        "type": "expr"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.ssn": {
+      "binding": {
+        "config": {
+          "path": "/root/QueryFields/Embed_SSN.props.params.text"
+        },
+        "transforms": [
+          {
+            "expression": "if(len({value}) \u003e 0, {value}, null)",
+            "type": "expression"
+          }
+        ],
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "width": 600
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "Header"
+        },
+        "position": {
+          "shrink": 0
+        },
+        "props": {
+          "params": {
+            "text": "Participant Lookup"
+          },
+          "path": "Participants/Campus Store/Cards/SearchHeader",
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "children": [
+          {
+            "events": {
+              "component": {
+                "onActionPerformed": {
+                  "config": {
+                    "script": "\tqFields \u003d self.parent.parent.getChild(\"QueryFields\")\n\t\n\tqFields.getChild(\"Embed_FirstName\").props.params.text \u003d \"\"\n\tqFields.getChild(\"Embed_MiddleName\").props.params.text \u003d \"\"\n\tqFields.getChild(\"Embed_LastName\").props.params.text \u003d \"\"\n\tqFields.getChild(\"Embed_Race\").props.params.selection \u003d None\n\tqFields.getChild(\"Embed_Year\").props.params.selection \u003d None\n\tqFields.getChild(\"Embed_Month\").props.params.selection \u003d None\n\tqFields.getChild(\"Embed_Day\").props.params.selection \u003d None\n\tqFields.getChild(\"Embed_SSN\").props.params.text \u003d \"\"\n\t"
+                  },
+                  "scope": "G",
+                  "type": "script"
+                }
+              }
+            },
+            "meta": {
+              "name": "Button Clear"
+            },
+            "position": {
+              "basis": "",
+              "shrink": 0
+            },
+            "props": {
+              "image": {
+                "icon": {
+                  "color": "#0D80E3",
+                  "path": "material/clear"
+                }
+              },
+              "style": {
+                "classes": "Buttons/Secondary",
+                "margin": "10px",
+                "padding": "5px 10px"
+              },
+              "text": "CLEAR SEARCH"
+            },
+            "type": "ia.input.button"
+          },
+          {
+            "events": {
+              "component": {
+                "onActionPerformed": {
+                  "config": {
+                    "script": "\timport traceback\n\t\n\tlogger \u003d system.util.getLogger(\"CampusStore.Button Select\")\n\t\n\ttry:\n\t\trow \u003d self.parent.parent.getChild(\"Results\").getChild(\"Table\").props.selection.selectedRow\n\t\tpid \u003d self.parent.parent.getChild(\"Results\").getChild(\"Table\").props.data[row].value.participant_id\n\t\t\n\t\tif pid is not None:\n\t\t\tsystem.perspective.sendMessage(\"storeParticipantSelected\",\n\t\t\t\t\tpayload\u003d{\u0027participantId\u0027: pid},\n\t\t\t\t\tscope\u003d\"page\")\n\t\telse:\n\t\t\tself.parent.parent.getChild(\"Label\").showMessage(\n\t\t\t\t\t\"Selected human does not have a participant ID\")\n\texcept:\n\t\tmsg \u003d traceback.format_exc()\n\t\tlogger.error(msg)"
+                  },
+                  "scope": "G",
+                  "type": "script"
+                }
+              }
+            },
+            "meta": {
+              "name": "Button Select"
+            },
+            "position": {
+              "basis": "",
+              "shrink": 0
+            },
+            "props": {
+              "image": {
+                "height": 28,
+                "icon": {
+                  "color": "#0D80E3",
+                  "path": "material/arrow_forward"
+                },
+                "position": "right",
+                "width": 28
+              },
+              "style": {
+                "classes": "Buttons/Secondary",
+                "margin": "10px",
+                "padding": "5px 10px"
+              },
+              "text": "SELECT PARTICIPANT"
+            },
+            "type": "ia.input.button"
+          }
+        ],
+        "meta": {
+          "name": "root Actions"
+        },
+        "position": {
+          "basis": "65px",
+          "shrink": 0
+        },
+        "props": {
+          "justify": "space-between"
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "children": [
+          {
+            "meta": {
+              "name": "Embed_FirstName"
+            },
+            "position": {
+              "basis": "20%",
+              "grow": 1,
+              "shrink": 0
+            },
+            "props": {
+              "params": {
+                "placeholder": "First Name",
+                "text": ""
+              },
+              "path": "1_TEMPLATES/Filtering/Conditionals/Conditional_Text",
+              "style": {
+                "height": "30px",
+                "margin": "10px 2px"
+              }
+            },
+            "scripts": {
+              "customMethods": [],
+              "extensionFunctions": null,
+              "messageHandlers": [
+                {
+                  "messageType": "ResetSearch",
+                  "pageScope": true,
+                  "script": "\t\n\tself.props.params.text \u003d \"\"",
+                  "sessionScope": true,
+                  "viewScope": false
+                }
+              ]
+            },
+            "type": "ia.display.view"
+          },
+          {
+            "meta": {
+              "name": "Embed_MiddleName"
+            },
+            "position": {
+              "basis": "20%",
+              "grow": 1,
+              "shrink": 0
+            },
+            "props": {
+              "params": {
+                "placeholder": "Middle Name",
+                "text": ""
+              },
+              "path": "1_TEMPLATES/Filtering/Conditionals/Conditional_Text",
+              "style": {
+                "height": "30px",
+                "margin": "10px 2px"
+              }
+            },
+            "scripts": {
+              "customMethods": [],
+              "extensionFunctions": null,
+              "messageHandlers": [
+                {
+                  "messageType": "ResetSearch",
+                  "pageScope": true,
+                  "script": "\tself.props.params.text \u003d \"\"",
+                  "sessionScope": true,
+                  "viewScope": false
+                }
+              ]
+            },
+            "type": "ia.display.view"
+          },
+          {
+            "meta": {
+              "name": "Embed_LastName"
+            },
+            "position": {
+              "basis": "20%",
+              "grow": 1,
+              "shrink": 0
+            },
+            "props": {
+              "params": {
+                "placeholder": "Last Name",
+                "text": ""
+              },
+              "path": "1_TEMPLATES/Filtering/Conditionals/Conditional_Text",
+              "style": {
+                "height": "30px",
+                "margin": "10px 2px"
+              }
+            },
+            "scripts": {
+              "customMethods": [],
+              "extensionFunctions": null,
+              "messageHandlers": [
+                {
+                  "messageType": "ResetSearch",
+                  "pageScope": true,
+                  "script": "\tself.props.params.text \u003d \"\"",
+                  "sessionScope": true,
+                  "viewScope": false
+                }
+              ]
+            },
+            "type": "ia.display.view"
+          },
+          {
+            "meta": {
+              "name": "Embed_Race"
+            },
+            "position": {
+              "basis": "30%",
+              "grow": 1,
+              "shrink": 0
+            },
+            "propConfig": {
+              "props.params.options": {
+                "binding": {
+                  "config": {
+                    "queryPath": "Participants/Registration/GetRaces"
+                  },
+                  "type": "query"
+                }
+              }
+            },
+            "props": {
+              "params": {
+                "placeholder": "Race",
+                "selection": null
+              },
+              "path": "1_TEMPLATES/Filtering/Conditionals/Conditional_SingleDropDown",
+              "style": {
+                "height": "30px",
+                "margin": "10px 2px"
+              }
+            },
+            "scripts": {
+              "customMethods": [],
+              "extensionFunctions": null,
+              "messageHandlers": [
+                {
+                  "messageType": "ResetSearch",
+                  "pageScope": true,
+                  "script": "\tself.props.params.selection \u003d None",
+                  "sessionScope": true,
+                  "viewScope": false
+                }
+              ]
+            },
+            "type": "ia.display.view"
+          },
+          {
+            "meta": {
+              "name": "Embed_Year"
+            },
+            "position": {
+              "basis": "20%",
+              "grow": 1,
+              "shrink": 0
+            },
+            "propConfig": {
+              "props.params.options": {
+                "binding": {
+                  "config": {
+                    "expression": "toInt(getYear(now(0)))"
+                  },
+                  "transforms": [
+                    {
+                      "code": "\tyear \u003d value\n\t# Generate the Rows\n\trows \u003d []\n\tfor x in range(120):\n\t\toneRow \u003d [str(year), year]\n\t\trows.append(oneRow)\n\t\tyear -\u003d 1\n\t# Generate the DataSet\n\theaders \u003d [\"1\", \"2\"]\n\tdata \u003d system.dataset.toDataSet(headers, rows)\n\treturn data",
+                      "type": "script"
+                    }
+                  ],
+                  "type": "expr"
+                }
+              }
+            },
+            "props": {
+              "params": {
+                "placeholder": "Year",
+                "selection": null
+              },
+              "path": "1_TEMPLATES/Filtering/Conditionals/Conditional_SingleDropDown",
+              "style": {
+                "height": "30px",
+                "margin": "10px 2px"
+              }
+            },
+            "scripts": {
+              "customMethods": [],
+              "extensionFunctions": null,
+              "messageHandlers": [
+                {
+                  "messageType": "ResetSearch",
+                  "pageScope": true,
+                  "script": "\tself.props.params.selection \u003d None",
+                  "sessionScope": true,
+                  "viewScope": false
+                }
+              ]
+            },
+            "type": "ia.display.view"
+          },
+          {
+            "meta": {
+              "name": "Embed_Month"
+            },
+            "position": {
+              "basis": "20%",
+              "grow": 1,
+              "shrink": 0
+            },
+            "propConfig": {
+              "props.params.options": {
+                "binding": {
+                  "config": {
+                    "expression": "toInt(getYear(now(0)))"
+                  },
+                  "transforms": [
+                    {
+                      "code": "\timport calendar\n\tmonth \u003d 1\n\t# Generate the Rows\n\trows \u003d []\n\tfor x in range(12):\n\t\toneRow \u003d [str(format(month,\u002702d\u0027)), calendar.month_name[x+1]]\n\t\trows.append(oneRow)\n\t\tmonth +\u003d 1\n\t# Generate the DataSet\n\theaders \u003d [\"1\", \"2\"]\n\tdata \u003d system.dataset.toDataSet(headers, rows)\n\treturn data",
+                      "type": "script"
+                    }
+                  ],
+                  "type": "expr"
+                }
+              }
+            },
+            "props": {
+              "params": {
+                "placeholder": "Month",
+                "selection": null
+              },
+              "path": "1_TEMPLATES/Filtering/Conditionals/Conditional_SingleDropDown",
+              "style": {
+                "height": "30px",
+                "margin": "10px 2px"
+              }
+            },
+            "scripts": {
+              "customMethods": [],
+              "extensionFunctions": null,
+              "messageHandlers": [
+                {
+                  "messageType": "ResetSearch",
+                  "pageScope": true,
+                  "script": "\tself.props.params.selection \u003d None",
+                  "sessionScope": true,
+                  "viewScope": false
+                }
+              ]
+            },
+            "type": "ia.display.view"
+          },
+          {
+            "meta": {
+              "name": "Embed_Day"
+            },
+            "position": {
+              "basis": "20%",
+              "grow": 1,
+              "shrink": 0
+            },
+            "propConfig": {
+              "props.params.options": {
+                "binding": {
+                  "config": {
+                    "expression": "if(hasChanged({view.params.dob_year}),true,\r\nif(hasChanged({view.params.dob_month}),true,\r\nfalse))"
+                  },
+                  "transforms": [
+                    {
+                      "code": "\timport calendar\n\t#Get the year from the dropdown\n\tif self.view.params.dob_year !\u003d None:\n\t\tselected_year \u003d self.view.params.dob_year\n\telse:\n\t\tselected_year \u003d int(system.date.getYear(system.date.now()))\n\tyear \u003d int(selected_year)\t\t\n\t#Get the month from the drop down\t\n\tif self.view.params.dob_month !\u003d None:\n\t\tif str(self.view.params.dob_month[1])\u003d\u003d \u00270\u0027:\n\t\t\tselected_month \u003d int(str(self.view.params.dob_month[1]))\n\t\telse:\n\t\t\tselected_month \u003d int(str(self.view.params.dob_month))\n\telse:\n\t\tselected_month \u003d 12\n\tmonth \u003d int(selected_month)\n\t#Get the number of days in the month\n\tdays_in_month \u003d calendar.monthrange(year,month)[1]\n\t#system.perspective.print(str(year) + \u0027,\u0027 + str(month) + \u0027,\u0027 + str(days_in_month))\n\t# Generate the Rows\n\trows \u003d []\n\tfor x in range(days_in_month):\n\t\toneRow \u003d [str(format(x+1,\u002702d\u0027)), x+1]\n\t\trows.append(oneRow)\n\t# Generate the DataSet\n\theaders \u003d [\"1\", \"2\"]\n\tdata \u003d system.dataset.toDataSet(headers, rows)\n\treturn data",
+                      "type": "script"
+                    }
+                  ],
+                  "type": "expr"
+                }
+              }
+            },
+            "props": {
+              "params": {
+                "placeholder": "Day",
+                "selection": null
+              },
+              "path": "1_TEMPLATES/Filtering/Conditionals/Conditional_SingleDropDown",
+              "style": {
+                "height": "30px",
+                "margin": "10px 2px"
+              }
+            },
+            "scripts": {
+              "customMethods": [],
+              "extensionFunctions": null,
+              "messageHandlers": [
+                {
+                  "messageType": "ResetSearch",
+                  "pageScope": true,
+                  "script": "\tself.props.params.selection \u003d None",
+                  "sessionScope": true,
+                  "viewScope": false
+                }
+              ]
+            },
+            "type": "ia.display.view"
+          },
+          {
+            "meta": {
+              "name": "Embed_SSN"
+            },
+            "position": {
+              "basis": "30%",
+              "grow": 1,
+              "shrink": 0
+            },
+            "props": {
+              "params": {
+                "placeholder": "SSN",
+                "text": ""
+              },
+              "path": "1_TEMPLATES/Filtering/Conditionals/Conditional_Text",
+              "style": {
+                "height": "30px",
+                "margin": "10px 2px"
+              }
+            },
+            "scripts": {
+              "customMethods": [],
+              "extensionFunctions": null,
+              "messageHandlers": [
+                {
+                  "messageType": "ResetSearch",
+                  "pageScope": true,
+                  "script": "\tself.props.params.text \u003d \"\"",
+                  "sessionScope": true,
+                  "viewScope": false
+                }
+              ]
+            },
+            "type": "ia.display.view"
+          }
+        ],
+        "meta": {
+          "name": "QueryFields"
+        },
+        "position": {
+          "basis": "",
+          "shrink": 0
+        },
+        "props": {
+          "style": {
+            "overflow": "hidden"
+          },
+          "wrap": "wrap"
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "meta": {
+          "name": "Label",
+          "visible": false
+        },
+        "position": {
+          "basis": "",
+          "shrink": 0
+        },
+        "props": {
+          "style": {
+            "classes": "Text/Error_Message",
+            "text-align": "center"
+          },
+          "text": "First Name, Last Name, and Race are required fields to add a new participant."
+        },
+        "scripts": {
+          "customMethods": [
+            {
+              "name": "showMessage",
+              "params": [
+                "message"
+              ],
+              "script": "\timport time\n\t#system.perspective.print(message)\n\tself.props.text \u003d message\n\tself.meta.visible \u003d True\n\ttime.sleep(5)\n\tself.meta.visible \u003d False\n\t"
+            }
+          ],
+          "extensionFunctions": null,
+          "messageHandlers": []
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "children": [
+          {
+            "events": {
+              "component": {
+                "onRowClick": {
+                  "config": {
+                    "script": "\tselected_row \u003d self.props.selection.selectedRow\n\t#system.perspective.print(selected_row)\n\thuman_id \u003d self.props.data[selected_row].value.human_id\n\tparticipant_id \u003d self.props.data[selected_row].value.participant_id\n\tfirst_name \u003d self.props.data[selected_row].value.first_name\n\tlast_name \u003d self.props.data[selected_row].value.last_name\n\tparticipant_active \u003d self.props.data[selected_row].value.participant\n\t#system.perspective.print(participant_id) \n\t#Participant doesn\u0027t exist\n\tif participant_id \u003d\u003d None:\n\t\t#The human exists, add to participants\n\t\tid \u003d \"pop_participants_copy_human\" \n\t\tview \u003d \"Participants/Registration/Search/PopupCopyHuman\"\n\t\tparameters \u003d {\u0027first_name\u0027:first_name,\u0027last_name\u0027:last_name,\u0027human_id\u0027:human_id}\n\t\tsystem.perspective.openPopup(id,view,parameters,showCloseIcon \u003d False, modal \u003d True)\n\t"
+                  },
+                  "scope": "G",
+                  "type": "script"
+                }
+              }
+            },
+            "meta": {
+              "name": "Table"
+            },
+            "position": {
+              "height": 1,
+              "width": 1
+            },
+            "propConfig": {
+              "custom.sql_data": {
+                "binding": {
+                  "config": {
+                    "expression": "if(hasChanged({view.params.first_name}),true,\r\nif(hasChanged({view.params.middle_name}),true,\r\nif(hasChanged({view.params.last_name}),true,\r\nif(hasChanged({view.params.nick_name}),true,\r\nif(hasChanged({view.params.race_id}),true,\r\nif(hasChanged({view.params.dob}),true,\r\nif(hasChanged({view.params.ssn}),true,\r\nif(hasChanged({view.params.dob_year}),true,\r\nif(hasChanged({view.params.dob_month}),true,\r\nif(hasChanged({view.params.dob_day}),true,\r\nfalse))))))))))"
+                  },
+                  "transforms": [
+                    {
+                      "code": "\t#system.perspective.print(\u0027Search Value Change Detected\u0027)\n\t#Assign variables from parameters\n\tfirst_name \u003d self.view.params.first_name\n\tmiddle_name \u003d self.view.params.middle_name\n\tlast_name \u003d self.view.params.last_name\n\tnick_name \u003d self.view.params.nick_name\n\trace_id \u003d self.view.params.race_id\n\tssn \u003d self.view.params.ssn\n\tdob_year \u003d self.view.params.dob_year\n\tdob_month \u003d self.view.params.dob_month\n\tdob_day \u003d self.view.params.dob_day\n\t#system.perspective.print(\u0027year:\u0027 + str(dob_year) + \u0027, month:\u0027 + str(dob_month) + \u0027, day:\u0027 + str(dob_day))\n\t#\n\t#Only run the query if there is search criteria\n\tif (\n\t\tfirst_name !\u003d None or middle_name !\u003d None or last_name !\u003d None or nick_name !\u003d None\n\t\tor race_id !\u003d None or ssn !\u003d None\n\t\tor dob_year !\u003d None or dob_month !\u003d None or dob_day !\u003d None\n\t\t):\n\t\t#system.perspective.print(\u0027Data Requested\u0027)\n\t\tproject \u003d \u0027RITI\u0027\n\t\tpath \u003d \"Participants/Registration/FindMatches\"\n\t\tparameters \u003d {\"first_name\":first_name,\n\t\t\t\t\t\"middle_name\":middle_name,\n\t\t\t\t\t\"last_name\":last_name,\n\t\t\t\t\t\"nick_name\":nick_name,\n\t\t\t\t\t\"race_id\":race_id,\n\t\t\t\t\t\"dob_year\":dob_year,\n\t\t\t\t\t\"dob_month\":dob_month,\n\t\t\t\t\t\"dob_day\":dob_day,\n\t\t\t\t\t\"ssn\":ssn}\n\t\tsearch_results \u003d system.db.runNamedQuery(project\u003dproject,path\u003dpath,parameters\u003dparameters, getKey\u003dTrue)\t\n\t\t#return search_results\n\t\t#table_data is the data object to return\n\t\ttable_data \u003d []\n\t\n\t\t#Iterate over the results of the query\n\t\tfor row in range(search_results.getRowCount()):\n\t\t\trow_struct \u003d {}\n\t\t\trow_data \u003d {}\n\t\t\tstyle \u003d {}\t\n\t\t\t#Map query results into correct attributes\n\t\t\trow_data[\u0027human_id\u0027] \u003d search_results.getValueAt(row, \"human_id\")\n\t\t\trow_data[\u0027participant_id\u0027] \u003d search_results.getValueAt(row, \"participant_id\")\n\t\t\tif search_results.getValueAt(row, \"participant_id\") !\u003d None:\n\t\t\t\tif search_results.getValueAt(row, \"participant_retired\") !\u003d None:\n\t\t\t\t\trow_data[\u0027participant\u0027] \u003d 2\n\t\t\t\telse:\n\t\t\t\t\trow_data[\u0027participant\u0027] \u003d 1\n\t\t\telse:\n\t\t\t\trow_data[\u0027participant\u0027] \u003d 0\n\t\t\t\t\n\t\t\tif search_results.getValueAt(row, \"volunteer_id\") !\u003d None:\n\t\t\t\tif search_results.getValueAt(row, \"volunteer_retired\") !\u003d None:\n\t\t\t\t\trow_data[\u0027volunteer\u0027] \u003d 2\n\t\t\t\telse:\n\t\t\t\t\trow_data[\u0027volunteer\u0027] \u003d 1\n\t\t\telse:\n\t\t\t\trow_data[\u0027volunteer\u0027] \u003d 0\n\t\t\t\t\t\n\t\t\tif search_results.getValueAt(row, \"employee_id\") !\u003d None:\n\t\t\t\tif search_results.getValueAt(row, \"employee_retired\") !\u003d None:\n\t\t\t\t\trow_data[\u0027employee\u0027] \u003d 2\n\t\t\t\telse:\n\t\t\t\t\trow_data[\u0027employee\u0027] \u003d 1\n\t\t\telse:\n\t\t\t\trow_data[\u0027employee\u0027] \u003d 0\n\n\t\t\trow_data[\u0027first_name\u0027] \u003d search_results.getValueAt(row, \"first_name\")\n\t\t\trow_data[\u0027middle_name\u0027] \u003d search_results.getValueAt(row, \"middle_name\")\n\t\t\trow_data[\u0027last_name\u0027] \u003d search_results.getValueAt(row, \"last_name\")\n\t\t\trow_data[\u0027nick_name\u0027] \u003d search_results.getValueAt(row, \"nick_name\")\n\t\t\trow_data[\u0027ssn\u0027] \u003d search_results.getValueAt(row, \"ssn\")\n\t\t\trow_data[\u0027dob\u0027] \u003d search_results.getValueAt(row, \"dob\")\n\t\t\trow_data[\u0027race_id\u0027] \u003d search_results.getValueAt(row, \"race_id\")\n\t\t\trow_data[\u0027race\u0027] \u003d search_results.getValueAt(row, \"race\")\n\t\t\t#Set the default style for the row\n\t\t\tstyle[\u0027classes\u0027] \u003d \"Table/Cell_Detail\"\n\t\t\trow_struct[\u0027value\u0027] \u003d row_data\n\t\t\trow_struct[\u0027style\u0027] \u003d style\n\t\t\t#Append the individual row date to the table data object\n\t\t\ttable_data.append(row_struct)\n\t\t\t\t\n\t\treturn table_data\n\telse:\n\t\treturn []",
+                      "type": "script"
+                    }
+                  ],
+                  "type": "expr"
+                }
+              },
+              "props.data": {
+                "binding": {
+                  "config": {
+                    "path": "this.custom.sql_data"
+                  },
+                  "type": "property"
+                }
+              }
+            },
+            "props": {
+              "cells": {
+                "style": {
+                  "classes": "Table/Cell_Detail_NoBG"
+                }
+              },
+              "columns": [
+                {
+                  "align": "center",
+                  "boolean": "checkbox",
+                  "dateFormat": "MM/DD/YYYY",
+                  "editable": false,
+                  "field": "human_id",
+                  "footer": {
+                    "align": "center",
+                    "justify": "left",
+                    "style": {
+                      "classes": ""
+                    },
+                    "title": ""
+                  },
+                  "header": {
+                    "align": "center",
+                    "justify": "left",
+                    "style": {
+                      "classes": ""
+                    },
+                    "title": "H ID"
+                  },
+                  "justify": "auto",
+                  "number": "value",
+                  "numberFormat": "0,0.##",
+                  "progressBar": {
+                    "bar": {
+                      "color": "#62A3F6",
+                      "linecap": "round",
+                      "width": 5
+                    },
+                    "max": 100,
+                    "track": {
+                      "color": "#DADADA",
+                      "linecap": "round",
+                      "width": 2
+                    },
+                    "value": {
+                      "color": "#7D7D7D",
+                      "show": true
+                    }
+                  },
+                  "render": "number",
+                  "resizable": true,
+                  "sort": "none",
+                  "sortable": false,
+                  "strictWidth": true,
+                  "style": {
+                    "classes": ""
+                  },
+                  "toggleSwitch": {
+                    "color": {
+                      "selected": "#2196F3",
+                      "unselected": "#FFFFFF"
+                    }
+                  },
+                  "viewParams": {},
+                  "viewPath": "Participants/Templates/Table/TableBooleanRetired",
+                  "visible": false,
+                  "width": 40
+                },
+                {
+                  "align": "center",
+                  "boolean": "checkbox",
+                  "dateFormat": "MM/DD/YYYY",
+                  "editable": false,
+                  "field": "participant_id",
+                  "footer": {
+                    "align": "center",
+                    "justify": "left",
+                    "style": {
+                      "classes": ""
+                    },
+                    "title": ""
+                  },
+                  "header": {
+                    "align": "center",
+                    "justify": "left",
+                    "style": {
+                      "classes": ""
+                    },
+                    "title": "P ID"
+                  },
+                  "justify": "auto",
+                  "number": "value",
+                  "numberFormat": "0,0.##",
+                  "progressBar": {
+                    "bar": {
+                      "color": "#62A3F6",
+                      "linecap": "round",
+                      "width": 5
+                    },
+                    "max": 100,
+                    "track": {
+                      "color": "#DADADA",
+                      "linecap": "round",
+                      "width": 2
+                    },
+                    "value": {
+                      "color": "#7D7D7D",
+                      "show": true
+                    }
+                  },
+                  "render": "number",
+                  "resizable": true,
+                  "sort": "none",
+                  "sortable": false,
+                  "strictWidth": true,
+                  "style": {
+                    "classes": ""
+                  },
+                  "toggleSwitch": {
+                    "color": {
+                      "selected": "#2196F3",
+                      "unselected": "#FFFFFF"
+                    }
+                  },
+                  "viewParams": {},
+                  "viewPath": "Participants/Templates/Table/TableBooleanRetired",
+                  "visible": false,
+                  "width": 80
+                },
+                {
+                  "align": "center",
+                  "boolean": "checkbox",
+                  "dateFormat": "MM/DD/YYYY",
+                  "editable": false,
+                  "field": "participant",
+                  "footer": {
+                    "align": "center",
+                    "justify": "left",
+                    "style": {
+                      "classes": ""
+                    },
+                    "title": ""
+                  },
+                  "header": {
+                    "align": "center",
+                    "justify": "left",
+                    "style": {
+                      "classes": ""
+                    },
+                    "title": "P"
+                  },
+                  "justify": "auto",
+                  "number": "value",
+                  "numberFormat": "0,0.##",
+                  "progressBar": {
+                    "bar": {
+                      "color": "#62A3F6",
+                      "linecap": "round",
+                      "width": 5
+                    },
+                    "max": 100,
+                    "track": {
+                      "color": "#DADADA",
+                      "linecap": "round",
+                      "width": 2
+                    },
+                    "value": {
+                      "color": "#7D7D7D",
+                      "show": true
+                    }
+                  },
+                  "render": "view",
+                  "resizable": true,
+                  "sort": "none",
+                  "sortable": false,
+                  "strictWidth": true,
+                  "style": {
+                    "classes": ""
+                  },
+                  "toggleSwitch": {
+                    "color": {
+                      "selected": "#2196F3",
+                      "unselected": "#FFFFFF"
+                    }
+                  },
+                  "viewParams": {},
+                  "viewPath": "",
+                  "visible": false,
+                  "width": 40
+                },
+                {
+                  "align": "center",
+                  "boolean": "checkbox",
+                  "dateFormat": "MM/DD/YYYY",
+                  "editable": false,
+                  "field": "volunteer",
+                  "footer": {
+                    "align": "center",
+                    "justify": "left",
+                    "style": {
+                      "classes": ""
+                    },
+                    "title": ""
+                  },
+                  "header": {
+                    "align": "center",
+                    "justify": "left",
+                    "style": {
+                      "classes": ""
+                    },
+                    "title": "V"
+                  },
+                  "justify": "auto",
+                  "number": "value",
+                  "numberFormat": "0,0.##",
+                  "progressBar": {
+                    "bar": {
+                      "color": "#62A3F6",
+                      "linecap": "round",
+                      "width": 5
+                    },
+                    "max": 100,
+                    "track": {
+                      "color": "#DADADA",
+                      "linecap": "round",
+                      "width": 2
+                    },
+                    "value": {
+                      "color": "#7D7D7D",
+                      "show": true
+                    }
+                  },
+                  "render": "view",
+                  "resizable": true,
+                  "sort": "none",
+                  "sortable": false,
+                  "strictWidth": true,
+                  "style": {
+                    "classes": ""
+                  },
+                  "toggleSwitch": {
+                    "color": {
+                      "selected": "#2196F3",
+                      "unselected": "#FFFFFF"
+                    }
+                  },
+                  "viewParams": {},
+                  "viewPath": "",
+                  "visible": false,
+                  "width": 40
+                },
+                {
+                  "align": "center",
+                  "boolean": "checkbox",
+                  "dateFormat": "MM/DD/YYYY",
+                  "editable": false,
+                  "field": "employee",
+                  "footer": {
+                    "align": "center",
+                    "justify": "left",
+                    "style": {
+                      "classes": ""
+                    },
+                    "title": ""
+                  },
+                  "header": {
+                    "align": "center",
+                    "justify": "left",
+                    "style": {
+                      "classes": ""
+                    },
+                    "title": "E"
+                  },
+                  "justify": "auto",
+                  "number": "value",
+                  "numberFormat": "0,0.##",
+                  "progressBar": {
+                    "bar": {
+                      "color": "#62A3F6",
+                      "linecap": "round",
+                      "width": 5
+                    },
+                    "max": 100,
+                    "track": {
+                      "color": "#DADADA",
+                      "linecap": "round",
+                      "width": 2
+                    },
+                    "value": {
+                      "color": "#7D7D7D",
+                      "show": true
+                    }
+                  },
+                  "render": "view",
+                  "resizable": true,
+                  "sort": "none",
+                  "sortable": false,
+                  "strictWidth": true,
+                  "style": {
+                    "classes": ""
+                  },
+                  "toggleSwitch": {
+                    "color": {
+                      "selected": "#2196F3",
+                      "unselected": "#FFFFFF"
+                    }
+                  },
+                  "viewParams": {},
+                  "viewPath": "",
+                  "visible": false,
+                  "width": 40
+                },
+                {
+                  "align": "center",
+                  "boolean": "checkbox",
+                  "dateFormat": "MM/DD/YYYY",
+                  "editable": false,
+                  "field": "first_name",
+                  "footer": {
+                    "align": "center",
+                    "justify": "left",
+                    "style": {
+                      "classes": ""
+                    },
+                    "title": ""
+                  },
+                  "header": {
+                    "align": "center",
+                    "justify": "left",
+                    "style": {
+                      "classes": ""
+                    },
+                    "title": "First Name"
+                  },
+                  "justify": "auto",
+                  "number": "value",
+                  "numberFormat": "0,0.##",
+                  "progressBar": {
+                    "bar": {
+                      "color": "#62A3F6",
+                      "linecap": "round",
+                      "width": 5
+                    },
+                    "max": 100,
+                    "track": {
+                      "color": "#DADADA",
+                      "linecap": "round",
+                      "width": 2
+                    },
+                    "value": {
+                      "color": "#7D7D7D",
+                      "show": true
+                    }
+                  },
+                  "render": "auto",
+                  "resizable": true,
+                  "sort": "none",
+                  "sortable": true,
+                  "strictWidth": false,
+                  "style": {
+                    "classes": ""
+                  },
+                  "toggleSwitch": {
+                    "color": {
+                      "selected": "#2196F3",
+                      "unselected": "#FFFFFF"
+                    }
+                  },
+                  "viewParams": {},
+                  "viewPath": "",
+                  "visible": true,
+                  "width": ""
+                },
+                {
+                  "align": "center",
+                  "boolean": "checkbox",
+                  "dateFormat": "MM/DD/YYYY",
+                  "editable": false,
+                  "field": "middle_name",
+                  "footer": {
+                    "align": "center",
+                    "justify": "left",
+                    "style": {
+                      "classes": ""
+                    },
+                    "title": ""
+                  },
+                  "header": {
+                    "align": "center",
+                    "justify": "left",
+                    "style": {
+                      "classes": ""
+                    },
+                    "title": "Middle Name"
+                  },
+                  "justify": "auto",
+                  "number": "value",
+                  "numberFormat": "0,0.##",
+                  "progressBar": {
+                    "bar": {
+                      "color": "#62A3F6",
+                      "linecap": "round",
+                      "width": 5
+                    },
+                    "max": 100,
+                    "track": {
+                      "color": "#DADADA",
+                      "linecap": "round",
+                      "width": 2
+                    },
+                    "value": {
+                      "color": "#7D7D7D",
+                      "show": true
+                    }
+                  },
+                  "render": "auto",
+                  "resizable": true,
+                  "sort": "none",
+                  "sortable": true,
+                  "strictWidth": false,
+                  "style": {
+                    "classes": ""
+                  },
+                  "toggleSwitch": {
+                    "color": {
+                      "selected": "#2196F3",
+                      "unselected": "#FFFFFF"
+                    }
+                  },
+                  "viewParams": {},
+                  "viewPath": "",
+                  "visible": true,
+                  "width": ""
+                },
+                {
+                  "align": "center",
+                  "boolean": "checkbox",
+                  "dateFormat": "MM/DD/YYYY",
+                  "editable": false,
+                  "field": "last_name",
+                  "footer": {
+                    "align": "center",
+                    "justify": "left",
+                    "style": {
+                      "classes": ""
+                    },
+                    "title": ""
+                  },
+                  "header": {
+                    "align": "center",
+                    "justify": "left",
+                    "style": {
+                      "classes": ""
+                    },
+                    "title": "Last Name"
+                  },
+                  "justify": "auto",
+                  "number": "value",
+                  "numberFormat": "0,0.##",
+                  "progressBar": {
+                    "bar": {
+                      "color": "#62A3F6",
+                      "linecap": "round",
+                      "width": 5
+                    },
+                    "max": 100,
+                    "track": {
+                      "color": "#DADADA",
+                      "linecap": "round",
+                      "width": 2
+                    },
+                    "value": {
+                      "color": "#7D7D7D",
+                      "show": true
+                    }
+                  },
+                  "render": "auto",
+                  "resizable": true,
+                  "sort": "none",
+                  "sortable": true,
+                  "strictWidth": false,
+                  "style": {
+                    "classes": ""
+                  },
+                  "toggleSwitch": {
+                    "color": {
+                      "selected": "#2196F3",
+                      "unselected": "#FFFFFF"
+                    }
+                  },
+                  "viewParams": {},
+                  "viewPath": "",
+                  "visible": true,
+                  "width": ""
+                },
+                {
+                  "align": "center",
+                  "boolean": "checkbox",
+                  "dateFormat": "MM/DD/YYYY",
+                  "editable": false,
+                  "field": "nick_name",
+                  "footer": {
+                    "align": "center",
+                    "justify": "left",
+                    "style": {
+                      "classes": ""
+                    },
+                    "title": ""
+                  },
+                  "header": {
+                    "align": "center",
+                    "justify": "left",
+                    "style": {
+                      "classes": ""
+                    },
+                    "title": "Nick Name"
+                  },
+                  "justify": "auto",
+                  "number": "value",
+                  "numberFormat": "0,0.##",
+                  "progressBar": {
+                    "bar": {
+                      "color": "#62A3F6",
+                      "linecap": "round",
+                      "width": 5
+                    },
+                    "max": 100,
+                    "track": {
+                      "color": "#DADADA",
+                      "linecap": "round",
+                      "width": 2
+                    },
+                    "value": {
+                      "color": "#7D7D7D",
+                      "show": true
+                    }
+                  },
+                  "render": "auto",
+                  "resizable": true,
+                  "sort": "none",
+                  "sortable": true,
+                  "strictWidth": false,
+                  "style": {
+                    "classes": ""
+                  },
+                  "toggleSwitch": {
+                    "color": {
+                      "selected": "#2196F3",
+                      "unselected": "#FFFFFF"
+                    }
+                  },
+                  "viewParams": {},
+                  "viewPath": "",
+                  "visible": false,
+                  "width": ""
+                },
+                {
+                  "align": "center",
+                  "boolean": "checkbox",
+                  "dateFormat": "MM/DD/YYYY",
+                  "editable": false,
+                  "field": "dob",
+                  "footer": {
+                    "align": "center",
+                    "justify": "left",
+                    "style": {
+                      "classes": ""
+                    },
+                    "title": ""
+                  },
+                  "header": {
+                    "align": "center",
+                    "justify": "left",
+                    "style": {
+                      "classes": ""
+                    },
+                    "title": ""
+                  },
+                  "justify": "auto",
+                  "number": "value",
+                  "numberFormat": "0,0.##",
+                  "progressBar": {
+                    "bar": {
+                      "color": "#62A3F6",
+                      "linecap": "round",
+                      "width": 5
+                    },
+                    "max": 100,
+                    "track": {
+                      "color": "#DADADA",
+                      "linecap": "round",
+                      "width": 2
+                    },
+                    "value": {
+                      "color": "#7D7D7D",
+                      "show": true
+                    }
+                  },
+                  "render": "date",
+                  "resizable": true,
+                  "sort": "none",
+                  "sortable": true,
+                  "strictWidth": false,
+                  "style": {
+                    "classes": ""
+                  },
+                  "toggleSwitch": {
+                    "color": {
+                      "selected": "#2196F3",
+                      "unselected": "#FFFFFF"
+                    }
+                  },
+                  "viewParams": {},
+                  "viewPath": "",
+                  "visible": true,
+                  "width": ""
+                },
+                {
+                  "align": "center",
+                  "boolean": "checkbox",
+                  "dateFormat": "MM/DD/YYYY",
+                  "editable": false,
+                  "field": "ssn",
+                  "footer": {
+                    "align": "center",
+                    "justify": "left",
+                    "style": {
+                      "classes": ""
+                    },
+                    "title": ""
+                  },
+                  "header": {
+                    "align": "center",
+                    "justify": "left",
+                    "style": {
+                      "classes": ""
+                    },
+                    "title": "SSN"
+                  },
+                  "justify": "auto",
+                  "number": "value",
+                  "numberFormat": "0,0.##",
+                  "progressBar": {
+                    "bar": {
+                      "color": "#62A3F6",
+                      "linecap": "round",
+                      "width": 5
+                    },
+                    "max": 100,
+                    "track": {
+                      "color": "#DADADA",
+                      "linecap": "round",
+                      "width": 2
+                    },
+                    "value": {
+                      "color": "#7D7D7D",
+                      "show": true
+                    }
+                  },
+                  "render": "auto",
+                  "resizable": true,
+                  "sort": "none",
+                  "sortable": true,
+                  "strictWidth": false,
+                  "style": {
+                    "classes": ""
+                  },
+                  "toggleSwitch": {
+                    "color": {
+                      "selected": "#2196F3",
+                      "unselected": "#FFFFFF"
+                    }
+                  },
+                  "viewParams": {},
+                  "viewPath": "",
+                  "visible": true,
+                  "width": ""
+                },
+                {
+                  "align": "center",
+                  "boolean": "checkbox",
+                  "dateFormat": "MM/DD/YYYY",
+                  "editable": false,
+                  "field": "race",
+                  "footer": {
+                    "align": "center",
+                    "justify": "left",
+                    "style": {
+                      "classes": ""
+                    },
+                    "title": ""
+                  },
+                  "header": {
+                    "align": "center",
+                    "justify": "left",
+                    "style": {
+                      "classes": ""
+                    },
+                    "title": "Race"
+                  },
+                  "justify": "auto",
+                  "number": "value",
+                  "numberFormat": "0,0.##",
+                  "progressBar": {
+                    "bar": {
+                      "color": "#62A3F6",
+                      "linecap": "round",
+                      "width": 5
+                    },
+                    "max": 100,
+                    "track": {
+                      "color": "#DADADA",
+                      "linecap": "round",
+                      "width": 2
+                    },
+                    "value": {
+                      "color": "#7D7D7D",
+                      "show": true
+                    }
+                  },
+                  "render": "auto",
+                  "resizable": true,
+                  "sort": "none",
+                  "sortable": true,
+                  "strictWidth": false,
+                  "style": {
+                    "classes": ""
+                  },
+                  "toggleSwitch": {
+                    "color": {
+                      "selected": "#2196F3",
+                      "unselected": "#FFFFFF"
+                    }
+                  },
+                  "viewParams": {},
+                  "viewPath": "",
+                  "visible": true,
+                  "width": ""
+                }
+              ],
+              "emptyMessage": {
+                "noData": {
+                  "text": "No Results",
+                  "textStyle": {
+                    "color": "#808080"
+                  }
+                },
+                "noFilterResults": {
+                  "text": "No Results"
+                }
+              },
+              "headerStyle": {
+                "background-color": "#FFFFFF00",
+                "classes": "Table/Column_Header_Detail",
+                "color": "#AAAAAA",
+                "font-size": "12px"
+              },
+              "pager": {
+                "initialOption": 10
+              },
+              "rows": {
+                "highlight": {
+                  "color": "#ccffff"
+                },
+                "striped": {
+                  "enabled": false
+                },
+                "style": {
+                  "cursor": "pointer"
+                }
+              },
+              "selection": {
+                "style": {
+                  "background-color": "#00000010",
+                  "backgroundColor": "#9af4eb4d"
+                }
+              }
+            },
+            "type": "ia.display.table"
+          },
+          {
+            "meta": {
+              "name": "ResultCount"
+            },
+            "position": {
+              "height": 0.0554,
+              "width": 0.2333,
+              "x": 0.02,
+              "y": 0.9365
+            },
+            "propConfig": {
+              "props.text": {
+                "binding": {
+                  "config": {
+                    "path": "../Table.props.data"
+                  },
+                  "transforms": [
+                    {
+                      "code": "\treturn str(len(value)) + \u0027 Results Found\u0027",
+                      "type": "script"
+                    }
+                  ],
+                  "type": "property"
+                }
+              }
+            },
+            "props": {
+              "style": {
+                "classes": "Text/Add_TextArea"
+              }
+            },
+            "type": "ia.display.label"
+          }
+        ],
+        "meta": {
+          "name": "Results"
+        },
+        "position": {
+          "basis": "200px",
+          "grow": 1
+        },
+        "props": {
+          "mode": "percent"
+        },
+        "type": "ia.container.coord"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column",
+      "style": {
+        "classes": "Background/Default"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

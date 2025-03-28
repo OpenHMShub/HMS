@@ -1,0 +1,344 @@
+{
+  "custom": {
+    "CategoryName": "New",
+    "Color": "",
+    "id": -1,
+    "isActive": false,
+    "noOfExistingEvents": 0
+  },
+  "params": {
+    "row_data": {
+      "CategoryId": -1,
+      "CategoryName": "New",
+      "Color": "",
+      "isActive": false
+    }
+  },
+  "propConfig": {
+    "custom.CategoryName": {
+      "binding": {
+        "config": {
+          "path": "view.params.row_data.CategoryName"
+        },
+        "type": "property"
+      },
+      "persistent": true
+    },
+    "custom.Color": {
+      "binding": {
+        "config": {
+          "path": "view.params.row_data.Color"
+        },
+        "type": "property"
+      },
+      "persistent": true
+    },
+    "custom.id": {
+      "binding": {
+        "config": {
+          "path": "view.params.row_data.CategoryId"
+        },
+        "type": "property"
+      },
+      "persistent": true
+    },
+    "custom.isActive": {
+      "binding": {
+        "config": {
+          "path": "view.params.row_data.isActive"
+        },
+        "type": "property"
+      },
+      "persistent": true
+    },
+    "custom.noOfExistingEvents": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "categoryId": "{view.custom.id}"
+          },
+          "queryPath": "Event/ParticipantEvents/Settings/GetNumberOfEventsForCategory"
+        },
+        "type": "query"
+      },
+      "persistent": true
+    },
+    "params.row_data": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.row_data.CategoryName": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.row_data.Color": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 170,
+      "width": 1043
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "EmbeddedView Header"
+        },
+        "position": {
+          "basis": "25px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.Text": {
+            "binding": {
+              "config": {
+                "path": "view.custom.id"
+              },
+              "transforms": [
+                {
+                  "expression": "if({value} \u003d -1,\u0027New Category\u0027,\u0027Edit Category\u0027)",
+                  "type": "expression"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "path": "Settings/Templates/Header"
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "EmbeddedView Row1"
+        },
+        "position": {
+          "basis": "70px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.CategoryName": {
+            "binding": {
+              "config": {
+                "bidirectional": true,
+                "path": "view.custom.CategoryName"
+              },
+              "type": "property"
+            }
+          },
+          "props.params.Id": {
+            "binding": {
+              "config": {
+                "bidirectional": true,
+                "path": "view.params.row_data.CategoryId"
+              },
+              "type": "property"
+            }
+          },
+          "props.params.color": {
+            "binding": {
+              "config": {
+                "bidirectional": true,
+                "path": "view.custom.Color"
+              },
+              "type": "property"
+            }
+          },
+          "props.params.isActive": {
+            "binding": {
+              "config": {
+                "bidirectional": true,
+                "path": "view.custom.isActive"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "path": "Events/ParticipantEvents/SettingsCategories/Dashboard/Main/Edit/Row1",
+          "style": {
+            "marginLeft": 25,
+            "marginRight": 25
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "children": [
+          {
+            "events": {
+              "component": {
+                "onActionPerformed": {
+                  "config": {
+                    "script": "\t#system.perspective.print(\"New Service Button Pressed\")\n\t#Send the message to refresh the table\n\t\n\tmessageType \u003d \u0027refreshCategorySettings\u0027\n\tsystem.perspective.sendMessage(messageType)\n\tself.view.params.row_data.CategoryId  \u003d -1\n\tself.parent.parent.getChild(\"EmbeddedView Row1\").props.params.CategoryName \u003d \"\"\n\tself.parent.parent.getChild(\"EmbeddedView Row1\").props.params.color \u003d \"\"\n\tself.parent.parent.getChild(\"EmbeddedView Row1\").props.params.isActive \u003d True"
+                  },
+                  "scope": "G",
+                  "type": "script"
+                }
+              }
+            },
+            "meta": {
+              "name": "button_new"
+            },
+            "position": {
+              "basis": "120px",
+              "shrink": 0
+            },
+            "props": {
+              "style": {
+                "classes": "Buttons/Secondary",
+                "marginBottom": "5px",
+                "marginLeft": "20px",
+                "marginTop": "5px"
+              },
+              "text": "New Category"
+            },
+            "type": "ia.input.button"
+          },
+          {
+            "events": {
+              "component": {
+                "onActionPerformed": {
+                  "config": {
+                    "script": "\timport traceback\n\ttry:\n\t\tproject \u003d \"RITI\"\n\t\t### Declare parameters \n\t\tCategoryDB \u003d []\n\t\t\n\t\tID \u003d self.parent.parent.getChild(\"EmbeddedView Row1\").props.params.Id\n\t\tCategoryName \u003d self.parent.parent.getChild(\"EmbeddedView Row1\").props.params.CategoryName\n\t\tColor \u003d self.parent.parent.getChild(\"EmbeddedView Row1\").props.params.color\n\t\tisActive \u003d self.parent.parent.getChild(\"EmbeddedView Row1\").props.params.isActive\n\t\tpath \u003d \"Event/ParticipantEvents/Settings/CategorySettingsDuplicateEntry\"\n\t\t\t\t\t\t\t\t\t\n\t\tparameters \u003d {\"Category_Name\":CategoryName, \u0027category_id\u0027:ID}\n\t\t\t\t\t\t#system.perspective.print(parameters)\n\t\t\t\n\t\tCategoryDB \u003d system.db.runNamedQuery(project\u003dproject,path\u003dpath,parameters\u003dparameters, getKey\u003dTrue)\n\t\t#system.perspective.print(CategoryDB)\t\n\t\t\n\t\tx \u003d CategoryDB.getRowCount()\n\t\t#system.perspective.print(x)\t\t\n\t\tif CategoryDB.getRowCount() \u003d\u003d 0:\n\t\t\tif (CategoryName !\u003d \"\" and Color !\u003d \"\" and CategoryName !\u003d None and Color !\u003d None):\n\t\t\t\t#system.perspective.print(\u0027In\u0027)\n\t\t\t\tif ID \u003d\u003d -1:#Insert new data, no row_id\n\t\t\t\t\t#system.perspective.print(\u0027In1\u0027)\n\t\t\t\t\tpath \u003d \"Event/ParticipantEvents/Settings/CategorySettingsInsert\"\n\t\t\t\t\t\t\t\t\n\t\t\t\t\tparameters \u003d {\"Category_name\":CategoryName,\"Color\":Color, \"isActive\":isActive}\n\t\t\t\t\t#system.perspective.print(parameters)\n\t\t\n\t\t\t\t\tnewCategory \u003d system.db.runNamedQuery(project\u003dproject,path\u003dpath,parameters\u003dparameters, getKey\u003dTrue)\n\t\t\t\t\t#system.perspective.print(newCategory)\n\t\t\n\t\t\t\t\tmessageType \u003d \u0027refreshCategorySettings\u0027\n\t\t\t\t\tsystem.perspective.sendMessage(messageType)\n\t\t\t\t\tself.parent.parent.getChild(\"EmbeddedView Row1\").props.params.CategoryName \u003d \"\"\n\t\t\t\t\tself.parent.parent.getChild(\"EmbeddedView Row1\").props.params.color \u003d \"\"\n\t\t\t\t\tself.parent.parent.getChild(\"EmbeddedView Row1\").props.params.Id \u003d -1\n\t\t\t\t\tself.parent.parent.getChild(\"EmbeddedView Row1\").props.params.isActive \u003d True\n\t\t\t\t\t\n\t\t\t\t\t\n\t\t\t\tif ID \u003e\u003d 0 :#Insert new data, no row_id\n\t\t\t\t\t#system.perspective.print(\u0027In2\u0027)\n\t\t\t\t\tpath \u003d \"Event/ParticipantEvents/Settings/CategorySettingsUpdate\"\n\t\t\t\t\t\t\t\t\n\t\t\t\t\tparameters \u003d {\"Category_name\":CategoryName,\"Color\":Color, \"Id\": ID, \"isActive\":isActive}\n\t\t\t\t\t#system.perspective.print(parameters)\n\t\t\n\t\t\t\t\tnewCategory \u003d system.db.runNamedQuery(project\u003dproject,path\u003dpath,parameters\u003dparameters, getKey\u003dTrue)\n\t\t\t\t\t#system.perspective.print(newCategory)\n\t\t\n\t\t\t\t\tmessageType \u003d \u0027refreshCategorySettings\u0027\n\t\t\t\t\tsystem.perspective.sendMessage(messageType)\n\t\t\t\t\tself.parent.parent.getChild(\"EmbeddedView Row1\").props.params.CategoryName \u003d \"\"\n\t\t\t\t\tself.parent.parent.getChild(\"EmbeddedView Row1\").props.params.color \u003d \"\"\n\t\t\t\t\tself.parent.parent.getChild(\"EmbeddedView Row1\").props.params.Id \u003d -1\t\n\t\t\t\t\tself.parent.parent.getChild(\"EmbeddedView Row1\").props.params.isActive \u003d True\t\n\t\t\telse:\n\t\t\t\tself.getSibling(\"Label\").showMessage(\"Make sure you have entered the name and color properly. Please try again.\")\n\t\telse:\n\t\t\tself.getSibling(\"Label\").showMessage(\"Duplicate Entry.\")\t\t\t\t\n\t\t\t\t\t\t\n\texcept:\n\t\t\tlogger \u003d system.util.getLogger(\"Category Settings Edit button_save\")\n\t\t\tmsg \u003d traceback.format_exc()\n\t\t\tlogger.error(msg)\n\t\t\tself.getSibling(\"Label\").showMessage(\"Something went wrong. Please try again.\")"
+                  },
+                  "scope": "G",
+                  "type": "script"
+                }
+              }
+            },
+            "meta": {
+              "name": "button_save"
+            },
+            "position": {
+              "basis": "120px",
+              "shrink": 0
+            },
+            "propConfig": {
+              "props.text": {
+                "binding": {
+                  "config": {
+                    "expression": "if({view.params.row_data.CategoryId} \u003d -1,\u0027Save Category\u0027,\u0027Update Category\u0027)"
+                  },
+                  "type": "expr"
+                }
+              }
+            },
+            "props": {
+              "style": {
+                "classes": "Buttons/Main",
+                "marginBottom": "5px",
+                "marginLeft": "10px",
+                "marginTop": "5px"
+              }
+            },
+            "type": "ia.input.button"
+          },
+          {
+            "events": {
+              "component": {
+                "onActionPerformed": {
+                  "config": {
+                    "script": "\timport traceback\n\ttry:\n\t\tproject \u003d \"RITI\"\n\t\t### Declare parameters \n\t\t\n\t\tID \u003d self.parent.parent.getChild(\"EmbeddedView Row1\").props.params.Id\n\t\tCategoryName \u003d self.parent.parent.getChild(\"EmbeddedView Row1\").props.params.CategoryName\n\t\tColor \u003d self.parent.parent.getChild(\"EmbeddedView Row1\").props.params.color\n\t\t\n\t\tif ID \u003e\u003d 0:#Delete new data\n\t\t\t#system.perspective.print(\u0027In\u0027)\n\t\t\tif self.view.custom.noOfExistingEvents \u003d\u003d 0: ## no events exist\n\t\t\t\tpath \u003d \"Event/ParticipantEvents/Settings/CategorySettingsDelete\"\n\t\t\t\t\t\t\t\t\t\t\n\t\t\t\tparameters \u003d {\"row_id\":ID }\n\t\t\t\t#system.perspective.print(parameters)\n\t\n\t\t\t\tnewCategory \u003d system.db.runNamedQuery(project\u003dproject,path\u003dpath,parameters\u003dparameters, getKey\u003dTrue)\n\t\t\t\t#system.perspective.print(newCategory)\n\t\n\t\t\t\tmessageType \u003d \u0027refreshCategorySettings\u0027\n\t\t\t\tsystem.perspective.sendMessage(messageType)\n\t\t\t\tself.view.params.row_data.CategoryId  \u003d -1\n\t\t\t\tself.parent.parent.getChild(\"EmbeddedView Row1\").props.params.CategoryName \u003d \"\"\n\t\t\t\tself.parent.parent.getChild(\"EmbeddedView Row1\").props.params.color \u003d \"\"\n\t\t\t\tself.parent.parent.getChild(\"EmbeddedView Row1\").props.params.isActive \u003d True\n\t\t\telse:\n\t\t\t\tself.getSibling(\"Label\").showMessage(\"Cannot delete this category as events exist for this category.\")\t\n\t\t\t\t\n\t\t\n\texcept:\n\t\tlogger \u003d system.util.getLogger(\"Category Settings Edit button_save\")\n\t\tmsg \u003d traceback.format_exc()\n\t\tlogger.error(msg)\n\t\tself.getSibling(\"Label\").showMessage(\"Something went wrong while saving data. Please try again.\")\t"
+                  },
+                  "scope": "G",
+                  "type": "script"
+                }
+              }
+            },
+            "meta": {
+              "name": "button_delete"
+            },
+            "position": {
+              "basis": "120px",
+              "shrink": 0
+            },
+            "propConfig": {
+              "position.display": {
+                "binding": {
+                  "config": {
+                    "expression": "if({view.params.row_data.CategoryId} !\u003d -1,true , False)"
+                  },
+                  "type": "expr"
+                }
+              }
+            },
+            "props": {
+              "style": {
+                "classes": "Buttons/Delete",
+                "marginBottom": "5px",
+                "marginLeft": "10px",
+                "marginTop": "5px"
+              },
+              "text": "Delete Category"
+            },
+            "type": "ia.input.button"
+          },
+          {
+            "meta": {
+              "name": "Label",
+              "visible": false
+            },
+            "position": {
+              "basis": "50px",
+              "grow": 1
+            },
+            "props": {
+              "style": {
+                "classes": "Text/Error_Message"
+              },
+              "text": "Something went wrong while saving data. Please try again."
+            },
+            "scripts": {
+              "customMethods": [
+                {
+                  "name": "showMessage",
+                  "params": [
+                    "message"
+                  ],
+                  "script": "\timport time\n\tself.props.text \u003d message\n\tself.meta.visible \u003d True\n\ttime.sleep(5)\n\tself.meta.visible \u003d False\n\t"
+                }
+              ],
+              "extensionFunctions": null,
+              "messageHandlers": []
+            },
+            "type": "ia.display.label"
+          }
+        ],
+        "meta": {
+          "name": "root Actions"
+        },
+        "position": {
+          "basis": "50px",
+          "shrink": 0
+        },
+        "props": {
+          "style": {
+            "borderTopColor": "#9db8d1",
+            "borderTopStyle": "Solid",
+            "borderTopWidth": "1px",
+            "marginTop": "5px",
+            "overflowY": "hidden",
+            "paddingTop": "5px"
+          }
+        },
+        "type": "ia.container.flex"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column",
+      "style": {
+        "classes": "Background/Default"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

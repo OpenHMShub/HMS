@@ -1,0 +1,34 @@
+INSERT INTO	participant.Suspension 
+	(
+	incidentLogId, 
+	LocationTypeId, 
+	participantId,
+	suspensionNotes,
+	suspensionTypeId,
+	suspensionTypeIdRevised,
+	Duration,
+	DurationRevised,
+	dateBegin,
+	dateEnd,
+	dateEndRevised,
+	reinstateRequired, 
+    timeCreated,
+    userName 
+	)
+VALUES
+	(
+	:incident_log_id, 
+	:incident_location_id,
+	:participant_id,
+	:suspension_notes, 
+	:suspension_type_id, 
+	:suspension_type_id, 
+	:duration,
+	:duration,
+	:dateBegin, 
+	:dateEnd,
+	:dateEnd,
+	:reinstateRequired,
+	:time_created,
+	:user_name 
+	)

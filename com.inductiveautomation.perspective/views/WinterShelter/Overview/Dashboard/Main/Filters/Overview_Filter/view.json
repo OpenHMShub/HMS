@@ -1,0 +1,105 @@
+{
+  "custom": {},
+  "params": {
+    "seasonId": -1
+  },
+  "propConfig": {
+    "params.seasonId": {
+      "binding": {
+        "config": {
+          "path": "/root/season.props.params.selection"
+        },
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 30,
+      "width": 1817
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "season"
+        },
+        "position": {
+          "basis": "140px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.options": {
+            "binding": {
+              "config": {
+                "queryPath": "WinterShelterGlobal/Filters/getSeasons",
+                "returnFormat": "dataset"
+              },
+              "type": "query"
+            }
+          },
+          "props.params.placeholder": {
+            "binding": {
+              "config": {
+                "expression": "toInt(if (getMonth(now()),getYear(now()),getYear(now())-1))"
+              },
+              "transforms": [
+                {
+                  "code": "\treturn str(value) + \u0027-\u0027 + str(value+1)",
+                  "type": "script"
+                }
+              ],
+              "type": "expr"
+            }
+          },
+          "props.params.selection": {
+            "binding": {
+              "config": {
+                "queryPath": "WinterShelterGlobal/getCurrentSeason"
+              },
+              "transforms": [
+                {
+                  "code": "\treturn value.getValueAt(0,\u0027id\u0027) if value.getRowCount()\u003e0 else -1",
+                  "type": "script"
+                }
+              ],
+              "type": "query"
+            }
+          }
+        },
+        "props": {
+          "path": "1_TEMPLATES/Filtering/Conditionals/Conditional_SingleDropDown_NoClear_TealBlue",
+          "style": {
+            "classes": "Filter/Filter_Container"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Placeholder"
+        },
+        "position": {
+          "basis": "1px",
+          "grow": 1
+        },
+        "props": {
+          "path": "1_globalTEMPLATES/Filtering/Filter_Placeholder"
+        },
+        "type": "ia.display.view"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "style": {
+        "classes": "Filter/Header_Text"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

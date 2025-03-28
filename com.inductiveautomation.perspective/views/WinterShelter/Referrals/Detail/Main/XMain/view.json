@@ -1,0 +1,125 @@
+{
+  "custom": {},
+  "params": {
+    "locationID": 162,
+    "trackID": 162
+  },
+  "propConfig": {
+    "params.locationID": {
+      "onChange": {
+        "enabled": null,
+        "script": "\tself.params.trackID \u003d self.params.locationID"
+      },
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 827,
+      "width": 1261
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "Filter"
+        },
+        "position": {
+          "basis": "30px"
+        },
+        "propConfig": {
+          "custom.providerId": {
+            "binding": {
+              "config": {
+                "parameters": {
+                  "locationId": "{view.params.locationID}"
+                },
+                "queryPath": "WinterShelter/getProviderID"
+              },
+              "transforms": [
+                {
+                  "code": "\tproviderId \u003d value.getValueAt(0,\u0027providerId\u0027)\n\treturn providerId",
+                  "type": "script"
+                }
+              ],
+              "type": "query"
+            }
+          },
+          "props.params.providerId": {
+            "binding": {
+              "config": {
+                "path": "this.custom.providerId"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "path": "WinterShelter/Referrals/Detail/Main/Filter/Referrals_Conditions",
+          "style": {
+            "marginLeft": "40px",
+            "marginRight": "37px"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Label"
+        },
+        "position": {
+          "basis": "32px"
+        },
+        "propConfig": {
+          "props.text": {
+            "binding": {
+              "config": {
+                "path": "../Filter.props.params.providerId"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "style": {
+            "classes": "Text/Error_Message"
+          }
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "meta": {
+          "name": "Table"
+        },
+        "position": {
+          "basis": "75%",
+          "grow": 1
+        },
+        "props": {
+          "params": {
+            "fetch": 100,
+            "resultRowCount": 0
+          },
+          "path": "WinterShelter/Referrals/Detail/Main/Table/Referrals_Table",
+          "style": {
+            "marginLeft": 40,
+            "marginRight": 40
+          }
+        },
+        "type": "ia.display.view"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column",
+      "style": {
+        "classes": "Background/Alternative"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

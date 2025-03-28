@@ -1,0 +1,112 @@
+{
+  "custom": {},
+  "params": {},
+  "propConfig": {
+    "params.wherePlusOut": {
+      "access": "PUBLIC",
+      "paramDirection": "output",
+      "persistent": false
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 50,
+      "width": 600
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "events": {
+          "component": {
+            "onActionPerformed": {
+              "config": {
+                "script": "\troot \u003d self.parent\n\tlbl \u003d self.getSibling(\"Emv_AboutLabel\")\n\t\n#\tdateIn \u003d root.getAsClientTime(system.date.now())\n\tdateIn \u003d system.date.now()\n\t\n\tlbl.props.params.Info \u003d \u0027\u0027\n\t\n\tpayload \u003d {\u0027dateIn\u0027: dateIn}\n\ttry:\n\t\tsystem.perspective.sendMessage(\u0027mhSetAvailabilityData\u0027, payload) #, scope \u003d \u0027page\u0027)\n\t\t\n\t\tlbl.props.params.Info \u003d system.date.format(dateIn,\"MMM d, yyyy\")\n\t\tlbl.props.params.Description \u003d \u0027Date\u0027 \n\texcept:\n\t\tlbl.props.params.Info \u003d \u0027error\u0027"
+              },
+              "scope": "G",
+              "type": "script"
+            }
+          }
+        },
+        "meta": {
+          "name": "btnView"
+        },
+        "position": {
+          "basis": "100px"
+        },
+        "props": {
+          "style": {
+            "classes": "Buttons/Main",
+            "marginBottom": "5px",
+            "marginLeft": "10px",
+            "marginTop": "5px"
+          },
+          "text": "View"
+        },
+        "type": "ia.input.button"
+      },
+      {
+        "meta": {
+          "name": "Emv_AboutLabel"
+        },
+        "position": {
+          "basis": "100px",
+          "grow": 1
+        },
+        "propConfig": {
+          "props.params.Info": {
+            "persistent": false
+          }
+        },
+        "props": {
+          "path": "Shelter/Availabiliy/Components/AboutLabel",
+          "style": {
+            "classes": "Background/Default"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Emv_Placeholder"
+        },
+        "position": {
+          "basis": "320px",
+          "grow": 3
+        },
+        "propConfig": {
+          "props.params.Info": {
+            "persistent": false
+          }
+        },
+        "props": {
+          "path": "Shelter/Availabiliy/Components/Placeholder",
+          "style": {
+            "classes": "Background/Default"
+          }
+        },
+        "type": "ia.display.view"
+      }
+    ],
+    "custom": {
+      "facilityIdForReservation": null
+    },
+    "meta": {
+      "name": "root"
+    },
+    "scripts": {
+      "customMethods": [
+        {
+          "name": "getAsClientTime",
+          "params": [
+            "datetimeInput"
+          ],
+          "script": "\ttimeClientOffset \u003d self.session.props.device.timezone.utcOffset - system.date.getTimezoneOffset()\n\ttimeClient \u003d system.date.addMinutes(datetimeInput,int(timeClientOffset*60))\n\t\n\treturn timeClient\n\n\n\n\n"
+        }
+      ],
+      "extensionFunctions": null,
+      "messageHandlers": []
+    },
+    "type": "ia.container.flex"
+  }
+}

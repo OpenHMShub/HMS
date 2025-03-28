@@ -1,0 +1,404 @@
+{
+  "custom": {
+    "participant_search": false,
+    "row_data": {
+      "employee_id": -1,
+      "hmis": -1,
+      "note": "",
+      "note_id": -1,
+      "note_type": "",
+      "note_type_id": -1,
+      "participant_id": -1,
+      "participant_name": "",
+      "servicee_name": "",
+      "services": [],
+      "type_name": ""
+    },
+    "selection_data": []
+  },
+  "params": {},
+  "propConfig": {
+    "custom.participant_search": {
+      "persistent": true
+    },
+    "custom.row_data": {
+      "persistent": true
+    },
+    "custom.row_data.HMIS": {
+      "binding": {
+        "config": {
+          "path": "view.custom.selection_data"
+        },
+        "transforms": [
+          {
+            "code": "\tif len(value):\n\t\treturn value[0].HMIS\n\telse:\n\t\treturn \"\"",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      }
+    },
+    "custom.row_data.comment": {
+      "binding": {
+        "config": {
+          "path": "view.custom.selection_data"
+        },
+        "transforms": [
+          {
+            "code": "\tif len(value):\n\t\treturn value[0].comment\n\telse:\n\t\treturn \"\"",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      }
+    },
+    "custom.row_data.employee_name": {
+      "binding": {
+        "config": {
+          "path": "view.custom.selection_data"
+        },
+        "transforms": [
+          {
+            "code": "\tif len(value):\n\t\treturn value[0].employee_name\n\telse:\n\t\treturn \"\"",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      }
+    },
+    "custom.row_data.enrollment_name": {
+      "binding": {
+        "config": {
+          "path": "view.custom.selection_data"
+        },
+        "transforms": [
+          {
+            "code": "\tif len(value):\n\t\treturn value[0].enrollment_name\n\telse:\n\t\treturn \"\"",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      }
+    },
+    "custom.row_data.quantity": {
+      "binding": {
+        "config": {
+          "path": "view.custom.selection_data"
+        },
+        "transforms": [
+          {
+            "code": "\tif len(value):\n\t\treturn value[0].quantity\n\telse:\n\t\treturn \"\"",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      }
+    },
+    "custom.row_data.service_name": {
+      "binding": {
+        "config": {
+          "path": "view.custom.selection_data"
+        },
+        "transforms": [
+          {
+            "code": "\tif len(value):\n\t\treturn value[0].service_name\n\telse:\n\t\treturn \"\"",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      }
+    },
+    "custom.selection_data": {
+      "binding": {
+        "config": {
+          "path": "/root/Table.props.params.selection_data"
+        },
+        "type": "property"
+      },
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 827,
+      "width": 1261
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "KPI"
+        },
+        "position": {
+          "basis": "175px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.activity_range": {
+            "binding": {
+              "config": {
+                "path": "../Filters_Row1.props.params.activity_range"
+              },
+              "type": "property"
+            }
+          },
+          "props.params.allSelection": {
+            "binding": {
+              "config": {
+                "path": "../Filters_Row3.props.params.allSelection"
+              },
+              "type": "property"
+            }
+          },
+          "props.path": {
+            "binding": {
+              "config": {
+                "path": "../Filters_Row3.props.params.viewSelection"
+              },
+              "transforms": [
+                {
+                  "fallback": "Participants/Journey/Dashboard/Main/KPI/Journey_KPI_ChronicHomeless",
+                  "inputType": "scalar",
+                  "mappings": [
+                    {
+                      "input": "Chronic Homeless",
+                      "output": "Participants/Journey/Dashboard/Main/KPI/Journey_KPI_ChronicHomeless"
+                    },
+                    {
+                      "input": "SO Registry",
+                      "output": "Participants/Journey/Dashboard/Main/KPI/Journey_KPI_SO_Registry"
+                    },
+                    {
+                      "input": "Programs",
+                      "output": "Participants/Journey/Dashboard/Main/KPI/Journey_KPI_Programs"
+                    },
+                    {
+                      "input": "Deceased",
+                      "output": "Participants/Journey/Dashboard/Main/KPI/Journey_KPI_Deceased"
+                    }
+                  ],
+                  "outputType": "scalar",
+                  "type": "map"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Label"
+        },
+        "position": {
+          "basis": "32px",
+          "display": false
+        },
+        "propConfig": {
+          "props.text": {
+            "binding": {
+              "config": {
+                "path": "session.custom.filters"
+              },
+              "transforms": [
+                {
+                  "code": "\toutput \u003d \"Service Date: \" + str(self.session.custom.filters.servicesDashboard.serviceDate.where)\n\toutput +\u003d \", HMIS: \" + str(self.session.custom.filters.servicesDashboard.HMIS.where)\n\toutput +\u003d \", Entered By: \" + str(self.session.custom.filters.servicesDashboard.employeeId.where)\n\t#output +\u003d \", Type: \" + str(self.session.custom.filters.servicesDashboard.programId.where)\n\toutput +\u003d \", Program: \" + str(self.session.custom.filters.servicesDashboard.programId.where)\n\toutput +\u003d \", Service: \" + str(self.session.custom.filters.servicesDashboard.serviceId.where)\n\t#output +\u003d \", First Name: \" + str(self.session.custom.filters.caseNotesDashboard.FirstName.where)\n\t#output +\u003d \", Middle Name: \" +str(self.session.custom.filters.caseNotesDashboard.MiddleName.where)\n\t#output +\u003d \", Last Name: \" +str(self.session.custom.filters.caseNotesDashboard.LastName.where)\n\t#output +\u003d \", Nick Name: \" +str(self.session.custom.filters.caseNotesDashboard.NickName.where)\n\n\treturn output",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "style": {
+            "classes": "Text/Error_Message"
+          }
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "meta": {
+          "name": "Filters_Row1"
+        },
+        "position": {
+          "basis": "30px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.viewSelection": {
+            "binding": {
+              "config": {
+                "path": "../Filters_Row3.props.params.viewSelection"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "activity_range": 36500
+          },
+          "path": "Participants/Journey/Dashboard/Main/Filters/Journey_Filter_Row1",
+          "style": {
+            "marginLeft": "40px",
+            "marginRight": "40px"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Filters_Row2"
+        },
+        "position": {
+          "basis": "30px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.viewSelection": {
+            "binding": {
+              "config": {
+                "path": "../Filters_Row3.props.params.viewSelection"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "AtciveTimePeriod": -1,
+            "activeTimePeriodEnd": null,
+            "activeTimePeriodStart": null
+          },
+          "path": "Participants/Journey/Dashboard/Main/Filters/Journey_Filter_Row2",
+          "style": {
+            "marginLeft": "40px",
+            "marginRight": "40px"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Filters_Row3"
+        },
+        "position": {
+          "basis": "30px",
+          "shrink": 0
+        },
+        "props": {
+          "params": {
+            "allSelection": 0,
+            "viewSelection": "Chronic Homeless"
+          },
+          "path": "Participants/Journey/Dashboard/Main/Filters/Journey_Filter_Row3",
+          "style": {
+            "marginLeft": "40px",
+            "marginRight": "40px"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Table"
+        },
+        "position": {
+          "basis": "500px",
+          "grow": 1
+        },
+        "propConfig": {
+          "props.params.activeTimePeriodEnd": {
+            "binding": {
+              "config": {
+                "path": "../Filters_Row2.props.params.activeTimePeriodEnd"
+              },
+              "type": "property"
+            }
+          },
+          "props.params.activeTimePeriodStart": {
+            "binding": {
+              "config": {
+                "path": "../Filters_Row2.props.params.activeTimePeriodStart"
+              },
+              "type": "property"
+            }
+          },
+          "props.params.activity_range": {
+            "binding": {
+              "config": {
+                "path": "../Filters_Row1.props.params.activity_range"
+              },
+              "type": "property"
+            }
+          },
+          "props.params.allSelection": {
+            "binding": {
+              "config": {
+                "path": "../Filters_Row3.props.params.allSelection"
+              },
+              "type": "property"
+            }
+          },
+          "props.path": {
+            "binding": {
+              "config": {
+                "path": "../Filters_Row3.props.params.viewSelection"
+              },
+              "transforms": [
+                {
+                  "fallback": "Participants/Journey/Dashboard/Main/Tables/JourneyTable_ChronicHomeless",
+                  "inputType": "scalar",
+                  "mappings": [
+                    {
+                      "input": "Chronic Homeless",
+                      "output": "Participants/Journey/Dashboard/Main/Tables/JourneyTable_ChronicHomeless"
+                    },
+                    {
+                      "input": "SO Registry",
+                      "output": "Participants/Journey/Dashboard/Main/Tables/JourneyTable_SORegistry"
+                    },
+                    {
+                      "input": "Programs",
+                      "output": "Participants/Journey/Dashboard/Main/Tables/JourneyTable_Programs"
+                    },
+                    {
+                      "input": "Deceased",
+                      "output": "Participants/Journey/Dashboard/Main/Tables/JourneyTable_Deceased"
+                    }
+                  ],
+                  "outputType": "scalar",
+                  "type": "map"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "selection_data": []
+          },
+          "style": {
+            "marginLeft": "0px",
+            "marginRight": "0px"
+          }
+        },
+        "type": "ia.display.view"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column",
+      "style": {
+        "classes": "Background/Alternative"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

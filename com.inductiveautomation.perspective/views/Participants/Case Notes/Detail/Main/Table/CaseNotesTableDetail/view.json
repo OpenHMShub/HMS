@@ -1,0 +1,1171 @@
+{
+  "custom": {
+    "notes_data": [],
+    "services_data": null,
+    "table_data": []
+  },
+  "events": {
+    "system": {
+      "onStartup": {
+        "config": {
+          "script": "\tself.refreshBinding(\"custom.notes_data\")"
+        },
+        "scope": "G",
+        "type": "script"
+      }
+    }
+  },
+  "params": {
+    "CaseNoteId": -2,
+    "activity_range": 365,
+    "participantID": -1,
+    "selection_data": [],
+    "services": [],
+    "table_data": []
+  },
+  "propConfig": {
+    "custom.notes_data": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "activity_range": "{view.params.activity_range}",
+            "enteredby": "{session.custom.filters.caseNotesDetail.EnteredBy.where}",
+            "hmis": "{session.custom.filters.caseNotesDetail.hmis.where}",
+            "notedate": "{session.custom.filters.caseNotesDetail.NoteDate.where}",
+            "notetype": "{session.custom.filters.caseNotesDetail.NoteType.where}",
+            "participant_id": "{view.params.participantID}",
+            "search": "{session.custom.filters.caseNotesDetail.Search.where}"
+          },
+          "queryPath": "Participants/CaseNotes/CaseNotesDetailSelect"
+        },
+        "transforms": [
+          {
+            "code": "\t\"\"\"\n\t\t\t####THIS SECTION FOR INFORMATION ONLY####\n\t\t\t#Example Drug Screen Detail data object should look like this:\n\t\t\t{\n\t\t\t\t\"value\": {\n\t\t\t\t  \"id\": 0\n\t\t\t\t  \"employee_id\":0\n\t\t\t\t  \"employee_name\": \"Susan Jones\"\n\t\t\t\t  \"hmis\":False\n\t\t\t\t  \"note_trunc\":\"I really like th...\"\n\t\t\t\t  \"note\":\"I really like this participant\"\t\t\t  \n\t\t\t\t  \"time_created\": \"07/30/2020\",\n\t\t\t\t \t }\n\t\t\t\t\"style\": {\n\t\t\t\t      \"classes\" \u003d \"Table/Cell_Detail\"\n\t\t\t\t\t  }\n\t\t\t\t}\n\t\t####END INFORMATION####\n\t\t\t\n\t\t####BEGIN ACTUAL SCRIPT####\n\t\"\"\"\n\timport traceback\n\ttry:\n\t\t#table_data is the data object to return\n\t\ttable_data \u003d []\n\t\t\t\n\t\t#Iterate over the results of the query\n\t\tfor row in range(value.getRowCount()):\n\t\t\trow_struct \u003d {}\n\t\t\trow_data \u003d {}\n\t\t\tstyle \u003d {}\t\n\t\t\t#Map query results into correct attributes\n\t\t\trow_data[\u0027note_id\u0027] \u003d value.getValueAt(row, \"id\")\n\t\t\trow_data[\u0027time_created\u0027] \u003d value.getValueAt(row, \"time_created\")\t\n\t\t\trow_data[\u0027employee_id\u0027] \u003d value.getValueAt(row, \"employee_id\")\n\t\t\trow_data[\u0027employee_name\u0027] \u003d value.getValueAt(row, \"employee_name\")\n\t\t\trow_data[\u0027hmis\u0027] \u003d value.getValueAt(row, \"hmis\")\n\t\t\trow_data[\u0027note_type_id\u0027] \u003d value.getValueAt(row, \"note_type_id\")\n\t\t\trow_data[\u0027note_type\u0027] \u003d value.getValueAt(row, \"note_type\")\n\t\t\trow_data[\u0027note_trunc\u0027] \u003d value.getValueAt(row, \"note\")[0:80]\n\t\t\trow_data[\u0027note\u0027] \u003d value.getValueAt(row, \"note\")\n\t\t\trow_data[\u0027startTime\u0027] \u003d value.getValueAt(row, \"startTime\")\n\t\t\trow_data[\u0027endTime\u0027] \u003d value.getValueAt(row, \"endTime\")\n\t\t\trow_data[\u0027notifyStaffId\u0027] \u003d value.getValueAt(row, \"notifyStaffId\")\n\t\t\t#Set the default style for the row\n\t\t\tstyle[\u0027classes\u0027] \u003d \"Table/Cell_Detail\"\n\t\t\trow_struct[\u0027value\u0027] \u003d row_data\n\t\t\trow_struct[\u0027style\u0027] \u003d style\n\t\t\t#Append the individual row date to the table data object\n\t\t\ttable_data.append(row_struct)\n\t\t\t\t\t\n\t\treturn table_data\n\texcept:\n\t\tlogger \u003d system.util.getLogger(\"Participants CaseNotesTableDetail view.custom.notes_data\")\n\t\tmsg \u003d traceback.format_exc()\n\t\tlogger.error(msg)\t",
+            "type": "script"
+          }
+        ],
+        "type": "query"
+      },
+      "persistent": true
+    },
+    "custom.services_data": {
+      "binding": {
+        "config": {
+          "path": "view.custom.notes_data"
+        },
+        "transforms": [
+          {
+            "code": "\timport traceback\n\ttry:\n\t\tnotes_data \u003d value\n\t\tproject \u003d \"RITI\"\n\t\t#table_data is the data object to return\n\t\tservices_data \u003d []\n\t\t\t\t\n\t\tif notes_data is not None and len(notes_data):\n\t\t\tfor row in range(len(notes_data)):\n\t\t\t\tcase_note_id \u003d self.custom.notes_data[row].value.note_id\n\t\t\t\tparticipant_id \u003d self.params.participantID\n\t\t\t\t#system.perspective.print(\u0027Case Note:\u0027 + str(case_note_id) + \u0027 Participant:\u0027 + str(participant_id))\n\t\t\t\tpath \u003d \"Participants/CaseNotes/CaseNotesServiceSelect\"\n\t\t\t\tparameters \u003d {\"case_note_id\":case_note_id,\n\t\t\t\t\t\t\t\"participant_id\":participant_id,\n\t\t\t\t\t\t\t\"program\":\"1\u003d1\",\n\t\t\t\t\t\t\t\"service\":\"1\u003d1\"}\n\t\t\t\tservices \u003d system.db.runNamedQuery(project\u003dproject,path\u003dpath,parameters\u003dparameters, getKey\u003dTrue)\n\t\t\t\tif services is not None and services.getRowCount() \u003e 0:\n\t\t\t\t\tfor service in range(services.getRowCount()):\n\t\t\t\t\t\trow_struct \u003d {}\n\t\t\t\t\t\trow_data \u003d {}\n\t\t\t\t\t\tstyle \u003d {}\t\n\t\t\t\t\t\t#Map query results into correct attributes\n\t\t\t\t\t\trow_data[\u0027note_id\u0027] \u003d case_note_id\n\t\t\t\t\t\trow_data[\u0027participant_id\u0027] \u003d participant_id\n\t\t\t\t\t\trow_data[\u0027service_id\u0027] \u003d services.getValueAt(service, \"servicesRowId\")\n\t\t\t\t\t\trow_data[\u0027employee_id\u0027] \u003d services.getValueAt(service, \"employeeId\")\n\t\t\t\t\t\trow_data[\u0027employee_name\u0027] \u003d services.getValueAt(service, \"employeeName\")\n\t\t\t\t\t\trow_data[\u0027enrollment_id\u0027] \u003d services.getValueAt(service, \"programId\")\n\t\t\t\t\t\trow_data[\u0027enrollment_name\u0027] \u003d services.getValueAt(service, \"ProgramName\")\n\t\t\t\t\t\trow_data[\u0027service_location_id\u0027] \u003d services.getValueAt(service, \"service_location_id\")\n\t\t\t\t\t\trow_data[\u0027service_id\u0027] \u003d services.getValueAt(service, \"serviceId\")\n\t\t\t\t\t\trow_data[\u0027service_name\u0027] \u003d services.getValueAt(service, \"serviceName\")\n\t\t\t\t\t\tif services.getValueAt(service, \"HMIS\") \u003d\u003d True:\n\t\t\t\t\t\t\trow_data[\u0027HMIS\u0027] \u003d 1\n\t\t\t\t\t\telif services.getValueAt(service, \"HMIS\") \u003d\u003d False:\n\t\t\t\t\t\t\trow_data[\u0027HMIS\u0027] \u003d 0\n\t\t\t\t\t\telse:\n\t\t\t\t\t\t\trow_data[\u0027HMIS\u0027] \u003d None\n\t\t\t\t\t\trow_data[\u0027quantity\u0027] \u003d services.getValueAt(service, \"quantity\")\n\t\t\t\t\t\trow_data[\u0027comment\u0027] \u003d services.getValueAt(service, \"comment\")\n\t\t\t\t\t\t#Set the default style for the row\n\t\t\t\t\t\tstyle[\u0027classes\u0027] \u003d \"Table/Cell_Detail\"\n\t\t\t\t\t\trow_struct[\u0027value\u0027] \u003d row_data\n\t\t\t\t\t\trow_struct[\u0027style\u0027] \u003d style\n\t\t\t\t\t\t#Append the individual row date to the table data object\n\t\t\t\t\t\tservices_data.append(row_struct)\n\t\t\t\t\t\t\t\n\t\t\treturn services_data\n\n\t\telse:\n\t\t\treturn None\n\texcept:\n\t\tlogger \u003d system.util.getLogger(\"Participants CaseNotesTableDetail view.custom.services_data\")\n\t\tmsg \u003d traceback.format_exc()\n\t\tlogger.error(msg)",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      },
+      "onChange": {
+        "enabled": null,
+        "script": "\t#Refresh the table data any time the services have changed\n\tself.refreshBinding(\"custom.table_data\")\n\t"
+      },
+      "persistent": true
+    },
+    "custom.table_data": {
+      "binding": {
+        "config": {
+          "path": "view.custom.notes_data"
+        },
+        "transforms": [
+          {
+            "code": "\timport traceback\n\ttry:\n\t\tnotes_data \u003d value\n\t\tservices_data \u003d []\n\t\tif self.custom.services_data !\u003d None:\n\t\t\tservices_data \u003d self.custom.services_data\n\t\t#system.perspective.print(str(len(services_data)) + \u0027 services found\u0027)\n\t\t#if len(services_data) \u003c 1:\n\t\t\t#services_data \u003d []\n\t\ttable_data \u003d []\n\t\t#Move the date from the case notes directly to the table\n\t\tif notes_data is not None and len(notes_data):\n\t\t\tfor row in range(len(notes_data)):\n\t\t\t\trow_struct \u003d {}\n\t\t\t\tnote \u003d {}\n\t\t\t\tservice_list \u003d []\n\t\t\t\tstyle \u003d {}\t\n\t\t\t\t#Map query results into correct attributes\n\t\t\t\t#system.perspective.print(\u0027Table Data Processing Case Note\u0027 + str(notes_data[row].value.note_id))\n\t\t\t\tnote[\u0027note_id\u0027] \u003d notes_data[row].value.note_id\n\t\t\t\tnote[\u0027time_created\u0027] \u003d notes_data[row].value.time_created\n\t\t\t\tnote[\u0027employee_id\u0027] \u003d notes_data[row].value.employee_id\n\t\t\t\tnote[\u0027employee_name\u0027] \u003d notes_data[row].value.employee_name\n\t\t\t\tnote[\u0027hmis\u0027] \u003d notes_data[row].value.hmis\n\t\t\t\tnote[\u0027note_type_id\u0027] \u003d notes_data[row].value.note_type_id\n\t\t\t\tnote[\u0027note_type\u0027] \u003d notes_data[row].value.note_type\n\t\t\t\tnote[\u0027note\u0027] \u003d notes_data[row].value.note\n\t\t\t\tnote[\u0027note_trunc\u0027] \u003d notes_data[row].value.note_trunc\n\t\t\t\tnote[\u0027notifyStaffId\u0027] \u003d notes_data[row].value.notifyStaffId\n\t\t\t\tnote[\u0027startTime\u0027] \u003d notes_data[row].value.startTime\n\t\t\t\tif notes_data[row].value.startTime is not None:\n\t\t\t\t\tnote[\u0027startTimeMilliseconds\u0027] \u003d system.date.toMillis(notes_data[row].value.startTime)\n\t\t\t\telse:\n\t\t\t\t\tnote[\u0027startTimeMilliseconds\u0027] \u003d None\n\t\t\t\tnote[\u0027endTime\u0027] \u003d notes_data[row].value.endTime\n\t\t\t\tif notes_data[row].value.endTime is not None:\n\t\t\t\t\tnote[\u0027endTimeMilliseconds\u0027] \u003d system.date.toMillis(notes_data[row].value.endTime)\n\t\t\t\telse:\n\t\t\t\t\tnote[\u0027endTimeMilliseconds\u0027] \u003d None\n\t\t\t\tnote[\u0027service_desc\u0027] \u003d \u0027\u0027\n\t\t\t\tRowNumber \u003d 0\n\t\t\t\t#system.perspective.print(str(len(services_data)) + \u0027 services found\u0027)\n\t\t\t\tif services_data is not None and len(services_data):\n\t\t\t\t\tfor s_row in range(len(services_data)):\n\t\t\t\t\t\tservice \u003d {}\n\t\t\t\t\t\t#system.perspective.print(str(note[\u0027note_id\u0027]) + \u0027 \u0027 + str(services_data[s_row].value.note_id))\n\t\t\t\t\t\tif int(note[\u0027note_id\u0027]) \u003d\u003d int(services_data[s_row].value.note_id):\n\t\t\t\t\t\t\t#system.perspective.print(\u0027Table Data Processing Service\u0027 + str(services_data[s_row].value.service_id))\n\t\t\t\t\t\t\tservice[\u0027participant_id\u0027] \u003d services_data[s_row].value.participant_id\n\t\t\t\t\t\t\tservice[\u0027employee_id\u0027] \u003d services_data[s_row].value.employee_id\n\t\t\t\t\t\t\tservice[\u0027employee_name\u0027] \u003d services_data[s_row].value.employee_name\n\t\t\t\t\t\t\tservice[\u0027enrollment_id\u0027] \u003d services_data[s_row].value.enrollment_id\n\t\t\t\t\t\t\tservice[\u0027enrollment_name\u0027] \u003d services_data[s_row].value.enrollment_name\n\t\t\t\t\t\t\tservice[\u0027service_location_id\u0027] \u003d services_data[s_row].value.service_location_id\n\t\t\t\t\t\t\tservice[\u0027service_id\u0027] \u003d services_data[s_row].value.service_id\n\t\t\t\t\t\t\tservice[\u0027service_name\u0027] \u003d services_data[s_row].value.service_name\n\t\t\t\t\t\t\tservice[\u0027HMIS\u0027] \u003d services_data[s_row].value.HMIS\n\t\t\t\t\t\t\tservice[\u0027quantity\u0027] \u003d services_data[s_row].value.quantity\n\t\t\t\t\t\t\tservice[\u0027comment\u0027] \u003d services_data[s_row].value.comment\n\t\t\t\t\t\t\tservice[\u0027row_num\u0027] \u003d RowNumber\n\t\t\t\t\t\t\tnote[\u0027service_desc\u0027] \u003d note[\u0027service_desc\u0027] + service[\u0027service_name\u0027] + \", \"\n\t\t\t\t\t\t\tservice_list.append(service)\n\t\t\t\t\t\t\tRowNumber +\u003d 1\n\t\t\t\t#Set the default style for the row\n\t\t\t\tstyle[\u0027classes\u0027] \u003d \"Table/Cell_Detail\"\n\t\t\t\t#note[\u0027services\u0027] \u003d service_list\n\t\t\t\trow_struct[\u0027value\u0027] \u003d note\n\t\t\t\trow_struct[\u0027services\u0027] \u003d service_list\n#\t\t\t\trow_struct[\u0027style\u0027] \u003d style\n\t\t\t\t#Append the individual row date to the table data object\n\t\t\t\ttable_data.append(row_struct)\n\t\n\t\treturn table_data\n\texcept:\n\t\tlogger \u003d system.util.getLogger(\"Participants CaseNotesTableDetail view.custom.table_data\")\n\t\tmsg \u003d traceback.format_exc()\n\t\tlogger.error(msg)",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      },
+      "onChange": {
+        "enabled": null,
+        "script": "\t#system.perspective.print(\"Table Data Changed\")\n\tsystem.perspective.sendMessage(messageType\u003d\"refreshCaseNotesDetail\", payload\u003d{}, scope\u003d\"session\")"
+      },
+      "persistent": true
+    },
+    "params.activity_range": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.participantID": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.selection_data": {
+      "binding": {
+        "config": {
+          "path": "/root/Table.props.selection.data"
+        },
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.services": {
+      "paramDirection": "input"
+    },
+    "params.table_data": {
+      "binding": {
+        "config": {
+          "path": "view.custom.table_data"
+        },
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 620,
+      "width": 873
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "events": {
+          "component": {
+            "onRowClick": {
+              "config": {
+                "script": "\t#system.perspective.print(len(self.props.data))\n\tfor item in range(len(self.props.data)):\n\t\tif item \u003d\u003d event.row:\n\t\t\tself.props.data[item].style.classes \u003d \u0027Table/Row_Select_Detail\u0027\n\t\telse:\n\t\t\tself.props.data[item].style.classes \u003d \u0027Table/Cell_Detail\u0027"
+              },
+              "enabled": false,
+              "scope": "G",
+              "type": "script"
+            }
+          }
+        },
+        "meta": {
+          "name": "Table"
+        },
+        "position": {
+          "basis": "100%"
+        },
+        "propConfig": {
+          "props.data": {
+            "binding": {
+              "config": {
+                "path": "view.custom.table_data"
+              },
+              "type": "property"
+            }
+          },
+          "props.selection.style.backgroundColor": {
+            "binding": {
+              "config": {
+                "path": "this.props.selection.selectedRow"
+              },
+              "transforms": [
+                {
+                  "code": "\treturn \"#FFFFFF00\" if value is None or value \u003d\u003d -1 else \"#9AF4EB4D\"",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "cells": {
+            "style": {
+              "classes": "Table/Cell_Detail_NoBG"
+            }
+          },
+          "columns": [
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "note_id",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header_Detail"
+                },
+                "title": "ID"
+              },
+              "justify": "auto",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal_Detail"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": false,
+              "width": 150
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "time_created",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header_Detail"
+                },
+                "title": "Date"
+              },
+              "justify": "auto",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "date",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal_Detail",
+                "paddingLeft": "25px"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 150
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "employee_id",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header_Detail"
+                },
+                "title": "Employee ID"
+              },
+              "justify": "auto",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal_Detail"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": false,
+              "width": 100
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "notifyStaffId",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header_Detail"
+                },
+                "title": "notifyStaffId"
+              },
+              "justify": "auto",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal_Detail"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": false,
+              "width": 100
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "employee_name",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header_Detail"
+                },
+                "title": "Entered By"
+              },
+              "justify": "auto",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal_Detail"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 120
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "hmis",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header_Detail"
+                },
+                "title": "HMIS"
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "boolean",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal_Detail"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 60
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "note_type_id",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header_Detail"
+                },
+                "title": "Type ID"
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal_Detail"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": false,
+              "width": 60
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "note_type",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header_Detail"
+                },
+                "title": "Type"
+              },
+              "justify": "left",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": false,
+              "style": {
+                "classes": "Table/Column_Normal_Detail"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 160
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "note_trunc",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header_Detail"
+                },
+                "title": "Note"
+              },
+              "justify": "auto",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": false,
+              "style": {
+                "classes": "Table/Column_Normal_Detail"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": ""
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "note",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header_Detail"
+                },
+                "title": "Note"
+              },
+              "justify": "auto",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": false,
+              "style": {
+                "classes": "Table/Column_Normal_Detail"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": false,
+              "width": ""
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "service_desc",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header_Detail"
+                },
+                "title": "Services"
+              },
+              "justify": "auto",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": false,
+              "style": {
+                "classes": "Table/Column_Normal_Detail"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": ""
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY hh:mm A",
+              "editable": false,
+              "field": "startTime",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header_Detail"
+                },
+                "title": "Start Time"
+              },
+              "justify": "auto",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "date",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": false,
+              "style": {
+                "classes": "Table/Column_Normal_Detail"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": ""
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY HH:mm A",
+              "editable": false,
+              "field": "startTimeMilliSecond",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header_Detail"
+                },
+                "title": "Start Time"
+              },
+              "justify": "auto",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": false,
+              "style": {
+                "classes": "Table/Column_Normal_Detail"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": false,
+              "width": ""
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY HH:mm A",
+              "editable": false,
+              "field": "endTimeMilliSecond",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header_Detail"
+                },
+                "title": "Start Time"
+              },
+              "justify": "auto",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": false,
+              "style": {
+                "classes": "Table/Column_Normal_Detail"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": false,
+              "width": ""
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY hh:mm A",
+              "editable": false,
+              "field": "endTime",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header_Detail"
+                },
+                "title": "End Time"
+              },
+              "justify": "auto",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "date",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": false,
+              "style": {
+                "classes": "Table/Column_Normal_Detail"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": ""
+            }
+          ],
+          "pager": {
+            "initialOption": 10
+          },
+          "rows": {
+            "highlight": {
+              "color": "#ccffff"
+            },
+            "striped": {
+              "enabled": false
+            },
+            "style": {
+              "cursor": "pointer"
+            }
+          },
+          "selection": {
+            "selectedRow": -1
+          },
+          "sortOrder": [
+            "note_trunc"
+          ],
+          "style": {
+            "classes": "Background/Default"
+          }
+        },
+        "scripts": {
+          "customMethods": [],
+          "extensionFunctions": null,
+          "messageHandlers": [
+            {
+              "messageType": "refreshCaseNotesDetail",
+              "pageScope": true,
+              "script": "\t### Refresh data\n\tsystem.perspective.print(\"Refresh Case Notes Detail\")\n\tself.props.selection.selectedRow \u003d -1\n#\tself.props.selection.data[0] \u003d {\n#\t\t\t\t\t\t\t\t\t  \"id\": -1\n#\t\t\t\t\t\t\t\t\t}\n#\tself.refreshBinding(\"props.data\")\n#\tself.props.selection.selectedRow \u003d None\n#\tself.props.selection.selectedColumn \u003d None",
+              "sessionScope": true,
+              "viewScope": true
+            },
+            {
+              "messageType": "tableToExcel",
+              "pageScope": true,
+              "script": "\t# implement your handler here\n\timport traceback\n\ttry:\n\t\t#Send the dataset to Excel\n\t\tfilename \u003d \u0027Participants_CaseNotesDetail_\u0027 + str(system.date.format(system.date.now(),\"yyyyMMddHHmmss\")) + \u0027.xls\u0027\n#\t\tdataset \u003d self.view.custom.sql_data\n#\t\tdisplay_columns \u003d [\u0027name\u0027,\u0027nickName\u0027,\u0027ssn\u0027,\u0027noteDate\u0027,\u0027hmis\u0027,\u0027CaseNoteTypeName\u0027]\n#\t\tfilteredData \u003d system.dataset.filterColumns(chartData, northSouth)\n\t\tdataset \u003d []\n\t\theader \u003d [\"Date\", \"Entered By\",\"HMIS\",\"Note Type\",\"Note\",\"Service\",\u0027Start Time\u0027,\u0027End Time\u0027]\n\t\tdata \u003d self.props.data #[0].value.note_type\n\t\tsystem.perspective.print(len(data))\n\t\tfor i in range(0,len(data)):\n\t\t\tdate \u003d system.date.format(data[i][\u0027value\u0027][\u0027time_created\u0027],\u0027MM/dd/yyyy\u0027)\n\t\t\tenteredBy \u003d data[i][\u0027value\u0027][\u0027employee_name\u0027]\n\t\t\thmis \u003d str(data[i][\u0027value\u0027][\u0027hmis\u0027])\n#\t\t\tif hmis \u003d\u003d 0:\n#\t\t\t\thmis \u003d False\n#\t\t\telif hmis \u003d\u003d 1:\n#\t\t\t\thmis \u003d False\n\t\t\tnote_type \u003d data[i][\u0027value\u0027][\u0027note_type\u0027]\n\t\t\tnote \u003d data[i][\u0027value\u0027][\u0027note\u0027]\n\t\t\tservice_desc \u003d data[i][\u0027value\u0027][\u0027service_desc\u0027]\n\t\t\tif data[i][\u0027value\u0027][\u0027startTime\u0027] !\u003d None and data[i][\u0027value\u0027][\u0027startTime\u0027] !\u003d \u0027\u0027:\n\t\t\t\tstartTime \u003d str(system.date.format(data[i][\u0027value\u0027][\u0027startTime\u0027],\u0027MM/dd/yyyy hh:mm\u0027))\n\t\t\telse:\n\t\t\t\tstartTime \u003d \u0027\u0027\n\t\t\tif data[i][\u0027value\u0027][\u0027endTime\u0027] !\u003d None and data[i][\u0027value\u0027][\u0027endTime\u0027] !\u003d \u0027\u0027:\n\t\t\t\tendTime \u003d str(system.date.format(data[i][\u0027value\u0027][\u0027endTime\u0027],\u0027MM/dd/yyyy hh:mm\u0027))\n\t\t\telse:\n\t\t\t\tendTime \u003d \u0027\u0027\n\t\t\tdataset.append([date,enteredBy,hmis,note_type,note,service_desc,startTime,endTime])\n\t\tsystem.perspective.print(dataset)\n\t\tNewDataset \u003d system.dataset.toDataSet(header, dataset)\n#\t\tsystem.perspective.print(NewDataset)\n\t\txlFile \u003d system.dataset.toExcel(True,NewDataset,True)\n\t\tsystem.perspective.download(filename, xlFile)\n\texcept:   \n\t\tlogger \u003d system.util.getLogger(\"Participants Case Notes tableToExcel\")\n\t\tmsg \u003d traceback.format_exc()\n\t\tlogger.error(msg)",
+              "sessionScope": true,
+              "viewScope": false
+            },
+            {
+              "messageType": "tableToPDF",
+              "pageScope": true,
+              "script": "\timport traceback\n\ttry:\n\t\tdataset \u003d []\n\t\theader \u003d [\"Date\", \"Entered By\",\"HMIS\",\"Note Type\",\"Note\",\"Service\",\u0027Start Time\u0027,\u0027End Time\u0027]\n\t\tdata \u003d self.props.data\n#\t\tsystem.perspective.print(len(data))\n\t\tfor i in range(0,len(data)):\n\t\t\tdate \u003d system.date.format(data[i][\u0027value\u0027][\u0027time_created\u0027],\u0027MM/dd/yyyy\u0027)\n\t\t\tenteredBy \u003d data[i][\u0027value\u0027][\u0027employee_name\u0027]\n\t\t\thmis \u003d str(data[i][\u0027value\u0027][\u0027hmis\u0027])\n\t#\t\t\tif hmis \u003d\u003d 0:\n\t#\t\t\t\thmis \u003d False\n\t#\t\t\telif hmis \u003d\u003d 1:\n\t#\t\t\t\thmis \u003d False\n\t\t\tnote_type \u003d data[i][\u0027value\u0027][\u0027note_type\u0027]\n\t\t\tnote \u003d data[i][\u0027value\u0027][\u0027note\u0027]\n\t\t\tservice_desc \u003d data[i][\u0027value\u0027][\u0027service_desc\u0027]\n\t\t\tif data[i][\u0027value\u0027][\u0027startTime\u0027] !\u003d None and data[i][\u0027value\u0027][\u0027startTime\u0027] !\u003d \u0027\u0027:\n\t\t\t\tstartTime \u003d str(system.date.format(data[i][\u0027value\u0027][\u0027startTime\u0027],\u0027MM/dd/yyyy hh:mm a\u0027))\n\t\t\telse:\n\t\t\t\tstartTime \u003d \u0027\u0027\n\t\t\tif data[i][\u0027value\u0027][\u0027endTime\u0027] !\u003d None and data[i][\u0027value\u0027][\u0027endTime\u0027] !\u003d \u0027\u0027:\n\t\t\t\tendTime \u003d str(system.date.format(data[i][\u0027value\u0027][\u0027endTime\u0027],\u0027MM/dd/yyyy hh:mm a\u0027))\n\t\t\telse:\n\t\t\t\tendTime \u003d \u0027\u0027\n\t\t\tdataset.append([date,enteredBy,hmis,note_type,note,service_desc,startTime,endTime])\n\t\tsystem.perspective.print(dataset)\n\t\tNewDataset \u003d system.dataset.toDataSet(header, dataset)\n\t\t\n\t\t\n\t\t#Generate the report\n\t\tproject \u003d \"RITI\"\n\t\tpath \u003d \"Participant/Participant_CaseNotes\"\n\t\tparameters \u003d {\u0027participantId\u0027:self.view.params.participantID, \u0027reportData\u0027:NewDataset}\n#\t\tsystem.perspective.print(parameters)\n\t\tpdfFile \u003d system.report.executeReport(path,project,parameters,fileType\u003d\u0027pdf\u0027)\n\t\tfilename \u003d \u0027Participant_CaseNotes_\u0027 + str(system.date.format(system.date.now(),\"yyyyMMddHHmmss\")) + \u0027.pdf\u0027\n\t\t\n\t\tsystem.perspective.download(filename, pdfFile)\n\texcept:   \n\t\tlogger \u003d system.util.getLogger(\"Participant Case Notes tableToPDF\")\n\t\tmsg \u003d traceback.format_exc()\n\t\tlogger.error(msg)",
+              "sessionScope": true,
+              "viewScope": false
+            }
+          ]
+        },
+        "type": "ia.display.table"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column"
+    },
+    "scripts": {
+      "customMethods": [],
+      "extensionFunctions": null,
+      "messageHandlers": [
+        {
+          "messageType": "refreshCaseNotesData",
+          "pageScope": true,
+          "script": "\t#from time import sleep\n\t\t### Refresh data\n\t#system.perspective.print(\"Refresh Case Notes Data\")\n\tview \u003d self.view\n\tview.refreshBinding(\"custom.notes_data\")\n#\tview.refreshBinding(\"custom.services_data\")\n\t",
+          "sessionScope": true,
+          "viewScope": true
+        }
+      ]
+    },
+    "type": "ia.container.flex"
+  }
+}

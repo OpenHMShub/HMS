@@ -1,0 +1,723 @@
+{
+  "custom": {
+    "partcipantId": ""
+  },
+  "params": {
+    "Row": 0,
+    "bedId": -1,
+    "endDate": "2020-08-04 00:00:00",
+    "facilityId": -2,
+    "participantId": -1,
+    "prescribedControlledSubstances": -1,
+    "programId": -1,
+    "providerId": -1,
+    "providerTypeId": -1,
+    "reservationId": -1,
+    "roomId": -1,
+    "startDate": "2020-08-03 00:00:00",
+    "waitingList": -1
+  },
+  "propConfig": {
+    "custom.partcipantId": {
+      "binding": {
+        "config": {
+          "path": "session.custom.filters.participant_search.Search.value"
+        },
+        "type": "property"
+      },
+      "onChange": {
+        "enabled": null,
+        "script": "#\tsystem.perspective.print(currentValue)\n\tself.getChild(\"root\").getChild(\"TopRow\").getChild(\"EmbeddedView Participant\").props.params.SelectedValue \u003d currentValue"
+      },
+      "persistent": true
+    },
+    "params.Row": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.bedId": {
+      "binding": {
+        "config": {
+          "path": "/root/BottomRow/EmbeddedView Bed.props.params.SelectedValue"
+        },
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.endDate": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.facilityId": {
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.participantId": {
+      "binding": {
+        "config": {
+          "path": "/root/TopRow/EmbeddedView Participant.props.params.SelectedValue"
+        },
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.prescribedControlledSubstances": {
+      "binding": {
+        "config": {
+          "path": "/root/BottomRow/Embed_ControlledSubstance.props.params.SelectedValue"
+        },
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.programId": {
+      "binding": {
+        "config": {
+          "path": "/root/TopRow/EmbeddedView Program.props.params.SelectedValue"
+        },
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.providerId": {
+      "binding": {
+        "config": {
+          "path": "/root/TopRow/EmbeddedView Provider.props.params.SelectedValue"
+        },
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.providerTypeId": {
+      "binding": {
+        "config": {
+          "path": "/root/TopRow/EmbeddedView ProviderType.props.params.SelectedValue"
+        },
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.reasonForEntryId": {
+      "binding": {
+        "config": {
+          "path": "/root/BottomRow/Embed_ResonForEntry.props.params.SelectedValue"
+        },
+        "type": "property"
+      },
+      "paramDirection": "output"
+    },
+    "params.reservationId": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.roomId": {
+      "binding": {
+        "config": {
+          "path": "/root/BottomRow/EmbeddedView Room.props.params.SelectedValue"
+        },
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.startDate": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.waitingList": {
+      "binding": {
+        "config": {
+          "path": "/root/TopRow/EmbeddedView WaitingList.props.params.SelectedValue"
+        },
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 100,
+      "width": 600
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "children": [
+          {
+            "meta": {
+              "name": "EmbeddedView WaitingList"
+            },
+            "position": {
+              "basis": "25%"
+            },
+            "propConfig": {
+              "props.params.Options": {
+                "binding": {
+                  "config": {
+                    "queryPath": "Shelter/Reservations/SelectWaitingListsForReservation",
+                    "returnFormat": "json"
+                  },
+                  "transforms": [
+                    {
+                      "code": "\t# need to append All to the list only if list has any elements\n\timport json\n\tif len(value) \u003d\u003d 0:\n\t\tvalueDict \u003d [] # get the string to dict\n\t\tquickReferralValue \u003d {}\n\t\tquickReferralValue[\u0027value\u0027] \u003d \u0027Quick Referral\u0027\n\t\tquickReferralValue[\u0027label\u0027] \u003d \u0027Quick Referral\u0027\n\t\tvalueDict.append(quickReferralValue) # add \u0027All\u0027 object\n\t\tnewValue \u003d system.util.jsonEncode(valueDict)\n\telse:\n\t\tvalueDict \u003d system.util.jsonDecode(str(value)) # get the string to dict\n\t\tallValue \u003d {}\n\t\tallValue[\u0027value\u0027] \u003d \u0027All\u0027\n\t\tallValue[\u0027label\u0027] \u003d \u0027All Waiting Lists\u0027\n\t\tvalueDict.append(allValue) # add \u0027All\u0027 object\n\t\tquickReferralValue \u003d {}\n\t\tquickReferralValue[\u0027value\u0027] \u003d \u0027Quick Referral\u0027\n\t\tquickReferralValue[\u0027label\u0027] \u003d \u0027Quick Referral\u0027\n\t\tvalueDict.append(quickReferralValue) # add \u0027All\u0027 object\n\t\tnewValue \u003d system.util.jsonEncode(valueDict)\n\treturn json.loads(newValue) # convert the json string to json Object ",
+                      "type": "script"
+                    }
+                  ],
+                  "type": "query"
+                }
+              }
+            },
+            "props": {
+              "params": {
+                "SelectedValue": -1,
+                "Text": "Waiting List / Quick Referral"
+              },
+              "path": "Shelter/Reservation/Cards/New Reservation/SelectionInput",
+              "style": {
+                "paddingRight": 15
+              }
+            },
+            "type": "ia.display.view"
+          },
+          {
+            "meta": {
+              "name": "EmbeddedView Participant"
+            },
+            "position": {
+              "basis": "20%"
+            },
+            "propConfig": {
+              "props.params.Options": {
+                "binding": {
+                  "config": {
+                    "expression": "if (({../EmbeddedView WaitingList.props.params.SelectedValue} \u003d -1 || {../EmbeddedView WaitingList.props.params.SelectedValue} \u003d None) , None, if({../EmbeddedView WaitingList.props.params.SelectedValue} \u003d \u0027Quick Referral\u0027, {/root.custom.allParticipants}, {/root.custom.participantsFromWaitingList})) "
+                  },
+                  "type": "expr"
+                }
+              }
+            },
+            "props": {
+              "params": {
+                "SelectedValue": -1,
+                "Text": "Participant"
+              },
+              "path": "Shelter/Reservation/Cards/New Reservation/SelectionInput",
+              "style": {
+                "paddingRight": 15
+              }
+            },
+            "type": "ia.display.view"
+          },
+          {
+            "events": {
+              "dom": {
+                "onClick": {
+                  "config": {
+                    "draggable": false,
+                    "id": "search_participant",
+                    "modal": false,
+                    "overlayDismiss": true,
+                    "position": {
+                      "relativeLocation": "bottom-left"
+                    },
+                    "positionType": "relative",
+                    "resizable": false,
+                    "showCloseIcon": false,
+                    "type": "open",
+                    "viewParams": {
+                      "WaitingList": "{/root/TopRow/EmbeddedView WaitingList.props.params.SelectedValue}"
+                    },
+                    "viewPath": "Shelter/Templates/Partcipant_Search",
+                    "viewportBound": true
+                  },
+                  "scope": "C",
+                  "type": "popup"
+                }
+              }
+            },
+            "meta": {
+              "name": "Icon"
+            },
+            "position": {
+              "basis": "30px"
+            },
+            "props": {
+              "color": "#0D80E3",
+              "path": "material/help_outline",
+              "style": {
+                "borderTopColor": "#9db8d1",
+                "borderTopStyle": "solid",
+                "borderTopWidth": "0px",
+                "marginTop": 0,
+                "paddingBottom": 0,
+                "paddingTop": 15
+              }
+            },
+            "type": "ia.display.icon"
+          },
+          {
+            "meta": {
+              "name": "EmbeddedView ProviderType"
+            },
+            "position": {
+              "basis": "18%"
+            },
+            "propConfig": {
+              "position.display": {
+                "binding": {
+                  "config": {
+                    "expression": "if({../EmbeddedView WaitingList.props.params.SelectedValue} !\u003d \"Quick Referral\", False, True)"
+                  },
+                  "type": "expr"
+                }
+              },
+              "props.params.Options": {
+                "binding": {
+                  "config": {
+                    "queryPath": "Shelter/Reservations/SelectProviderTypesForReservations"
+                  },
+                  "type": "query"
+                }
+              }
+            },
+            "props": {
+              "params": {
+                "SelectedValue": -1,
+                "Text": "Provider Type"
+              },
+              "path": "Shelter/Reservation/Cards/New Reservation/SelectionInput",
+              "style": {
+                "paddingRight": 15
+              }
+            },
+            "type": "ia.display.view"
+          },
+          {
+            "meta": {
+              "name": "EmbeddedView Provider"
+            },
+            "position": {
+              "basis": "18%"
+            },
+            "propConfig": {
+              "position.display": {
+                "binding": {
+                  "config": {
+                    "expression": "if({../EmbeddedView WaitingList.props.params.SelectedValue} !\u003d \"Quick Referral\", False, True)"
+                  },
+                  "type": "expr"
+                }
+              },
+              "props.params.Options": {
+                "binding": {
+                  "config": {
+                    "parameters": {
+                      "typeId": "{../EmbeddedView ProviderType.props.params.SelectedValue}"
+                    },
+                    "queryPath": "Shelter/Reservations/SelectProvidersForReservations"
+                  },
+                  "type": "query"
+                }
+              }
+            },
+            "props": {
+              "params": {
+                "SelectedValue": -1,
+                "Text": "Provider"
+              },
+              "path": "Shelter/Reservation/Cards/New Reservation/SelectionInput",
+              "style": {
+                "paddingRight": 15
+              }
+            },
+            "type": "ia.display.view"
+          },
+          {
+            "meta": {
+              "name": "EmbeddedView Program"
+            },
+            "position": {
+              "basis": "18%"
+            },
+            "propConfig": {
+              "position.display": {
+                "binding": {
+                  "config": {
+                    "expression": "if({../EmbeddedView WaitingList.props.params.SelectedValue} !\u003d \"Quick Referral\", False, True)"
+                  },
+                  "type": "expr"
+                }
+              },
+              "props.params.Options": {
+                "binding": {
+                  "config": {
+                    "expression": "if({session.custom.isCareCoordinator}, {/root.custom.CareCoordinatorPrograms}, if({session.custom.isSupportCoordinator} || {session.custom.isWSSupportCoordinator}, {/root.custom.SupportAndWSSupportCoordinatorPrograms}, {/root.custom.allPrograms}))"
+                  },
+                  "type": "expr"
+                }
+              }
+            },
+            "props": {
+              "params": {
+                "SelectedValue": -1,
+                "Text": "Program"
+              },
+              "path": "Shelter/Reservation/Cards/New Reservation/SelectionInput"
+            },
+            "type": "ia.display.view"
+          }
+        ],
+        "meta": {
+          "name": "TopRow"
+        },
+        "position": {
+          "basis": "50%"
+        },
+        "props": {
+          "style": {
+            "marginBottom": 5
+          }
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "children": [
+          {
+            "meta": {
+              "name": "EmbeddedView Facility"
+            },
+            "position": {
+              "basis": "25%"
+            },
+            "propConfig": {
+              "position.display": {
+                "binding": {
+                  "config": {
+                    "expression": "{view.params.facilityId} \u003d -2"
+                  },
+                  "type": "expr"
+                }
+              },
+              "props.params.Options": {
+                "binding": {
+                  "config": {
+                    "path": "/root.custom.allFacilities"
+                  },
+                  "type": "property"
+                }
+              }
+            },
+            "props": {
+              "params": {
+                "SelectedValue": -1,
+                "Text": "Facility"
+              },
+              "path": "Shelter/Reservation/Cards/New Reservation/SelectionInput",
+              "style": {
+                "paddingRight": 15
+              }
+            },
+            "type": "ia.display.view"
+          },
+          {
+            "meta": {
+              "name": "EmbeddedView Room"
+            },
+            "propConfig": {
+              "position.basis": {
+                "binding": {
+                  "config": {
+                    "expression": "if({../EmbeddedView Facility.position.display} \u003d True, \u002720%\u0027, \u002725%\u0027)"
+                  },
+                  "type": "expr"
+                }
+              },
+              "props.params.Options": {
+                "binding": {
+                  "config": {
+                    "parameters": {
+                      "endDate": "{view.params.endDate}",
+                      "facilityId": "{/root.custom.facilityIdForReservation}",
+                      "startDate": "{view.params.startDate}"
+                    },
+                    "queryPath": "Shelter/Reservations/SelectAvailableRoomsForReservation",
+                    "returnFormat": "json"
+                  },
+                  "type": "query"
+                }
+              }
+            },
+            "props": {
+              "params": {
+                "SelectedValue": -1,
+                "Text": "Room"
+              },
+              "path": "Shelter/Reservation/Cards/New Reservation/SelectionInput",
+              "style": {
+                "paddingRight": 15
+              }
+            },
+            "type": "ia.display.view"
+          },
+          {
+            "meta": {
+              "name": "EmbeddedView Bed"
+            },
+            "propConfig": {
+              "position.basis": {
+                "binding": {
+                  "config": {
+                    "expression": "if({../EmbeddedView Facility.position.display} \u003d True, \u002718%\u0027, \u002720%\u0027)"
+                  },
+                  "type": "expr"
+                }
+              },
+              "props.params.Options": {
+                "binding": {
+                  "config": {
+                    "parameters": {
+                      "endDate": "{view.params.endDate}",
+                      "facilityId": "{/root.custom.facilityIdForReservation}",
+                      "roomId": "{view.params.roomId}",
+                      "startDate": "{view.params.startDate}"
+                    },
+                    "queryPath": "Shelter/Reservations/SelectAvailableBedsForReservation",
+                    "returnFormat": "json"
+                  },
+                  "type": "query"
+                }
+              }
+            },
+            "props": {
+              "params": {
+                "SelectedValue": -1,
+                "Text": "Bed"
+              },
+              "path": "Shelter/Reservation/Cards/New Reservation/SelectionInput",
+              "style": {
+                "paddingRight": 15
+              }
+            },
+            "type": "ia.display.view"
+          },
+          {
+            "meta": {
+              "name": "Embed_ResonForEntry"
+            },
+            "position": {
+              "basis": "200px",
+              "shrink": 0
+            },
+            "propConfig": {
+              "position.display": {
+                "binding": {
+                  "config": {
+                    "expression": "if({.../TopRow/EmbeddedView WaitingList.props.params.SelectedValue} !\u003d \"Quick Referral\", False, True)"
+                  },
+                  "type": "expr"
+                }
+              },
+              "props.params.Options": {
+                "binding": {
+                  "config": {
+                    "queryPath": "Participants/Referrals/Get_ReferralReasonForEntry"
+                  },
+                  "type": "query"
+                }
+              },
+              "props.params.editable": {
+                "binding": {
+                  "config": {
+                    "path": ".../TopRow/EmbeddedView ProviderType.props.params.SelectedValue"
+                  },
+                  "transforms": [
+                    {
+                      "code": "\tif value \u003d\u003d 7:\n\t\treturn True\n\telse:\n\t\treturn False",
+                      "type": "script"
+                    }
+                  ],
+                  "type": "property"
+                }
+              }
+            },
+            "props": {
+              "params": {
+                "SelectedValue": -1,
+                "Text": "Reason for Entry",
+                "setValue": -1
+              },
+              "path": "Shelter/Reservation/Cards/New Reservation/SelectionInput_conditional"
+            },
+            "type": "ia.display.view"
+          },
+          {
+            "meta": {
+              "name": "Embed_ControlledSubstance"
+            },
+            "position": {
+              "basis": "200px",
+              "shrink": 0
+            },
+            "props": {
+              "params": {
+                "Options": {
+                  "$": [
+                    "ds",
+                    192,
+                    1691477363862
+                  ],
+                  "$columns": [
+                    {
+                      "data": [
+                        0,
+                        1
+                      ],
+                      "name": "id",
+                      "type": "Integer"
+                    },
+                    {
+                      "data": [
+                        "No",
+                        "Yes"
+                      ],
+                      "name": "reason",
+                      "type": "String"
+                    }
+                  ]
+                },
+                "SelectedValue": -1,
+                "Text": "Prescribed Controlled Substance",
+                "editable": true,
+                "setValue": -1
+              },
+              "path": "Shelter/Reservation/Cards/New Reservation/SelectionInput_conditional"
+            },
+            "type": "ia.display.view"
+          }
+        ],
+        "meta": {
+          "name": "BottomRow"
+        },
+        "position": {
+          "basis": "50%"
+        },
+        "props": {
+          "style": {
+            "marginTop": 5
+          }
+        },
+        "type": "ia.container.flex"
+      }
+    ],
+    "custom": {
+      "key": "value"
+    },
+    "meta": {
+      "name": "root"
+    },
+    "propConfig": {
+      "custom.CareCoordinatorPrograms": {
+        "binding": {
+          "config": {
+            "queryPath": "Shelter/Reservations/SelectProgramsForReservations_CareCoordinator"
+          },
+          "type": "query"
+        }
+      },
+      "custom.SupportAndWSSupportCoordinatorPrograms": {
+        "binding": {
+          "config": {
+            "queryPath": "Shelter/Reservations/SelectProgramsForReservations_SupportCoordinators"
+          },
+          "type": "query"
+        }
+      },
+      "custom.allFacilities": {
+        "binding": {
+          "config": {
+            "queryPath": "Shelter/Reservations/SelectFacilitiesForReservations"
+          },
+          "type": "query"
+        }
+      },
+      "custom.allParticipants": {
+        "binding": {
+          "config": {
+            "queryPath": "Shelter/Reservations/SelectParticipantsForReservation"
+          },
+          "type": "query"
+        }
+      },
+      "custom.allPrograms": {
+        "binding": {
+          "config": {
+            "queryPath": "Shelter/Reservations/SelectProgramsForReservations"
+          },
+          "type": "query"
+        }
+      },
+      "custom.facilitiesForWaitingList": {
+        "binding": {
+          "config": {
+            "parameters": {
+              "waitListName": "{./EmbeddedView WaitingList.props.params.SelectedValue}"
+            },
+            "queryPath": "Shelter/Reservations/SelectFacilitiesForWaitingListForReservations"
+          },
+          "type": "query"
+        }
+      },
+      "custom.facilityIdForReservation": {
+        "binding": {
+          "config": {
+            "expression": "if({view.params.facilityId} !\u003d -2 , {view.params.facilityId}, {./BottomRow/EmbeddedView Facility.props.params.SelectedValue})"
+          },
+          "type": "expr"
+        }
+      },
+      "custom.participantsFromWaitingList": {
+        "binding": {
+          "config": {
+            "parameters": {
+              "waitListName": "{./TopRow/EmbeddedView WaitingList.props.params.SelectedValue}"
+            },
+            "queryPath": "Shelter/Reservations/SelectParticipantsFromWaitingListForReservation"
+          },
+          "type": "query"
+        }
+      }
+    },
+    "props": {
+      "direction": "column"
+    },
+    "scripts": {
+      "customMethods": [],
+      "extensionFunctions": null,
+      "messageHandlers": [
+        {
+          "messageType": "reservationselected",
+          "pageScope": true,
+          "script": "\t# implement your handler here\n\t#payload \u003d {\u0027reservationId\u0027:reservationId, \u0027bedId\u0027:bedId, \u0027participantId\u0027:participantId, \u0027roomId\u0027:roomId\n#\tsystem.perspective.print(payload[\u0027ReasonForEntryId\u0027])\n\tif (self.getChild(\"BottomRow\").getChild(\"EmbeddedView Facility\").position.display ):\n\t\tself.getChild(\"BottomRow\").getChild(\"EmbeddedView Facility\").props.params.SelectedValue \u003d int(payload[\u0027facilityId\u0027])\n\tself.view.params.reservationId \u003d payload[\u0027reservationId\u0027]\n\treservationType \u003d payload[\u0027reservationType\u0027]\n\tif reservationType \u003d\u003d \"Quick Referral\":\n\t\tself.getChild(\"TopRow\").getChild(\"EmbeddedView WaitingList\").props.params.SelectedValue \u003d payload[\u0027reservationType\u0027]\n\t\tself.getChild(\"TopRow\").getChild(\"EmbeddedView ProviderType\").props.params.SelectedValue \u003d int(payload[\u0027providerTypeId\u0027])\n\t\tself.getChild(\"TopRow\").getChild(\"EmbeddedView Provider\").props.params.SelectedValue \u003d int(payload[\u0027providerId\u0027])\n\t\tself.getChild(\"TopRow\").getChild(\"EmbeddedView Program\").props.params.SelectedValue \u003d int(payload[\u0027programId\u0027])\n\t\tself.getChild(\"BottomRow\").getChild(\"Embed_ResonForEntry\").props.params.SelectedValue \u003d payload[\u0027ReasonForEntryId\u0027]\n\telif reservationType \u003d\u003d \"\" or reservationType \u003d\u003d None:\n\t\tself.getChild(\"TopRow\").getChild(\"EmbeddedView WaitingList\").props.params.SelectedValue \u003d -1\n\t\tself.getChild(\"TopRow\").getChild(\"EmbeddedView ProviderType\").props.params.SelectedValue \u003d -1\n\t\tself.getChild(\"TopRow\").getChild(\"EmbeddedView Provider\").props.params.SelectedValue \u003d -1\n\t\tself.getChild(\"TopRow\").getChild(\"EmbeddedView Program\").props.params.SelectedValue \u003d -1\n\t\tself.getChild(\"BottomRow\").getChild(\"Embed_ResonForEntry\").props.params.SelectedValue \u003d -1\n\telse:\n\t\tself.getChild(\"TopRow\").getChild(\"EmbeddedView WaitingList\").props.params.SelectedValue \u003d payload[\u0027waitListName\u0027]\n\t\tself.getChild(\"TopRow\").getChild(\"EmbeddedView ProviderType\").props.params.SelectedValue \u003d -1\n\t\tself.getChild(\"TopRow\").getChild(\"EmbeddedView Provider\").props.params.SelectedValue \u003d -1\n\t\tself.getChild(\"TopRow\").getChild(\"EmbeddedView Program\").props.params.SelectedValue \u003d -1\n\t\tself.getChild(\"BottomRow\").getChild(\"Embed_ResonForEntry\").props.params.SelectedValue \u003d -1\n\n\t\n\tself.getChild(\"TopRow\").getChild(\"EmbeddedView Participant\").props.params.SelectedValue \u003d int(payload[\u0027participantId\u0027])\n\tself.getChild(\"BottomRow\").getChild(\"EmbeddedView Room\").props.params.SelectedValue \u003d int(payload[\u0027roomId\u0027])\n\tself.getChild(\"BottomRow\").getChild(\"EmbeddedView Bed\").props.params.SelectedValue \u003d int(payload[\u0027bedId\u0027])\n\tself.getChild(\"BottomRow\").getChild(\"Embed_ControlledSubstance\").props.params.SelectedValue \u003d int(payload[\u0027prescribedControlledSubstance\u0027])\n\t",
+          "sessionScope": true,
+          "viewScope": true
+        },
+        {
+          "messageType": "refreshReservations",
+          "pageScope": true,
+          "script": "\t# implement your handler here\n\tif (self.getChild(\"BottomRow\").getChild(\"EmbeddedView Facility\").position.display ):\n\t\t\tself.getChild(\"BottomRow\").getChild(\"EmbeddedView Facility\").props.params.SelectedValue \u003d -1\n\tself.view.params.reservationId \u003d -1\n\tself.getChild(\"TopRow\").getChild(\"EmbeddedView Participant\").props.params.SelectedValue \u003d -1\n\tself.getChild(\"BottomRow\").getChild(\"EmbeddedView Room\").props.params.SelectedValue \u003d -1\n\tself.getChild(\"BottomRow\").getChild(\"EmbeddedView Bed\").props.params.SelectedValue \u003d -1\n\tself.getChild(\"TopRow\").getChild(\"EmbeddedView WaitingList\").refreshBinding(\"props.params.Options\")\n\tself.getChild(\"TopRow\").getChild(\"EmbeddedView WaitingList\").props.params.SelectedValue \u003d -1\n\tself.getChild(\"TopRow\").getChild(\"EmbeddedView ProviderType\").props.params.SelectedValue \u003d -1\n\tself.getChild(\"TopRow\").getChild(\"EmbeddedView Provider\").props.params.SelectedValue \u003d -1\n\tself.getChild(\"TopRow\").getChild(\"EmbeddedView Program\").props.params.SelectedValue \u003d -1\n\tself.getChild(\"BottomRow\").getChild(\"Embed_ResonForEntry\").props.params.SelectedValue \u003d -1\n\tself.getChild(\"BottomRow\").getChild(\"Embed_ControlledSubstance\").props.params.SelectedValue \u003d -1",
+          "sessionScope": true,
+          "viewScope": false
+        }
+      ]
+    },
+    "type": "ia.container.flex"
+  }
+}

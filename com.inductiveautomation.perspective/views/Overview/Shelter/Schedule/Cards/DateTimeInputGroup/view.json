@@ -1,0 +1,80 @@
+{
+  "custom": {},
+  "params": {},
+  "props": {
+    "defaultSize": {
+      "height": 60
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "EmbeddedView_CheckIn"
+        },
+        "position": {
+          "basis": "320px"
+        },
+        "propConfig": {
+          "props.params.jsonOut": {
+            "persistent": true
+          }
+        },
+        "props": {
+          "params": {
+            "jsonBase": "{\"cnd\":\"[lodging].[Reservation].[reservationStart] \u003e\u003d ?\",\"prepQuery\":{\"query\":\"WITH cte (dateId) AS (SELECT CAST(GETDATE() AS DATE) UNION ALL SELECT DATEADD(DAY, 1, dateId) FROM cte WHERE dateId \u003c DATEADD(YEAR, 1, GETDATE())) SELECT YEAR(dateId) *10000 + MONTH(dateId)*100 + DAY(dateId) ymdId, CONCAT_WS(\u0027 \u0027,LEFT(DATENAME(MONTH, dateId),3), CAST(DAY(dateId) AS VARCHAR(2)) +\u0027,\u0027, YEAR(dateId)) mmmddyyyy FROM cte ORDER BY ymdId  OPTION (MAXRECURSION 0)\"}}",
+            "jsonExpo": "{\"Label.text\":\"Check-in Date\"}",
+            "jsonIn": "{\"wherePlus\":[]}",
+            "jsonOut": "{\"wherePlus\":[{\"arg\":\"Thu Apr 16 08:00:00 CDT 2020\",\"cnd\":\"[lodging].[Reservation].[reservationStart] \u003e\u003d ?\"}]}"
+          },
+          "path": "Shelter/Schedule/Cards/DateTimeInput",
+          "style": {
+            "classes": "InputCards/InputCard"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "EmbeddedView_CheckOut"
+        },
+        "position": {
+          "basis": "320px"
+        },
+        "props": {
+          "params": {
+            "jsonBase": "{\"cnd\":\"[lodging].[Reservation].[reservationStart] \u003e\u003d ?\",\"prepQuery\":{\"query\":\"DECLARE @t1 AS DATETIME \u003d ? ; WITH cte (dateId) AS (SELECT @t1 UNION ALL SELECT DATEADD(DAY, 1, dateId) FROM cte WHERE dateId \u003c DATEADD(MONTH, 2, @t1)) SELECT YEAR(dateId) *10000 + MONTH(dateId)*100 + DAY(dateId) ymdId, CONCAT_WS(\u0027 \u0027,LEFT(DATENAME(MONTH, dateId),3), CAST(DAY(dateId) AS VARCHAR(2)) +\u0027,\u0027, YEAR(dateId)) mmmddyyyy FROM cte ORDER BY ymdId  OPTION (MAXRECURSION 0)\"}}",
+            "jsonExpo": "{\"Label.text\":\"Check-out Date\"}",
+            "jsonIn": "{\"wherePlus\":[{\"arg\":-1,\"cnd\":\"-1 \u003d ?\"}]}",
+            "jsonOut": "{\"wherePlus\":[{\"arg\":\"Tue Apr 14 08:00:00 CDT 2020\",\"cnd\":\"[lodging].[Reservation].[reservationStart] \u003e\u003d ?\"}]}"
+          },
+          "path": "Shelter/Schedule/Cards/DateTimeInput",
+          "style": {
+            "classes": "InputCards/InputCard"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Placeholder"
+        },
+        "position": {
+          "basis": "320px",
+          "grow": 1
+        },
+        "props": {
+          "path": "Shelter/Schedule/Cards/Placeholder",
+          "style": {
+            "classes": "InputCards/InputCard"
+          }
+        },
+        "type": "ia.display.view"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "type": "ia.container.flex"
+  }
+}

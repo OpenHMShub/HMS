@@ -1,0 +1,448 @@
+{
+  "custom": {
+    "attendeeCategoryFilter": {
+      "filterTrue": false,
+      "filterValue": "1\u003d1"
+    },
+    "eventNameFilter": {
+      "filterTrue": false,
+      "filterValue": "1\u003d1"
+    },
+    "key": "value",
+    "totalKPIs": {
+      "$": [
+        "ds",
+        192,
+        1729682799432
+      ],
+      "$columns": [
+        {
+          "data": [
+            570
+          ],
+          "name": "TotalEvents",
+          "type": "Integer"
+        },
+        {
+          "data": [
+            87667
+          ],
+          "name": "TotalAttendees",
+          "type": "Integer"
+        },
+        {
+          "data": [
+            2908
+          ],
+          "name": "activeParticipants",
+          "type": "Integer"
+        }
+      ]
+    }
+  },
+  "events": {
+    "system": {
+      "onStartup": {
+        "config": {
+          "script": "\troot \u003d self.getChild(\"root\")\n\t\n\t#try:\n\t\t#system.perspective.sendMessage(\u0027mhProviderDashboardKpiHeader\u0027, payload \u003d {})\n\t#except:\n\t\t#root.cleanKpis()"
+        },
+        "scope": "G",
+        "type": "script"
+      }
+    }
+  },
+  "params": {
+    "ActivityRange": {
+      "$": [
+        "ts",
+        192,
+        1686728469970
+      ],
+      "$ts": 1655192465968
+    },
+    "CategoryId": null,
+    "EventName": [],
+    "beginDate": null,
+    "endDate": null,
+    "facilitatorId": null,
+    "gender": null,
+    "maxAge": null,
+    "minAge": null,
+    "programId": null,
+    "search": "",
+    "selectedAttendeeCategories": []
+  },
+  "propConfig": {
+    "custom.attendeeCategoryFilter": {
+      "binding": {
+        "config": {
+          "path": "view.params.selectedAttendeeCategories"
+        },
+        "transforms": [
+          {
+            "code": "\tfilterValue \u003d \"1\u003d1\"\n\tfilterTrue \u003d False\n\tif value is not None and value !\u003d \u0027\u0027 and len(value) \u003e 0:\n\t\tfilterTrue \u003d True\n\t\tfilterValue \u003d \" x.shelterName in (\"\n\t\tfor oneVal in value:\n\t\t\tfilterValue \u003d filterValue + \"\u0027\" + str(oneVal) + \"\u0027,\"\n\t\tfilterValue \u003d filterValue[:-1] + \")\"\n\treturn {\u0027filterValue\u0027:filterValue,\u0027filterTrue\u0027:filterTrue}",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      },
+      "persistent": true
+    },
+    "custom.eventNameFilter": {
+      "binding": {
+        "config": {
+          "path": "view.params.EventName"
+        },
+        "transforms": [
+          {
+            "code": "\tfilterValue \u003d \"1\u003d1\"\n\tfilterTrue \u003d False\n\tif value is not None and value !\u003d \u0027\u0027 and len(value) \u003e 0:\n\t\tfilterTrue \u003d True\n\t\tfilterValue \u003d \" x.name in (\"\n\t\tfor oneVal in value:\n\t\t\tfilterValue \u003d filterValue + \"\u0027\" + str(oneVal) + \"\u0027,\"\n\t\tfilterValue \u003d filterValue[:-1] + \")\"\n\treturn {\u0027filterValue\u0027:filterValue,\u0027filterTrue\u0027:filterTrue}",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      },
+      "persistent": true
+    },
+    "custom.key": {
+      "persistent": true
+    },
+    "custom.totalKPIs": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "CategoryId": "{view.params.CategoryId}",
+            "EventName": "{view.custom.eventNameFilter.filterValue}",
+            "beginDate": "{view.params.beginDate}",
+            "dateFrom": "{view.params.ActivityRange}",
+            "dateTo": "addDays(midnight(now(0)),1)",
+            "endDate": "{view.params.endDate}",
+            "facilitatorId": "{view.params.facilitatorId}",
+            "filterByAttendeeCategories": "{view.custom.attendeeCategoryFilter.filterTrue}",
+            "genderId": "{view.params.gender}",
+            "maxAge": "{view.params.maxAge}",
+            "minAge": "{view.params.minAge}",
+            "programId": "{view.params.programId}",
+            "searchText": "{view.params.search}",
+            "selectedAttendeeCategories": "{view.custom.attendeeCategoryFilter.filterValue}"
+          },
+          "queryPath": "Event/ParticipantEvents/Attendance/GetTotal_KPIs"
+        },
+        "type": "query"
+      },
+      "persistent": true
+    },
+    "params.ActivityRange": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.CategoryId": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.EventName": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.beginDate": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.endDate": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.facilitatorId": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.gender": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.maxAge": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.minAge": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.programId": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.search": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.selectedAttendeeCategories": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 185,
+      "width": 1430
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "KPI1"
+        },
+        "position": {
+          "basis": "270px",
+          "grow": 1,
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.Value": {
+            "binding": {
+              "config": {
+                "path": "view.custom.totalKPIs"
+              },
+              "transforms": [
+                {
+                  "code": "\tif value is not None and value.getRowCount() \u003e 0:\n\t\treturn value.getValueAt(0,\u0027TotalAttendees\u0027)\n\telse:\n\t\treturn 0",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "Title": "Total Event Attendees"
+          },
+          "path": "Events/ParticipantEvents/Attendance/Dashboard/Cards/KPI/Metric_Flex",
+          "style": {
+            "classes": "KPIs/KPI_Card",
+            "marginLeft": "40px"
+          },
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "KPI2"
+        },
+        "position": {
+          "basis": "270px",
+          "grow": 1,
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.Value": {
+            "binding": {
+              "config": {
+                "path": "view.custom.totalKPIs"
+              },
+              "transforms": [
+                {
+                  "code": "\tif value is not None and value.getRowCount() \u003e 0:\n\t\treturn value.getValueAt(0,\u0027activeParticipants\u0027)\n\telse:\n\t\treturn 0",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "Title": "Active Participants"
+          },
+          "path": "Events/ParticipantEvents/Attendance/Dashboard/Cards/KPI/Metric_Flex",
+          "style": {
+            "classes": "KPIs/KPI_Card"
+          },
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "custom": {
+          "testValue": [
+            {
+              "applicants": 1,
+              "time": "9/1/2020"
+            },
+            {
+              "applicants": 0,
+              "time": "10/1/2020"
+            },
+            {
+              "applicants": 1,
+              "time": "11/1/2020"
+            },
+            {
+              "applicants": 0,
+              "time": "12/1/2020"
+            },
+            {
+              "applicants": 4,
+              "time": "1/1/2021"
+            }
+          ]
+        },
+        "meta": {
+          "name": "KPI3"
+        },
+        "position": {
+          "basis": "345px",
+          "grow": 1,
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.Value": {
+            "binding": {
+              "config": {
+                "parameters": {
+                  "CategoryId": "{view.params.CategoryId}",
+                  "EventName": "{view.custom.eventNameFilter.filterValue}",
+                  "beginDate": "{view.params.beginDate}",
+                  "dateFrom": "{view.params.ActivityRange}",
+                  "dateTo": "addDays(midnight(now(0)),1)",
+                  "endDate": "{view.params.endDate}",
+                  "facilitatorId": "{view.params.facilitatorId}",
+                  "filterByAttendeeCategories": "{view.custom.attendeeCategoryFilter.filterTrue}",
+                  "genderId": "{view.params.gender}",
+                  "maxAge": "{view.params.maxAge}",
+                  "minAge": "{view.params.minAge}",
+                  "programId": "{view.params.programId}",
+                  "searchText": "{view.params.search}",
+                  "selectedAttendeeCategories": "{view.custom.attendeeCategoryFilter.filterValue}"
+                },
+                "queryPath": "Event/ParticipantEvents/Attendance/GetMonthlyAttendance_KPI"
+              },
+              "transforms": [
+                {
+                  "code": "\tdataset \u003d value\n\tlist \u003d []\n\tfor i in range(0,value.getRowCount()):\n\t\tif value.getValueAt(i,0) is not None:\n\t\t\ttime \u003d system.date.format(value.getValueAt(i,0),\u0027M/dd/YYYY\u0027)\n\t\t# date format 10/1/2020\n\t\t\tapplicants \u003d  value.getValueAt(i,1)\n\t\t\tlist.append({\u0027Participants\u0027:applicants,\u0027time\u0027:time})\n\t\n\treturn list",
+                  "type": "script"
+                }
+              ],
+              "type": "query"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "Title": "Event Attendance Monthly"
+          },
+          "path": "Events/ParticipantEvents/Templates/Graph_Flex _bar",
+          "style": {
+            "classes": "KPIs/KPI_Card"
+          },
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "KPI4"
+        },
+        "position": {
+          "basis": "270px",
+          "grow": 1,
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.Value": {
+            "binding": {
+              "config": {
+                "path": "view.custom.totalKPIs"
+              },
+              "transforms": [
+                {
+                  "code": "\tif value is not None and value.getRowCount() \u003e 0:\n\t\treturn value.getValueAt(0,\u0027TotalEvents\u0027)\n\telse:\n\t\treturn 0",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "Title": "Total Events"
+          },
+          "path": "Events/ParticipantEvents/Attendance/Dashboard/Cards/KPI/Total_Flex",
+          "style": {
+            "classes": "KPIs/KPI_Card",
+            "marginRight": "40px"
+          },
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      }
+    ],
+    "custom": {
+      "_devPulse": false,
+      "_isDev": false
+    },
+    "meta": {
+      "name": "root"
+    },
+    "propConfig": {
+      "custom._devPulse": {
+        "onChange": {
+          "enabled": null,
+          "script": "\troot \u003d self\n\tif currentValue.value is True:\n\t\tpayload \u003d {}\n\n\t\tsystem.perspective.sendMessage(\u0027mhProviderDashboardKpiHeader\u0027, payload \u003d payload)\n\n\telse:\n\t\troot.cleanKpis()\t"
+        }
+      }
+    },
+    "props": {
+      "alignContent": "flex-start",
+      "alignItems": "center",
+      "style": {
+        "classes": "KPIs/KPI_Flex_Container",
+        "overflow": "hidden",
+        "overflowY": "hidden"
+      }
+    },
+    "scripts": {
+      "customMethods": [
+        {
+          "name": "setKpi1",
+          "params": [
+            "payload"
+          ],
+          "script": "\t\n\tkpi1 \u003d self.getChild(\"KPI1\")\n\t\n\tkpi1.props.params.Title \u003d \u0027Total Event Attendees\u0027\n\tkpi1.props.params.Value \u003d payload.get(\u0027TotalEventAttendees\u0027,0)\n\n"
+        },
+        {
+          "name": "setKpi2",
+          "params": [
+            "payload"
+          ],
+          "script": "\t# Total Referrals (Year To Date): total count of referrals since 1/1 of the current year\n\t\n\tkpi2 \u003d self.getChild(\"KPI2\")\n\t\n\tkpi2.props.params.Title \u003d \u0027Active Participants\u0027\n\tkpi2.props.params.Value \u003d payload.get(\u0027ActiveParticipants\u0027,0)\n\n\t"
+        },
+        {
+          "name": "setKpi3",
+          "params": [
+            "payload"
+          ],
+          "script": "\t# New Referrals Monthly: count of referrals per month in a XY Chart\n\t\n\tkpi3 \u003d self.getChild(\"KPI3\")\n\tkpi3.props.params.Value \u003d payload.get(\u0027EventAttendanceMonthly\u0027,[])\n\tkpi3.props.params.Title \u003d \u0027Event Attendance Monthly\u0027\n\n\t"
+        },
+        {
+          "name": "cleanKpis",
+          "params": [],
+          "script": "\tkpi1 \u003d self.getChild(\"KPI1\")\n\tkpi2 \u003d self.getChild(\"KPI2\")\n\tkpi3 \u003d self.getChild(\"KPI3\")\n\t#kpiX4 \u003d self.getChild(\"KPIx4\")\t\n\n\tkpi1.props.params.Title \u003d \u0027\u0027\n\tkpi1.props.params.Value \u003d 0\n\t\t\n\tkpi2.props.params.Title \u003d \u0027\u0027\n\tkpi2.props.params.Value \u003d 0\n\n\tkpi3.props.params.Title \u003d \u0027\u0027\n\tkpi3.props.params.Value \u003d []\n\n\t"
+        }
+      ],
+      "extensionFunctions": null,
+      "messageHandlers": [
+        {
+          "messageType": "mhEvAttendHistoryKpiHeader",
+          "pageScope": true,
+          "script": "\t\n\tself.setKpi1(payload)\n\tself.setKpi2(payload)\n\tself.setKpi3(payload)\n\t\n\t\n\t\n\n\n\t",
+          "sessionScope": false,
+          "viewScope": false
+        }
+      ]
+    },
+    "type": "ia.container.flex"
+  }
+}

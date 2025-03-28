@@ -1,0 +1,185 @@
+{
+  "custom": {},
+  "params": {
+    "column_name": "Gender",
+    "filter": "",
+    "key": "",
+    "options": [],
+    "placeholder": "Gender",
+    "searchType": "match",
+    "selectedValue": null
+  },
+  "propConfig": {
+    "params.column_name": {
+      "access": "PUBLIC",
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.filter": {
+      "access": "PUBLIC",
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.key": {
+      "access": "PUBLIC",
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.options": {
+      "access": "PUBLIC",
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.placeholder": {
+      "access": "PUBLIC",
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.searchType": {
+      "access": "PUBLIC",
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.selectedValue": {
+      "binding": {
+        "config": {
+          "path": "/Filter/filter.props.value"
+        },
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 30,
+      "width": 309
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "filter"
+        },
+        "position": {
+          "basis": "100%"
+        },
+        "propConfig": {
+          "props.options": {
+            "binding": {
+              "config": {
+                "path": "view.params.options"
+              },
+              "type": "property"
+            }
+          },
+          "props.placeholder.text": {
+            "binding": {
+              "config": {
+                "path": "view.params.placeholder"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.classes": {
+            "binding": {
+              "config": {
+                "path": "view.params.selection"
+              },
+              "transforms": [
+                {
+                  "code": "\ttext \u003d \"Filter/Filter_Text_Default\"\n\tif value !\u003d None:\n\t\tif value !\u003d \"\" and value \u003e -1:\n\t\t\ttext \u003d \"Filter/Filter_Text_TeelBlue\"\n\treturn text",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          },
+          "props.value": {
+            "binding": {
+              "config": {
+                "path": "session.custom.filters"
+              },
+              "transforms": [
+                {
+                  "code": "\tnewValue \u003d None\n\ttry:\n\t\tnewValue \u003d value[self.view.params.filter][self.view.params.key][\"value\"]\n\texcept:\n\t\tpass\n\t\t\n\treturn newValue",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            },
+            "onChange": {
+              "enabled": null,
+              "script": "\tif previousValue is not None and previousValue.value is not None and (currentValue is None or currentValue.value is None):\n\t\tself.getSibling(\"TextField\").focus()"
+            }
+          }
+        },
+        "props": {
+          "dropdownOptionStyle": {
+            "classes": "Dropdowns/DD_Options"
+          },
+          "placeholder": {
+            "color": "#AAAAAA"
+          },
+          "showClearIcon": true,
+          "style": {},
+          "wrapMultiSelectValues": false
+        },
+        "type": "ia.input.dropdown"
+      },
+      {
+        "meta": {
+          "name": "TextField"
+        },
+        "position": {
+          "basis": "2px"
+        },
+        "props": {
+          "rejectUpdatesWhileFocused": false,
+          "style": {
+            "cursor": "none"
+          }
+        },
+        "type": "ia.input.text-field"
+      }
+    ],
+    "meta": {
+      "name": "Filter"
+    },
+    "propConfig": {
+      "props.style.classes": {
+        "binding": {
+          "config": {
+            "path": "./filter.props.value"
+          },
+          "transforms": [
+            {
+              "code": "\tborder \u003d \"Filter/Filter_Border_Default\"\n\tif value !\u003d None:\n\t\tborder \u003d \"Filter/Filter_Border_TeelBlue\"\n\treturn border",
+              "type": "script"
+            }
+          ],
+          "type": "property"
+        }
+      }
+    },
+    "props": {
+      "style": {}
+    },
+    "scripts": {
+      "customMethods": [],
+      "extensionFunctions": null,
+      "messageHandlers": [
+        {
+          "messageType": "clearFilter",
+          "pageScope": true,
+          "script": "\tself.getChild(\"filter\").props.value \u003d None",
+          "sessionScope": false,
+          "viewScope": true
+        }
+      ]
+    },
+    "type": "ia.container.flex"
+  }
+}

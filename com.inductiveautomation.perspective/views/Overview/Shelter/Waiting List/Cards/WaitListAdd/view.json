@@ -1,0 +1,264 @@
+{
+  "custom": {
+    "selectedwldata": {
+      "$": [
+        "ds",
+        192,
+        1605371244415
+      ],
+      "$columns": [
+        {
+          "data": [],
+          "name": "wlid",
+          "type": "Integer"
+        },
+        {
+          "data": [],
+          "name": "participantid",
+          "type": "Integer"
+        },
+        {
+          "data": [],
+          "name": "programid",
+          "type": "Integer"
+        },
+        {
+          "data": [],
+          "name": "details",
+          "type": "String"
+        },
+        {
+          "data": [],
+          "name": "dateadded",
+          "type": "Date"
+        },
+        {
+          "data": [],
+          "name": "dateremoved",
+          "type": "Date"
+        }
+      ]
+    }
+  },
+  "params": {
+    "wlid": -1
+  },
+  "propConfig": {
+    "custom.selectedwldata": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "wlid": "{view.params.wlid}"
+          },
+          "queryPath": "Shelter/WaitList/WaitListSelection"
+        },
+        "type": "query"
+      },
+      "onChange": {
+        "enabled": null,
+        "script": "\tdata \u003d system.dataset.toPyDataSet(self.custom.selectedwldata)\n\tif(len(data) \u003d\u003d 1):\n\t\tself.getChild(\"root\").getChild(\"EmbeddedSelection\").props.params.selectedprogram \u003d data[0][\"programid\"]\n\t\tself.getChild(\"root\").getChild(\"EmbeddedSelection\").props.params.selectedparticipant \u003d data[0][\"participantid\"] \n\t\tself.getChild(\"root\").getChild(\"EmbeddedDateInput\").props.params.date \u003d data[0][\"dateadded\"]\n\t\tself.getChild(\"root\").getChild(\"EmbeddedNote\").props.params.CaseNote \u003d data[0][\"details\"]\n\telse: \n\t\tsystem.perspective.sendMessage(\"WaitListResetSelection\", \"\", scope\u003d\"page\")"
+      },
+      "persistent": true
+    },
+    "params.wlid": {
+      "paramDirection": "inout",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 290
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "EmbeddedHeader"
+        },
+        "position": {
+          "basis": "25px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.Text": {
+            "binding": {
+              "config": {
+                "expression": "if({view.params.wlid} \u003d -1, \"New Waiting List\", \"Edit Waiting List\")"
+              },
+              "type": "expr"
+            }
+          }
+        },
+        "props": {
+          "path": "Shelter/Reservation/Cards/New Reservation/ReservationHeader"
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "EmbeddedDateInput"
+        },
+        "position": {
+          "basis": "60px"
+        },
+        "props": {
+          "params": {
+            "date": {
+              "$": [
+                "ts",
+                192,
+                1604776051817
+              ],
+              "$ts": 1604776051817
+            },
+            "text": "Added to Waitlist"
+          },
+          "path": "Shelter/Waiting List/Cards/DateInput",
+          "style": {
+            "classes": "InputCards/InputCard",
+            "marginBot": 10,
+            "marginLeft": 10,
+            "marginRight": 10,
+            "marginTop": 10,
+            "paddingRight": 0
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "EmbeddedNote"
+        },
+        "position": {
+          "basis": "68px"
+        },
+        "props": {
+          "params": {
+            "CaseNote": ""
+          },
+          "path": "Shelter/Reservation/Cards/New Reservation/Note",
+          "style": {
+            "classes": "InputCards/InputCard",
+            "marginLeft": 10,
+            "marginRight": 10
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "EmbeddedSelection"
+        },
+        "position": {
+          "basis": "60px"
+        },
+        "props": {
+          "params": {
+            "dateadded": "value",
+            "selecteddate": {
+              "$": [
+                "ts",
+                192,
+                1601932493118
+              ],
+              "$ts": 1601313993730
+            },
+            "selectedparticipant": -1,
+            "selectedprogram": -1
+          },
+          "path": "Shelter/Waiting List/Cards/WaitListSelection",
+          "style": {
+            "marginBottom": 0,
+            "paddingLeft": "17px",
+            "paddingRight": "10px"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "EmbeddedButtons"
+        },
+        "position": {
+          "basis": "60px"
+        },
+        "propConfig": {
+          "props.params.dateadded": {
+            "binding": {
+              "config": {
+                "path": "../EmbeddedDateInput.props.params.date"
+              },
+              "type": "property"
+            }
+          },
+          "props.params.notes": {
+            "binding": {
+              "config": {
+                "path": "../EmbeddedNote.props.params.CaseNote"
+              },
+              "type": "property"
+            }
+          },
+          "props.params.participantid": {
+            "binding": {
+              "config": {
+                "path": "../EmbeddedSelection.props.params.selectedparticipant"
+              },
+              "type": "property"
+            }
+          },
+          "props.params.programid": {
+            "binding": {
+              "config": {
+                "path": "../EmbeddedSelection.props.params.selectedprogram"
+              },
+              "type": "property"
+            }
+          },
+          "props.params.wlid": {
+            "binding": {
+              "config": {
+                "bidirectional": true,
+                "path": "view.params.wlid"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "path": "Shelter/Waiting List/Cards/WaitListAddButtons",
+          "style": {
+            "marginBottom": "35px",
+            "paddingLeft": "10px",
+            "paddingRight": "10px"
+          }
+        },
+        "type": "ia.display.view"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column",
+      "style": {
+        "backgroundColor": "#FFFFFF",
+        "classes": "Background/Alternative"
+      }
+    },
+    "scripts": {
+      "customMethods": [],
+      "messageHandlers": [
+        {
+          "messageType": "WaitListResetSelection",
+          "pageScope": true,
+          "script": "\t# implement your handler here\n\tself.getChild(\"EmbeddedSelection\").props.params.selectedprogram\n\tself.getChild(\"EmbeddedSelection\").props.params.selectedprogram \u003d -1\n\tself.getChild(\"EmbeddedSelection\").props.params.selectedparticipant \u003d -1\n\tself.getChild(\"EmbeddedDateInput\").props.params.date \u003d system.date.now()\n\tself.getChild(\"EmbeddedNote\").props.params.CaseNote \u003d \"\"",
+          "sessionScope": false,
+          "viewScope": false
+        }
+      ]
+    },
+    "type": "ia.container.flex"
+  }
+}

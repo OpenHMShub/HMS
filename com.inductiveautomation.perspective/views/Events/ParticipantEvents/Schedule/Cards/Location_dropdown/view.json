@@ -1,0 +1,104 @@
+{
+  "custom": {},
+  "params": {
+    "Column": "value",
+    "rowData": {
+      "id": "value"
+    },
+    "rowIndex": "value",
+    "value": -1
+  },
+  "propConfig": {
+    "params.Column": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.rowData": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.rowIndex": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.value": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 22,
+      "width": 135
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "children": [
+          {
+            "events": {
+              "component": {
+                "onActionPerformed": {
+                  "config": {
+                    "script": "\trow \u003d self.view.params.rowIndex\n\tcol \u003d self.view.params.Column\n\tlocationId \u003d self.props.value\n\tid \u003d self.view.params.rowData.id\n\tsystem.db.runPrepUpdate(\"update [participant].[EventSchedule] set locationId \u003d \" + str(locationId) + \" where id \u003d \" + str(id))"
+                  },
+                  "scope": "G",
+                  "type": "script"
+                }
+              }
+            },
+            "meta": {
+              "name": "Dropdown"
+            },
+            "position": {
+              "basis": "135px",
+              "shrink": 0
+            },
+            "propConfig": {
+              "props.options": {
+                "binding": {
+                  "config": {
+                    "queryPath": "Event/ParticipantEvents/Registration/Get_Locations"
+                  },
+                  "type": "query"
+                }
+              },
+              "props.value": {
+                "binding": {
+                  "config": {
+                    "path": "view.params.value"
+                  },
+                  "type": "property"
+                }
+              }
+            },
+            "props": {
+              "dropdownOptionStyle": {
+                "classes": "Dropdowns/DD_Options"
+              },
+              "style": {
+                "classes": "Dropdowns/DD_Default"
+              }
+            },
+            "type": "ia.input.dropdown"
+          }
+        ],
+        "meta": {
+          "name": "Location"
+        },
+        "position": {
+          "basis": "22px"
+        },
+        "type": "ia.container.flex"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column"
+    },
+    "type": "ia.container.flex"
+  }
+}

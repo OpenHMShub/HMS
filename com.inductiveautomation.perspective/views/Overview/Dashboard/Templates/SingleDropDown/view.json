@@ -1,0 +1,128 @@
+{
+  "custom": {},
+  "params": {
+    "options": "",
+    "placeholder": "",
+    "selectedValue": ""
+  },
+  "propConfig": {
+    "params.column_name": {
+      "access": "PUBLIC"
+    },
+    "params.filter": {
+      "access": "PUBLIC"
+    },
+    "params.options": {
+      "access": "PUBLIC",
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.placeholder": {
+      "access": "PUBLIC",
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.searchType": {
+      "access": "PUBLIC"
+    },
+    "params.selectedValue": {
+      "paramDirection": "inout",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 30,
+      "width": 309
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "filter"
+        },
+        "position": {
+          "basis": "100%"
+        },
+        "propConfig": {
+          "props.options": {
+            "binding": {
+              "config": {
+                "path": "view.params.options"
+              },
+              "type": "property"
+            }
+          },
+          "props.placeholder.text": {
+            "binding": {
+              "config": {
+                "path": "view.params.placeholder"
+              },
+              "type": "property"
+            }
+          },
+          "props.value": {
+            "binding": {
+              "config": {
+                "bidirectional": true,
+                "path": "view.params.selectedValue"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "dropdownOptionStyle": {
+            "classes": "Dropdowns/DD_Options"
+          },
+          "placeholder": {
+            "color": "#AAAAAA"
+          },
+          "style": {
+            "classes": "Filter/Filter_Text_Default"
+          },
+          "wrapMultiSelectValues": false
+        },
+        "type": "ia.input.dropdown"
+      }
+    ],
+    "meta": {
+      "name": "Filter"
+    },
+    "propConfig": {
+      "props.style.classes": {
+        "binding": {
+          "config": {
+            "path": "./filter.props.value"
+          },
+          "transforms": [
+            {
+              "code": "\tborder \u003d \"Filter/Filter_Border_Default\"\n\tif value !\u003d None:\n\t\tborder \u003d \"Filter/Filter_Border_TeelBlue\"\n\treturn border",
+              "type": "script"
+            }
+          ],
+          "type": "property"
+        }
+      }
+    },
+    "props": {
+      "direction": "column",
+      "style": {}
+    },
+    "scripts": {
+      "customMethods": [],
+      "extensionFunctions": null,
+      "messageHandlers": [
+        {
+          "messageType": "clearFilter",
+          "pageScope": true,
+          "script": "\tself.getChild(\"filter\").props.value \u003d None",
+          "sessionScope": false,
+          "viewScope": true
+        }
+      ]
+    },
+    "type": "ia.container.flex"
+  }
+}

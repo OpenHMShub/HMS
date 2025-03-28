@@ -1,0 +1,134 @@
+{
+  "custom": {
+    "data": "Campus Store, Detox, Extended Recuperative Care, Guest House, Hope University, Paticipant Mail Service"
+  },
+  "params": {
+    "More": false,
+    "participantID": 4676
+  },
+  "propConfig": {
+    "custom.data": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "participantId": "{view.params.participantID}"
+          },
+          "queryPath": "Participants/Enrollments/ParticipantSelectedEnrollments",
+          "returnFormat": "dataset"
+        },
+        "transforms": [
+          {
+            "code": "\t#data is the data object to return\n\tdata \u003d []\n\t\n\tif value !\u003d None and value.getRowCount() \u003e 0:\n\t\tfor i in range(value.getRowCount()):\n\t\t\tdata.append(value.getValueAt(i,\u0027programName\u0027))\n\t\t\n\telse:\n\t\tdata.append(\"No Programs Enrolled Yet.\")\n\t\t\n\t\t\n\treturn \u0027, \u0027.join(data)",
+            "type": "script"
+          }
+        ],
+        "type": "query"
+      },
+      "persistent": true
+    },
+    "params.More": {
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.participantID": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 200,
+      "width": 600
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "Label_1"
+        },
+        "position": {
+          "grow": 1
+        },
+        "propConfig": {
+          "position.basis": {
+            "binding": {
+              "config": {
+                "expression": "if({view.params.More},\u0027140px\u0027,\u002725px\u0027)"
+              },
+              "type": "expr"
+            }
+          },
+          "props.text": {
+            "binding": {
+              "config": {
+                "expression": "{view.custom.data}"
+              },
+              "type": "expr"
+            }
+          }
+        },
+        "props": {
+          "alignVertical": "top",
+          "style": {
+            "classes": "Text/About_info",
+            "overflow": "hidden",
+            "overflowWrap": "break-word",
+            "paddingLeft": "20px",
+            "paddingTop": "5px",
+            "textOverflow": "ellipsis"
+          }
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "events": {
+          "dom": {
+            "onClick": {
+              "config": {
+                "script": "\tself.view.params.More \u003d not self.view.params.More "
+              },
+              "scope": "G",
+              "type": "script"
+            }
+          }
+        },
+        "meta": {
+          "name": "Label"
+        },
+        "position": {
+          "basis": "25px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.text": {
+            "binding": {
+              "config": {
+                "expression": "if({view.params.More}, \u0027LESS\u0027, \u0027MORE\u0027)"
+              },
+              "type": "expr"
+            }
+          }
+        },
+        "props": {
+          "style": {
+            "classes": "Text/About_info",
+            "paddingLeft": "20px",
+            "textDecoration": "underline"
+          }
+        },
+        "type": "ia.display.label"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column",
+      "style": {
+        "classes": "Background/Default"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

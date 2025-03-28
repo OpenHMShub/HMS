@@ -1,0 +1,92 @@
+{
+  "custom": {},
+  "params": {
+    "selectedDateRange": " 10/24/2024 to 10/24/2024"
+  },
+  "propConfig": {
+    "params.selectedDateRange": {
+      "binding": {
+        "config": {
+          "path": "/root/Label.props.text"
+        },
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 30,
+      "width": 150
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "events": {
+          "dom": {
+            "onClick": [
+              {
+                "config": {
+                  "draggable": true,
+                  "id": "m+nL2ZFq",
+                  "modal": true,
+                  "overlayDismiss": true,
+                  "resizable": false,
+                  "showCloseIcon": false,
+                  "title": "Date Range",
+                  "type": "open",
+                  "viewPath": "Shelter/Templates/DateRange/DateSelection",
+                  "viewportBound": false
+                },
+                "scope": "C",
+                "type": "popup"
+              },
+              {
+                "config": {
+                  "script": "\tsystem.perspective.print(\"before sendMessage, pageId\u003d \"+self.page.props.pageId)\n\tsystem.perspective.sendMessage(\"setDateFilters\", payload \u003d {\"pageId\":self.page.props.pageId,\"startDate_column\":\"eventStart\",\"endDate_column\":\"eventEnd\"}, scope \u003d \"session\")\n\tsystem.perspective.print(\"after sendMessage\")"
+                },
+                "enabled": false,
+                "scope": "G",
+                "type": "script"
+              }
+            ]
+          }
+        },
+        "meta": {
+          "name": "Label"
+        },
+        "position": {
+          "basis": "100%"
+        },
+        "propConfig": {
+          "props.text": {
+            "binding": {
+              "config": {
+                "expression": "\" \"+ {session.custom.dateRangeFromDate} + \" to \" + {session.custom.dateRangeToDate}"
+              },
+              "type": "expr"
+            }
+          }
+        },
+        "props": {
+          "style": {
+            "classes": "DateTime/Date_Purple"
+          }
+        },
+        "type": "ia.display.label"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column",
+      "style": {
+        "backgroundColor": "#FFFFFF"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

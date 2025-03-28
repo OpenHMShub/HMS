@@ -1,0 +1,1397 @@
+{
+  "custom": {},
+  "events": {
+    "system": {
+      "onStartup": {
+        "config": {
+          "script": "\ttry:\n\t\troot \u003d self.getChild(\"root\")\n\t\troot.setPropsDropdowns()\n\t\t#emvSearch \u003d root.getChild(\"emvSearch\")\n\t\t#emvSearch.props.params.keyUpPulse \u003d False\n\texcept:\n\t\timport traceback\n\t\tlogger \u003d system.util.getLogger(\"Shelter\")\n\t\tmsg \u003d self.name + \u0027:\\n\u0027\n\t\tmsg +\u003d traceback.format_exc()\n\t\tlogger.error(msg)\t\t\t"
+        },
+        "scope": "G",
+        "type": "script"
+      }
+    }
+  },
+  "params": {
+    "allSelection": 1,
+    "congregation": null,
+    "dateRangeFrom": "08/06/2010 00:00:00",
+    "dateRangeTo": "10/30/2024 23:59:59",
+    "program": null,
+    "searchText": "%%",
+    "shelter": null
+  },
+  "propConfig": {
+    "params.allSelection": {
+      "binding": {
+        "config": {
+          "path": "/root/emvAll.props.params.selection"
+        },
+        "transforms": [
+          {
+            "code": "\tif value \u003d\u003d None or value \u003d\u003d -1:\n\t\tvalue \u003d 1\n\treturn value",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.congregation": {
+      "binding": {
+        "config": {
+          "path": "/root/emvCongregation.props.params.selection"
+        },
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.dateRangeFrom": {
+      "binding": {
+        "config": {
+          "path": "session.custom.dateRangeFromDate"
+        },
+        "transforms": [
+          {
+            "code": "\tdate \u003d str(value) + \u0027 00:00:00\u0027\n\treturn date",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.dateRangeTo": {
+      "binding": {
+        "config": {
+          "path": "session.custom.dateRangeToDate"
+        },
+        "transforms": [
+          {
+            "code": "\tdate \u003d str(value) + \u0027 23:59:59\u0027\n\treturn date",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.program": {
+      "binding": {
+        "config": {
+          "path": "/root/emvProgram.props.params.selection"
+        },
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.searchText": {
+      "binding": {
+        "config": {
+          "path": "/root/emvSearch.props.params.searchText"
+        },
+        "transforms": [
+          {
+            "code": "\tif value is None or value \u003d\u003d \u0027\u0027 or len(value) \u003d\u003d 0:\n\t\treturn \"%%\"\n\telse:\n\t\treturn \"%\" + str(value) + \"%\"",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.shelter": {
+      "binding": {
+        "config": {
+          "path": "/root/emvShelter.props.params.selection"
+        },
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 30,
+      "width": 1200
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "Placeholder"
+        },
+        "position": {
+          "basis": "200px",
+          "display": false,
+          "grow": 1
+        },
+        "props": {
+          "path": "1_TEMPLATES/Filtering/Filter_Placeholder"
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "emvDateRange"
+        },
+        "position": {
+          "basis": "180px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.selectedDateRange": {
+            "onChange": {
+              "enabled": null,
+              "script": "\troot \u003d self.parent\n\troot.sendMsgCondition()"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "selectedDateRange": " 08/06/2010 to 10/30/2024"
+          },
+          "path": "Shelter/Templates/DateRange/DateInput",
+          "style": {
+            "classes": "Filter/Filter_Container",
+            "marginLeft": "40px"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "emvAll"
+        },
+        "position": {
+          "basis": "150px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.actionPerformedPulse": {
+            "onChange": {
+              "enabled": null,
+              "script": "\troot \u003d self.parent\n\troot.sendMsgCondition()\t"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "actionPerformedPulse": false,
+            "clear": false,
+            "multiSelect": false,
+            "options": [
+              {
+                "label": "All",
+                "value": 1
+              },
+              {
+                "label": "Shelter",
+                "value": 2
+              },
+              {
+                "label": "Winter Shelter",
+                "value": 3
+              }
+            ],
+            "placeholder": "All",
+            "selection": null
+          },
+          "path": "Providers/Dashboard/Components/Filters/Conditional_DropDown",
+          "style": {
+            "classes": "Filter/Filter_Text_TeelBlue Filter/Filter_Container",
+            "marginLeft": "4px"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "emvShelter"
+        },
+        "position": {
+          "basis": "150px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.actionPerformedPulse": {
+            "onChange": {
+              "enabled": null,
+              "script": "\troot \u003d self.parent\n\troot.sendMsgCondition()\t"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "actionPerformedPulse": false,
+            "clear": false,
+            "multiSelect": false,
+            "options": [
+              {
+                "label": "All Guest House",
+                "value": "All Guest House"
+              },
+              {
+                "label": "532 Apartments",
+                "value": "532 Apartments"
+              },
+              {
+                "label": "705 Apartments",
+                "value": "705 Apartments"
+              },
+              {
+                "label": "Hallway",
+                "value": "Hallway"
+              },
+              {
+                "label": "Next Steps Dorm",
+                "value": "Next Steps Dorm"
+              },
+              {
+                "label": "Night Shift Dorm",
+                "value": "Night Shift Dorm"
+              },
+              {
+                "label": "Respite Dorm (Men)",
+                "value": "Respite Dorm (Men)"
+              },
+              {
+                "label": "Respite Dorm (Women)",
+                "value": "Respite Dorm (Women)"
+              },
+              {
+                "label": "Special Dorm",
+                "value": "Special Dorm"
+              },
+              {
+                "label": "Veteran Service Intensive Dorm",
+                "value": "Veteran Service Intensive Dorm"
+              },
+              {
+                "label": "Veteran\u0027s Dorm",
+                "value": "Veteran\u0027s Dorm"
+              },
+              {
+                "label": "Vine Hill",
+                "value": "Vine Hill"
+              },
+              {
+                "label": "Welcome Dorm",
+                "value": "Welcome Dorm"
+              },
+              {
+                "label": "Women\u0027s Welcome Dorm",
+                "value": "Women\u0027s Welcome Dorm"
+              }
+            ],
+            "placeholder": "Shelter",
+            "selection": null
+          },
+          "path": "Providers/Dashboard/Components/Filters/Conditional_DropDown",
+          "style": {
+            "classes": "Filter/Filter_Text_TeelBlue Filter/Filter_Container",
+            "marginLeft": "4px"
+          }
+        },
+        "scripts": {
+          "customMethods": [
+            {
+              "name": "setOptions",
+              "params": [],
+              "script": "\t\n\tquery \u003d \"\"\" \nSELECT facilityName FROM lodging.Facility WHERE facilityName IS NOT NULL AND timeRetired IS NULL ORDER BY facilityName\n\t\"\"\"\n\t\n\tresult \u003d system.db.runPrepQuery(query,[],\u0027RITIOps\u0027)\n\t\n\t# Version 1 set options as list of dictionaries\n\tfacilityNameList \u003d [ dict(value \u003d x[0],label \u003d x[0]) for x in result]\n\tfacilityNameList.insert(0,{\u0027value\u0027:\u0027All Guest House\u0027,\u0027label\u0027:\u0027All Guest House\u0027})\n\t\n\t\n\tself.props.params.options \u003d facilityNameList\n#\tself.props.params.options \u003d [ dict(value \u003d x[0],label \u003d x[0]) for x in result]\n\t\n"
+            }
+          ],
+          "extensionFunctions": null,
+          "messageHandlers": []
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "emvCongregation"
+        },
+        "position": {
+          "basis": "160px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.actionPerformedPulse": {
+            "onChange": {
+              "enabled": null,
+              "script": "\troot \u003d self.parent\n\troot.sendMsgCondition()\t"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "actionPerformedPulse": false,
+            "clear": false,
+            "multiSelect": false,
+            "options": [
+              {
+                "label": "Acklen Avenue Church of Christ",
+                "value": "Acklen Avenue Church of Christ"
+              },
+              {
+                "label": "Antioch United Methodist Church",
+                "value": "Antioch United Methodist Church"
+              },
+              {
+                "label": "Belle Meade United Methodist Church",
+                "value": "Belle Meade United Methodist Church"
+              },
+              {
+                "label": "Bellevue Baptist Church",
+                "value": "Bellevue Baptist Church"
+              },
+              {
+                "label": "Bellevue Church of Christ",
+                "value": "Bellevue Church of Christ"
+              },
+              {
+                "label": "Bellevue Presbyterian Church",
+                "value": "Bellevue Presbyterian Church"
+              },
+              {
+                "label": "Bellevue United Methodist Church",
+                "value": "Bellevue United Methodist Church"
+              },
+              {
+                "label": "Belmont United Methodist Church",
+                "value": "Belmont United Methodist Church"
+              },
+              {
+                "label": "Belmont University",
+                "value": "Belmont University"
+              },
+              {
+                "label": "Bethel Church of the Nazarene",
+                "value": "Bethel Church of the Nazarene"
+              },
+              {
+                "label": "Bethlehem United Methodist Church",
+                "value": "Bethlehem United Methodist Church"
+              },
+              {
+                "label": "Blakemore Church of the Nazarene",
+                "value": "Blakemore Church of the Nazarene"
+              },
+              {
+                "label": "Blakemore United Methodist Church",
+                "value": "Blakemore United Methodist Church"
+              },
+              {
+                "label": "Brentwood Baptist",
+                "value": "Brentwood Baptist"
+              },
+              {
+                "label": "Brentwood Hills Church of Christ",
+                "value": "Brentwood Hills Church of Christ"
+              },
+              {
+                "label": "Brentwood United Methodist",
+                "value": "Brentwood United Methodist"
+              },
+              {
+                "label": "Brook Hollow Baptist Church",
+                "value": "Brook Hollow Baptist Church"
+              },
+              {
+                "label": "Brookemeade Congregational UCC",
+                "value": "Brookemeade Congregational UCC"
+              },
+              {
+                "label": "Brush Hill Cumberland Presbyterian Church",
+                "value": "Brush Hill Cumberland Presbyterian Church"
+              },
+              {
+                "label": "Calvary Chapel Long Hollow",
+                "value": "Calvary Chapel Long Hollow"
+              },
+              {
+                "label": "Calvary United Methodist Church",
+                "value": "Calvary United Methodist Church"
+              },
+              {
+                "label": "Cathedral of the Incarnation",
+                "value": "Cathedral of the Incarnation"
+              },
+              {
+                "label": "Christ Church Cathedral",
+                "value": "Christ Church Cathedral"
+              },
+              {
+                "label": "Christ Community Church",
+                "value": "Christ Community Church"
+              },
+              {
+                "label": "Christ Presbyterian Church",
+                "value": "Christ Presbyterian Church"
+              },
+              {
+                "label": "Christ The King Catholic Church",
+                "value": "Christ The King Catholic Church"
+              },
+              {
+                "label": "Christ United Methodist Church",
+                "value": "Christ United Methodist Church"
+              },
+              {
+                "label": "Church of the Advent",
+                "value": "Church of the Advent"
+              },
+              {
+                "label": "Church of the Redeemer",
+                "value": "Church of the Redeemer"
+              },
+              {
+                "label": "Clark Memorial United Methodist Church",
+                "value": "Clark Memorial United Methodist Church"
+              },
+              {
+                "label": "Clearview Baptist Church",
+                "value": "Clearview Baptist Church"
+              },
+              {
+                "label": "Community Baptist Church",
+                "value": "Community Baptist Church"
+              },
+              {
+                "label": "Community Church of Hendersonville",
+                "value": "Community Church of Hendersonville"
+              },
+              {
+                "label": "Concord Community Church of the Nazarene",
+                "value": "Concord Community Church of the Nazarene"
+              },
+              {
+                "label": "Congregation Micah",
+                "value": "Congregation Micah"
+              },
+              {
+                "label": "Congregation Sherith Israel",
+                "value": "Congregation Sherith Israel"
+              },
+              {
+                "label": "Congregation1_Test",
+                "value": "Congregation1_Test"
+              },
+              {
+                "label": "Congregation2_Test",
+                "value": "Congregation2_Test"
+              },
+              {
+                "label": "Connell Memorial United Methodist Church",
+                "value": "Connell Memorial United Methodist Church"
+              },
+              {
+                "label": "Covenant Presbyterian Church",
+                "value": "Covenant Presbyterian Church"
+              },
+              {
+                "label": "Crieve Hall Church of Christ",
+                "value": "Crieve Hall Church of Christ"
+              },
+              {
+                "label": "Crievewood Baptist Church",
+                "value": "Crievewood Baptist Church"
+              },
+              {
+                "label": "Crievewood United Methodist",
+                "value": "Crievewood United Methodist"
+              },
+              {
+                "label": "Dalewood Baptist Church ",
+                "value": "Dalewood Baptist Church "
+              },
+              {
+                "label": "Dalewood United Methodist Church",
+                "value": "Dalewood United Methodist Church"
+              },
+              {
+                "label": "Donelson Church of Christ",
+                "value": "Donelson Church of Christ"
+              },
+              {
+                "label": "Donelson Heights United Methodist Church",
+                "value": "Donelson Heights United Methodist Church"
+              },
+              {
+                "label": "Donelson Presbyterian Church",
+                "value": "Donelson Presbyterian Church"
+              },
+              {
+                "label": "Donelson View Baptist Church",
+                "value": "Donelson View Baptist Church"
+              },
+              {
+                "label": "East Brentwood Presbyterian Church",
+                "value": "East Brentwood Presbyterian Church"
+              },
+              {
+                "label": "Eastwood Christian Church",
+                "value": "Eastwood Christian Church"
+              },
+              {
+                "label": "Edgehill United Methodist Church",
+                "value": "Edgehill United Methodist Church"
+              },
+              {
+                "label": "Emilyschurch",
+                "value": "Emilyschurch"
+              },
+              {
+                "label": "Episcopal Church of the Resurrection",
+                "value": "Episcopal Church of the Resurrection"
+              },
+              {
+                "label": "Epworth United Methodist Church",
+                "value": "Epworth United Methodist Church"
+              },
+              {
+                "label": "Ethos @ Acklen Avenue",
+                "value": "Ethos @ Acklen Avenue"
+              },
+              {
+                "label": "Faith Baptist Church",
+                "value": "Faith Baptist Church"
+              },
+              {
+                "label": "Father Ryan High School",
+                "value": "Father Ryan High School"
+              },
+              {
+                "label": "First Apostolic Church",
+                "value": "First Apostolic Church"
+              },
+              {
+                "label": "First Baptist Church Capitol Hill",
+                "value": "First Baptist Church Capitol Hill"
+              },
+              {
+                "label": "First Baptist Church Donelson",
+                "value": "First Baptist Church Donelson"
+              },
+              {
+                "label": "First Baptist Church Hendersonville",
+                "value": "First Baptist Church Hendersonville"
+              },
+              {
+                "label": "First Baptist Goodlettsville",
+                "value": "First Baptist Goodlettsville"
+              },
+              {
+                "label": "First Church of the Nazarene",
+                "value": "First Church of the Nazarene"
+              },
+              {
+                "label": "First Lutheran",
+                "value": "First Lutheran"
+              },
+              {
+                "label": "First Presbyterian Church Franklin",
+                "value": "First Presbyterian Church Franklin"
+              },
+              {
+                "label": "First Presbyterian Church Nashville",
+                "value": "First Presbyterian Church Nashville"
+              },
+              {
+                "label": "First Unitarian Universalist Church of Nashville",
+                "value": "First Unitarian Universalist Church of Nashville"
+              },
+              {
+                "label": "First United Methodist Church Hendersonville",
+                "value": "First United Methodist Church Hendersonville"
+              },
+              {
+                "label": "Forest Hills Baptist Church",
+                "value": "Forest Hills Baptist Church"
+              },
+              {
+                "label": "Forest Hills United Methodist Church",
+                "value": "Forest Hills United Methodist Church"
+              },
+              {
+                "label": "Fourteenth Avenue Missionary Baptist Church",
+                "value": "Fourteenth Avenue Missionary Baptist Church"
+              },
+              {
+                "label": "Franklin First United Methodist Church",
+                "value": "Franklin First United Methodist Church"
+              },
+              {
+                "label": "Gateway Community Church",
+                "value": "Gateway Community Church"
+              },
+              {
+                "label": "Glendale Baptist Church",
+                "value": "Glendale Baptist Church"
+              },
+              {
+                "label": "Glendale United Methodist Church",
+                "value": "Glendale United Methodist Church"
+              },
+              {
+                "label": "Godwhy",
+                "value": "Godwhy"
+              },
+              {
+                "label": "Good Shepherd United Methodist Church",
+                "value": "Good Shepherd United Methodist Church"
+              },
+              {
+                "label": "Goodlettsville Nazarene",
+                "value": "Goodlettsville Nazarene"
+              },
+              {
+                "label": "Grace Baptist Church",
+                "value": "Grace Baptist Church"
+              },
+              {
+                "label": "Grace Chapel",
+                "value": "Grace Chapel"
+              },
+              {
+                "label": "Grace Place",
+                "value": "Grace Place"
+              },
+              {
+                "label": "Grace United Methodist Church",
+                "value": "Grace United Methodist Church"
+              },
+              {
+                "label": "GRASSLAND HEIGHTS BAPTIST CHURCH",
+                "value": "GRASSLAND HEIGHTS BAPTIST CHURCH"
+              },
+              {
+                "label": "Greater Bethel AME",
+                "value": "Greater Bethel AME"
+              },
+              {
+                "label": "Greater Nashville Unitarian Universalist Congregat",
+                "value": "Greater Nashville Unitarian Universalist Congregat"
+              },
+              {
+                "label": "Green Hill Church",
+                "value": "Green Hill Church"
+              },
+              {
+                "label": "Harpeth Hills Church of Christ",
+                "value": "Harpeth Hills Church of Christ"
+              },
+              {
+                "label": "Hendersonville Church of Christ",
+                "value": "Hendersonville Church of Christ"
+              },
+              {
+                "label": "Hendersonville First United Methodist Church",
+                "value": "Hendersonville First United Methodist Church"
+              },
+              {
+                "label": "Hermitage Church of the Nazarene",
+                "value": "Hermitage Church of the Nazarene"
+              },
+              {
+                "label": "Hermitage Hills Baptist Church",
+                "value": "Hermitage Hills Baptist Church"
+              },
+              {
+                "label": "Hermitage United Methodist Church",
+                "value": "Hermitage United Methodist Church"
+              },
+              {
+                "label": "Hillcrest SDA",
+                "value": "Hillcrest SDA"
+              },
+              {
+                "label": "Hillcrest United Methodist Church",
+                "value": "Hillcrest United Methodist Church"
+              },
+              {
+                "label": "Hillsboro Church of Christ",
+                "value": "Hillsboro Church of Christ"
+              },
+              {
+                "label": "Hillsboro Presbyterian Church",
+                "value": "Hillsboro Presbyterian Church"
+              },
+              {
+                "label": "Holy Family Catholic Church",
+                "value": "Holy Family Catholic Church"
+              },
+              {
+                "label": "Holy Rosary Catholic Church",
+                "value": "Holy Rosary Catholic Church"
+              },
+              {
+                "label": "Holy Trinity Community Church",
+                "value": "Holy Trinity Community Church"
+              },
+              {
+                "label": "Holy Trinity Episcopal Church",
+                "value": "Holy Trinity Episcopal Church"
+              },
+              {
+                "label": "Immanuel Baptist Church",
+                "value": "Immanuel Baptist Church"
+              },
+              {
+                "label": "Jackson Park Church of Christ",
+                "value": "Jackson Park Church of Christ"
+              },
+              {
+                "label": "John Wesley United Methodist Church",
+                "value": "John Wesley United Methodist Church"
+              },
+              {
+                "label": "Journey Church",
+                "value": "Journey Church"
+              },
+              {
+                "label": "Kaleo Nashville Church of the Nazarene",
+                "value": "Kaleo Nashville Church of the Nazarene"
+              },
+              {
+                "label": "Kings lane Church of Christ",
+                "value": "Kings lane Church of Christ"
+              },
+              {
+                "label": "Lake Providence Missionary Baptist",
+                "value": "Lake Providence Missionary Baptist"
+              },
+              {
+                "label": "Lee Chapel AME Church",
+                "value": "Lee Chapel AME Church"
+              },
+              {
+                "label": "Liberty United Methodist Church",
+                "value": "Liberty United Methodist Church"
+              },
+              {
+                "label": "Lifepoint Church Smyrna",
+                "value": "Lifepoint Church Smyrna"
+              },
+              {
+                "label": "Long Hollow Baptist Church",
+                "value": "Long Hollow Baptist Church"
+              },
+              {
+                "label": "Madison Church of Christ",
+                "value": "Madison Church of Christ"
+              },
+              {
+                "label": "Matthews Memorial United Methodist Church",
+                "value": "Matthews Memorial United Methodist Church"
+              },
+              {
+                "label": "McFerrin Missionary Baptist Church",
+                "value": "McFerrin Missionary Baptist Church"
+              },
+              {
+                "label": "Mt. Nebo Baptist Church",
+                "value": "Mt. Nebo Baptist Church"
+              },
+              {
+                "label": "Mt. Vernon Missionary Baptist Church",
+                "value": "Mt. Vernon Missionary Baptist Church"
+              },
+              {
+                "label": "Mt. Zion Baptist Church",
+                "value": "Mt. Zion Baptist Church"
+              },
+              {
+                "label": "Nashville First Baptist",
+                "value": "Nashville First Baptist"
+              },
+              {
+                "label": "Nashville First Church of the Nazarene",
+                "value": "Nashville First Church of the Nazarene"
+              },
+              {
+                "label": "New Covenant Christian Church",
+                "value": "New Covenant Christian Church"
+              },
+              {
+                "label": "New Hope Missionary Baptist Church",
+                "value": "New Hope Missionary Baptist Church"
+              },
+              {
+                "label": "Nolensville First United Methodist Church",
+                "value": "Nolensville First United Methodist Church"
+              },
+              {
+                "label": "NorthField Church",
+                "value": "NorthField Church"
+              },
+              {
+                "label": "Northside Church of Christ",
+                "value": "Northside Church of Christ"
+              },
+              {
+                "label": "Oak Valley Baptist Church",
+                "value": "Oak Valley Baptist Church"
+              },
+              {
+                "label": "Otter Creek Church",
+                "value": "Otter Creek Church"
+              },
+              {
+                "label": "Our Lady of the Lake Catholic Church",
+                "value": "Our Lady of the Lake Catholic Church"
+              },
+              {
+                "label": "Our Savior Lutheran Church",
+                "value": "Our Savior Lutheran Church"
+              },
+              {
+                "label": "Parkway Baptist",
+                "value": "Parkway Baptist"
+              },
+              {
+                "label": "Pegram Church of Christ",
+                "value": "Pegram Church of Christ"
+              },
+              {
+                "label": "Pennington United Methodist Church",
+                "value": "Pennington United Methodist Church"
+              },
+              {
+                "label": "Pleasant Green Missionary Baptist Church",
+                "value": "Pleasant Green Missionary Baptist Church"
+              },
+              {
+                "label": "Psalm 91",
+                "value": "Psalm 91"
+              },
+              {
+                "label": "Riverwood Church of Christ",
+                "value": "Riverwood Church of Christ"
+              },
+              {
+                "label": "Room In The Inn",
+                "value": "Room In The Inn"
+              },
+              {
+                "label": "Rural Hill Church of Christ",
+                "value": "Rural Hill Church of Christ"
+              },
+              {
+                "label": "Saint Pishoy Coptic Orthodox Church",
+                "value": "Saint Pishoy Coptic Orthodox Church"
+              },
+              {
+                "label": "Second Presbyterian Church",
+                "value": "Second Presbyterian Church"
+              },
+              {
+                "label": "South End United Methodist Church",
+                "value": "South End United Methodist Church"
+              },
+              {
+                "label": "St. Andrew Lutheran Church",
+                "value": "St. Andrew Lutheran Church"
+              },
+              {
+                "label": "St. Anns Episcopal Church",
+                "value": "St. Anns Episcopal Church"
+              },
+              {
+                "label": "St. Augustines Chapel",
+                "value": "St. Augustines Chapel"
+              },
+              {
+                "label": "St. Bartholomews Episcopal Church",
+                "value": "St. Bartholomews Episcopal Church"
+              },
+              {
+                "label": "St. Davids Episcopal Church",
+                "value": "St. Davids Episcopal Church"
+              },
+              {
+                "label": "St. Edward",
+                "value": "St. Edward"
+              },
+              {
+                "label": "St. Georges Episcopal Church",
+                "value": "St. Georges Episcopal Church"
+              },
+              {
+                "label": "St. Henry Catholic Church",
+                "value": "St. Henry Catholic Church"
+              },
+              {
+                "label": "St. Ignatius of Antioch Catholic Church",
+                "value": "St. Ignatius of Antioch Catholic Church"
+              },
+              {
+                "label": "St. John African Methodist Episcopal Church",
+                "value": "St. John African Methodist Episcopal Church"
+              },
+              {
+                "label": "St. Johns Lutheran Church",
+                "value": "St. Johns Lutheran Church"
+              },
+              {
+                "label": "St. Joseph Catholic Church",
+                "value": "St. Joseph Catholic Church"
+              },
+              {
+                "label": "St. Matthew Catholic Church",
+                "value": "St. Matthew Catholic Church"
+              },
+              {
+                "label": "St. Stephen Catholic Community",
+                "value": "St. Stephen Catholic Community"
+              },
+              {
+                "label": "St. Verena American Coptic Orthodox Church",
+                "value": "St. Verena American Coptic Orthodox Church"
+              },
+              {
+                "label": "Stateland Missionary Baptist Church",
+                "value": "Stateland Missionary Baptist Church"
+              },
+              {
+                "label": "Test Congregation",
+                "value": "Test Congregation"
+              },
+              {
+                "label": "Test Congregation",
+                "value": "Test Congregation"
+              },
+              {
+                "label": "Test Congregation 2",
+                "value": "Test Congregation 2"
+              },
+              {
+                "label": "The Temple",
+                "value": "The Temple"
+              },
+              {
+                "label": "Trevecca Community Church of the Nazarene",
+                "value": "Trevecca Community Church of the Nazarene"
+              },
+              {
+                "label": "Tulip Grove Baptist Church",
+                "value": "Tulip Grove Baptist Church"
+              },
+              {
+                "label": "Tusculum Church of Christ",
+                "value": "Tusculum Church of Christ"
+              },
+              {
+                "label": "Una Baptist Church",
+                "value": "Una Baptist Church"
+              },
+              {
+                "label": "Unity of Nashville",
+                "value": "Unity of Nashville"
+              },
+              {
+                "label": "USN Families",
+                "value": "USN Families"
+              },
+              {
+                "label": "Vine Street Christian Church",
+                "value": "Vine Street Christian Church"
+              },
+              {
+                "label": "Walker Memorial Baptist Church",
+                "value": "Walker Memorial Baptist Church"
+              },
+              {
+                "label": "West End Synagogue",
+                "value": "West End Synagogue"
+              },
+              {
+                "label": "West End United Methodist Church",
+                "value": "West End United Methodist Church"
+              },
+              {
+                "label": "Western Hills Church of Christ",
+                "value": "Western Hills Church of Christ"
+              },
+              {
+                "label": "Westminster Presbyterian Church",
+                "value": "Westminster Presbyterian Church"
+              },
+              {
+                "label": "Westwood Baptist",
+                "value": "Westwood Baptist"
+              },
+              {
+                "label": "Woodland Presbyterian Church",
+                "value": "Woodland Presbyterian Church"
+              },
+              {
+                "label": "Woodmont Baptist Church",
+                "value": "Woodmont Baptist Church"
+              },
+              {
+                "label": "Woodmont Christian Church",
+                "value": "Woodmont Christian Church"
+              },
+              {
+                "label": "Woodmont Hills Church of Christ",
+                "value": "Woodmont Hills Church of Christ"
+              },
+              {
+                "label": "Woodson Chapel Church of Christ",
+                "value": "Woodson Chapel Church of Christ"
+              }
+            ],
+            "placeholder": "Congregation",
+            "selection": null
+          },
+          "path": "Providers/Dashboard/Components/Filters/Conditional_DropDown",
+          "style": {
+            "classes": "Filter/Filter_Text_TeelBlue Filter/Filter_Container",
+            "marginLeft": "4px"
+          }
+        },
+        "scripts": {
+          "customMethods": [
+            {
+              "name": "setOptions",
+              "params": [],
+              "script": "\t\n\tquery \u003d \"\"\" \n\tSELECT locationName FROM shelter.Location\n\twhere timeRetired IS NULL\n\torder by locationName\t\"\"\"\n\t\n\tresult \u003d system.db.runPrepQuery(query,[],\u0027RITIOps\u0027)\n\t\n\tself.props.params.options \u003d [ dict(value \u003d x[0],label \u003d x[0]) for x in result]\n\t\n"
+            }
+          ],
+          "extensionFunctions": null,
+          "messageHandlers": []
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "emvProgram"
+        },
+        "position": {
+          "basis": "150px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.actionPerformedPulse": {
+            "onChange": {
+              "enabled": null,
+              "script": "\troot \u003d self.parent\n\troot.sendMsgCondition()\t"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "actionPerformedPulse": false,
+            "clear": false,
+            "multiSelect": false,
+            "options": [
+              {
+                "label": "ARP",
+                "value": "ARP"
+              },
+              {
+                "label": "Campus Store",
+                "value": "Campus Store"
+              },
+              {
+                "label": "Extended Recuperative Care",
+                "value": "Extended Recuperative Care"
+              },
+              {
+                "label": "First Steps - Welcome Dorms",
+                "value": "First Steps - Welcome Dorms"
+              },
+              {
+                "label": "First Steps/Engagement - Welcome Dorm",
+                "value": "First Steps/Engagement - Welcome Dorm"
+              },
+              {
+                "label": "Guest House",
+                "value": "Guest House"
+              },
+              {
+                "label": "Hope University",
+                "value": "Hope University"
+              },
+              {
+                "label": "Metro",
+                "value": "Metro"
+              },
+              {
+                "label": "Navigation",
+                "value": "Navigation"
+              },
+              {
+                "label": "Next Steps Residential",
+                "value": "Next Steps Residential"
+              },
+              {
+                "label": "Paticipant Escrow",
+                "value": "Paticipant Escrow"
+              },
+              {
+                "label": "Paticipant Mail Service",
+                "value": "Paticipant Mail Service"
+              },
+              {
+                "label": "Permanent Supportive Housing",
+                "value": "Permanent Supportive Housing"
+              },
+              {
+                "label": "Post-Treatment Supportive Shelter",
+                "value": "Post-Treatment Supportive Shelter"
+              },
+              {
+                "label": "Recuperative Care",
+                "value": "Recuperative Care"
+              },
+              {
+                "label": "RHP/TDOC",
+                "value": "RHP/TDOC"
+              },
+              {
+                "label": "Seeking/Pending Treatment",
+                "value": "Seeking/Pending Treatment"
+              },
+              {
+                "label": "Special Shelter",
+                "value": "Special Shelter"
+              },
+              {
+                "label": "Transitional Housing Program",
+                "value": "Transitional Housing Program"
+              },
+              {
+                "label": "Veterans Hospital to Housing",
+                "value": "Veterans Hospital to Housing"
+              },
+              {
+                "label": "Veterans Low Demand",
+                "value": "Veterans Low Demand"
+              },
+              {
+                "label": "Veterans Service Intensive",
+                "value": "Veterans Service Intensive"
+              },
+              {
+                "label": "Vine Hill Residential",
+                "value": "Vine Hill Residential"
+              },
+              {
+                "label": "Winter Shelter",
+                "value": "Winter Shelter"
+              }
+            ],
+            "placeholder": "Program",
+            "selection": null
+          },
+          "path": "Providers/Dashboard/Components/Filters/Conditional_DropDown",
+          "style": {
+            "classes": "Filter/Filter_Text_TeelBlue Filter/Filter_Container"
+          }
+        },
+        "scripts": {
+          "customMethods": [
+            {
+              "name": "setOptions",
+              "params": [],
+              "script": "\t\n\tquery \u003d \"\"\"\nSELECT programName FROM interaction.Program WHERE programName IS NOT NULL AND timeRetired IS NULL ORDER BY programName\n\t\"\"\"\n\t\n\tresult \u003d system.db.runPrepQuery(query,[],\u0027RITIOps\u0027)\n\t\n\t# Version 1 set options as list of dictionaries\n\tself.props.params.options \u003d [ dict(value \u003d x[0],label \u003d x[0]) for x in result]\n"
+            }
+          ],
+          "extensionFunctions": null,
+          "messageHandlers": []
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "toExcel"
+        },
+        "position": {
+          "basis": "30px",
+          "shrink": 0
+        },
+        "props": {
+          "params": {
+            "defaultFilePrefix": "Shelter"
+          },
+          "path": "1_TEMPLATES/Tables/TableToExcel"
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "toPDF"
+        },
+        "position": {
+          "basis": "30px",
+          "shrink": 0
+        },
+        "props": {
+          "params": {
+            "defaultFilePrefix": "Shelter"
+          },
+          "path": "1_TEMPLATES/Tables/TableToPDF"
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "FlexContainer"
+        },
+        "position": {
+          "basis": "50px",
+          "grow": 1
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "meta": {
+          "name": "lblSearch"
+        },
+        "position": {
+          "basis": "50px"
+        },
+        "props": {
+          "style": {
+            "classes": "Table/Filter_Header",
+            "textAlign": "end"
+          },
+          "text": "Search:"
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "meta": {
+          "name": "emvSearch"
+        },
+        "position": {
+          "basis": "220px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.keyUpPulse": {
+            "onChange": {
+              "enabled": null,
+              "script": "\troot \u003d self.parent\n\troot.sendMsgCondition()\t"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "clear": false,
+            "keyUpPulse": false,
+            "searchText": ""
+          },
+          "path": "Providers/Dashboard/Components/Filters/Search_Bar",
+          "style": {
+            "classes": "Table/Search_Bar"
+          },
+          "useDefaultViewWidth": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "events": {
+          "component": {
+            "onActionPerformed": {
+              "config": {
+                "script": "\troot \u003d self.parent\n\t\n\temvAll \u003d self.getSibling(\"emvAll\")\n\temvShelter \u003d self.getSibling(\"emvShelter\")\n\temvCongregation \u003d self.getSibling(\"emvCongregation\")\n\temvProgram \u003d self.getSibling(\"emvProgram\")\n\temvSearch \u003d self.getSibling(\"emvSearch\")\n\t\n\temvAll.props.params.clear \u003d True\n\temvShelter.props.params.clear \u003d True \n\temvCongregation.props.params.clear \u003d True\n\temvProgram.props.params.clear \u003d True\n\temvSearch.props.params.clear \u003d True\n\tself.session.custom.dateRangeFromDate \u003d system.date.format(system.date.now(), \"MM/dd/yyyy\")\n\tself.session.custom.dateRangeToDate \u003d system.date.format(system.date.now(), \"MM/dd/yyyy\")\n\t\n"
+              },
+              "scope": "G",
+              "type": "script"
+            }
+          }
+        },
+        "meta": {
+          "name": "clearConditions"
+        },
+        "position": {
+          "basis": "30px",
+          "shrink": 0
+        },
+        "props": {
+          "image": {
+            "height": 16,
+            "icon": {
+              "color": "#0C4E8B",
+              "path": "material/close"
+            },
+            "position": "center",
+            "width": 16
+          },
+          "style": {
+            "classes": "Filter/Filter_Border_Default Filter/Filter_Container",
+            "marginRight": "40px"
+          },
+          "text": "",
+          "textStyle": {
+            "classes": "GreyColor"
+          }
+        },
+        "type": "ia.input.button"
+      }
+    ],
+    "custom": {
+      "_devClean": false,
+      "_devPulse": false,
+      "_isDev": false
+    },
+    "meta": {
+      "name": "root"
+    },
+    "propConfig": {
+      "custom._devClean": {
+        "onChange": {
+          "enabled": null,
+          "script": "\t\n\temvProviderType \u003d self.getChild(\"emvProviderType\")\n\temvActivityRange \u003d self.getChild(\"emvActivityRange\")\n\temvSearch \u003d self.getChild(\"emvSearch\")\n\t\n\temvProviderType.props.params.clear \u003d True\n\temvActivityRange.props.params.clear \u003d True\n\temvSearch.props.params.clear \u003d True\n\t\n\n\t\n\tif self.custom._devClean:\n\t\tself.custom._devClean \u003d False"
+        }
+      },
+      "custom._devPulse": {
+        "onChange": {
+          "enabled": null,
+          "script": "\t\n\temvProviderType \u003d self.getChild(\"emvProviderType\")\n\temvActivityRange \u003d self.getChild(\"emvActivityRange\")\n\temvSearch \u003d self.getChild(\"emvSearch\")\n\t\n\t\n\tif self.custom._isDev:\n\t\tif currentValue.value is True:\n\t\t\tself.setPropsDropdowns()\n\t\telse:\n\t\t\temvProviderType.props.params.options \u003d []\n\t\t\temvActivityRange.props.params.options \u003d []\n\t\n\temvProviderType.props.params.actionPerformedPulse \u003d False\n\temvActivityRange.props.params.actionPerformedPulse \u003d False\n\temvSearch.props.params.keyUpPulse \u003d False"
+        }
+      }
+    },
+    "props": {
+      "style": {
+        "classes": "Filter/Header_Text"
+      }
+    },
+    "scripts": {
+      "customMethods": [
+        {
+          "name": "setPropsDropdowns",
+          "params": [],
+          "script": "\temvShelter \u003d self.getChild(\"emvShelter\")\n\temvProgram \u003d self.getChild(\"emvProgram\")\n\temvDateRange \u003d self.getChild(\"emvDateRange\")\n\temvCongregation \u003d self.getChild(\"emvCongregation\")\n\t\n\temvShelter.setOptions()\n\temvProgram.setOptions()\n\temvCongregation.setOptions()\n\t## Set default option as All\n\tself.getChild(\"emvAll\").props.params.selection \u003d 1\n#\temvDateRange.setOptions()"
+        },
+        {
+          "name": "sendMsgCondition",
+          "params": [
+            "payload\u003dNone"
+          ],
+          "script": "\t\n\temvShelter \u003d self.getChild(\"emvShelter\")\n\temvProgram \u003d self.getChild(\"emvProgram\")\n#\temvDateRange \u003d self.getChild(\"emvDateRange\")\n\temvSearch \u003d self.getChild(\"emvSearch\")\n\t\n\t\n\tif payload is None:\n\t\tpayload \u003d {}\n\t\tpayload[\u0027shelter\u0027] \u003d emvShelter.props.params.selection\n\t\tpayload[\u0027program\u0027] \u003d emvProgram.props.params.selection\n\t\tpayload[\u0027dateRangeFrom\u0027] \u003d self.session.custom.dateRangeFromDate\n\t\tpayload[\u0027dateRangeTo\u0027] \u003d self.session.custom.dateRangeToDate\n\t\tpayload[\u0027searchText\u0027] \u003d emvSearch.props.params.searchText\n#\tsystem.perspective.print(payload)\n#\tsystem.perspective.sendMessage(\u0027mhByCondition\u0027, payload)\n\t\n"
+        }
+      ],
+      "extensionFunctions": null,
+      "messageHandlers": [
+        {
+          "messageType": "refreshReservations",
+          "pageScope": true,
+          "script": "\tself.sendMsgCondition()",
+          "sessionScope": true,
+          "viewScope": false
+        }
+      ]
+    },
+    "type": "ia.container.flex"
+  }
+}

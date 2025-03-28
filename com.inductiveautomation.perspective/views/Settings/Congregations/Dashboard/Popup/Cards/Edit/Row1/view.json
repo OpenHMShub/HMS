@@ -1,0 +1,228 @@
+{
+  "custom": {
+    "password": "",
+    "password2": ""
+  },
+  "params": {
+    "newPassword": ""
+  },
+  "propConfig": {
+    "custom.password": {
+      "persistent": true
+    },
+    "custom.password2": {
+      "persistent": true
+    },
+    "params.newPassword": {
+      "binding": {
+        "config": {
+          "struct": {
+            "confirmPassword": "{view.custom.password2}",
+            "password": "{view.custom.password}"
+          },
+          "waitOnAll": true
+        },
+        "transforms": [
+          {
+            "code": "\tnewPassword \u003d \"\"\n\tif value[\u0027password\u0027] !\u003d \"\" and value[\u0027confirmPassword\u0027] !\u003d \"\" and value[\u0027password\u0027] \u003d\u003d value[\u0027confirmPassword\u0027]:\n\t\tnewPassword \u003d value[\u0027password\u0027]\n\treturn newPassword",
+            "type": "script"
+          }
+        ],
+        "type": "expr-struct"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 189,
+      "width": 742
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "children": [
+          {
+            "meta": {
+              "name": "Label"
+            },
+            "position": {
+              "shrink": 0
+            },
+            "props": {
+              "style": {
+                "classes": "Text/Add_HeaderText"
+              },
+              "text": "Password"
+            },
+            "type": "ia.display.label"
+          },
+          {
+            "meta": {
+              "name": "Label_0"
+            },
+            "position": {
+              "basis": "10px",
+              "shrink": 0
+            },
+            "props": {
+              "style": {
+                "color": "#D80000"
+              },
+              "text": "*"
+            },
+            "type": "ia.display.label"
+          }
+        ],
+        "meta": {
+          "name": "Password"
+        },
+        "position": {
+          "basis": "25px",
+          "shrink": 0
+        },
+        "props": {
+          "style": {
+            "marginTop": "20px"
+          }
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "meta": {
+          "name": "PasswordField"
+        },
+        "position": {
+          "basis": "32px"
+        },
+        "propConfig": {
+          "props.text": {
+            "binding": {
+              "config": {
+                "bidirectional": true,
+                "path": "view.custom.password"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "style": {
+            "classes": "Text/Add_TextFieldWhite",
+            "marginBottom": "0px"
+          }
+        },
+        "type": "ia.input.password-field"
+      },
+      {
+        "children": [
+          {
+            "meta": {
+              "name": "Label"
+            },
+            "position": {
+              "shrink": 0
+            },
+            "props": {
+              "style": {
+                "classes": "Text/Add_HeaderText"
+              },
+              "text": "Confirm Password"
+            },
+            "type": "ia.display.label"
+          },
+          {
+            "meta": {
+              "name": "Label_0"
+            },
+            "position": {
+              "shrink": 0
+            },
+            "propConfig": {
+              "props.text": {
+                "binding": {
+                  "config": {
+                    "expression": "if ({view.custom.password2}\u003d\u0027\u0027\r\n\t, \u0027*\u0027\r\n\t,if({view.custom.password} \u003d {view.custom.password2}, \u0027*\u0027, \u0027* Passwords must match\u0027))"
+                  },
+                  "type": "expr"
+                }
+              }
+            },
+            "props": {
+              "style": {
+                "color": "#D80000",
+                "fontSize": "14px"
+              }
+            },
+            "type": "ia.display.label"
+          }
+        ],
+        "meta": {
+          "name": "PasswordConfirm"
+        },
+        "position": {
+          "basis": "25px",
+          "shrink": 0
+        },
+        "props": {
+          "style": {
+            "marginTop": "20px"
+          }
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "meta": {
+          "name": "PasswordFieldConfirm"
+        },
+        "position": {
+          "basis": "32px"
+        },
+        "propConfig": {
+          "props.text": {
+            "binding": {
+              "config": {
+                "bidirectional": true,
+                "path": "view.custom.password2"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "style": {
+            "classes": "Text/Add_TextFieldWhite",
+            "marginBottom": "0px"
+          }
+        },
+        "type": "ia.input.password-field"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column",
+      "style": {
+        "classes": "Background/Default"
+      },
+      "wrap": "wrap"
+    },
+    "scripts": {
+      "customMethods": [],
+      "extensionFunctions": null,
+      "messageHandlers": [
+        {
+          "messageType": "clearCongregationsBulkUpdateList",
+          "pageScope": true,
+          "script": "\t# implement your handler here\n\tself.view.custom.password \u003d \"\"\n\tself.view.custom.password2 \u003d \"\"",
+          "sessionScope": false,
+          "viewScope": false
+        }
+      ]
+    },
+    "type": "ia.container.flex"
+  }
+}

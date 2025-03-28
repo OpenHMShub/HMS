@@ -1,0 +1,362 @@
+{
+  "custom": {
+    "data": [
+      {
+        "id": "",
+        "suspension_time_begin": "",
+        "suspension_time_end": "",
+        "suspension_type_name": "No Active Suspension."
+      }
+    ]
+  },
+  "params": {
+    "isSuspened": true,
+    "participantID": 431697
+  },
+  "propConfig": {
+    "custom.data": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "participant_id": "{view.params.participantID}"
+          },
+          "queryPath": "Participants/Suspensions/GetActiveSuspensionForPreview",
+          "returnFormat": "dataset"
+        },
+        "transforms": [
+          {
+            "code": "\t#data is the data object to return\n\tdata \u003d []\n\titem \u003d {}\n\tif value !\u003d None and value.getRowCount() \u003e 0:\n\t\titem[\u0027id\u0027] \u003d value.getValueAt(0, \"id\")\n\t\titem[\u0027suspension_type_name\u0027] \u003d value.getValueAt(0,\u0027suspension_type_name\u0027)\n\t\titem[\u0027suspension_time_begin\u0027] \u003d value.getValueAt(0,\u0027suspension_time_begin\u0027)\n\t\titem[\u0027suspension_time_end\u0027] \u003d value.getValueAt(0,\u0027suspension_time_end\u0027)\n\t\t\n\telse:\n\t\titem[\u0027id\u0027] \u003d \u0027\u0027\n\t\titem[\u0027suspension_type_name\u0027] \u003d \"No Active Suspension.\"\n\t\titem[\u0027suspension_time_begin\u0027] \u003d \u0027\u0027\n\t\titem[\u0027suspension_time_end\u0027] \u003d \u0027\u0027\n\t\t\n\t\t\n\tdata.append(item)\n\t\n\treturn data",
+            "type": "script"
+          }
+        ],
+        "type": "query"
+      },
+      "persistent": true
+    },
+    "params.isSuspened": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.participantID": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 50,
+      "width": 600
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "FlexContainer"
+        },
+        "position": {
+          "basis": "20px",
+          "shrink": 0
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "meta": {
+          "name": "TableAlert"
+        },
+        "position": {
+          "basis": "30px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.value": {
+            "binding": {
+              "config": {
+                "path": "view.params.isSuspened"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "row": "value",
+            "rowIndex": "value"
+          },
+          "path": "1_globalTEMPLATES/Tables/TableAlert"
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "meta": {
+                  "name": "SuspensionStart"
+                },
+                "position": {
+                  "basis": "150px",
+                  "shrink": 0
+                },
+                "propConfig": {
+                  "position.display": {
+                    "binding": {
+                      "config": {
+                        "path": "view.params.isSuspened"
+                      },
+                      "type": "property"
+                    }
+                  }
+                },
+                "props": {
+                  "style": {
+                    "classes": "Text/About_description",
+                    "paddingLeft": "20px"
+                  },
+                  "text": "Begin"
+                },
+                "type": "ia.display.label"
+              },
+              {
+                "meta": {
+                  "name": "SuspensionEnd"
+                },
+                "position": {
+                  "basis": "150px",
+                  "shrink": 0
+                },
+                "propConfig": {
+                  "position.display": {
+                    "binding": {
+                      "config": {
+                        "path": "view.params.isSuspened"
+                      },
+                      "type": "property"
+                    }
+                  }
+                },
+                "props": {
+                  "style": {
+                    "classes": "Text/About_description",
+                    "paddingLeft": "20px"
+                  },
+                  "text": "End"
+                },
+                "type": "ia.display.label"
+              },
+              {
+                "meta": {
+                  "name": "SuspensionType"
+                },
+                "position": {
+                  "basis": "150px",
+                  "shrink": 0
+                },
+                "propConfig": {
+                  "position.display": {
+                    "binding": {
+                      "config": {
+                        "path": "view.params.isSuspened"
+                      },
+                      "type": "property"
+                    }
+                  }
+                },
+                "props": {
+                  "style": {
+                    "classes": "Text/About_description",
+                    "paddingLeft": "20px"
+                  },
+                  "text": "Type"
+                },
+                "type": "ia.display.label"
+              }
+            ],
+            "meta": {
+              "name": "HeaderRow"
+            },
+            "position": {
+              "basis": "25px",
+              "shrink": 0
+            },
+            "type": "ia.container.flex"
+          },
+          {
+            "children": [
+              {
+                "meta": {
+                  "name": "SuspensionStart"
+                },
+                "position": {
+                  "basis": "150px",
+                  "shrink": 0
+                },
+                "propConfig": {
+                  "props.text": {
+                    "binding": {
+                      "config": {
+                        "path": "view.custom.data[0].suspension_time_begin"
+                      },
+                      "transforms": [
+                        {
+                          "formatType": "datetime",
+                          "formatValue": {
+                            "date": "short"
+                          },
+                          "type": "format"
+                        }
+                      ],
+                      "type": "property"
+                    }
+                  }
+                },
+                "props": {
+                  "style": {
+                    "classes": "Text/About_info",
+                    "paddingLeft": "20px"
+                  }
+                },
+                "type": "ia.display.label"
+              },
+              {
+                "meta": {
+                  "name": "SuspensionEnd"
+                },
+                "position": {
+                  "basis": "150px",
+                  "shrink": 0
+                },
+                "propConfig": {
+                  "props.text": {
+                    "binding": {
+                      "config": {
+                        "path": "view.custom.data[0].suspension_time_end"
+                      },
+                      "transforms": [
+                        {
+                          "formatType": "datetime",
+                          "formatValue": {
+                            "date": "short"
+                          },
+                          "type": "format"
+                        }
+                      ],
+                      "type": "property"
+                    }
+                  }
+                },
+                "props": {
+                  "style": {
+                    "classes": "Text/About_info",
+                    "paddingLeft": "20px"
+                  }
+                },
+                "type": "ia.display.label"
+              },
+              {
+                "meta": {
+                  "name": "SuspensionType"
+                },
+                "position": {
+                  "basis": "150px",
+                  "shrink": 0
+                },
+                "propConfig": {
+                  "props.text": {
+                    "binding": {
+                      "config": {
+                        "path": "view.custom.data[0].suspension_type_name"
+                      },
+                      "type": "property"
+                    }
+                  }
+                },
+                "props": {
+                  "style": {
+                    "classes": "Text/About_info",
+                    "paddingLeft": "20px"
+                  }
+                },
+                "type": "ia.display.label"
+              }
+            ],
+            "meta": {
+              "name": "DetailRow"
+            },
+            "position": {
+              "basis": "30px",
+              "shrink": 0
+            },
+            "type": "ia.container.flex"
+          }
+        ],
+        "meta": {
+          "name": "SuspensionDetail"
+        },
+        "position": {
+          "basis": "550px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "position.display": {
+            "binding": {
+              "config": {
+                "path": "view.params.isSuspened"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "direction": "column"
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "meta": {
+          "name": "SuspensionType"
+        },
+        "position": {
+          "basis": "150px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "position.display": {
+            "binding": {
+              "config": {
+                "expression": "!{view.params.isSuspened}"
+              },
+              "type": "expr"
+            }
+          },
+          "props.text": {
+            "binding": {
+              "config": {
+                "path": "view.custom.data[0].suspension_type_name"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "style": {
+            "classes": "Text/About_info",
+            "paddingLeft": "20px"
+          }
+        },
+        "type": "ia.display.label"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "style": {
+        "classes": "Background/Default",
+        "overflow": "hidden"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

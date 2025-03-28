@@ -1,0 +1,138 @@
+{
+  "custom": {
+    "row_data": {
+      "CategoryName": "",
+      "Color": "",
+      "Id": -1
+    },
+    "selectedRow": null
+  },
+  "params": {},
+  "propConfig": {
+    "custom.row_data": {
+      "persistent": true
+    },
+    "custom.selectedRow": {
+      "binding": {
+        "config": {
+          "path": "/root/Table.props.params.selectedRow"
+        },
+        "type": "property"
+      },
+      "onChange": {
+        "enabled": false,
+        "script": "\tselectionData \u003d self.custom.selection_data\n\tselectedRow \u003d self.custom.selectedRow\n\tif len(selectionData) and selectedRow \u003e -1:\n\t\tself.custom.row_data.programId \u003d selectionData[0].programId\n\t\tif selectionData[0].active:\n\t\t\tself.custom.row_data.active \u003d 1\n\t\telse:\n\t\t\tself.custom.row_data.active \u003d 0\n\t\tif selectionData[0].autoEnroll:\n\t\t\tself.custom.row_data.autoEnroll \u003d 1\n\t\telse:\n\t\t\tself.custom.row_data.autoEnroll \u003d 0\n\t\tself.custom.row_data.programName \u003d selectionData[0].programName\n\t\tself.custom.row_data.programDescription \u003d selectionData[0].programDescription\n\t\tself.custom.row_data.IsResidential \u003d selectionData[0].IsResidential\n\telse:\n\t\tself.custom.row_data.programId \u003d -1\n\t\tself.custom.row_data.active \u003d -1\n\t\tself.custom.row_data.autoEnroll \u003d -1\n\t\tself.custom.row_data.programName \u003d \u0027\u0027\n\t\tself.custom.row_data.programDescription \u003d \u0027\u0027\n\t\tself.custom.row_data.IsResidential \u003d False\n\t"
+      },
+      "persistent": true
+    },
+    "custom.table_data": {
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "width": 1166
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "Edit"
+        },
+        "position": {
+          "basis": "160px",
+          "shrink": 0
+        },
+        "props": {
+          "params": {
+            "row_data": {
+              "Id": -1,
+              "LocationName": ""
+            }
+          },
+          "path": "Events/ParticipantEvents/SettingsLocations/Dashboard/Main/Edit/LocationSettingsEdit",
+          "style": {
+            "classes": "ActivityCards/Card",
+            "marginLeft": "40px",
+            "marginRight": "40px"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "FlexContainer"
+        },
+        "position": {
+          "basis": "10px"
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "meta": {
+          "name": "Filter"
+        },
+        "position": {
+          "basis": "35px"
+        },
+        "props": {
+          "params": {
+            "activeFilter": null,
+            "filter_active": null,
+            "text": ""
+          },
+          "path": "Events/ParticipantEvents/SettingsLocations/Dashboard/Main/Filters/SettingsLocationFilter",
+          "style": {
+            "marginLeft": "40px",
+            "marginRight": "40px"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Table"
+        },
+        "position": {
+          "basis": "320px",
+          "grow": 1
+        },
+        "propConfig": {
+          "props.params.SearchText": {
+            "binding": {
+              "config": {
+                "path": "../Filter.props.params.text"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "selectedRow": null,
+            "selected_row": "",
+            "selection_data": [],
+            "tableData": ""
+          },
+          "path": "Events/ParticipantEvents/SettingsLocations/Dashboard/Main/Tables/LocationsSettingsTable",
+          "style": {
+            "marginLeft": "40px",
+            "marginRight": "40px"
+          }
+        },
+        "type": "ia.display.view"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column",
+      "style": {
+        "classes": "Background/Alternative"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

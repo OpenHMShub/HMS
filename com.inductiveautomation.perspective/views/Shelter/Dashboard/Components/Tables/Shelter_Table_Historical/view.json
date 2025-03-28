@@ -1,0 +1,728 @@
+{
+  "custom": {},
+  "params": {
+    "endDate": {
+      "$": [
+        "ts",
+        201,
+        1731058739938
+      ],
+      "$ts": 1731131999000
+    },
+    "selectedPrograms": "(24)",
+    "selected_shelterId": "(\u0027\u0027)",
+    "startDate": {
+      "$": [
+        "ts",
+        201,
+        1731065736428
+      ],
+      "$ts": 1731045600000
+    }
+  },
+  "propConfig": {
+    "params.endDate": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.selectedPrograms": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.selected_shelterId": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.startDate": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 637,
+      "width": 1732
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "events": {
+          "component": {
+            "onRowClick": {
+              "config": {
+                "script": "\t#system.perspective.print(\"In row click\")\n\tselectedColumn \u003d self.props.selection.selectedColumn\n\t\n\t#system.perspective.print(\"selectedColumn\u003d\"+str(selectedColumn))\n\t#Close the preview screen if open\n\tif selectedColumn !\u003d \"Options\":\n\t\tsystem.perspective.closeDock(\u0027PreviewShelter\u0027)\n\t\n\tif selectedColumn \u003d\u003d \"ShelterName\": \n\t\t#system.perspective.print(\"selectedColumn \u003d\u003d ShelterName\")\n\t\t#Display the detail screen\n\t\tshelterID \u003d int(self.props.selection.data[0][\u0027id\u0027])\n#\t\tsystem.perspective.print(\"on overview click shelterID\u003d\"+str(shelterID))\n\t\tsystem.perspective.navigate(view \u003d \u0027Shelter/Detail/Shelter_Detail\u0027, params \u003d {\u0027shelterID\u0027:shelterID})\n\telif selectedColumn \u003d\u003d \"Options\":\n\t\tshelterID \u003d int(self.props.selection.data[0][\u0027id\u0027])\n\t\tid \u003d \"PreviewShelter\" \n\t\tparams \u003d {\"shelterID\":shelterID}\n\t\tif shelterID !\u003d -1:\n\t\t\tsystem.perspective.openDock(id\u003did,params\u003dparams)\n\telse:\n\t\tpass\n\t"
+              },
+              "scope": "G",
+              "type": "script"
+            }
+          }
+        },
+        "meta": {
+          "name": "Table"
+        },
+        "position": {
+          "basis": "100%"
+        },
+        "propConfig": {
+          "custom.sql_data": {
+            "binding": {
+              "config": {
+                "parameters": {
+                  "endDate": "{view.params.endDate}",
+                  "selectedPrograms": "{view.params.selectedPrograms}",
+                  "selectedShelters": "{view.params.selected_shelterId}",
+                  "startDate": "{view.params.startDate}"
+                },
+                "queryPath": "Shelter/Dashboard/Shelter_Dashboard_Historical"
+              },
+              "type": "query"
+            }
+          },
+          "custom.table_data": {
+            "binding": {
+              "config": {
+                "path": "this.custom.sql_data"
+              },
+              "transforms": [
+                {
+                  "code": "\tpyDataset \u003d value\n\tcolNames \u003d system.dataset.getColumnHeaders(pyDataset)\n\t## add column options in columns\n\tcolNames.insert(0, \u0027Options\u0027)\n\t\n\t## add style to ndividual columns\n\t_data \u003d []\n\tif pyDataset.getRowCount()\u003e0:\n\t\tfor row in range(pyDataset.getRowCount()):\n\t\t\tauxDict \u003d {}\n\t\t\tfor col in colNames:\n\t\t\t\tcolNoSpace \u003d col.replace(\u0027 \u0027,\u0027\u0027)\n\t\t\t\tvalue \u003d pyDataset.getValueAt(row,col) if col !\u003d \u0027Options\u0027 else \u0027\u0027\n\t\t\t\tif value \u003d\u003d \u0027true\u0027:\n\t\t\t\t\tvalue \u003d True\n\t\t\t\tif value \u003d\u003d \u0027false\u0027:\n\t\t\t\t\tvalue \u003d False\n\t\t\t\t\t\n\t\t\t\tif col \u003d\u003d \u0027Options\u0027:\n\t\t\t\t\tauxDict[colNoSpace] \u003d \u0027\u0027\n\t\t\t\telif col \u003d\u003d \u0027Shelter Name\u0027:\n\t\t\t\t\t_style \u003d {\t\"color\": \"#0c4e85\",\n\t\t\t\t\t\t\t\t\"cursor\": \"pointer\",\n\t\t\t\t\t\t\t\t\"fontFamily\": \"Proxima Nova ExCn Medium\",\n\t\t\t\t\t\t\t\t\"text-align\": \"left\"}\n\t\t\t\t\t\t\t\t\n\t\t\t\t\tauxDict[colNoSpace] \u003d {\u0027value\u0027: value, \"style\": _style}\n\t\t\t\telse:\n\t\t\t\t\tauxDict[colNoSpace] \u003d value\n\t\t\t_data.append(auxDict)\n\t\n\t\t## append total to table\n\t\tuniqueParticipants \u003d 0\n\t\ttotalBedNights \u003d 0\n\t\tavgDaysPerOccupant \u003d 0\n\t\tfor row in _data:\n\t#\t\tuniqueParticipants \u003d uniqueParticipants + int(row[\u0027uniqueParticipants\u0027])\n\t\t\ttotalBedNights \u003d totalBedNights + int(row[\u0027totalBedNights\u0027])\n\t#\t\tavgDaysPerOccupant \u003d avgDaysPerOccupant + int(row[\u0027avgDaysPerOccupant\u0027])\n\t\tstyleObject \u003d {\"fontFamily\": \"Proxima Nova ExCn Medium\", \"color\": \"#0c4e85\", \"text-align\": \"left\"}\n\t\tshelterObject \u003d {\u0027style\u0027:styleObject, \u0027value\u0027:\u0027\u0027}\n\t\t\n\t\tuniqueParticipants \u003d self.custom.uniqueParticipantSummary\n\t\tavgDaysPerOccupant \u003d totalBedNights/uniqueParticipants if uniqueParticipants!\u003d0 else 0\n\t\tuniqueParticipantsObject \u003d {\u0027style\u0027:styleObject, \u0027value\u0027:uniqueParticipants}\n\t\ttotalBedNightsObject \u003d {\u0027style\u0027:styleObject, \u0027value\u0027:totalBedNights}\n\t\tavgDaysPerOccupantObject \u003d {\u0027style\u0027:styleObject, \u0027value\u0027:avgDaysPerOccupant}\n\t\t\n\t\toptionsObject \u003d {\u0027style\u0027:styleObject, \u0027value\u0027:\u0027\u0027}\n\t\ttotalsRow \u003d {\u0027uniqueParticipants\u0027:uniqueParticipantsObject, \u0027Options\u0027:optionsObject, \u0027ShelterName\u0027:shelterObject, \u0027totalBedNights\u0027: totalBedNightsObject, \u0027avgDaysPerOccupant\u0027: avgDaysPerOccupantObject, \u0027ShelterType\u0027: \u0027\u0027, \u0027id\u0027: -1}\n\t\t_data.append(totalsRow)\n\t\n\treturn _data",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          },
+          "custom.uniqueParticipantSummary": {
+            "binding": {
+              "config": {
+                "parameters": {
+                  "endDate": "{view.params.endDate}",
+                  "selectedPrograms": "{view.params.selectedPrograms}",
+                  "selectedShelters": "{view.params.selected_shelterId}",
+                  "startDate": "{view.params.startDate}"
+                },
+                "queryPath": "Shelter/Dashboard/Shelter_Dashboard_Historical_SummaryCal"
+              },
+              "transforms": [
+                {
+                  "code": "\treturn value.getValueAt(0,0)",
+                  "type": "script"
+                }
+              ],
+              "type": "query"
+            }
+          },
+          "props.data": {
+            "binding": {
+              "config": {
+                "path": "this.custom.table_data"
+              },
+              "type": "property"
+            }
+          },
+          "props.selection.style.backgroundColor": {
+            "binding": {
+              "config": {
+                "path": "this.props.selection.selectedRow"
+              },
+              "transforms": [
+                {
+                  "code": "\treturn \"#FFFFFF00\" if value is None or value \u003d\u003d -1 else \"#9AF4EB4D\"",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "cells": {
+            "style": {
+              "backgroundColor": "#FFFFFF",
+              "borderBottomColor": "#efefef",
+              "borderBottomStyle": "solid",
+              "borderBottomWidth": "2px",
+              "color": "#0c4e85",
+              "fontFamily": "Proxima Nova ExCn Light",
+              "fontSize": "20px"
+            }
+          },
+          "columns": [
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "Options",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "center",
+                "style": {
+                  "classes": "Table/Column_Header"
+                },
+                "title": " "
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "view",
+              "resizable": false,
+              "sort": "none",
+              "sortable": false,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "Shelter/Dashboard/Components/Tables/Templates/TableOptions",
+              "visible": true,
+              "width": 40
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "id",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "center",
+                "style": {
+                  "classes": "Table/Column_Header"
+                },
+                "title": " "
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": false,
+              "sort": "none",
+              "sortable": false,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": false,
+              "width": 40
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "isShelterSelected",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "center",
+                "style": {
+                  "classes": "Table/Column_Header"
+                },
+                "title": " "
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "view",
+              "resizable": false,
+              "sort": "none",
+              "sortable": false,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {
+                "Column": "",
+                "rowData": {
+                  "ShelterName": "value"
+                },
+                "value": false
+              },
+              "viewPath": "Shelter/Dashboard/Components/Tables/Templates/TableCheckbox",
+              "visible": true,
+              "width": 40
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "ShelterName",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header"
+                },
+                "title": "Shelter Name"
+              },
+              "justify": "left",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 350
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "ShelterType",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header"
+                },
+                "title": "Shelter Type"
+              },
+              "justify": "left",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 220
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "uniqueParticipants",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "center",
+                "style": {
+                  "classes": "Table/Column_Header"
+                },
+                "title": "Unique Participants"
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": false,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": ""
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "totalBedNights",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "center",
+                "style": {
+                  "classes": "Table/Column_Header"
+                },
+                "title": "Total Bed Nights"
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": false,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": ""
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "avgDaysPerOccupant",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "center",
+                "style": {
+                  "classes": "Table/Column_Header"
+                },
+                "title": "Avg Days Per Occupant"
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": false,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": ""
+            }
+          ],
+          "rows": {
+            "striped": {
+              "enabled": false
+            }
+          },
+          "style": {
+            "backgroundColor": "#FFFFFF"
+          }
+        },
+        "scripts": {
+          "customMethods": [],
+          "extensionFunctions": null,
+          "messageHandlers": [
+            {
+              "messageType": "tableToExcel",
+              "pageScope": true,
+              "script": "\t# implement your handler here\n\timport traceback\n\ttry:\n\t\t#Send the dataset to Excel\n\t\tfilename \u003d \u0027shelter_Overview_Historical_\u0027 + str(system.date.format(system.date.now(),\"yyyyMMddHHmmss\")) + \u0027.xls\u0027\n\t\tdatasetJSON \u003d self.props.data\n\t\t\n\t\theaders \u003d [\u0027Shelter Name\u0027, \u0027Shelter Type\u0027, \u0027Unique Participants\u0027,\u0027Total Bed Nights\u0027,\u0027Avg Days Per Occupant\u0027]\n\t\trows \u003d []\n\t\t## create the dataset from json formatted table data\n\t\tif len(datasetJSON) \u003e 1:\n\t\t\tfor i in range (len(datasetJSON) - 1):\n\t\t\t\toneData \u003d self.props.data[i]\n\n\t\t\t\toneRow \u003d [oneData.ShelterName.value, oneData.ShelterType, oneData.uniqueParticipants, oneData.totalBedNights, oneData.avgDaysPerOccupant]\n\t\t\t\trows.append(oneRow)\n\t\t\t\n\t\t\t## append the last row separately as it has extra styling information for TOTALs , so the way you get value is different\n\t\t\tlastRowIndex \u003d len(datasetJSON) - 1\n\t\t\toneData \u003d self.props.data[lastRowIndex]\n\t\t\toneRow \u003d [\"\", \"\", oneData.uniqueParticipants.value, oneData.totalBedNights.value, oneData.avgDaysPerOccupant.value]\n\t\t\trows.append(oneRow)\n\n\t\n\t\t\tdataset \u003d system.dataset.toDataSet(headers, rows)\n\t\t\t\n\t\t\txlFile \u003d system.dataset.toExcel(True,dataset)\n\t\t\tsystem.perspective.download(filename, xlFile)\n\texcept:   \n\t\tlogger \u003d system.util.getLogger(\"Shelter Dashboard Historical tableToExcel\")\n\t\tmsg \u003d traceback.format_exc()\n\t\tlogger.error(msg)",
+              "sessionScope": true,
+              "viewScope": false
+            }
+          ]
+        },
+        "type": "ia.display.table"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column",
+      "justify": "space-around",
+      "style": {
+        "overflow": "visible"
+      }
+    },
+    "scripts": {
+      "customMethods": [
+        {
+          "name": "getDataDb_X",
+          "params": [],
+          "script": "\tquery \u003d \"\"\"\nDECLARE @OneDay datetime \u003d ?  \n\t    \n;WITH frb As (\nSELECT [Facility].[id] AS facilityId, [Room].[id] AS roomId, [Bed].[id] AS bedId\nFROM [lodging].[Bed]\n\tINNER JOIN [lodging].[Room] ON [Bed].[roomId] \u003d [Room].[id]\n\tINNER JOIN [lodging].[Facility] ON [Room].[facilityId] \u003d [Facility].[id]\nWHERE ([Facility].[timeRetired] is NULL \n\tAND [Room].[timeRetired] is NULL\n\tAND [Bed].[timeRetired] is NULL) \n)\n\n, r AS (\nSELECT DISTINCT [bedId]\nFROM [lodging].[Reservation]  \nWHERE ([Reservation].[timeRetired] IS NULL\n\tAND [Reservation].[reservationStart] IS NOT NULL    \n\tAND [Reservation].[reservationStart] \u003c\u003d @OneDay\n\tAND ISNULL([Reservation].[reservationEnd],@OneDay) \u003e\u003d @OneDay)\n)\n\n, o AS (\nSELECT distinct [bedId] \nFROM [lodging].[BedLog]  \nWHERE ([eventStart] IS NOT NULL    \n\tAND [eventEnd] IS NULL\n\tAND [eventStart] \u003c\u003d @OneDay\n\tAND ISNULL([eventEnd],@OneDay) \u003e\u003d @OneDay)\n)\n\n,facGroup AS (\nSELECT \n\tfrb.facilityId\n,COUNT(frb.bedId) bedQty\n,COUNT(r.bedId) cntRes\n,COUNT(o.bedId) cntOcc\nFROM frb \nLEFT JOIN r ON r.bedId \u003d frb.bedId\nLEFT JOIN o ON o.bedId \u003d frb.bedId\nGROUP BY frb.facilityId\n)\n\nSELECT [Facility].[id]\n\t,[Facility].[facilityName] AS [Shelter Name]\n\t,[FacilityType].[facilityTypeName] AS [Shelter Type]\n\t,facGroup.[bedQty] AS [Total Beds]\n\t,facGroup.[cntRes] AS [Current Reservations]\n\t,facGroup.[cntOcc] AS [Current Residents]\n\t,(facGroup.bedQty - facGroup.cntRes - facGroup.cntOcc) AS [Available Beds]\n\nFROM facGroup\nINNER JOIN [lodging].[Facility] ON facGroup.[facilityId] \u003d [Facility].[id]\nLEFT JOIN [lodging].[FacilityType] ON [FacilityType].[id] \u003d [Facility].[facilityTypeId]\nWHERE [FacilityType].[timeRetired]  IS NULL\nORDER BY [Facility].[facilityName]\t\n\t\"\"\"\n\tnow \u003d system.date.now()\n\tresult \u003d system.db.runPrepQuery(query,[now],\u0027RITIOps\u0027)\n\treturn result"
+        },
+        {
+          "name": "setTableData_X",
+          "params": [
+            "empty\u003dFalse"
+          ],
+          "script": "\ttbl \u003d self.getChild(\"Table\")\n\t\n\tif empty is True:\n\t\ttbl.props.data \u003d []\n\telse:\n\t\tpyds \u003d self.getDataDb()\n\t\t\n\t\ttbl.props.columns \u003d self.getColumnProps(pyDataset \u003d pyds, addColumn\u003d\u0027Options\u0027)\n#\t\ttbl.props.data \u003d self.getMakeUpData(pyDataset \u003d pyds, addColumn\u003d\u0027Options\u0027)\n\t\tdata \u003d self.getMakeUpData(pyDataset \u003d pyds, addColumn\u003d\u0027Options\u0027)\n\t\t\n\t\ttotalBeds \u003d 0\n\t\ttotalAvailableBeds \u003d 0\n\t\ttotalReservations \u003d 0\n\t\ttotalResidents \u003d 0\n\t\t\n\t\tfor row in data:\n#\t\t\tsystem.perspective.print(row)\n\t\t\ttotalBeds \u003d totalBeds + int(row[\u0027TotalBeds\u0027])\n\t\t\ttotalAvailableBeds \u003d totalAvailableBeds + int(row[\u0027AvailableBeds\u0027])\n\t\t\ttotalReservations \u003d totalReservations + int(row[\u0027CurrentReservations\u0027])\n\t\t\ttotalResidents \u003d totalResidents + int(row[\u0027CurrentResidents\u0027])\n#\t\t\tsystem.perspective.print(\u0027done\u0027)\n\t\tstyleObject \u003d {\"fontFamily\": \"Proxima Nova ExCn Medium\", \"color\": \"#0c4e85\", \"text-align\": \"left\"}\n\t\tshelterObject \u003d {\u0027style\u0027:styleObject, \u0027value\u0027:\u0027\u0027}\n\t\t\n\t\ttotalBedsObject \u003d {\u0027style\u0027:styleObject, \u0027value\u0027:totalBeds}\n\t\ttotalAvailableBedsObject \u003d {\u0027style\u0027:styleObject, \u0027value\u0027:totalAvailableBeds}\n\t\ttotalReservationsObject \u003d {\u0027style\u0027:styleObject, \u0027value\u0027:totalReservations}\n\t\ttotalResidentsObject \u003d {\u0027style\u0027:styleObject, \u0027value\u0027:totalResidents}\n\t\toptionsObject \u003d {\u0027style\u0027:styleObject, \u0027value\u0027:\u0027\u0027}\n\t\ttotalsRow \u003d {\u0027AvailableBeds\u0027:totalAvailableBedsObject, \u0027Options\u0027:optionsObject, \u0027ShelterName\u0027:shelterObject, \u0027TotalBeds\u0027: totalBedsObject, \u0027CurrentReservations\u0027: totalReservationsObject, \u0027ShelterType\u0027: \u0027\u0027, \u0027CurrentResidents\u0027: totalResidentsObject, \u0027id\u0027: -1}\n\t\tdata.append(totalsRow)\n\t\t\n\t\ttbl.props.data \u003d data\n\t\t\n\t\t# Send KPI data\n\t\tpayload \u003d {}\n\t\tpayload[\u0027availableBeds\u0027] \u003d totalAvailableBeds\n\t\tpayload[\u0027totalBeds\u0027] \u003d totalBeds\n\t\tsystem.perspective.sendMessage(\u0027mhShelterDashboardKpiHeader\u0027, payload \u003d payload)\n\t\t"
+        },
+        {
+          "name": "getColumnProps_X",
+          "params": [
+            "pyDataset",
+            "addColumn\u003d\u0027Options\u0027"
+          ],
+          "script": "\tcolNames \u003d system.dataset.getColumnHeaders(pyDataset)\n\t\n\tcolNames.insert(0,addColumn)\n\t\n\t# This is json with default values for one column\n\tjsonAtom \u003d \"\"\"\n  {\n\t    \"field\": \"associatedProgram\",\n\t    \"visible\": true,\n\t    \"editable\": false,\n\t    \"render\": \"auto\",\n\t    \"justify\": \"center\",\n\t    \"align\": \"center\",\n\t    \"resizable\": true,\n\t    \"sortable\": true,\n\t    \"sort\": \"none\",\n\t    \"viewPath\": \"\",\n\t    \"viewParams\": {},\n\t    \"boolean\": \"checkbox\",\n\t    \"number\": \"value\",\n\t    \"progressBar\": {\n\t      \"max\": 100,\n\t      \"bar\": {\n\t        \"color\": \"#62A3F6\",\n\t        \"linecap\": \"round\",\n\t        \"width\": 5\n\t      },\n\t      \"track\": {\n\t        \"color\": \"#DADADA\",\n\t        \"linecap\": \"round\",\n\t        \"width\": 2\n\t      },\n\t      \"value\": {\n\t        \"color\": \"#7D7D7D\",\n\t        \"show\": true\n\t      }\n\t    },\n\t    \"toggleSwitch\": {\n\t      \"color\": {\n\t        \"selected\": \"#2196F3\",\n\t        \"unselected\": \"#FFFFFF\"\n\t      }\n\t    },\n\t    \"numberFormat\": \"0,0.##\",\n\t    \"dateFormat\": \"MM/DD/YYYY\",\n\t    \"width\": 190,\n\t    \"strictWidth\": false,\n\t    \"header\": {\n\t      \"title\": \"Associated Program\",\n\t      \"justify\": \"center\",\n\t      \"align\": \"center\",\n\t      \"style\": {\n\t        \"classes\": \"Table/Column_Header\"\n\t      }\n\t    },\n\t    \"footer\": {\n\t      \"title\": \"\",\n\t      \"justify\": \"left\",\n\t      \"align\": \"center\",\n\t      \"style\": {\n\t        \"classes\": \"\"\n\t      }\n\t    },\n\t    \"style\": {\n\t      \"classes\": \"Table/Column_Normal\"\n\t    }\n\t  },\t\n\t\"\"\"\n\twidths \u003d {\u0027Options\u0027: 40, \u0027Shelter Name\u0027: 350, \u0027Associated Programs\u0027: 520,\u0027Shelter Type\u0027: 220 }\n\n\t_columns \u003d []\n\tfor col in colNames:\n\t\tcolNoSpace \u003d col.replace(\u0027 \u0027,\u0027\u0027)\n\t\tpyAtom \u003d system.util.jsonDecode(jsonAtom)\n\t\tpyAtom[\u0027field\u0027] \u003d colNoSpace\n\t\tpyAtom[\u0027header\u0027][\u0027title\u0027] \u003d col\n\t\t\n\t\tif col in widths:\n\t\t\tpyAtom[\u0027width\u0027] \u003d widths[col]\n\t\t\tpyAtom[\u0027strictWidth\u0027] \u003d True\n\t\telse:\n\t\t\tpyAtom[\u0027width\u0027] \u003d \u0027\u0027\n\t\t\tpyAtom[\u0027strictWidth\u0027] \u003d False\n\t\t\n\t\tif col \u003d\u003d \u0027Options\u0027:\n\t\t\tpyAtom[\u0027header\u0027][\u0027title\u0027] \u003d \u0027 \u0027\n\t\t\tpyAtom[\"render\"] \u003d \"view\"\n\t\t\tpyAtom[\"justify\"] \u003d \"center\"\n\t\t\tpyAtom[\"resizable\"] \u003d False\n\t\t\tpyAtom[\"sortable\"] \u003d False\n\t\t\tpyAtom[\"viewPath\"] \u003d \"Shelter/Dashboard/Components/Tables/Templates/TableOptions\"\t\t\n\t\telif col \u003d\u003d \u0027id\u0027:\n\t\t\tpyAtom[\"visible\"] \u003d False\n\t\t\tpyAtom[\"resizable\"] \u003d False\n\t\t\tpyAtom[\"sortable\"] \u003d False\n\t\telif col \u003d\u003d \u0027Shelter Name\u0027:\n\t\t\tpyAtom[\"justify\"] \u003d \"left\"\n\t\t\tpyAtom[\u0027header\u0027][\u0027justify\u0027] \u003d \"left\"\n\t\telif col \u003d\u003d \u0027Shelter Type\u0027:\n\t\t\tpyAtom[\"justify\"] \u003d \"left\"\n\t\t\tpyAtom[\u0027header\u0027][\u0027justify\u0027] \u003d \"left\"\n\t\t\t\t\t\t\n\t\t_columns.append(pyAtom)\n\t\t\n\t\n\t\n\treturn _columns"
+        },
+        {
+          "name": "getMakeUpData_X",
+          "params": [
+            "pyDataset",
+            "addColumn\u003d\u0027Options\u0027"
+          ],
+          "script": "\tcolNames \u003d system.dataset.getColumnHeaders(pyDataset)\n\t\n\tcolNames.insert(0, addColumn)\n\t\n\t_data \u003d []\n\tfor row in pyDataset:\n\t\tauxDict \u003d {}\n\t\tfor col in colNames:\n\t\t\tcolNoSpace \u003d col.replace(\u0027 \u0027,\u0027\u0027)\n\t\t\tif col \u003d\u003d \u0027Options\u0027:\n\t\t\t\tauxDict[colNoSpace] \u003d \u0027\u0027\n\t\t\telif col \u003d\u003d \u0027Shelter Name\u0027:\n\t\t\t\t_style \u003d {\t\"color\": \"#0c4e85\",\n\t\t\t\t\t\t\t\"cursor\": \"pointer\",\n\t\t\t\t\t\t\t\"fontFamily\": \"Proxima Nova ExCn Medium\",\n\t\t\t\t\t\t\t\"text-align\": \"left\"}\n\t\t\t\t\t\t\t\n\t\t\t\tauxDict[colNoSpace] \u003d {\u0027value\u0027: row[col], \"style\": _style}\n\t\t\telse:\n\t\t\t\tauxDict[colNoSpace] \u003d row[col] \n\t\t_data.append(auxDict)\n\treturn _data"
+        },
+        {
+          "name": "sendMessageKpiHeader_X",
+          "params": [],
+          "script": "\ttbl \u003d self.getChild(\"Table\")\n\t\n\tpayload \u003d {}\n\t\n\ttotalBeds \u003d 0\n\tavailableBeds \u003d 0\n\t\n\tfor x in tbl.props.data:\n\t\ttotalBeds +\u003d x.get(\u0027TotalBeds\u0027,0)\n\t\tavailableBeds +\u003d x.get(\u0027AvailableBeds\u0027,0)\n\t\t\n\tpayload[\u0027availableBeds\u0027] \u003d availableBeds\n\tpayload[\u0027totalBeds\u0027] \u003d totalBeds\n\n\tsystem.perspective.sendMessage(\u0027mhShelterDashboardKpiHeader\u0027, payload \u003d payload)"
+        },
+        {
+          "name": "setTable_SendMsgKpiHeader_X",
+          "params": [],
+          "script": "\tself.setTableData()\n#\tself.sendMessageKpiHeader() This is covered in table data as we are calculaing totals there only"
+        }
+      ],
+      "extensionFunctions": null,
+      "messageHandlers": []
+    },
+    "type": "ia.container.flex"
+  }
+}

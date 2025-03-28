@@ -1,0 +1,669 @@
+{
+  "custom": {
+    "participantId": ""
+  },
+  "params": {
+    "Row_Data": {
+      "Created": "",
+      "Due Date": "None",
+      "Location Name": "",
+      "Task": "",
+      "Task Type": "",
+      "assigner": null,
+      "assignerId": -1,
+      "completed": null,
+      "contact": "",
+      "id": -1,
+      "locationId": -1,
+      "notes": "",
+      "participantId": "",
+      "priority": "",
+      "priorityId": -1,
+      "staffId": -1,
+      "staffName": "",
+      "status": "Not Started",
+      "statusId": 1,
+      "taskTypeId": -1
+    }
+  },
+  "propConfig": {
+    "custom.participantId": {
+      "binding": {
+        "config": {
+          "path": "session.custom.filters.participant_search.Search.value"
+        },
+        "type": "property"
+      },
+      "onChange": {
+        "enabled": null,
+        "script": "\tself.params.Row_Data.participantId \u003d currentValue.value"
+      },
+      "persistent": true
+    },
+    "params.Row_Data": {
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.Row_Data.assignerId": {
+      "onChange": {
+        "enabled": null,
+        "script": "\tif currentValue.value !\u003d None and currentValue.value !\u003d \u0027\u0027 and currentValue.value !\u003d -1:\n\t\tassigner_dataset \u003d self.getChild(\"root\").getChild(\"Col1\").getChild(\"Bottom\").getChild(\"Embed_Assigner\").props.params.options\n\t\tselectQ \u003d \"SELECT CONCAT_WS(\u0027 \u0027,[humans].[Human].firstName, [humans].[Human].middleName, [humans].[Human].lastName) as \u0027employee_name\u0027\"\n\t\tselectQ \u003d selectQ + \" FROM [staff].[Employee] INNER JOIN [humans].[Human] on [staff].[Employee].humanId \u003d [humans].[Human].id\"\n\t\tselectQ \u003d selectQ + \" WHERE [humans].[Human].email is not null and [humans].[Human].email !\u003d \u0027\u0027 AND [staff].[Employee].timeRetired is NULL and [staff].[Employee].humanId \u003d\" + str(currentValue.value)\n\t\tselectQ \u003d selectQ + \" ORDER BY [humans].[Human].firstname\"\n\t\tresult \u003d system.db.runPrepQuery(selectQ)\n\t\tself.params.Row_Data.assigner \u003d result.getValueAt(0,0)\n\telse:\n\t\tself.params.Row_Data.assigner \u003d None"
+      }
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 220,
+      "width": 1100
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "children": [
+          {
+            "meta": {
+              "name": "Embed_Subject"
+            },
+            "position": {
+              "basis": "63%"
+            },
+            "propConfig": {
+              "props.params.text": {
+                "binding": {
+                  "config": {
+                    "bidirectional": true,
+                    "path": "view.params.Row_Data.Task"
+                  },
+                  "type": "property"
+                }
+              }
+            },
+            "props": {
+              "params": {
+                "label": "Subject",
+                "placeholder": "Enter subject"
+              },
+              "path": "1_TEMPLATES/60px/top/Input_Text_Mandatory"
+            },
+            "type": "ia.display.view"
+          },
+          {
+            "children": [
+              {
+                "meta": {
+                  "name": "Embed_Assigner"
+                },
+                "position": {
+                  "basis": "45%"
+                },
+                "propConfig": {
+                  "props.params.options": {
+                    "binding": {
+                      "config": {
+                        "queryPath": "WinterShelter/Tasks/GetStaff"
+                      },
+                      "type": "query"
+                    }
+                  },
+                  "props.params.selection": {
+                    "binding": {
+                      "config": {
+                        "bidirectional": true,
+                        "path": "view.params.Row_Data.assignerId"
+                      },
+                      "type": "property"
+                    }
+                  }
+                },
+                "props": {
+                  "params": {
+                    "text": "Assigner"
+                  },
+                  "path": "1_TEMPLATES/60px/top/Input_DropDownSingle",
+                  "style": {
+                    "marginRight": "10px"
+                  }
+                },
+                "type": "ia.display.view"
+              },
+              {
+                "meta": {
+                  "name": "Embed_Staff"
+                },
+                "position": {
+                  "basis": "45%",
+                  "shrink": 0
+                },
+                "propConfig": {
+                  "props.params.options": {
+                    "binding": {
+                      "config": {
+                        "queryPath": "WinterShelter/Tasks/GetStaff"
+                      },
+                      "type": "query"
+                    }
+                  },
+                  "props.params.selection": {
+                    "binding": {
+                      "config": {
+                        "bidirectional": true,
+                        "path": "view.params.Row_Data.staffId"
+                      },
+                      "type": "property"
+                    }
+                  }
+                },
+                "props": {
+                  "params": {
+                    "text": "Staff"
+                  },
+                  "path": "1_TEMPLATES/60px/top/Input_DropDownSingle_Mandatory",
+                  "style": {
+                    "marginRight": "10px"
+                  }
+                },
+                "type": "ia.display.view"
+              }
+            ],
+            "meta": {
+              "name": "Bottom"
+            },
+            "position": {
+              "basis": "40%",
+              "shrink": 0
+            },
+            "type": "ia.container.flex"
+          }
+        ],
+        "meta": {
+          "name": "Col1"
+        },
+        "position": {
+          "basis": "300px"
+        },
+        "props": {
+          "direction": "column",
+          "style": {
+            "overflow": "hidden"
+          }
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "children": [
+          {
+            "meta": {
+              "name": "Embed_TaskType"
+            },
+            "position": {
+              "basis": "63%"
+            },
+            "propConfig": {
+              "props.params.options": {
+                "binding": {
+                  "config": {
+                    "queryPath": "WinterShelter/Tasks/Types"
+                  },
+                  "type": "query"
+                }
+              },
+              "props.params.selection": {
+                "binding": {
+                  "config": {
+                    "bidirectional": true,
+                    "path": "view.params.Row_Data.taskTypeId"
+                  },
+                  "type": "property"
+                }
+              }
+            },
+            "props": {
+              "params": {
+                "text": "Task Type"
+              },
+              "path": "1_TEMPLATES/60px/top/Input_DropDownSingle",
+              "useDefaultViewWidth": true
+            },
+            "type": "ia.display.view"
+          },
+          {
+            "meta": {
+              "name": "Embed_Priority"
+            },
+            "position": {
+              "basis": "40%",
+              "shrink": 0
+            },
+            "propConfig": {
+              "props.params.options": {
+                "binding": {
+                  "config": {
+                    "queryPath": "WinterShelter/Tasks/Priority"
+                  },
+                  "type": "query"
+                }
+              },
+              "props.params.selection": {
+                "binding": {
+                  "config": {
+                    "bidirectional": true,
+                    "path": "view.params.Row_Data.priorityId"
+                  },
+                  "type": "property"
+                }
+              }
+            },
+            "props": {
+              "params": {
+                "text": "Priority"
+              },
+              "path": "1_TEMPLATES/60px/top/Input_DropDownSingle",
+              "useDefaultViewWidth": true
+            },
+            "type": "ia.display.view"
+          }
+        ],
+        "meta": {
+          "name": "Col2"
+        },
+        "position": {
+          "basis": "150px"
+        },
+        "props": {
+          "direction": "column",
+          "style": {
+            "overflow": "hidden"
+          }
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "children": [
+          {
+            "meta": {
+              "name": "Embed_Congregation"
+            },
+            "position": {
+              "basis": "63%"
+            },
+            "propConfig": {
+              "props.params.options": {
+                "binding": {
+                  "config": {
+                    "queryPath": "WinterShelter/Tasks/getCongregations"
+                  },
+                  "type": "query"
+                }
+              },
+              "props.params.selection": {
+                "binding": {
+                  "config": {
+                    "bidirectional": true,
+                    "path": "view.params.Row_Data.locationId"
+                  },
+                  "type": "property"
+                }
+              }
+            },
+            "props": {
+              "params": {
+                "text": "Congregation"
+              },
+              "path": "1_TEMPLATES/60px/top/Input_DropDownSingle_Mandatory"
+            },
+            "type": "ia.display.view"
+          },
+          {
+            "meta": {
+              "name": "Embed_Status"
+            },
+            "position": {
+              "basis": "40%",
+              "shrink": 0
+            },
+            "propConfig": {
+              "props.params.options": {
+                "binding": {
+                  "config": {
+                    "queryPath": "WinterShelter/Tasks/Status"
+                  },
+                  "type": "query"
+                }
+              },
+              "props.params.selection": {
+                "binding": {
+                  "config": {
+                    "bidirectional": true,
+                    "path": "view.params.Row_Data.statusId"
+                  },
+                  "type": "property"
+                },
+                "onChange": {
+                  "enabled": null,
+                  "script": "\tif currentValue.value \u003d\u003d 3 and ( self.view.params.Row_Data.completed \u003d\u003d None or self.view.params.Row_Data.completed \u003d\u003d \"\") :\n\t\tself.parent.parent.getChild(\"Col5\").getChild(\"Embed_Completed\").props.params.date \u003d system.date.now()\n\telif currentValue.value !\u003d 3:\n\t\tself.parent.parent.getChild(\"Col5\").getChild(\"Embed_Completed\").props.params.date \u003d None\n\telse:\n\t\tself.parent.parent.getChild(\"Col5\").getChild(\"Embed_Completed\").props.params.date \u003d self.view.params.Row_Data.completed"
+                }
+              }
+            },
+            "props": {
+              "params": {
+                "text": "Status"
+              },
+              "path": "1_TEMPLATES/60px/top/Input_DropDownSingle",
+              "style": {
+                "paddingRight": 50
+              }
+            },
+            "type": "ia.display.view"
+          }
+        ],
+        "meta": {
+          "name": "Col3"
+        },
+        "position": {
+          "basis": "220px"
+        },
+        "props": {
+          "direction": "column",
+          "style": {
+            "overflow": "hidden"
+          }
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "children": [
+          {
+            "meta": {
+              "name": "Embed_Contact"
+            },
+            "position": {
+              "basis": "63%"
+            },
+            "propConfig": {
+              "props.params.text": {
+                "binding": {
+                  "config": {
+                    "bidirectional": true,
+                    "path": "view.params.Row_Data.contact"
+                  },
+                  "type": "property"
+                }
+              }
+            },
+            "props": {
+              "params": {
+                "label": "Contact",
+                "placeholder": "Enter name"
+              },
+              "path": "1_TEMPLATES/60px/top/Input_Text"
+            },
+            "type": "ia.display.view"
+          },
+          {
+            "meta": {
+              "name": "Embed_Due"
+            },
+            "position": {
+              "basis": "40%",
+              "shrink": 0
+            },
+            "propConfig": {
+              "props.params.date": {
+                "binding": {
+                  "config": {
+                    "bidirectional": true,
+                    "path": "view.params.Row_Data[\u0027Due Date\u0027]"
+                  },
+                  "type": "property"
+                }
+              }
+            },
+            "props": {
+              "params": {
+                "text": "Due Date"
+              },
+              "path": "1_TEMPLATES/60px/top/Input_Date_Mandatory"
+            },
+            "type": "ia.display.view"
+          }
+        ],
+        "meta": {
+          "name": "Col4"
+        },
+        "position": {
+          "basis": "200px"
+        },
+        "props": {
+          "direction": "column",
+          "style": {
+            "overflow": "hidden"
+          }
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "children": [
+          {
+            "meta": {
+              "name": "Embed_DateCreated"
+            },
+            "position": {
+              "basis": "63%"
+            },
+            "propConfig": {
+              "props.params.text": {
+                "binding": {
+                  "config": {
+                    "bidirectional": true,
+                    "path": "view.params.Row_Data.Created"
+                  },
+                  "type": "property"
+                }
+              }
+            },
+            "props": {
+              "params": {
+                "label": "Date Created",
+                "placeholder": ""
+              },
+              "path": "1_TEMPLATES/60px/top/Input_Text"
+            },
+            "type": "ia.display.view"
+          },
+          {
+            "meta": {
+              "name": "Embed_Completed"
+            },
+            "position": {
+              "basis": "40%",
+              "shrink": 0
+            },
+            "propConfig": {
+              "props.params.date": {
+                "binding": {
+                  "config": {
+                    "bidirectional": true,
+                    "path": "view.params.Row_Data.completed"
+                  },
+                  "type": "property"
+                }
+              }
+            },
+            "props": {
+              "params": {
+                "text": "Completed"
+              },
+              "path": "1_TEMPLATES/60px/top/Input_Date"
+            },
+            "type": "ia.display.view"
+          }
+        ],
+        "meta": {
+          "name": "Col5"
+        },
+        "position": {
+          "basis": "200px"
+        },
+        "props": {
+          "direction": "column",
+          "style": {
+            "overflow": "hidden"
+          }
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "children": [
+          {
+            "meta": {
+              "name": "Embed_Note"
+            },
+            "position": {
+              "basis": "63%"
+            },
+            "propConfig": {
+              "props.params.text": {
+                "binding": {
+                  "config": {
+                    "bidirectional": true,
+                    "path": "view.params.Row_Data.notes"
+                  },
+                  "type": "property"
+                }
+              }
+            },
+            "props": {
+              "params": {
+                "label": "Notes",
+                "placeholder": "Start typing to create a Task..."
+              },
+              "path": "1_TEMPLATES/120px/top/Input_Text_MultiLine"
+            },
+            "type": "ia.display.view"
+          },
+          {
+            "children": [
+              {
+                "meta": {
+                  "name": "Embed_Participant"
+                },
+                "position": {
+                  "basis": "80%",
+                  "shrink": 0
+                },
+                "propConfig": {
+                  "props.params.options": {
+                    "binding": {
+                      "config": {
+                        "queryPath": "Shelter/Reservations/SelectParticipantsForReservation"
+                      },
+                      "type": "query"
+                    }
+                  },
+                  "props.params.selection": {
+                    "binding": {
+                      "config": {
+                        "bidirectional": true,
+                        "path": "view.params.Row_Data.participantId"
+                      },
+                      "type": "property"
+                    }
+                  }
+                },
+                "props": {
+                  "params": {
+                    "text": "Participant"
+                  },
+                  "path": "1_TEMPLATES/60px/top/Input_DropDownSingle",
+                  "style": {
+                    "marginRight": "000px"
+                  }
+                },
+                "type": "ia.display.view"
+              },
+              {
+                "events": {
+                  "dom": {
+                    "onClick": {
+                      "config": {
+                        "draggable": false,
+                        "id": "search_participant",
+                        "modal": false,
+                        "overlayDismiss": true,
+                        "position": {
+                          "relativeLocation": "bottom-left"
+                        },
+                        "positionType": "relative",
+                        "resizable": false,
+                        "showCloseIcon": false,
+                        "type": "open",
+                        "viewPath": "Participants/Tasks/Dashboard/Main/template/Partcipant_Search",
+                        "viewportBound": true
+                      },
+                      "scope": "C",
+                      "type": "popup"
+                    }
+                  }
+                },
+                "meta": {
+                  "name": "Icon"
+                },
+                "position": {
+                  "basis": "30px"
+                },
+                "props": {
+                  "color": "#0D80E3",
+                  "path": "material/help_outline",
+                  "style": {
+                    "borderTopColor": "#9db8d1",
+                    "borderTopStyle": "solid",
+                    "borderTopWidth": "0px",
+                    "marginTop": "20px"
+                  }
+                },
+                "type": "ia.display.icon"
+              }
+            ],
+            "meta": {
+              "name": "Participant"
+            },
+            "position": {
+              "basis": "40%",
+              "shrink": 0
+            },
+            "props": {
+              "style": {
+                "marginRight": "200px"
+              }
+            },
+            "type": "ia.container.flex"
+          }
+        ],
+        "meta": {
+          "name": "Col6"
+        },
+        "position": {
+          "basis": "200px",
+          "grow": 1
+        },
+        "props": {
+          "direction": "column",
+          "style": {
+            "overflow": "hidden"
+          }
+        },
+        "type": "ia.container.flex"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "style": {
+        "classes": "Background/Default"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

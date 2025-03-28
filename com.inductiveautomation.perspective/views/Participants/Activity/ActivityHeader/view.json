@@ -1,0 +1,130 @@
+{
+  "custom": {},
+  "params": {
+    "Date": "Apr. 19, 2020 at 11:32 AM",
+    "Icon": "material/spa",
+    "Title": "value"
+  },
+  "propConfig": {
+    "params.Date": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.Icon": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.Title": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 50
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "Icon"
+        },
+        "position": {
+          "basis": "30px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.path": {
+            "binding": {
+              "config": {
+                "path": "view.params.Icon"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "color": "#0C4E8B",
+          "style": {
+            "marginLeft": "10px",
+            "marginRight": "10px"
+          }
+        },
+        "type": "ia.display.icon"
+      },
+      {
+        "events": {
+          "dom": {
+            "onClick": {
+              "config": {
+                "script": "\tPage \u003d self.view.params.Title\n\tmessageType \u003d \u0027participant_detail_tab_select\u0027\n\tValid \u003d 1\n\tif Page \u003d\u003d \"Incident\":\n\t\tpayload \u003d {\"tab_id\":\"Incidents\"}\n\telif Page \u003d\u003d \"Case Note\":\n\t\tpayload \u003d {\"tab_id\":\"Case Notes\"}\n\telif Page \u003d\u003d \"Intake\":\n\t\tpayload \u003d {\"tab_id\":\"Intake\"}\n\telif Page \u003d\u003d \"Enrollment\":\n\t\tpayload \u003d {\"tab_id\":\"Programs\"}\n\telif Page \u003d\u003d \"Service\":\n\t\tpayload \u003d {\"tab_id\":\"Services\"}\n\telif Page \u003d\u003d \"Drug screen\":\n\t\tpayload \u003d {\"tab_id\":\"Drug Screen\"}\n\telse:\n\t\tValid \u003d 0 \n\t\t\n\tif Valid \u003d\u003d 1:\n\t\tsystem.perspective.sendMessage(messageType, payload)\n\telse:\n\t\tpass"
+              },
+              "scope": "G",
+              "type": "script"
+            }
+          }
+        },
+        "meta": {
+          "name": "Label"
+        },
+        "position": {
+          "basis": "100%",
+          "grow": 1
+        },
+        "propConfig": {
+          "props.text": {
+            "binding": {
+              "config": {
+                "path": "view.params.Title"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "style": {
+            "classes": "ActivityCards/Card_Title",
+            "color": "#0d80e3",
+            "cursor": "pointer"
+          }
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "meta": {
+          "name": "Label_0"
+        },
+        "position": {
+          "basis": "100%",
+          "grow": 1
+        },
+        "propConfig": {
+          "props.text": {
+            "binding": {
+              "config": {
+                "path": "view.params.Date"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "style": {
+            "classes": "ActivityCards/Card_Date"
+          }
+        },
+        "type": "ia.display.label"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "style": {
+        "overflow": "hidden"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

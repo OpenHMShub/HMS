@@ -1,0 +1,234 @@
+{
+  "custom": {
+    "Data": [
+      {
+        "AdministeredBy": "",
+        "Comment": "",
+        "Grade": "",
+        "Passed": false,
+        "Reason": "",
+        "Score": "",
+        "TestType": ""
+      }
+    ]
+  },
+  "params": {
+    "Date": "Apr. 19, 2020 at 11:32 AM",
+    "ID": 22,
+    "Size": 150
+  },
+  "propConfig": {
+    "custom.Data": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "DrugScreenLogID": "{view.params.ID}"
+          },
+          "queryPath": "Participants/Activities/SelectSingleDrugScreen",
+          "returnFormat": "json"
+        },
+        "transforms": [
+          {
+            "code": "\tif len(value):\n\t\treturn value\n\telse:\n\t\treturn [{\n\t  \"AdministeredBy\": \"\",\n\t  \"Reason\": \"\",\n\t  \"TestType\": \"\",\n\t  \"Score\": \"\",\n\t  \"Grade\": \"\",\n\t  \"Passed\": False,\n\t  \"Comment\": \"\"\n\t}]",
+            "type": "script"
+          }
+        ],
+        "type": "query"
+      },
+      "persistent": true
+    },
+    "params.Date": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.ID": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.Size": {
+      "binding": {
+        "config": {
+          "path": "view.props.defaultSize.height"
+        },
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 150
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "EmbeddedView"
+        },
+        "position": {
+          "basis": "40px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.Date": {
+            "binding": {
+              "config": {
+                "expression": "{view.params.Date}"
+              },
+              "transforms": [
+                {
+                  "expression": "dateFormat({value},\"MMM. d, YYYY\") +\" at \"+ dateFormat({value},\"hh:mm a\")",
+                  "type": "expression"
+                }
+              ],
+              "type": "expr"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "Icon": "material/spa",
+            "Title": "Drug screen"
+          },
+          "path": "Participants/Activity/ActivityHeader"
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "EmbeddedView_1"
+        },
+        "position": {
+          "basis": "50px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.Pass": {
+            "binding": {
+              "config": {
+                "path": "view.custom.Data[0].Passed"
+              },
+              "type": "property"
+            }
+          },
+          "props.params.Reason": {
+            "binding": {
+              "config": {
+                "path": "view.custom.Data[0].Reason"
+              },
+              "type": "property"
+            }
+          },
+          "props.params.TestType": {
+            "binding": {
+              "config": {
+                "path": "view.custom.Data[0].TestType"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "path": "Participants/Activity/DrugScreen/InformationTop",
+          "style": {
+            "borderBottomColor": "#e6e6e6",
+            "borderBottomStyle": "solid",
+            "borderBottomWidth": 1,
+            "borderTopColor": "#e6e6e6",
+            "borderTopStyle": "solid",
+            "borderTopWidth": 1,
+            "marginBottom": "10px",
+            "marginLeft": "50px",
+            "marginRight": "50px",
+            "paddingTop": "5px"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "EmbeddedView_2"
+        },
+        "position": {
+          "basis": "38px",
+          "display": false,
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.Grade": {
+            "binding": {
+              "config": {
+                "path": "view.custom.Data[0].Grade"
+              },
+              "type": "property"
+            }
+          },
+          "props.params.Pass": {
+            "binding": {
+              "config": {
+                "path": "view.custom.Data[0].Passed"
+              },
+              "type": "property"
+            }
+          },
+          "props.params.Score": {
+            "binding": {
+              "config": {
+                "path": "view.custom.Data[0].Score"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "path": "Participants/Activity/DrugScreen/InformationBottom",
+          "style": {
+            "borderBottomColor": "#e6e6e6",
+            "borderBottomStyle": "solid",
+            "borderBottomWidth": 1,
+            "marginLeft": "50px",
+            "marginRight": "50px",
+            "paddingBottom": "5px"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "EmbeddedView_3"
+        },
+        "position": {
+          "basis": "50px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.Text": {
+            "binding": {
+              "config": {
+                "path": "view.custom.Data[0].Comment"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "path": "Participants/Activity/DrugScreen/Comment"
+        },
+        "type": "ia.display.view"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column",
+      "style": {
+        "classes": "Background/Default",
+        "overflow": "hidden"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

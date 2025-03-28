@@ -1,0 +1,311 @@
+{
+  "custom": {
+    "loggedInStaffHumanId": -1
+  },
+  "params": {
+    "Row_Data": {
+      "Created": "06/05/2024 02:09 AM",
+      "Due Date": "",
+      "Location Name": "",
+      "Task": "",
+      "Task Type": "",
+      "assignerId": -1,
+      "completed": null,
+      "contact": "",
+      "id": -1,
+      "locationId": -1,
+      "notes": "",
+      "participantId": -1,
+      "priority": "",
+      "priorityId": null,
+      "staffId": -1,
+      "staffName": "",
+      "status": "Not Started",
+      "statusId": 1,
+      "taskTypeId": null
+    },
+    "view_height": "270px"
+  },
+  "propConfig": {
+    "custom.edit_data": {
+      "persistent": true
+    },
+    "custom.loggedInStaffHumanId": {
+      "binding": {
+        "config": {
+          "path": "session.custom.loggedInStaffEmployeeID"
+        },
+        "transforms": [
+          {
+            "code": "\tloggedInStaff \u003d value\n\tgetHumanIfFromStaff \u003d system.db.runPrepQuery(\"select * from [staff].[Employee] where id \u003d \"+str(loggedInStaff))\n\tif getHumanIfFromStaff.getRowCount()\u003e0:\n\t\tloggedInStaffHumanId \u003d getHumanIfFromStaff.getValueAt(0,\u0027humanId\u0027)\n\telse:\n\t\tloggedInStaffHumanId \u003d -1\n\treturn loggedInStaffHumanId",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      },
+      "persistent": true
+    },
+    "params.Row_Data": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.view_height": {
+      "paramDirection": "output",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 286,
+      "width": 1440
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "EmbeddedView Header"
+        },
+        "position": {
+          "basis": "25px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.Text": {
+            "binding": {
+              "config": {
+                "path": "view.params.Row_Data.id"
+              },
+              "transforms": [
+                {
+                  "expression": "if({value} \u003d -1,\u0027New Task\u0027,\u0027Edit Task\u0027)",
+                  "type": "expression"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "path": "1_globalTEMPLATES/Header/Header"
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "EmbeddedView Row1"
+        },
+        "position": {
+          "basis": "180px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.Row_Data": {
+            "binding": {
+              "config": {
+                "path": "view.params.Row_Data"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "func_add_task": false,
+            "func_remove_task": false
+          },
+          "path": "WinterShelter/Tasks/Dashboard/Main/Edit/Row",
+          "style": {
+            "marginLeft": 25,
+            "marginRight": 25
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "children": [
+          {
+            "events": {
+              "component": {
+                "onActionPerformed": {
+                  "config": {
+                    "script": "\tsystem.perspective.sendMessage(\"clearTaskSelection\", payload \u003d {}, scope \u003d \u0027session\u0027)\n\t\n\t"
+                  },
+                  "scope": "G",
+                  "type": "script"
+                }
+              }
+            },
+            "meta": {
+              "name": "button_new"
+            },
+            "position": {
+              "basis": "120px",
+              "shrink": 0
+            },
+            "props": {
+              "style": {
+                "classes": "Buttons/Secondary",
+                "marginBottom": "5px",
+                "marginLeft": "20px",
+                "marginTop": "5px"
+              },
+              "text": "New Task"
+            },
+            "type": "ia.input.button"
+          },
+          {
+            "events": {
+              "dom": {
+                "onClick": {
+                  "config": {
+                    "script": "\tdataToUpdate \u003d self.parent.parent.getChild(\"EmbeddedView Row1\").props.params.Row_Data\n#\tsystem.perspective.print(\"dataToUpdate\")\n#\tsystem.perspective.print(dataToUpdate)\n\t\n\tmissingFields \u003d \"\"\n\t## check that you have all mandetaory fields entered\n\tif dataToUpdate[\u0027Task\u0027] \u003d\u003d None or dataToUpdate[\u0027Task\u0027] \u003d\u003d \"\":\n\t\tmissingFields \u003d missingFields + \", Subject\"  \n#\tif dataToUpdate[\u0027taskTypeId\u0027] \u003d\u003d None or dataToUpdate[\u0027taskTypeId\u0027] \u003d\u003d \"\" or dataToUpdate[\u0027taskTypeId\u0027] \u003d\u003d -1:\n#\t\tmissingFields \u003d missingFields + \", Task Type\"\n#\tif dataToUpdate[\u0027priorityId\u0027] \u003d\u003d None or dataToUpdate[\u0027priorityId\u0027] \u003d\u003d \"\" or dataToUpdate[\u0027priorityId\u0027] \u003d\u003d -1:\n#\t\tmissingFields \u003d missingFields + \", Priority\"\n\tif dataToUpdate[\u0027locationId\u0027] \u003d\u003d None or dataToUpdate[\u0027locationId\u0027] \u003d\u003d \"\" or dataToUpdate[\u0027locationId\u0027] \u003d\u003d -1:\n\t\tmissingFields \u003d missingFields + \", Congregation\"\t\n\tif dataToUpdate[\u0027staffId\u0027] \u003d\u003d None or dataToUpdate[\u0027staffId\u0027] \u003d\u003d \"\" or dataToUpdate[\u0027staffId\u0027] \u003d\u003d -1:\n\t\tmissingFields \u003d missingFields + \", Staff\"\t\n#\tif dataToUpdate[\u0027statusId\u0027] \u003d\u003d None or dataToUpdate[\u0027statusId\u0027] \u003d\u003d \"\" or dataToUpdate[\u0027statusId\u0027] \u003d\u003d -1:\n#\t\tmissingFields \u003d missingFields + \", Status\"\t\t\n\tif dataToUpdate[\u0027Due Date\u0027] \u003d\u003d None or dataToUpdate[\u0027Due Date\u0027] \u003d\u003d \"\" :\n\t\tmissingFields \u003d missingFields + \", Due Date\"\n#\tif dataToUpdate[\u0027assignerId\u0027] \u003d\u003d None or dataToUpdate[\u0027assignerId\u0027] \u003d\u003d \"\" or dataToUpdate[\u0027assignerId\u0027] \u003d\u003d -1:\n#\t\tmissingFields \u003d missingFields + \", Assigner\"\t\n#\tif dataToUpdate[\u0027participantId\u0027] \u003d\u003d None or dataToUpdate[\u0027participantId\u0027] \u003d\u003d \"\" or dataToUpdate[\u0027participantId\u0027] \u003d\u003d -1:\n#\t\tmissingFields \u003d missingFields + \", Participant\"\t\n\t\n\tif missingFields !\u003d \"\":\n\t\terrorMessage \u003d \"Ensure \" + missingFields[1:] + \" value(s) are selected\"\n\t\tself.getSibling(\"Label\").showMessage(errorMessage)\n\telse:\n\t\ttry:\n\t\t\tactivityType \u003d \"\"\n\t\t\tnoteIdForLog \u003d dataToUpdate[\u0027id\u0027]\n\t\t\tif dataToUpdate[\u0027id\u0027] \u003d\u003d -1:\n\t\t\t\tinsertQ \u003d \"INSERT INTO shelter.Tasks (locationId, taskTypeId, title, dueDate, staffId, priority, statusId, notes, contact, timeCreated, assignerId, participantId) VALUES (?,?,?,?,?,?,?,?,?, CURRENT_TIMESTAMP, ?,?)\"\n\t\t\t\tnewTaskId \u003d system.db.runPrepUpdate(insertQ, [dataToUpdate[\u0027locationId\u0027], dataToUpdate[\u0027taskTypeId\u0027], dataToUpdate[\u0027Task\u0027],dataToUpdate[\u0027Due Date\u0027], dataToUpdate[\u0027staffId\u0027], dataToUpdate[\u0027priorityId\u0027], dataToUpdate[\u0027statusId\u0027] , dataToUpdate[\u0027notes\u0027] ,dataToUpdate[\u0027contact\u0027], dataToUpdate[\u0027assignerId\u0027],  dataToUpdate[\u0027participantId\u0027]], getKey \u003d 1)\n\t\t\t\tself.getSibling(\"Label\").showMessage(\"New task created successfully.\")\n\t\t\t\tself.view.params.Row_Data.id \u003d newTaskId\n\t\t\t\tactivityType \u003d \"task_added\"\n\t\t\t\tnoteIdForLog \u003d newTaskId\n\t\t\t\t\n\t\t\t\t## if staff and assigner are different then send email to staff\n\t\t\t\tif dataToUpdate[\u0027staffId\u0027] !\u003d dataToUpdate[\u0027assignerId\u0027]:\n\t\t\t\t\t# check is email enable\n\t\t\t\t\tgetIsEnableEvent \u003d system.db.runPrepQuery(\"SELECT id, settingName, settingValue FROM shelter.Settings WHERE timeRetired is NULL AND settingName \u003d \u0027NewTaskEmail_Enable\u0027\")\n\t\t\t\t\tisEnableEvent \u003d  getIsEnableEvent.getValueAt(0,\u0027settingValue\u0027)\n\t\t\t\t\tif isEnableEvent \u003d\u003d \u0027true\u0027:\n\t\t\t\t\t\tgetStaffEmail \u003d system.db.runPrepQuery(\u0027select email from [humans].[Human] where id \u003d \u0027 + str(dataToUpdate[\u0027staffId\u0027]))\n\t\t\t\t\t\ttoAddress \u003d getStaffEmail.getValueAt(0,0)\n\t\t\t\t\t\tgetTaskDetails \u003d system.db.runNamedQuery(\"WinterShelter/Tasks/GetTask_FromTaskID\",{\u0027taskId\u0027:noteIdForLog})\n\t\t\t\t\t\temailText \u003d \"\u003cHTML\u003e\u003cBODY\u003e\"\n\t\t\t\t\t\temailText \u003d emailText + \"Subject : \" + str(getTaskDetails.getValueAt(0,\u0027title\u0027)) + \"\u003cbr\u003eTask Type : \" + str(getTaskDetails.getValueAt(0,\u0027type\u0027))\n\t\t\t\t\t\temailText \u003d emailText + \"\u003cbr\u003eCongregation : \" + str(getTaskDetails.getValueAt(0,\u0027locationName\u0027)) + \"\u003cbr\u003eContact : \" + str(getTaskDetails.getValueAt(0,\u0027contact\u0027))\n\t\t\t\t\t\temailText \u003d emailText + \"\u003cbr\u003eNotes : \" + str(getTaskDetails.getValueAt(0,\u0027notes\u0027)) + \"\u003cbr\u003eAssigner : \" + str(getTaskDetails.getValueAt(0,\u0027assigner\u0027))\n\t\t\t\t\t\temailText \u003d emailText + \"\u003cbr\u003eStaff : \" + str(getTaskDetails.getValueAt(0,\u0027staffName\u0027)) + \"\u003cbr\u003ePriority : \" + str(getTaskDetails.getValueAt(0,\u0027taskPriority\u0027))\n\t\t\t\t\t\temailText \u003d emailText + \"\u003cbr\u003eDue Date : \" + str(system.date.format(getTaskDetails.getValueAt(0,\u0027dueDate\u0027), \u0027yyyy-MM-dd hh:mm:ss\u0027))\n\t\t\t\t\t\temailText \u003d emailText + \"\u003c/BODY\u003e\u003c/HTML\u003e\"\n\t\t\t\t\t\tsystem.perspective.print(emailText)\n\t\t\t\t\t\temailSubject \u003d \u0027Task Created : \u0027 + str(dataToUpdate[\u0027Task\u0027])\n\t\t\t\t\t\tloggerName \u003d \u0027New_Task_Email\u0027\n\t\t\t\t\t\tto_addr \u003d toAddress\n\t\t\t\t\t\tmessage \u003d emailText\n\t\t\t\t\t\tlogger \u003d system.util.getLogger(loggerName)\n\t\t\t\t\t\ttry:\n\t\t\t\t\t\t\tsystem.net.sendEmail(fromAddr\u003d\"test-notifications@test.org\", subject\u003demailSubject, \n\t\t\t\t\t\t\t\t\t\t\t\tbody\u003d message, to\u003d to_addr, smtpProfile\u003d\"tsetnotifications\",html\u003d1)\n\t\t\t\t\t\t\tlogger.info(\u0027Email sent successfully.\\nSubject: \u0027+ str(emailSubject) + \u0027\\nTo: \u0027 + to_addr)\n\t\t\t\t\t\texcept:\n\t\t\t\t\t\t\tlogger.info(\u0027Could not send email because none of the recipients had valid email addresses.\u0027)\n\t\t\telse:\n\t\t\t\t\n#\t\t\t\tsystem.perspective.print(updateQ)\n\t\t\t\tcompletedDate \u003d self.parent.parent.getChild(\"EmbeddedView Row1\").props.params.Row_Data.completed\n#\t\t\t\tsystem.perspective.print(completedDate)\n\t\t\t\tif completedDate is not None and str(completedDate) !\u003d \"\" and str(completedDate) !\u003d \"null\" and \u00271900\u0027 not in str(completedDate):\n\t\t\t\t\tupdateQ \u003d \"UPDATE shelter.Tasks SET locationId \u003d ?, taskTypeId \u003d ?, title \u003d ?, dueDate \u003d ?, staffId \u003d ?, priority \u003d ?, statusId \u003d ?, notes \u003d ?, contact \u003d ?, completedDate \u003d ?, assignerId \u003d ?, participantId \u003d ? WHERE id \u003d ?\"\n\t\t\t\t\tsystem.db.runPrepUpdate(updateQ, [dataToUpdate[\u0027locationId\u0027], dataToUpdate[\u0027taskTypeId\u0027], dataToUpdate[\u0027Task\u0027],dataToUpdate[\u0027Due Date\u0027], dataToUpdate[\u0027staffId\u0027], dataToUpdate[\u0027priorityId\u0027], dataToUpdate[\u0027statusId\u0027] , dataToUpdate[\u0027notes\u0027] ,dataToUpdate[\u0027contact\u0027],completedDate, dataToUpdate[\u0027assignerId\u0027],  dataToUpdate[\u0027participantId\u0027], dataToUpdate[\u0027id\u0027]])\n\t\t\t\telse:\n\t\t\t\t\tupdateQ \u003d \"UPDATE shelter.Tasks SET locationId \u003d ?, taskTypeId \u003d ?, title \u003d ?, dueDate \u003d ?, staffId \u003d ?, priority \u003d ?, statusId \u003d ?, notes \u003d ?, contact \u003d ?, assignerId \u003d ?, participantId \u003d ? WHERE id \u003d ?\"\n\t\t\t\t\tsystem.db.runPrepUpdate(updateQ, [dataToUpdate[\u0027locationId\u0027], dataToUpdate[\u0027taskTypeId\u0027], dataToUpdate[\u0027Task\u0027],dataToUpdate[\u0027Due Date\u0027], dataToUpdate[\u0027staffId\u0027], dataToUpdate[\u0027priorityId\u0027], dataToUpdate[\u0027statusId\u0027] , dataToUpdate[\u0027notes\u0027] ,dataToUpdate[\u0027contact\u0027], dataToUpdate[\u0027assignerId\u0027],  dataToUpdate[\u0027participantId\u0027], dataToUpdate[\u0027id\u0027]])\t\t\t\t\t\n\t\t\t\t#param \u003d [dataToUpdate[\u0027locationId\u0027], dataToUpdate[\u0027taskTypeId\u0027], dataToUpdate[\u0027Task\u0027],dataToUpdate[\u0027Due Date\u0027], dataToUpdate[\u0027staffId\u0027], dataToUpdate[\u0027priorityId\u0027], dataToUpdate[\u0027statusId\u0027] , dataToUpdate[\u0027notes\u0027] ,dataToUpdate[\u0027contact\u0027],completedDate, dataToUpdate[\u0027assignerId\u0027],  dataToUpdate[\u0027participantId\u0027], dataToUpdate[\u0027id\u0027]]\n#\t\t\t\tsystem.perspective.print(param)\n\t\t\t\tself.getSibling(\"Label\").showMessage(\"Task updated successfully.\")\n\t\t\t\tactivityType \u003d \"task_modified\"\n\t\t\tsystem.perspective.sendMessage(messageType\u003d\"refreshTasksDashboardData\", payload\u003d{}, scope\u003d\"session\")\n\t\t\t\n\t\t\t## create case note for selected participant if not exist else update note only\n\t\t\tcheckIfTaskCaseNote_result \u003d system.db.runPrepQuery(\u0027select * from [participant].[CaseNotes] where [taskId] \u003d \u0027+str(noteIdForLog))\n\t\t\tgetEmployeeIdFromHumanId_result \u003d system.db.runPrepQuery(\u0027select id from [staff].[Employee] where humanId \u003d\u0027 + str(int(dataToUpdate[\u0027staffId\u0027])))\n\t\t\ttime_created \u003d system.date.format(system.date.now(), \u0027yyyy-MM-dd hh:mm:ss\u0027)\n\t\t\tparticipant_id \u003d int(dataToUpdate[\u0027participantId\u0027]) if dataToUpdate[\u0027participantId\u0027]!\u003dNone and dataToUpdate[\u0027participantId\u0027]!\u003d\u0027\u0027 else dataToUpdate[\u0027participantId\u0027]\n\t\t\temployee_id \u003d getEmployeeIdFromHumanId_result.getValueAt(0,0)\n\t\t\thmis \u003d 0\n\t\t\tnote \u003d str(dataToUpdate[\u0027Task\u0027]) + \u0027: \u0027 + str(dataToUpdate[\u0027notes\u0027])\n\t\t\tuser_name \u003d self.session.props.auth.user.userName\n\t\t\tstartTime \u003d system.date.format(dataToUpdate[\u0027Due Date\u0027], \u0027yyyy-MM-dd hh:mm:ss\u0027)\n\t\t\tendTime \u003d system.date.format(system.date.addMinutes(dataToUpdate[\u0027Due Date\u0027], 15), \u0027yyyy-MM-dd hh:mm:ss\u0027)\n\t\t\tnoteType \u003d 1\n\t\t\tproject \u003d \u0027RITI\u0027\n\t\t\tparticipantId_old \u003d self.view.params.Row_Data.participantId\n\t\t\tparticipantId_current \u003d dataToUpdate[\u0027participantId\u0027]\n\t\t\tsystem.perspective.print(participantId_old)\n\t\t\tsystem.perspective.print(participantId_current)\n\t\t\tif checkIfTaskCaseNote_result.getRowCount()\u003e0:\n\t\t\t\tnote_id \u003d checkIfTaskCaseNote_result.getValueAt(0,\u0027id\u0027)\n\t\t\t\t## if participnt change for that task then delete case note from prev participant and add new case note for new participant\n\t\t\t\tif participantId_old !\u003d -1 and  participantId_old !\u003d None and  participantId_old !\u003d \u0027\u0027 and (participantId_old !\u003d participantId_current):\n\t\t\t\t\t## Delete the case notes types record(s) before deleting the case note\n\t\t\t\t\tpath \u003d \"Participants/CaseNotes/CaseNotesTypesDelete\"\n\t\t\t\t\tparameters \u003d {\"case_note_id\":note_id}\n\t\t\t\t\tsystem.db.runNamedQuery(project\u003dproject,path\u003dpath,parameters\u003dparameters)\t\n\t\t\t\t\t#Delete the Case Note from previous participant\n\t\t\t\t\tpath \u003d \"Participants/CaseNotes/CaseNotesDetailDelete\"\n\t\t\t\t\tparameters \u003d {\"row_id\":note_id}\n\t\t\t\t\tRefresh \u003d system.db.runNamedQuery(project\u003dproject,path\u003dpath,parameters\u003dparameters, getKey\u003dTrue)\t\n\t\t\t\t\t# insert case note for new participant\n\t\t\t\t\tpath \u003d \"Participants/CaseNotes/CaseNotesDetailInsert_FromWsTask\"\n\t\t\t\t\tparameters \u003d {\"time_created\":time_created,\n\t\t\t\t\t\t\t\t\"participant_id\":participant_id,\n\t\t\t\t\t\t\t\t\"employee_id\":employee_id, \n\t\t\t\t\t\t\t\t\"hmis\":hmis,\n\t\t\t\t\t\t\t\t\"note\":note,\n\t\t\t\t\t\t\t\t\"user_name\":user_name,\n\t\t\t\t\t\t\t\t\u0027startTime\u0027:startTime,\n\t\t\t\t\t\t\t\t\u0027endTime\u0027:endTime,\n\t\t\t\t\t\t\t\t\u0027taskId\u0027:noteIdForLog}\n\t\t\t\t#\t\t\t\tsystem.perspective.print(parameters)\n\t\t\t\t\tnote_row \u003d system.db.runNamedQuery(project\u003dproject,path\u003dpath,parameters\u003dparameters, getKey\u003dTrue)\t\n\t\t\t\t\t## insert case note types\n\t\t\t\t\tpath \u003d \"Participants/CaseNotes/CaseNotesTypesInsert\"\n\t\t\t\t\tparameters \u003d {\"case_note_id\":note_row,\n\t\t\t\t\t\t\t\t\"case_note_type_id\":noteType}\n\t\t\t\t\tnote_type_row \u003d system.db.runNamedQuery(project\u003dproject,path\u003dpath,parameters\u003dparameters, getKey\u003dTrue)\t\t\t\n\t\t\t\t\t\n\t\t\t\t## else update case note\n\t\t\t\telse: \n\t\t\t\t\t## update case note\n\t\t\t\t\tpath \u003d \"Participants/CaseNotes/CaseNotesDetailUpdate\"\n\t\t\t\t\tparameters \u003d {\n\t\t\t\t\t\t\t\t\"participant_id\":participant_id,\n\t\t\t\t\t\t\t\t\"employee_id\":employee_id, \n\t\t\t\t\t\t\t\t\"hmis\":hmis,\n\t\t\t\t\t\t\t\t\"note\":note,\n\t\t\t\t\t\t\t\t\"row_id\":note_id,\n\t\t\t\t\t\t\t\t\"user_name\":user_name,\n\t\t\t\t\t\t\t\t\u0027startTime\u0027:startTime,\n\t\t\t\t\t\t\t\t\u0027endTime\u0027:endTime}\n\t\t\t\t\tnothing \u003d system.db.runNamedQuery(project\u003dproject,path\u003dpath,parameters\u003dparameters, getKey\u003dTrue)\n\t\t\t\t\t\n\t\t\t\t\t## if there was change in start or end times, add a log entry\n\t\t\t\t\toldStartTime \u003d checkIfTaskCaseNote_result.getValueAt(0,\u0027startTime\u0027)\n\t\t\t\t\toldEndTime \u003d checkIfTaskCaseNote_result.getValueAt(0,\u0027endTime\u0027)\n\t\t\t\t\tif oldStartTime !\u003d startTime or oldEndTime !\u003d endTime:\n\t\t\t\t\t\taction \u003d \"Time Updates\"\n\t\t\t\t\t\tpath \u003d \"Participants/CaseNotes/CaseNoteAuditLogInsert\"\n\t\t\t\t\t\tparameters \u003d { \"participant_id\" : participant_id,\n\t\t\t\t\t\t\"employee_id\":self.session.custom.loggedInStaffEmployeeID , \n\t\t\t\t\t\t\"action\":action , \n\t\t\t\t\t\t\"case_note_id\": note_id, \n\t\t\t\t\t\t\"old_start_time\":oldStartTime , \n\t\t\t\t\t\t\"old_end_time\": oldEndTime, \n\t\t\t\t\t\t\"new_start_time\":startTime , \n\t\t\t\t\t\t\"new_end_time\": endTime, \n\t\t\t\t\t\t\"user_name\": user_name}\n\t\t\t\t\t\tsystem.db.runNamedQuery(project\u003dproject,path\u003dpath,parameters\u003dparameters)\n\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t## delete existing record(s) for case note types for selected case note\n\t\t\t\t\tpath \u003d \"Participants/CaseNotes/CaseNotesTypesDelete\"\n\t\t\t\t\tparameters \u003d {\"case_note_id\":note_id}\n\t\t\t\t\tsystem.db.runNamedQuery(project\u003dproject,path\u003dpath,parameters\u003dparameters)\t\t\n\t\t\t\t\t\n\t\t\t\t\t## insert new record(s) for case note types for selected case note\n\t\t\t\t\tpath \u003d \"Participants/CaseNotes/CaseNotesTypesInsert\"\n\t\t\t\t\tparameters \u003d {\"case_note_id\":note_id,\n\t\t\t\t\t\t\t\t\"case_note_type_id\":noteType}\n\t\t\t\t\tnote_type_row \u003d system.db.runNamedQuery(project\u003dproject,path\u003dpath,parameters\u003dparameters, getKey\u003dTrue)\t\n\t\t\telse:\n\t\t\t\t## insert new case note\n\t\t\t\tif participant_id !\u003d None and participant_id!\u003d\u0027\u0027 and participant_id!\u003d-1:\n\t\t\t\t\tpath \u003d \"Participants/CaseNotes/CaseNotesDetailInsert_FromWsTask\"\n\t\t\t\t\tparameters \u003d {\"time_created\":time_created,\n\t\t\t\t\t\t\t\t\"participant_id\":participant_id,\n\t\t\t\t\t\t\t\t\"employee_id\":employee_id, \n\t\t\t\t\t\t\t\t\"hmis\":hmis,\n\t\t\t\t\t\t\t\t\"note\":note,\n\t\t\t\t\t\t\t\t\"user_name\":user_name,\n\t\t\t\t\t\t\t\t\u0027startTime\u0027:startTime,\n\t\t\t\t\t\t\t\t\u0027endTime\u0027:endTime,\n\t\t\t\t\t\t\t\t\u0027taskId\u0027:noteIdForLog}\n\t#\t\t\t\tsystem.perspective.print(parameters)\n\t\t\t\t\tnote_row \u003d system.db.runNamedQuery(project\u003dproject,path\u003dpath,parameters\u003dparameters, getKey\u003dTrue)\t\t\n\t\t\t\t\t\n\t\t\t\t\t## insert case note types\n\t\t\t\t\tpath \u003d \"Participants/CaseNotes/CaseNotesTypesInsert\"\n\t\t\t\t\tparameters \u003d {\"case_note_id\":note_row,\n\t\t\t\t\t\t\t\t\"case_note_type_id\":noteType}\n\t\t\t\t\tnote_type_row \u003d system.db.runNamedQuery(project\u003dproject,path\u003dpath,parameters\u003dparameters, getKey\u003dTrue)\t\t\n\t\t\t\n\t\t\t# update task active count\n\t\t\tsystem.perspective.sendMessage(messageType\u003d\"refreshTasksDashboardData\", payload\u003d{}, scope\u003d\"session\")\n\t\t\tsystem.perspective.sendMessage(\"clearTaskSelection\", payload \u003d {}, scope \u003d \u0027session\u0027)\n\t\t\t## also log to the Activity Log\n\t\t\tinsertLogQ \u003d \"INSERT INTO shelter.ActivityLog (locationId, activityType, activityDescription, timeCreated, referenceId) VALUES (?,?,?,CURRENT_TIMESTAMP, ?)\"\n\t\t\tsystem.db.runPrepUpdate(insertLogQ, [dataToUpdate[\u0027locationId\u0027],activityType,dataToUpdate[\u0027Task\u0027],noteIdForLog])\n\t\texcept Exception as e:\n\t\t\tsystem.perspective.print(\"exception : \" + str(e))\n\t\t\tself.getSibling(\"Label\").showMessage(\"Something went wrong. Please try again.\")\t"
+                  },
+                  "scope": "G",
+                  "type": "script"
+                }
+              }
+            },
+            "meta": {
+              "name": "button_update"
+            },
+            "position": {
+              "basis": "120px",
+              "shrink": 0
+            },
+            "propConfig": {
+              "props.text": {
+                "binding": {
+                  "config": {
+                    "expression": "if({view.params.Row_Data.id} \u003d -1, \"SAVE TASK\", \"UPDATE TASK\")"
+                  },
+                  "type": "expr"
+                }
+              }
+            },
+            "props": {
+              "style": {
+                "classes": "Buttons/Main",
+                "marginBottom": "5px",
+                "marginLeft": "10px",
+                "marginTop": "5px"
+              }
+            },
+            "type": "ia.input.button"
+          },
+          {
+            "events": {
+              "component": {
+                "onActionPerformed": {
+                  "config": {
+                    "script": "\t### Declare parameters\n\tproject \u003d \"RITI\" \n\tid \u003d self.view.params.Row_Data.id\n\t\t\t\n\ttry:\n\t\tpath \u003d \"WinterShelter/Tasks/TaskRetire\"\n\t\tparameters \u003d {\"row_id\":id}\n\t\t\n\t\tRefresh \u003d system.db.runNamedQuery(project\u003dproject,path\u003dpath,parameters\u003dparameters, getKey\u003dTrue)\t\t\n\t\t\n\t\t##delete respective case note of task\n\t\tcheckIfTaskCaseNote_result \u003d system.db.runPrepQuery(\u0027select * from [participant].[CaseNotes] where [taskId] \u003d \u0027+str(id))\n\t\tif checkIfTaskCaseNote_result.getRowCount()\u003e0:\n\t\t\tnote_id \u003d checkIfTaskCaseNote_result.getValueAt(0,\u0027id\u0027)\n\t\t\t## Delete the case notes types record(s) before deleting the case note\n\t\t\tpath \u003d \"Participants/CaseNotes/CaseNotesTypesDelete\"\n\t\t\tparameters \u003d {\"case_note_id\":note_id}\n\t\t\tsystem.db.runNamedQuery(project\u003dproject,path\u003dpath,parameters\u003dparameters)\t\t\n\t\t\t\n\t\t\t#Delete the Case Note\n\t\t\tpath \u003d \"Participants/CaseNotes/CaseNotesDetailDelete\"\n\t\t\tparameters \u003d {\"row_id\":note_id}\n\t\t\tRefresh \u003d system.db.runNamedQuery(project\u003dproject,path\u003dpath,parameters\u003dparameters, getKey\u003dTrue)\t\n\n\t\t##### Refresh the table\n\t\tsystem.perspective.sendMessage(messageType\u003d\"refreshTasksDashboardData\", payload\u003d{}, scope\u003d\"session\")\n\t\t\n\t\t### Let the user know that the record was deleted\n\t\tself.getSibling(\"Label\").showMessage(\"Task Deleted.\")\t\n\t\tsystem.perspective.sendMessage(\"clearTaskSelection\", payload \u003d {}, scope \u003d \u0027session\u0027)\n\t\t\n\texcept:\n\t\tself.getSibling(\"Label\").showMessage(\"Something went wrong while deleting data. Please try again.\")\t\n\n\t\t\n\t"
+                  },
+                  "scope": "G",
+                  "type": "script"
+                }
+              }
+            },
+            "meta": {
+              "name": "button_delete"
+            },
+            "position": {
+              "basis": "120px",
+              "shrink": 0
+            },
+            "propConfig": {
+              "position.display": {
+                "binding": {
+                  "config": {
+                    "expression": "if({view.params.Row_Data.id} \u003e -1 \u0026\u0026 {session.custom.isAdministrator}, True, False)"
+                  },
+                  "type": "expr"
+                }
+              }
+            },
+            "props": {
+              "style": {
+                "classes": "Buttons/Delete",
+                "marginBottom": "5px",
+                "marginLeft": "10px",
+                "marginTop": "5px"
+              },
+              "text": "Delete Task"
+            },
+            "type": "ia.input.button"
+          },
+          {
+            "meta": {
+              "name": "Label",
+              "visible": false
+            },
+            "position": {
+              "basis": "50px",
+              "grow": 1
+            },
+            "props": {
+              "style": {
+                "classes": "Text/Error_Message"
+              },
+              "text": "Please fill in all the fields correctly before saving."
+            },
+            "scripts": {
+              "customMethods": [
+                {
+                  "name": "showMessage",
+                  "params": [
+                    "message"
+                  ],
+                  "script": "\timport time\n\tself.props.text \u003d message\n\tself.meta.visible \u003d True\n\ttime.sleep(5)\n\tself.meta.visible \u003d False\n\t"
+                }
+              ],
+              "extensionFunctions": null,
+              "messageHandlers": []
+            },
+            "type": "ia.display.label"
+          }
+        ],
+        "meta": {
+          "name": "root Actions"
+        },
+        "position": {
+          "basis": "50px",
+          "shrink": 0
+        },
+        "props": {
+          "style": {
+            "borderTopColor": "#9db8d1",
+            "borderTopStyle": "solid",
+            "borderTopWidth": "1px",
+            "classes": "Background/Default",
+            "marginTop": "5px",
+            "paddingTop": "5px"
+          }
+        },
+        "type": "ia.container.flex"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column",
+      "style": {
+        "classes": "Background/Default"
+      }
+    },
+    "scripts": {
+      "customMethods": [],
+      "extensionFunctions": null,
+      "messageHandlers": [
+        {
+          "messageType": "clearTaskSelection",
+          "pageScope": true,
+          "script": "\t# implement your handler here\n\tnewTaskData \u003d {\n\t\t  \"Task Type\": \"\",\n\t\t  \"Due Date\": \"\",\n\t\t  \"Task\": \"\",\n\t\t  \"notes\": \"\",\n\t\t  \"Location Name\": \"\",\n\t\t  \"completed\": None,\n\t\t  \"priority\": \"\",\n\t\t  \"Created\": None,\n\t\t  \"priorityId\": None,\n\t\t  \"taskTypeId\": None,\n\t\t  \"statusId\": 1,\n\t\t  \"locationId\": -1,\n\t\t  \"contact\": \"\",\n\t\t  \"staffName\": \"\",\n\t\t  \"id\": -1,\n\t\t  \"staffId\": -1,\n\t\t  \"status\": \"Not Started\",\n\t\t  \"assignerId\": -1,\n\t\t  \"participantId\": -1\n\t\t}\n\tnewTaskData[\u0027Created\u0027] \u003d system.date.format(system.date.now(),\u0027MM/dd/YYYY hh:mm a\u0027)\n\tnewTaskData[\u0027assignerId\u0027] \u003d self.view.custom.loggedInStaffHumanId\n\tself.view.params.Row_Data \u003d newTaskData",
+          "sessionScope": true,
+          "viewScope": true
+        }
+      ]
+    },
+    "type": "ia.container.flex"
+  }
+}

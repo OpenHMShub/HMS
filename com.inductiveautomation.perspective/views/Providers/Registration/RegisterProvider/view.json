@@ -1,0 +1,732 @@
+{
+  "custom": {
+    "_devPulse": false,
+    "_isDev": false
+  },
+  "params": {
+    "providerInfo": {
+      "providerId": -1,
+      "providerName": "test",
+      "street": "test"
+    }
+  },
+  "propConfig": {
+    "custom._devPulse": {
+      "onChange": {
+        "enabled": null,
+        "script": "\troot \u003d self.getChild(\"root\")\n\tif self.custom._isDev:\n\t\tif currentValue.value:\n\t\t\t#root.insertProviderDb()\n\t\t\t#root.updateProviderDb()\n\t\t\tpass"
+      },
+      "persistent": true
+    },
+    "custom._isDev": {
+      "persistent": true
+    },
+    "params.providerInfo": {
+      "onChange": {
+        "enabled": null,
+        "script": "\troot \u003d self.getChild(\"root\")\n\tsystem.perspective.print((\u0027provInfo:\u0027,currentValue.value))\n\ttry:\n\t\t_providerId \u003d currentValue.value[\u0027providerId\u0027].value\n\texcept:\n\t\t_providerId \u003d None\n\t\t\n\t\t\n\tif _providerId is None:\n\t\t_providerName \u003d currentValue.value[\u0027providerName\u0027].value\n\t\t_street \u003d currentValue.value[\u0027street\u0027].value\t\n\t\troot.setFormComponents(providerName\u003d_providerName, street\u003d_street)\n\t\t\n\telse:\n\t\troot.setFormComponents(providerId \u003d _providerId)\n\t\t\n\t\t\n\tsystem.perspective.print((\u0027provInfo2:\u0027,currentValue.value))\n\n\n"
+      },
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.providerInfo.providerId": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.providerInfo.providerName": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.providerInfo.street": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 900,
+      "width": 600
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "emvHeader"
+        },
+        "position": {
+          "shrink": 0
+        },
+        "props": {
+          "params": {
+            "text": "Register Provider"
+          },
+          "path": "Providers/Registration/Cards/RegistrationHeader",
+          "useDefaultViewHeight": true
+        },
+        "scripts": {
+          "customMethods": [
+            {
+              "name": "cleanForm",
+              "params": [],
+              "script": "\tself.parent.getChild(\"FlexContainer Basic\").getChild(\"FlexContainer Left\").getChild(\"ProviderName\").props.params.inputText \u003d \"\"\n\tself.parent.getChild(\"FlexContainer Basic\").getChild(\"FlexContainer Left\").getChild(\"Address\").props.params.inputText \u003d \"\"\n\tself.parent.getChild(\"FlexContainer Basic\").getChild(\"FlexContainer Left\").getChild(\"State\").props.params.inputText \u003d \"\"\n\tself.parent.getChild(\"FlexContainer Basic\").getChild(\"FlexContainer Left\").getChild(\"Zip\").props.params.inputText \u003d \"\"\n\t\n\tself.parent.getChild(\"FlexContainer Basic\").getChild(\"FlexContainer Right\").getChild(\"LocationDesc\").props.params.inputText \u003d \"\"\n\t\n\tself.parent.getChild(\"FlexContainer Contact\").getChild(\"FlexContainer Left\").getChild(\"Phone\").props.params.inputText \u003d \"\"\n\tself.parent.getChild(\"FlexContainer Contact\").getChild(\"FlexContainer Left\").getChild(\"Email\").props.params.inputText \u003d \"\"\n\t\n\tself.parent.getChild(\"FlexContainer Contact\").getChild(\"FlexContainer Right\").getChild(\"ContactName\").props.params.inputText \u003d \"\"\n\tself.parent.getChild(\"FlexContainer Contact\").getChild(\"FlexContainer Right\").getChild(\"ContactPhone\").props.params.inputText \u003d \"\"\n\tself.view.params.provId \u003d 0"
+            }
+          ],
+          "extensionFunctions": null,
+          "messageHandlers": []
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "meta": {
+                  "name": "ProviderName"
+                },
+                "position": {
+                  "shrink": 0
+                },
+                "props": {
+                  "params": {
+                    "editEnabled": false,
+                    "inputText": null,
+                    "text": "Provider Name*"
+                  },
+                  "path": "Providers/Registration/Cards/TextInput",
+                  "style": {
+                    "marginTop": "5px"
+                  },
+                  "useDefaultViewHeight": true
+                },
+                "type": "ia.display.view"
+              },
+              {
+                "meta": {
+                  "name": "Street"
+                },
+                "position": {
+                  "shrink": 0
+                },
+                "props": {
+                  "params": {
+                    "editEnabled": false,
+                    "inputText": null,
+                    "text": "Address*"
+                  },
+                  "path": "Providers/Registration/Cards/TextInput",
+                  "style": {
+                    "marginTop": "5px"
+                  },
+                  "useDefaultViewHeight": true
+                },
+                "type": "ia.display.view"
+              },
+              {
+                "meta": {
+                  "name": "City"
+                },
+                "props": {
+                  "params": {
+                    "inputText": "",
+                    "text": "City"
+                  },
+                  "path": "Providers/Registration/Cards/TextInput",
+                  "style": {
+                    "marginTop": "5px"
+                  },
+                  "useDefaultViewHeight": true
+                },
+                "type": "ia.display.view"
+              },
+              {
+                "meta": {
+                  "name": "State"
+                },
+                "position": {
+                  "shrink": 0
+                },
+                "props": {
+                  "params": {
+                    "inputText": "",
+                    "text": "State"
+                  },
+                  "path": "Providers/Registration/Cards/TextInput",
+                  "style": {
+                    "marginTop": "5px"
+                  },
+                  "useDefaultViewHeight": true
+                },
+                "type": "ia.display.view"
+              },
+              {
+                "meta": {
+                  "name": "ZipCode"
+                },
+                "position": {
+                  "shrink": 0
+                },
+                "props": {
+                  "params": {
+                    "inputText": "",
+                    "text": "Zip Code"
+                  },
+                  "path": "Participants/Registration/Cards/TextInput",
+                  "style": {
+                    "marginTop": "5px"
+                  },
+                  "useDefaultViewHeight": true
+                },
+                "type": "ia.display.view"
+              }
+            ],
+            "meta": {
+              "name": "FlexContainer Left"
+            },
+            "position": {
+              "basis": "200px",
+              "grow": 1
+            },
+            "props": {
+              "direction": "column",
+              "style": {
+                "paddingLeft": "25px",
+                "paddingRight": "20px"
+              }
+            },
+            "type": "ia.container.flex"
+          },
+          {
+            "children": [
+              {
+                "custom": {
+                  "_devPulse": true
+                },
+                "meta": {
+                  "name": "ProviderTypeId"
+                },
+                "propConfig": {
+                  "custom._devPulse": {
+                    "onChange": {
+                      "enabled": null,
+                      "script": "\tif currentValue.value is True:\n\t\tself.setOptions()\n\telif currentValue.value is False:\n\t\tself.props.params.options \u003d []"
+                    }
+                  }
+                },
+                "props": {
+                  "params": {
+                    "options": [
+                      {
+                        "label": "Community Partner",
+                        "value": 0
+                      },
+                      {
+                        "label": "Law Enforcement",
+                        "value": 3
+                      },
+                      {
+                        "label": "Medical Facility",
+                        "value": 2
+                      }
+                    ],
+                    "selectedValue": null,
+                    "text": "Provider Type"
+                  },
+                  "path": "Providers/Registration/Cards/SelectionInput",
+                  "style": {
+                    "marginTop": "5px"
+                  },
+                  "useDefaultViewHeight": true
+                },
+                "scripts": {
+                  "customMethods": [
+                    {
+                      "name": "setOptions",
+                      "params": [],
+                      "script": "\tquery \u003d \"\"\"\nSELECT [id]\n\t,[providerTypeName]\nFROM [organization].[ProviderType]\nWHERE providerTypeName NOT IN (\u0027Presenter-Volunteer\u0027,\u0027Insurance\u0027, \u0027Congregation\u0027,\u0027Staff\u0027,\u0027Other\u0027)\nORDER BY [providerTypeName]\n\t\"\"\"\n\t\n\tresult \u003d system.db.runPrepQuery(query,[],\u0027RITIOps\u0027)\n\t\n\t# Version 1 set options as list of dictionaries\n\tself.props.params.options \u003d [ dict(value \u003d x[0],label \u003d x[1]) for x in result]\n\n\t# Version 2 set options as dataset\n\t#self.props.params.options \u003d result"
+                    }
+                  ],
+                  "extensionFunctions": null,
+                  "messageHandlers": []
+                },
+                "type": "ia.display.view"
+              },
+              {
+                "meta": {
+                  "name": "LocationDescription"
+                },
+                "position": {
+                  "shrink": 0
+                },
+                "props": {
+                  "params": {
+                    "inputText": "",
+                    "text": "Location Description"
+                  },
+                  "path": "Providers/Registration/Cards/TextInput",
+                  "style": {
+                    "marginTop": "5px"
+                  },
+                  "useDefaultViewHeight": true
+                },
+                "type": "ia.display.view"
+              },
+              {
+                "custom": {
+                  "changed": false
+                },
+                "meta": {
+                  "name": "Active"
+                },
+                "position": {
+                  "basis": "36px"
+                },
+                "props": {
+                  "selected": true,
+                  "style": {
+                    "classes": "Text/Add_HeaderText"
+                  },
+                  "text": "Active",
+                  "textPosition": "left",
+                  "timeRetiredDb": null
+                },
+                "type": "ia.input.checkbox"
+              }
+            ],
+            "meta": {
+              "name": "FlexContainer Right"
+            },
+            "position": {
+              "basis": "200px",
+              "grow": 1
+            },
+            "props": {
+              "direction": "column",
+              "style": {
+                "paddingLeft": "15px",
+                "paddingRight": "30px"
+              }
+            },
+            "type": "ia.container.flex"
+          }
+        ],
+        "meta": {
+          "name": "FlexContainer Basic"
+        },
+        "position": {
+          "shrink": 0
+        },
+        "props": {
+          "style": {
+            "borderBottomColor": "#e6e6e6",
+            "borderBottomStyle": "solid",
+            "borderBottomWidth": 1,
+            "paddingBottom": "20px",
+            "paddingTop": "5px"
+          }
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "meta": {
+                  "name": "Phone"
+                },
+                "position": {
+                  "shrink": 0
+                },
+                "props": {
+                  "params": {
+                    "inputText": "",
+                    "text": "Provider Phone"
+                  },
+                  "path": "Participants/Registration/Cards/TextInput",
+                  "style": {
+                    "marginTop": "5px"
+                  },
+                  "useDefaultViewHeight": true
+                },
+                "type": "ia.display.view"
+              },
+              {
+                "meta": {
+                  "name": "Email"
+                },
+                "position": {
+                  "shrink": 0
+                },
+                "props": {
+                  "params": {
+                    "inputText": "",
+                    "text": "Email Address"
+                  },
+                  "path": "Participants/Registration/Cards/TextInput",
+                  "style": {
+                    "marginTop": "5px"
+                  },
+                  "useDefaultViewHeight": true
+                },
+                "type": "ia.display.view"
+              },
+              {
+                "meta": {
+                  "name": "Website"
+                },
+                "position": {
+                  "basis": "320px"
+                },
+                "props": {
+                  "params": {
+                    "inputText": "",
+                    "text": "Website"
+                  },
+                  "path": "Participants/Registration/Cards/TextInput",
+                  "style": {
+                    "marginTop": "5px"
+                  },
+                  "useDefaultViewHeight": true
+                },
+                "type": "ia.display.view"
+              }
+            ],
+            "meta": {
+              "name": "FlexContainer Left"
+            },
+            "position": {
+              "basis": "200px",
+              "grow": 1
+            },
+            "props": {
+              "direction": "column",
+              "style": {
+                "paddingLeft": "25px",
+                "paddingRight": "20px"
+              }
+            },
+            "type": "ia.container.flex"
+          },
+          {
+            "children": [
+              {
+                "meta": {
+                  "name": "ContactName"
+                },
+                "position": {
+                  "shrink": 0
+                },
+                "props": {
+                  "params": {
+                    "inputText": "",
+                    "text": "Contact Name"
+                  },
+                  "path": "Participants/Registration/Cards/TextInput",
+                  "style": {
+                    "marginTop": "5px"
+                  },
+                  "useDefaultViewHeight": true
+                },
+                "type": "ia.display.view"
+              },
+              {
+                "meta": {
+                  "name": "ContactPhone"
+                },
+                "position": {
+                  "shrink": 0
+                },
+                "props": {
+                  "params": {
+                    "inputText": "",
+                    "text": "Contact Phone"
+                  },
+                  "path": "Participants/Registration/Cards/TextInput",
+                  "style": {
+                    "marginTop": "5px"
+                  },
+                  "useDefaultViewHeight": true
+                },
+                "type": "ia.display.view"
+              }
+            ],
+            "meta": {
+              "name": "FlexContainer Right"
+            },
+            "position": {
+              "basis": "200px",
+              "grow": 1
+            },
+            "props": {
+              "direction": "column",
+              "style": {
+                "paddingLeft": "15px",
+                "paddingRight": "30px"
+              }
+            },
+            "type": "ia.container.flex"
+          }
+        ],
+        "meta": {
+          "name": "FlexContainer Contact"
+        },
+        "position": {
+          "basis": "221px",
+          "shrink": 0
+        },
+        "props": {
+          "style": {
+            "borderBottomColor": "#e6e6e6",
+            "borderBottomStyle": "solid",
+            "borderBottomWidth": 1,
+            "paddingBottom": "20px",
+            "paddingTop": "5px"
+          }
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "children": [
+          {
+            "meta": {
+              "name": "FlexContainer Left"
+            },
+            "position": {
+              "basis": "200px",
+              "grow": 1
+            },
+            "props": {
+              "direction": "column",
+              "style": {
+                "paddingLeft": "25px",
+                "paddingRight": "20px"
+              }
+            },
+            "type": "ia.container.flex"
+          },
+          {
+            "meta": {
+              "name": "FlexContainer Right"
+            },
+            "position": {
+              "basis": "200px",
+              "grow": 1
+            },
+            "props": {
+              "direction": "column",
+              "style": {
+                "paddingLeft": "15px",
+                "paddingRight": "30px"
+              }
+            },
+            "type": "ia.container.flex"
+          }
+        ],
+        "meta": {
+          "name": "FlexContainer Extra"
+        },
+        "position": {
+          "shrink": 0
+        },
+        "props": {
+          "style": {
+            "borderBottomColor": "#e6e6e6",
+            "borderBottomStyle": "solid",
+            "borderBottomWidth": 1,
+            "paddingBottom": "20px",
+            "paddingTop": "5px"
+          }
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "children": [
+          {
+            "events": {
+              "component": {
+                "onActionPerformed": {
+                  "config": {
+                    "script": "\troot \u003d self.view.getChild(\"root\")\n\tlblMessage \u003d self.getSibling(\"lblMessage\")\n\t_providerId \u003d self.view.params.providerInfo.get(\u0027providerId\u0027)\n\t\n\t\n\tsystem.perspective.print((\u0027_save providerId \u0027,_providerId ))\n\n\t_validationMsg \u003d root.getValidationMessage()\n\tif _validationMsg:\n\t\tlblMessage.showMessage(_validationMsg)\n\t\treturn\n\t\n\tsystem.perspective.print((\u0027_validationMsg: \u0027, _validationMsg))\n\ttry:\n\t\tif isinstance(_providerId, (int, long)) and _providerId \u003e -1:\n\t\t\troot.updateProviderDb(_providerId)\n\t\telse:\n\t\t\tself.view.params.providerInfo[\u0027providerId\u0027] \u003d root.insertProviderDb()\n\t\t\t\n\texcept:\n\t\tlblMessage.showMessage(\"Something went wrong while saving data. Please try again.\")\n\t\traise\t\t\t\t\n\t\n\telse:\t\t\n\t\tsystem.perspective.closeDock(\"SearchProvider\")\n\t\tsystem.perspective.closeDock(\"RegisterProvider\")\t\n\t\tsystem.perspective.sendMessage(\u0027refreshProviderTableFromFilter\u0027)\n\n"
+                  },
+                  "scope": "G",
+                  "type": "script"
+                }
+              }
+            },
+            "meta": {
+              "name": "Button Save"
+            },
+            "position": {
+              "basis": "120px",
+              "shrink": 0
+            },
+            "props": {
+              "style": {
+                "classes": "Buttons/Main",
+                "marginBottom": "15px",
+                "marginLeft": "20px",
+                "marginRight": "20px",
+                "marginTop": "15px"
+              },
+              "text": "Save"
+            },
+            "type": "ia.input.button"
+          },
+          {
+            "events": {
+              "component": {
+                "onActionPerformed": {
+                  "config": {
+                    "id": "RegisterProvider",
+                    "type": "close"
+                  },
+                  "scope": "C",
+                  "type": "dock"
+                }
+              }
+            },
+            "meta": {
+              "name": "Button Cancel"
+            },
+            "position": {
+              "basis": "120px",
+              "shrink": 0
+            },
+            "props": {
+              "style": {
+                "classes": "Buttons/Secondary_Orange",
+                "marginBottom": "15px",
+                "marginTop": "15px"
+              },
+              "text": "Cancel"
+            },
+            "type": "ia.input.button"
+          },
+          {
+            "meta": {
+              "name": "lblMessage",
+              "visible": false
+            },
+            "position": {
+              "basis": "50px",
+              "grow": 1
+            },
+            "props": {
+              "style": {
+                "classes": "Text/Error_Message"
+              },
+              "text": 213
+            },
+            "scripts": {
+              "customMethods": [
+                {
+                  "name": "showMessage",
+                  "params": [
+                    "message"
+                  ],
+                  "script": "\timport time\n\tself.props.text \u003d message\n\tself.meta.visible \u003d True\n\ttime.sleep(5)\n\tself.meta.visible \u003d False\n\t"
+                }
+              ],
+              "extensionFunctions": null,
+              "messageHandlers": []
+            },
+            "type": "ia.display.label"
+          }
+        ],
+        "meta": {
+          "name": "FlexContainer"
+        },
+        "position": {
+          "basis": "65px",
+          "shrink": 0
+        },
+        "type": "ia.container.flex"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column",
+      "style": {
+        "classes": "Background/Default"
+      }
+    },
+    "scripts": {
+      "customMethods": [
+        {
+          "name": "insertProviderDb",
+          "params": [],
+          "script": "\tquery \u003d \"\"\"\nINSERT INTO [organization].[Provider]\n\t\t([providerName]\n\t\t,[street]\n\t\t,[city]\n\t\t,[state]\n\t\t,[zipCode]\n\t\t,[providerTypeId]\n\t\t,[locationDescription]\n\t\t,[phone]\n\t\t,[email]\n\t\t,[website]\n\t\t,[contactName]\n\t\t,[contactPhone]\n\t\t,[timeRetired]\n\t\t,[timeCreated])\n\t     VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)\n\"\"\"\n\t_dictComp \u003d self.getDictComponents()\n\targs \u003d []\n\targs.append(_dictComp[\u0027providerName\u0027].props.params.inputText)\n\targs.append(_dictComp[\u0027street\u0027].props.params.inputText)\n\targs.append(_dictComp[\u0027city\u0027].props.params.inputText)\n\targs.append(_dictComp[\u0027state\u0027].props.params.inputText)\n\targs.append(_dictComp[\u0027zipCode\u0027].props.params.inputText)\n\t\n\targs.append(_dictComp[\u0027providerTypeId\u0027].props.params.selectedValue)\n\t\n\targs.append(_dictComp[\u0027locationDescription\u0027].props.params.inputText)\n\t\n\targs.append(_dictComp[\u0027phone\u0027].props.params.inputText)\n\t\n\targs.append(_dictComp[\u0027email\u0027].props.params.inputText)\n\targs.append(_dictComp[\u0027website\u0027].props.params.inputText)\n\targs.append(_dictComp[\u0027contactName\u0027].props.params.inputText)\n\targs.append(_dictComp[\u0027contactPhone\u0027].props.params.inputText)\n\t\n\t_timeRetired \u003d None if _dictComp[\u0027active\u0027].props.selected else system.date.now()\n\targs.append(_timeRetired)\n\t\n\targs.append(system.date.now())\n\n\t#errors \u003d False  # A flag to denote if we ran into a problem with a query during the transaction\n\t\n\t#system.perspective.print((\u0027insertDb:\u0027, query.replace(\u0027\\n\u0027,\u0027 \u0027).replace(\u0027\\t\u0027,\u0027 \u0027), args))\n\n\t\n\tidInserted \u003d -1\n\tsystem.perspective.print((\u0027insertDb:\u0027, args))\n\tidInserted \u003d system.db.runPrepUpdate(query,  args, \u0027RITIOps\u0027,getKey\u003d1)\n\tsystem.perspective.print((\u0027idInserted :\u0027, idInserted))\n"
+        },
+        {
+          "name": "updateProviderDb",
+          "params": [
+            "providerId"
+          ],
+          "script": "\t\n\tquery \u003d \"\"\"\nDECLARE @id INT \u003d ?\n\nUPDATE [organization].[Provider]\nSET  [providerName]\u003d ?\n\t,[street]\u003d ?\n\t,[city]\u003d ?\n\t,[state]\u003d ?\n\t,[zipCode]\u003d ?\n\t,[providerTypeId]\u003d ?\n\t,[locationDescription]\u003d ?\n\t,[phone]\u003d ?\n\t,[email] \u003d ?\n\t,[website]\u003d ?\n\t,[contactName]\u003d ?\n\t,[contactPhone]\u003d ?\n\t,[timeRetired]\u003d ?\nWHERE [id] \u003d @id\n\"\"\"\n\n\t_dictComp \u003d self.getDictComponents()\n\targs \u003d []\n\targs.append(self.view.params.providerInfo.providerId)\n\t\n\targs.append(_dictComp[\u0027providerName\u0027].props.params.inputText)\n\targs.append(_dictComp[\u0027street\u0027].props.params.inputText)\n\targs.append(_dictComp[\u0027city\u0027].props.params.inputText)\n\targs.append(_dictComp[\u0027state\u0027].props.params.inputText)\n\targs.append(_dictComp[\u0027zipCode\u0027].props.params.inputText)\n\t\n\targs.append(_dictComp[\u0027providerTypeId\u0027].props.params.selectedValue)\n\t\n\targs.append(_dictComp[\u0027locationDescription\u0027].props.params.inputText)\n\targs.append(_dictComp[\u0027phone\u0027].props.params.inputText)\n\targs.append(_dictComp[\u0027email\u0027].props.params.inputText)\n\targs.append(_dictComp[\u0027website\u0027].props.params.inputText)\n\targs.append(_dictComp[\u0027contactName\u0027].props.params.inputText)\n\targs.append(_dictComp[\u0027contactPhone\u0027].props.params.inputText)\n\n\t_isActive \u003d _dictComp[\u0027active\u0027].props.selected\n\t_timeRetiredDb \u003d _dictComp[\u0027active\u0027].props.timeRetiredDb\n\t\n\tif _isActive \u003d\u003d True:\n\t\targs.append(None)\n\telse:\n\t\tif _timeRetiredDb:\n\t\t\t# In the case that provider was not active before edit and stays still inactive, old retiredDate will be saved,\n\t\t\targs.append(_timeRetiredDb)\n\t\telse:\n\t\t\targs.append(system.date.now())\n\n\t\n\tsystem.perspective.print((\u0027updateDb:\u0027, args))\n\n\tsystem.db.runPrepUpdate(query,  args, \u0027RITIOps\u0027)   \n"
+        },
+        {
+          "name": "YupdateProviderDb",
+          "params": [
+            "providerId"
+          ],
+          "script": "\tquery \u003d \"\"\"\nDECLARE @id INT \u003d ?\n\nUPDATE [organization].[Provider]\nSET  [providerName]\u003d ?\n\t,[street]\u003d ?\n\t,[city]\u003d ?\n\t,[state]\u003d ?\n\t,[zipCode]\u003d ?\n\t,[providerTypeId]\u003d ?\n\t,[locationDescription]\u003d ?\n\t,[phone]\u003d ?\n\t,[email] \u003d ?\n\t,[website]\u003d ?\n\t,[contactName]\u003d ?\n\t,[contactPhone]\u003d ?\n\t,[timeRetired]\u003d ?\nWHERE [id] \u003d @id\n\"\"\"\n\n\tqueryWithoutTimeRetired \u003d \"\"\"\nDECLARE @id INT \u003d ?\n\nUPDATE [organization].[Provider]\nSET  [providerName]\u003d ?\n\t,[street]\u003d ?\n\t,[city]\u003d ?\n\t,[state]\u003d ?\n\t,[zipCode]\u003d ?\n\t,[providerTypeId]\u003d ?\n\t,[locationDescription]\u003d ?\n\t,[phone]\u003d ?\n\t,[email] \u003d ?\n\t,[website]\u003d ?\n\t,[contactName]\u003d ?\n\t,[contactPhone]\u003d ?\nWHERE [id] \u003d @id\n\"\"\"\n\n\n\t_dictComp \u003d self.getDictComponents()\n\targs \u003d []\n\targs.append(self.view.params.providerInfo.providerId)\n\t\n\targs.append(_dictComp[\u0027providerName\u0027].props.params.inputText)\n\targs.append(_dictComp[\u0027street\u0027].props.params.inputText)\n\targs.append(_dictComp[\u0027city\u0027].props.params.inputText)\n\targs.append(_dictComp[\u0027state\u0027].props.params.inputText)\n\targs.append(_dictComp[\u0027zipCode\u0027].props.params.inputText)\n\t\n\targs.append(_dictComp[\u0027providerTypeId\u0027].props.params.selectedValue)\n\t\n\targs.append(_dictComp[\u0027locationDescription\u0027].props.params.inputText)\n\targs.append(_dictComp[\u0027phone\u0027].props.params.inputText)\n\targs.append(_dictComp[\u0027email\u0027].props.params.inputText)\n\targs.append(_dictComp[\u0027website\u0027].props.params.inputText)\n\targs.append(_dictComp[\u0027contactName\u0027].props.params.inputText)\n\targs.append(_dictComp[\u0027contactPhone\u0027].props.params.inputText)\n\n\t_isActive \u003d _dictComp[\u0027timeRetired\u0027].props.selected\n\t_isDeactivated \u003d _dictComp[\u0027timeRetired\u0027].props.isDeactivated\n\t\n\tif _isActive \u003d\u003d True:\n\t\targs.append(None)\n\telse:\n\t\tif _isDeactivated \u003d\u003d True:\n\t\t\targs.append(system.date.now())\n\t\telse:\n\t\t\t# In case that provider is not active, but selection is not changed don\u0027t update timeRetired. (use query without timeRetired, don\u0027t add arg, )\n\t\t\tquery \u003d queryWithoutTimeRetired\n\n\t\n\tsystem.perspective.print((\u0027updateDb:\u0027, query.replace(\u0027\\n\u0027,\u0027 \u0027).replace(\u0027\\t\u0027,\u0027 \u0027), args))\n\n\tsystem.db.runPrepUpdate(query,  args, \u0027RITIOps\u0027)   \n"
+        },
+        {
+          "name": "XupdateProviderDb",
+          "params": [
+            "providerId"
+          ],
+          "script": "\tquery \u003d \"\"\"\nUPDATE [organization].[Provider]\nSET  [providerName]\u003d ?\n\t,[street]\u003d ?\n\t,[city]\u003d ?\n\t,[state]\u003d ?\n\t,[zipCode]\u003d ?\n\t,[providerTypeId]\u003d ?\n\t,[locationDescription]\u003d ?\n\t,[phone]\u003d ?\n\t,[email] \u003d ?\n\t,[website]\u003d ?\n\t,[contactName]\u003d ?\n\t,[contactPhone]\u003d ?\n\t,[timeRetired]\u003d ?\nWHERE [id] \u003d ?\n\"\"\"\n\targs \u003d self.getArgValues() + [providerId]\n\t#errors \u003d False  # A flag to denote if we ran into a problem with a query during the transaction\n\t\n\t\n\tsystem.perspective.print((\u0027updateDb:\u0027, query.replace(\u0027\\n\u0027,\u0027 \u0027).replace(\u0027\\t\u0027,\u0027 \u0027), args))\n\n\ttry:       \n\t\ttxId \u003d system.db.beginTransaction(timeout\u003d5000)\n\t\tsystem.db.runPrepUpdate(query,  args, \u0027RITIOps\u0027, tx\u003dtxId)   \n\t\tsystem.db.commitTransaction(txId)  \n\t\tsystem.db.closeTransaction(txId)\n\texcept:\n\t\tsystem.db.rollbackTransaction(txId)\n\t\tsystem.db.closeTransaction(txId)\n\t\traise\n\t\t#errors \u003d True  \n"
+        },
+        {
+          "name": "XgetArgValues",
+          "params": [],
+          "script": "\t\n\t_dictComp \u003d self.getDictComponents()\n\t\n\t_argKeys \u003d [ \n\t\t\u0027providerName\u0027\n\t\t,\u0027street\u0027\n\t\t,\u0027city\u0027\n\t\t,\u0027state\u0027\n\t\t,\u0027zipCode\u0027\n\t\t,\u0027providerTypeId\u0027\n\t\t,\u0027locationDescription\u0027\n\t\t,\u0027phone\u0027\n\t\t,\u0027email\u0027\n\t\t,\u0027website\u0027\n\t\t,\u0027contactName\u0027\n\t\t,\u0027contactPhone\u0027\n\t\t,\u0027timeRetired\u0027\t]\n\t\n\t\n\targValues \u003d []\t\n\tfor key in _argKeys:\n\t\n\t\tif key \u003d\u003d \u0027timeRetired\u0027:\n\t\t\ttimeRetired \u003d None if _dictComp[key].props.selected else system.date.now()\n\t\t\targValues.append(timeRetired)\t\n\t\telif \u0027inputText\u0027 in _dictComp[key].props.params:\n\t\t\tif _dictComp[key].props.params.inputText is None:\n\t\t\t\targValues.append(\u0027\u0027)\n\t\t\telse:\n\t\t\t\targValues.append(_dictComp[key].props.params.inputText)\n\t\telif \u0027selectedValue\u0027 in _dictComp[key].props.params:\n\t\t\targValues.append(_dictComp[key].props.params.selectedValue)\t\n\t\telse:\n\t\t\targValues.append(None)\n\n\treturn argValues\n\t\n\t_x \u003d \"\"\"\n\t_dict \u003d {}\n\tflexBasic \u003d self.getChild(\"FlexContainer Basic\")\n\t_dict[\u0027providerName\u0027] \u003d flexBasic.getChild(\"FlexContainer Left\").getChild(\"ProviderName\").props.params.inputText\n\t_dict[\u0027street\u0027] \u003d flexBasic.getChild(\"FlexContainer Left\").getChild(\"Street\").props.params.inputText\n\t_dict[\u0027state\u0027] \u003d flexBasic.getChild(\"FlexContainer Left\").getChild(\"State\").props.params.inputText\n\t_dict[\u0027city\u0027] \u003d flexBasic.getChild(\"FlexContainer Left\").getChild(\"City\").props.params.inputText\n\t_dict[\u0027zipCode\u0027] \u003d flexBasic.getChild(\"FlexContainer Left\").getChild(\"ZipCode\").props.params.inputText\n\t_dict[\u0027locationDescription\u0027] \u003d flexBasic.getChild(\"FlexContainer Right\").getChild(\"LocationDescription\").props.params.inputText\n\t_dict[\u0027providerTypeId\u0027] \u003d flexBasic.getChild(\"FlexContainer Right\").getChild(\"ProviderTypeId\").props.params.selectedValue\n\t\n\tflexContact \u003d self.getChild(\"FlexContainer Contact\")\n\t_dict[\u0027email\u0027] \u003d flexContact.getChild(\"FlexContainer Left\").getChild(\"Email\").props.params.inputText\n\t_dict[\u0027phone\u0027] \u003d flexContact.getChild(\"FlexContainer Left\").getChild(\"Phone\").props.params.inputText\n\t_dict[\u0027contactName\u0027] \u003d flexContact.getChild(\"FlexContainer Right\").getChild(\"ContactName\").props.params.inputText\n\t_dict[\u0027contactPhone\u0027] \u003d flexContact.getChild(\"FlexContainer Right\").getChild(\"ContactPhone\").props.params.inputText\n\t_dict[\u0027website\u0027] \u003d flexContact.getChild(\"FlexContainer Left\").getChild(\"Website\").props.params.inputText\n\t_dict[\u0027active\u0027] \u003d flexContact.getChild(\"FlexContainer Right\").getChild(\"Active\").props.selected\n\t\n\t# Correction for phone\n\t_dict[\u0027phone\u0027] \u003d \u0027\u0027.join([s for s in phone if s.isdigit()])\n\t_dict[\u0027contactPhone\u0027] \u003d \u0027\u0027.join([s for s in contactPhone if s.isdigit()])\n\t\n\targValues \u003d [_dict.get(key) for key in self.getArgKeys()]\n\t\n\treturn argValues\"\"\""
+        },
+        {
+          "name": "setFormComponents",
+          "params": [
+            "**kwargs"
+          ],
+          "script": "\tsystem.perspective.print((\u0027AAA111\u0027))\n\temvHeader \u003d self.getChild(\"emvHeader\")\n\t\n\t_dictComp \u003d self.getDictComponents()\n\t\t\n\t_dictComp[\u0027providerTypeId\u0027].setOptions()\n\n\tproviderId \u003d kwargs.get(\u0027providerId\u0027)\n\n\tsystem.perspective.print((\u0027providerId:\u0027,providerId))\n\t\n\tif providerId is not None and providerId \u003e -1:\n\t\temvHeader.props.params.text \u003d \u0027Edit Provider\u0027\n\n\t\tpyds \u003d self.getProviderDb(providerId)\n\n\n\t\t_dictComp[\u0027providerTypeId\u0027].props.params.selectedValue \u003d pyds[0][\u0027providerTypeId\u0027]\n\t\t\n\t\t_dictComp[\u0027active\u0027].props.selected \u003d True if pyds[0][\u0027timeRetired\u0027] is None else False\n\t\t_dictComp[\u0027active\u0027].props.timeRetiredDb \u003d pyds[0][\u0027timeRetired\u0027]\t\t\t\n\t\t\n\t\t_dictComp[\u0027providerName\u0027].props.params.inputText \u003d pyds[0][\u0027providerName\u0027]\n\t\t_dictComp[\u0027providerName\u0027].props.params.editEnabled \u003d True\n\t\t\n\t\t_dictComp[\u0027street\u0027].props.params.inputText \u003d pyds[0][\u0027street\u0027]\n\t\t_dictComp[\u0027street\u0027].props.params.editEnabled \u003d True\t\t\n\t\t\n\t\t_dictComp[\u0027state\u0027].props.params.inputText \u003d pyds[0][\u0027state\u0027]\n\t\t_dictComp[\u0027city\u0027].props.params.inputText \u003d pyds[0][\u0027city\u0027]\n\t\t_dictComp[\u0027zipCode\u0027].props.params.inputText \u003d pyds[0][\u0027zipCode\u0027]\n\t\t_dictComp[\u0027locationDescription\u0027].props.params.inputText \u003d pyds[0][\u0027locationDescription\u0027]\n\n\t\t_dictComp[\u0027email\u0027].props.params.inputText \u003d pyds[0][\u0027email\u0027]\n\t\t_dictComp[\u0027phone\u0027].props.params.inputText \u003d pyds[0][\u0027phone\u0027]\n\t\t_dictComp[\u0027contactName\u0027].props.params.inputText \u003d pyds[0][\u0027contactName\u0027]\n\t\t_dictComp[\u0027contactPhone\u0027].props.params.inputText \u003d pyds[0][\u0027contactPhone\u0027]\n\t\t_dictComp[\u0027website\u0027].props.params.inputText \u003d pyds[0][\u0027website\u0027]\t\n\n\telse:\n\t\temvHeader.props.params.text \u003d \u0027Register Provider\u0027\n\n\t\t_dictComp[\u0027providerTypeId\u0027].props.params.selectedValue \u003d None\n\t\t\n\t\t_dictComp[\u0027active\u0027].props.selected \u003d True\n\t\t_dictComp[\u0027active\u0027].props.timeRetiredDb \u003d None\t\t\n\t\t\n\t\t_dictComp[\u0027providerName\u0027].props.params.inputText \u003d kwargs.get(\u0027providerName\u0027)\n\t\t_dictComp[\u0027providerName\u0027].props.params.editEnabled \u003d False\n\t\t\n\t\t_dictComp[\u0027street\u0027].props.params.inputText \u003d kwargs.get(\u0027street\u0027)\n\t\t_dictComp[\u0027street\u0027].props.params.editEnabled \u003d False\n\t\t\n\t\t_dictComp[\u0027state\u0027].props.params.inputText \u003d \u0027\u0027\n\t\t_dictComp[\u0027city\u0027].props.params.inputText \u003d \u0027\u0027\n\t\t_dictComp[\u0027zipCode\u0027].props.params.inputText \u003d \u0027\u0027\n\t\t_dictComp[\u0027locationDescription\u0027].props.params.inputText \u003d \u0027\u0027\n\n\t\t_dictComp[\u0027email\u0027].props.params.inputText \u003d \u0027\u0027\n\t\t_dictComp[\u0027phone\u0027].props.params.inputText \u003d \u0027\u0027\n\t\t_dictComp[\u0027contactName\u0027].props.params.inputText \u003d \u0027\u0027\n\t\t_dictComp[\u0027contactPhone\u0027].props.params.inputText \u003d \u0027\u0027\n\t\t_dictComp[\u0027website\u0027].props.params.inputText \u003d \u0027\u0027"
+        },
+        {
+          "name": "XsetFormComponents",
+          "params": [
+            "providerInfo"
+          ],
+          "script": "\temvHeader \u003d self.getChild(\"emvHeader\")\n\t\n\t_dictComp \u003d self.getDictComponents()\n\t\t\n\t_dictComp[\u0027providerTypeId\u0027].setOptions()\n\t\n\tif providerInfo[\u0027providerId\u0027] \u003e -1:\n\t\temvHeader.props.params.text \u003d \u0027Edit Provider\u0027\n\t\n\t\tproviderId \u003d providerInfo[\u0027providerId\u0027]\n\t\tpyds \u003d self.getProviderDb(providerId)\n\n\n\t\t_dictComp[\u0027providerTypeId\u0027].props.params.selectedValue \u003d pyds[0][\u0027providerTypeId\u0027]\n\t\t\n\t\t_dictComp[\u0027active\u0027].props.selected \u003d True if pyds[0][\u0027timeRetired\u0027] is None else False\n\t\t_dictComp[\u0027active\u0027].props.timeRetiredDb \u003d pyds[0][\u0027timeRetired\u0027]\t\t\t\n\t\t\n\t\t_dictComp[\u0027providerName\u0027].props.params.inputText \u003d pyds[0][\u0027providerName\u0027]\n\t\t_dictComp[\u0027street\u0027].props.params.inputText \u003d pyds[0][\u0027street\u0027]\n\t\t_dictComp[\u0027state\u0027].props.params.inputText \u003d pyds[0][\u0027state\u0027]\n\t\t_dictComp[\u0027city\u0027].props.params.inputText \u003d pyds[0][\u0027city\u0027]\n\t\t_dictComp[\u0027zipCode\u0027].props.params.inputText \u003d pyds[0][\u0027zipCode\u0027]\n\t\t_dictComp[\u0027locationDescription\u0027].props.params.inputText \u003d pyds[0][\u0027locationDescription\u0027]\n\n\t\t_dictComp[\u0027email\u0027].props.params.inputText \u003d pyds[0][\u0027email\u0027]\n\t\t_dictComp[\u0027phone\u0027].props.params.inputText \u003d pyds[0][\u0027phone\u0027]\n\t\t_dictComp[\u0027contactName\u0027].props.params.inputText \u003d pyds[0][\u0027contactName\u0027]\n\t\t_dictComp[\u0027contactPhone\u0027].props.params.inputText \u003d pyds[0][\u0027contactPhone\u0027]\n\t\t_dictComp[\u0027website\u0027].props.params.inputText \u003d pyds[0][\u0027website\u0027]\t\n\n\telse:\n\t\temvHeader.props.params.text \u003d \u0027Register Provider\u0027\n\n\t\t_dictComp[\u0027providerTypeId\u0027].props.params.selectedValue \u003d None\n\t\t\n\t\t_dictComp[\u0027active\u0027].props.selected \u003d True\n\t\t_dictComp[\u0027active\u0027].props.timeRetiredDb \u003d None\t\t\n\t\t\n\t\t_dictComp[\u0027providerName\u0027].props.params.inputText \u003d providerInfo[\u0027providerName\u0027]\n\t\t_dictComp[\u0027street\u0027].props.params.inputText \u003d providerInfo[\u0027street\u0027]\n\t\t_dictComp[\u0027state\u0027].props.params.inputText \u003d \u0027\u0027\n\t\t_dictComp[\u0027city\u0027].props.params.inputText \u003d \u0027\u0027\n\t\t_dictComp[\u0027zipCode\u0027].props.params.inputText \u003d \u0027\u0027\n\t\t_dictComp[\u0027locationDescription\u0027].props.params.inputText \u003d \u0027\u0027\n\n\t\t_dictComp[\u0027email\u0027].props.params.inputText \u003d \u0027\u0027\n\t\t_dictComp[\u0027phone\u0027].props.params.inputText \u003d \u0027\u0027\n\t\t_dictComp[\u0027contactName\u0027].props.params.inputText \u003d \u0027\u0027\n\t\t_dictComp[\u0027contactPhone\u0027].props.params.inputText \u003d \u0027\u0027\n\t\t_dictComp[\u0027website\u0027].props.params.inputText \u003d \u0027\u0027"
+        },
+        {
+          "name": "getProviderDb",
+          "params": [
+            "providerId"
+          ],
+          "script": "\tquery \u003d \"\"\"\nSELECT \n\t [id]\n\t,[providerName]\n\t,[street]\n\t,[city]\n\t,[state]\n\t,[zipCode]\n\t,[providerTypeId]\n\t,[locationDescription]\n\t,[phone]\n\t,[email]\n\t,[website]\n\t,[contactName]\n\t,[contactPhone]\t\n\t,[timeRetired]\nFROM [organization].[Provider]\nWHERE [id] \u003d ?\n\"\"\"\n\t\n\tresult \u003d system.db.runPrepQuery(query,[providerId], \u0027RITIOps\u0027)\n\t\n\treturn result\n\t\n\t\n\t\n\t\n\t\n\t"
+        },
+        {
+          "name": "XgetArgKeys",
+          "params": [],
+          "script": "\t_lst \u003d[ \u0027providerName\u0027\n\t\t\t,\u0027street\u0027\n\t\t\t,\u0027city\u0027\n\t\t\t,\u0027state\u0027\n\t\t\t,\u0027zipCode\u0027\n\t\t\t,\u0027providerTypeId\u0027\n\t\t\t,\u0027locationDescription\u0027\n\t\t\t,\u0027phone\u0027\n\t\t\t,\u0027email\u0027\n\t\t\t,\u0027website\u0027\n\t\t\t,\u0027contactName\u0027\n\t\t\t,\u0027contactPhone\u0027\n\t\t\t,\u0027timeRetired\u0027\t]\n\t\n\treturn _lst\n"
+        },
+        {
+          "name": "getDictComponents",
+          "params": [],
+          "script": "\t_dictComp \u003d {}\n\tflexBasic \u003d self.getChild(\"FlexContainer Basic\")\n\tflexContact \u003d self.getChild(\"FlexContainer Contact\")\n\t\n\t_dictComp[\u0027providerName\u0027] \u003d flexBasic.getChild(\"FlexContainer Left\").getChild(\"ProviderName\")\n\t_dictComp[\u0027street\u0027] \u003d flexBasic.getChild(\"FlexContainer Left\").getChild(\"Street\")\n\t_dictComp[\u0027state\u0027] \u003d flexBasic.getChild(\"FlexContainer Left\").getChild(\"State\")\n\t_dictComp[\u0027city\u0027] \u003d flexBasic.getChild(\"FlexContainer Left\").getChild(\"City\")\n\t_dictComp[\u0027zipCode\u0027] \u003d flexBasic.getChild(\"FlexContainer Left\").getChild(\"ZipCode\")\n\t_dictComp[\u0027locationDescription\u0027] \u003d flexBasic.getChild(\"FlexContainer Right\").getChild(\"LocationDescription\")\n\t_dictComp[\u0027providerTypeId\u0027] \u003d flexBasic.getChild(\"FlexContainer Right\").getChild(\"ProviderTypeId\")\n\t_dictComp[\u0027active\u0027] \u003d flexBasic.getChild(\"FlexContainer Right\").getChild(\"Active\")\n\t\n\t_dictComp[\u0027email\u0027] \u003d flexContact.getChild(\"FlexContainer Left\").getChild(\"Email\")\n\t_dictComp[\u0027phone\u0027] \u003d flexContact.getChild(\"FlexContainer Left\").getChild(\"Phone\")\n\t_dictComp[\u0027contactName\u0027] \u003d flexContact.getChild(\"FlexContainer Right\").getChild(\"ContactName\")\n\t_dictComp[\u0027contactPhone\u0027] \u003d flexContact.getChild(\"FlexContainer Right\").getChild(\"ContactPhone\")\n\t_dictComp[\u0027website\u0027] \u003d flexContact.getChild(\"FlexContainer Left\").getChild(\"Website\")\n\n\treturn _dictComp"
+        },
+        {
+          "name": "getValidationMessage",
+          "params": [],
+          "script": "\timport re\n\n\t_dictComp \u003d self.getDictComponents()\n\t\n\t_providerName \u003d _dictComp[\u0027providerName\u0027].props.params.inputText\n\t_street \u003d _dictComp[\u0027street\u0027].props.params.inputText\n\t_state \u003d _dictComp[\u0027state\u0027].props.params.inputText\n\t_zipCode \u003d _dictComp[\u0027zipCode\u0027].props.params.inputText\n\t_providerTypeId \u003d _dictComp[\u0027providerTypeId\u0027].props.params.selectedValue\n\t_phone \u003d_dictComp[\u0027phone\u0027].props.params.inputText\n\t_contactPhone \u003d _dictComp[\u0027contactPhone\u0027].props.params.inputText\n\t\n\t_patternPhone \u003d re.compile(\"^[0-9]{3}-[0-9]{3}-[0-9]{4}$\", re.IGNORECASE)\n\n\t\n\tif not(_providerName) or unicode(_providerName).strip \u003d\u003d \u0027\u0027:\n\t\tvalidationMsg \u003d \"Provider name is mandatory!\"\n\t\n\telif not(_street) or unicode(_street).strip \u003d\u003d \u0027\u0027:\n\t\tvalidationMsg \u003d \"Address is mandatory!\"\n\t\n\telif not(_state) or unicode(_state).strip \u003d\u003d \u0027\u0027:\n\t\tvalidationMsg \u003d \"State is mandatory!\"\n\t\n\telif not(_zipCode) or unicode(_zipCode).strip \u003d\u003d \u0027\u0027:\n\t\tvalidationMsg \u003d \"Zip code is mandatory!\"\n\t\n\telif _providerTypeId is None or _providerTypeId \u003d\u003d -1:\t\n\t\tvalidationMsg \u003d \"Provider type is mandatory, select!\"\n\n\telif _phone and _patternPhone.match(_phone) is None:\n\t\tvalidationMsg \u003d \"Provider phone must be in format ***-***-**** \"\t\n\t\t\n\telif _contactPhone and _patternPhone.match(_contactPhone) is None:\n\t\tvalidationMsg \u003d \"Contact phone must be in format ***-***-**** \"\t\n\telse:\n\t\tvalidationMsg \u003d \u0027\u0027\n\t\n\treturn validationMsg\n"
+        }
+      ],
+      "extensionFunctions": null,
+      "messageHandlers": []
+    },
+    "type": "ia.container.flex"
+  }
+}

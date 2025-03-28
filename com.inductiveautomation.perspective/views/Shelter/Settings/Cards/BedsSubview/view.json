@@ -1,0 +1,640 @@
+{
+  "custom": {},
+  "params": {
+    "value": {
+      "id": -1
+    }
+  },
+  "propConfig": {
+    "params.value": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 200,
+      "width": 400
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "meta": {
+                  "name": "Label"
+                },
+                "position": {
+                  "basis": "100px"
+                },
+                "props": {
+                  "style": {
+                    "classes": "Labels/Label_Text_Res"
+                  },
+                  "text": "Beds"
+                },
+                "type": "ia.display.label"
+              },
+              {
+                "children": [
+                  {
+                    "meta": {
+                      "name": "Label",
+                      "visible": false
+                    },
+                    "position": {
+                      "basis": "50px",
+                      "grow": 1
+                    },
+                    "props": {
+                      "style": {
+                        "classes": "Text/Error_Message"
+                      },
+                      "text": "Cannot remove bed, it is currently occupied."
+                    },
+                    "scripts": {
+                      "customMethods": [
+                        {
+                          "name": "showMessage",
+                          "params": [
+                            "message"
+                          ],
+                          "script": "\timport time\n\tself.props.text \u003d message\n\tself.meta.visible \u003d True\n\ttime.sleep(5)\n\tself.meta.visible \u003d False\n\t"
+                        }
+                      ],
+                      "extensionFunctions": null,
+                      "messageHandlers": []
+                    },
+                    "type": "ia.display.label"
+                  }
+                ],
+                "meta": {
+                  "name": "Filler"
+                },
+                "position": {
+                  "basis": "500px",
+                  "grow": 1
+                },
+                "props": {
+                  "style": {
+                    "overflow": "hidden"
+                  }
+                },
+                "type": "ia.container.flex"
+              },
+              {
+                "events": {
+                  "component": {
+                    "onActionPerformed": {
+                      "config": {
+                        "script": "\tnewRow \u003d [-1,\u0027\u0027]\n\tself.parent.parent.getChild(\"BedsTable\").custom.editedData \u003d system.dataset.addRow(self.parent.parent.getChild(\"BedsTable\").custom.editedData,0,newRow)"
+                      },
+                      "scope": "G",
+                      "type": "script"
+                    }
+                  }
+                },
+                "meta": {
+                  "name": "add"
+                },
+                "position": {
+                  "basis": "35px"
+                },
+                "propConfig": {
+                  "props.enabled": {
+                    "binding": {
+                      "config": {
+                        "expression": "{view.params.value.id} !\u003d -1"
+                      },
+                      "type": "expr"
+                    }
+                  }
+                },
+                "props": {
+                  "image": {
+                    "height": 15,
+                    "icon": {
+                      "path": "material/add"
+                    },
+                    "position": "center",
+                    "width": 15
+                  },
+                  "style": {
+                    "borderBottomLeftRadius": 25,
+                    "borderBottomRightRadius": 25,
+                    "borderTopLeftRadius": 25,
+                    "borderTopRightRadius": 25,
+                    "marginBottom": 5,
+                    "marginTop": 5
+                  },
+                  "text": ""
+                },
+                "type": "ia.input.button"
+              },
+              {
+                "meta": {
+                  "name": "Filler2"
+                },
+                "position": {
+                  "basis": "5px"
+                },
+                "props": {
+                  "style": {
+                    "overflow": "hidden"
+                  }
+                },
+                "type": "ia.container.flex"
+              },
+              {
+                "events": {
+                  "dom": {
+                    "onClick": {
+                      "config": {
+                        "script": "\t## Iterate through each row of the editedData and insert new row or update\n\tbedsData \u003d self.parent.parent.getChild(\"BedsTable\").custom.editedData\n\troomId \u003d self.view.params.value.id\n\ttotalBeds \u003d bedsData.getRowCount()\n\tfor i in range(totalBeds):\n\t\tbedId \u003d bedsData.getValueAt(i,\u0027id\u0027)\n\t\tbedName \u003d bedsData.getValueAt(i,\u0027bedName\u0027)\n\t\tsqlQ \u003d \"\"\n\t\tif bedId \u003d\u003d -1:\n\t\t\t## this is new row so insert\n\t\t\tsqlQ \u003d \"INSERT INTO lodging.Bed (bedName, roomId, timeCreated) VALUES (\u0027\"\n\t\t\tsqlQ \u003d sqlQ + bedName + \"\u0027,\" + str(roomId) + \", CURRENT_TIMESTAMP)\"\n\t\t\t\n\t\telse:\n\t\t\t## this is for updation\n\t\t\tsqlQ \u003d \"UPDATE lodging.Bed SET bedName \u003d \u0027\" + bedName + \"\u0027 WHERE id \u003d \" + str(bedId)\n\t\t\n\t\tif sqlQ !\u003d \"\":\n\t\t\tsystem.db.runUpdateQuery(sqlQ)\n\t\n\t## Also remove the beds that were deleted \n\tfor oneBed in self.parent.parent.getChild(\"BedsTable\").custom.bedIdsToRemove:\n\t\tsqlQ \u003d \"UPDATE lodging.Bed SET timeRetired \u003d CURRENT_TIMESTAMP WHERE id \u003d \" + str(oneBed)\n\t\tsystem.perspective.print(\"delete bed q : \" + sqlQ)\n\t\tsystem.db.runUpdateQuery(sqlQ)\n\t\n\t## Update the numberBeds in the rooms table \n\tsqlQ \u003d \"UPDATE lodging.Room SET numberBeds \u003d \" + str(totalBeds) + \" WHERE id \u003d \" + str(roomId)\n\tsystem.perspective.print(\"update room q : \" + sqlQ)\n\tsystem.db.runUpdateQuery(sqlQ)\n\t\n\t## refresh the sqlData\n\tself.parent.parent.getChild(\"BedsTable\").refreshBinding(\"custom.sqlData\")\n\t\n\t## Send message to rooms table view to refresh the data\n\tsystem.perspective.sendMessage(messageType\u003d\"refreshRoomsSettings\", payload\u003d{}, scope\u003d\"session\")"
+                      },
+                      "scope": "G",
+                      "type": "script"
+                    }
+                  }
+                },
+                "meta": {
+                  "name": "save"
+                },
+                "position": {
+                  "basis": "35px"
+                },
+                "propConfig": {
+                  "props.enabled": {
+                    "binding": {
+                      "config": {
+                        "expression": "{view.params.value.id} !\u003d -1"
+                      },
+                      "type": "expr"
+                    }
+                  }
+                },
+                "props": {
+                  "image": {
+                    "height": 15,
+                    "icon": {
+                      "path": "material/check_circle"
+                    },
+                    "position": "center",
+                    "width": 15
+                  },
+                  "style": {
+                    "borderBottomLeftRadius": 25,
+                    "borderBottomRightRadius": 25,
+                    "borderTopLeftRadius": 25,
+                    "borderTopRightRadius": 25,
+                    "marginBottom": 5,
+                    "marginTop": 5
+                  },
+                  "text": ""
+                },
+                "type": "ia.input.button"
+              },
+              {
+                "meta": {
+                  "name": "Filler3"
+                },
+                "position": {
+                  "basis": "5px"
+                },
+                "props": {
+                  "style": {
+                    "overflow": "hidden"
+                  }
+                },
+                "type": "ia.container.flex"
+              },
+              {
+                "events": {
+                  "dom": {
+                    "onClick": {
+                      "config": {
+                        "script": "\tself.parent.parent.getChild(\"BedsTable\").custom.editedData \u003d self.parent.parent.getChild(\"BedsTable\").custom.sqlData\n\tself.parent.parent.getChild(\"BedsTable\").custom.bedIdsToRemove \u003d []"
+                      },
+                      "scope": "G",
+                      "type": "script"
+                    }
+                  }
+                },
+                "meta": {
+                  "name": "cancel"
+                },
+                "position": {
+                  "basis": "35px"
+                },
+                "propConfig": {
+                  "props.enabled": {
+                    "binding": {
+                      "config": {
+                        "expression": "{view.params.value.id} !\u003d -1"
+                      },
+                      "type": "expr"
+                    }
+                  }
+                },
+                "props": {
+                  "image": {
+                    "height": 15,
+                    "icon": {
+                      "path": "material/cancel"
+                    },
+                    "position": "center",
+                    "width": 15
+                  },
+                  "style": {
+                    "borderBottomLeftRadius": 25,
+                    "borderBottomRightRadius": 25,
+                    "borderTopLeftRadius": 25,
+                    "borderTopRightRadius": 25,
+                    "marginBottom": 5,
+                    "marginTop": 5
+                  },
+                  "text": ""
+                },
+                "type": "ia.input.button"
+              },
+              {
+                "meta": {
+                  "name": "Filler4"
+                },
+                "position": {
+                  "basis": "5px"
+                },
+                "props": {
+                  "style": {
+                    "overflow": "hidden"
+                  }
+                },
+                "type": "ia.container.flex"
+              }
+            ],
+            "meta": {
+              "name": "Heading"
+            },
+            "position": {
+              "basis": "30px"
+            },
+            "props": {
+              "style": {
+                "classes": "ActivityCards/Header_Card",
+                "overflow": "hidden"
+              }
+            },
+            "type": "ia.container.flex"
+          },
+          {
+            "custom": {
+              "bedIdsToRemove": [],
+              "editedData": {
+                "$": [
+                  "ds",
+                  192,
+                  1667901283714
+                ],
+                "$columns": [
+                  {
+                    "data": [],
+                    "name": "id",
+                    "type": "Integer"
+                  },
+                  {
+                    "data": [],
+                    "name": "bedName",
+                    "type": "String"
+                  }
+                ]
+              }
+            },
+            "events": {
+              "component": {
+                "onEditCellCommit": {
+                  "config": {
+                    "script": "\t\n\tself.custom.editedData \u003d system.dataset.setValue(self.custom.editedData, event.row, event.column, event.value)\n"
+                  },
+                  "scope": "G",
+                  "type": "script"
+                },
+                "onRowClick": {
+                  "config": {
+                    "script": "\tclickedColumn \u003d self.props.selection.selectedColumn\n\tif clickedColumn \u003d\u003d \"remove\":\n\t\trowToRemove \u003d self.props.selection.selectedRow\n\t\tbedIdToRemove \u003d self.custom.editedData.getValueAt(rowToRemove,\u0027id\u0027)\n\t\t#system.perspective.print(\"bedIdToCheck : \" + str(bedIdToRemove))\n\t\tisBedOccupied \u003d 0\n\t\tisBedReserved \u003d 0\n\t\t# check if bed is occupied\n\t\tproject \u003d \"RITI\"\n\t\tpath \u003d \"Shelter/Settings/CheckIfBedIsOccupied\"\n\t\tparameters \u003d {\"bedId\": bedIdToRemove}\n\t\t\n\t\tisBedOccupiedData \u003d system.db.runNamedQuery(project\u003dproject,path\u003dpath,parameters\u003dparameters)\n\t\tif isBedOccupiedData is not None and isBedOccupiedData.getRowCount()\u003e0:\n\t\t\tisBedOccupied \u003d int(isBedOccupiedData.getValueAt(0,0))\n\t\t\tif isBedOccupied \u003d\u003d 1:\n\t\t\t\tself.parent.getChild(\"Heading\").getChild(\"Filler\").getChild(\"Label\").showMessage(\"Cannot remove bed, it is currently occupied.\")\n\t\telse:\n\t\t\tself.parent.getChild(\"Heading\").getChild(\"Filler\").getChild(\"Label\").showMessage(\"Something went wrong ... please try deleting again.\")\t\t\t\n\t\tif isBedOccupied \u003d\u003d 0:\n\t\t\t# check if it is reserved\n\t\t\tpath \u003d \"Shelter/Settings/CheckIfBedIsReserved\"\n\t\t\tparameters \u003d {\"bedId\": bedIdToRemove}\n\t\t\t\n\t\t\tisBedReservedData \u003d system.db.runNamedQuery(project\u003dproject,path\u003dpath,parameters\u003dparameters)\n\t\t\tif isBedReservedData is not None and isBedReservedData.getRowCount()\u003e0:\n\t\t\t\tisBedReserved \u003d int(isBedReservedData.getValueAt(0,0))\n\t\t\t\tif isBedReserved \u003d\u003d 1:\n\t\t\t\t\tself.parent.getChild(\"Heading\").getChild(\"Filler\").getChild(\"Label\").showMessage(\"Cannot remove bed, it is currently reserved.\")\n\t\t\telse:\n\t\t\t\tself.parent.getChild(\"Heading\").getChild(\"Filler\").getChild(\"Label\").showMessage(\"Something went wrong ... please try deleting again.\")\t\n\t\t\n\t\t\n\t\tif isBedReserved \u003d\u003d 0 and isBedOccupied \u003d\u003d 0:\n\t\t\tself.custom.bedIdsToRemove.append(bedIdToRemove)\n\t\t\tself.custom.editedData \u003d system.dataset.deleteRow(self.custom.editedData, rowToRemove)"
+                  },
+                  "scope": "G",
+                  "type": "script"
+                }
+              }
+            },
+            "meta": {
+              "name": "BedsTable"
+            },
+            "position": {
+              "grow": 1
+            },
+            "propConfig": {
+              "custom.sqlData": {
+                "binding": {
+                  "config": {
+                    "parameters": {
+                      "roomId": "{view.params.value.id}"
+                    },
+                    "queryPath": "Shelter/Settings/GetBedsForRoom"
+                  },
+                  "type": "query"
+                },
+                "onChange": {
+                  "enabled": null,
+                  "script": "\tself.custom.editedData \u003d self.custom.sqlData\n\tself.custom.bedIdsToRemove \u003d []\n\t"
+                }
+              },
+              "props.data": {
+                "binding": {
+                  "config": {
+                    "path": "this.custom.editedData"
+                  },
+                  "transforms": [
+                    {
+                      "code": "\tbeds \u003d []\n\tbedNameStyle \u003d {}\n\tbedNameStyle[\u0027color\u0027] \u003d \u0027#0c4e85\u0027\n\tbedNameStyle[\u0027cursor\u0027] \u003d \"pointer\"\n\tbedNameStyle[\u0027fontFamily\u0027] \u003d \"Proxima Nova ExCn Medium\"\n\tbedNameStyle[\u0027text-align\u0027] \u003d \"left\"\n\tfor row in range(value.getRowCount()):\n\t\t\toneBed \u003d {}\n\t\t\toneBed[\u0027id\u0027] \u003d str(value.getValueAt(row, \"id\"))\n\t\t\tbedName \u003d {}\n\t\t\n\t\t\tbedName[\u0027style\u0027] \u003d bedNameStyle\n\t\t\tbedName[\u0027value\u0027] \u003d str(value.getValueAt(row, \"bedName\"))\n\t\t\toneBed[\u0027bedName\u0027] \u003d bedName\n\t\t\t\n\t\t\toneBed[\u0027remove\u0027] \u003d \u0027\u0027\n\t\t\tbeds.append(oneBed)\n\treturn beds\n\t",
+                      "type": "script"
+                    }
+                  ],
+                  "type": "property"
+                }
+              }
+            },
+            "props": {
+              "cells": {
+                "style": {
+                  "classes": "Table/Cell_Detail_NoBG",
+                  "height": "25px"
+                }
+              },
+              "columns": [
+                {
+                  "align": "center",
+                  "boolean": "checkbox",
+                  "dateFormat": "MM/DD/YYYY",
+                  "editable": true,
+                  "field": "bedName",
+                  "footer": {
+                    "align": "center",
+                    "justify": "left",
+                    "style": {
+                      "classes": ""
+                    },
+                    "title": ""
+                  },
+                  "header": {
+                    "align": "center",
+                    "justify": "left",
+                    "style": {
+                      "classes": "Table/Filter_Text"
+                    },
+                    "title": ""
+                  },
+                  "justify": "auto",
+                  "number": "value",
+                  "numberFormat": "0,0.##",
+                  "progressBar": {
+                    "bar": {
+                      "color": "",
+                      "style": {
+                        "classes": ""
+                      }
+                    },
+                    "max": 100,
+                    "min": 0,
+                    "track": {
+                      "color": "",
+                      "style": {
+                        "classes": ""
+                      }
+                    },
+                    "value": {
+                      "enabled": true,
+                      "format": "0,0.##",
+                      "justify": "center",
+                      "style": {
+                        "classes": ""
+                      }
+                    }
+                  },
+                  "render": "auto",
+                  "resizable": true,
+                  "sort": "none",
+                  "sortable": false,
+                  "strictWidth": true,
+                  "style": {
+                    "classes": "Table/Cell_Detail"
+                  },
+                  "toggleSwitch": {
+                    "color": {
+                      "selected": "",
+                      "unselected": ""
+                    }
+                  },
+                  "viewParams": {},
+                  "viewPath": "",
+                  "visible": true,
+                  "width": 270
+                },
+                {
+                  "align": "center",
+                  "boolean": "checkbox",
+                  "dateFormat": "MM/DD/YYYY",
+                  "editable": false,
+                  "field": "remove",
+                  "footer": {
+                    "align": "center",
+                    "justify": "left",
+                    "style": {
+                      "classes": ""
+                    },
+                    "title": ""
+                  },
+                  "header": {
+                    "align": "center",
+                    "justify": "left",
+                    "style": {
+                      "classes": ""
+                    },
+                    "title": ""
+                  },
+                  "justify": "center",
+                  "number": "value",
+                  "numberFormat": "0,0.##",
+                  "progressBar": {
+                    "bar": {
+                      "color": "",
+                      "style": {
+                        "classes": ""
+                      }
+                    },
+                    "max": 100,
+                    "min": 0,
+                    "track": {
+                      "color": "",
+                      "style": {
+                        "classes": ""
+                      }
+                    },
+                    "value": {
+                      "enabled": true,
+                      "format": "0,0.##",
+                      "justify": "center",
+                      "style": {
+                        "classes": ""
+                      }
+                    }
+                  },
+                  "render": "view",
+                  "resizable": true,
+                  "sort": "none",
+                  "sortable": true,
+                  "strictWidth": true,
+                  "style": {
+                    "classes": ""
+                  },
+                  "toggleSwitch": {
+                    "color": {
+                      "selected": "",
+                      "unselected": ""
+                    }
+                  },
+                  "viewParams": {},
+                  "viewPath": "Shelter/Settings/Cards/RemoveButton",
+                  "visible": true,
+                  "width": 30
+                },
+                {
+                  "align": "center",
+                  "boolean": "checkbox",
+                  "dateFormat": "MM/DD/YYYY",
+                  "editable": false,
+                  "field": "id",
+                  "footer": {
+                    "align": "center",
+                    "justify": "left",
+                    "style": {
+                      "classes": ""
+                    },
+                    "title": ""
+                  },
+                  "header": {
+                    "align": "center",
+                    "justify": "left",
+                    "style": {
+                      "classes": ""
+                    },
+                    "title": ""
+                  },
+                  "justify": "auto",
+                  "number": "value",
+                  "numberFormat": "0,0.##",
+                  "progressBar": {
+                    "bar": {
+                      "color": "",
+                      "style": {
+                        "classes": ""
+                      }
+                    },
+                    "max": 100,
+                    "min": 0,
+                    "track": {
+                      "color": "",
+                      "style": {
+                        "classes": ""
+                      }
+                    },
+                    "value": {
+                      "enabled": true,
+                      "format": "0,0.##",
+                      "justify": "center",
+                      "style": {
+                        "classes": ""
+                      }
+                    }
+                  },
+                  "render": "auto",
+                  "resizable": true,
+                  "sort": "none",
+                  "sortable": true,
+                  "strictWidth": false,
+                  "style": {
+                    "classes": ""
+                  },
+                  "toggleSwitch": {
+                    "color": {
+                      "selected": "",
+                      "unselected": ""
+                    }
+                  },
+                  "viewParams": {},
+                  "viewPath": "",
+                  "visible": false,
+                  "width": 200
+                }
+              ],
+              "emptyMessage": {
+                "noData": {
+                  "text": "No Data"
+                }
+              },
+              "enableHeader": false,
+              "pager": {
+                "bottom": false,
+                "initialOption": 100
+              },
+              "rows": {
+                "height": "25px",
+                "highlight": {
+                  "color": "#ccffff"
+                }
+              },
+              "selection": {
+                "style": {
+                  "backgroundColor": "#9af4eb4d"
+                }
+              },
+              "style": {
+                "classes": "ActivityCards/Card_Date",
+                "marginLeft": 5
+              }
+            },
+            "type": "ia.display.table"
+          }
+        ],
+        "meta": {
+          "name": "Beds"
+        },
+        "position": {
+          "grow": 1
+        },
+        "props": {
+          "direction": "column",
+          "style": {
+            "classes": "ActivityCards/Card",
+            "overflow": "hidden"
+          }
+        },
+        "type": "ia.container.flex"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "alignItems": "flex-start",
+      "direction": "column",
+      "style": {
+        "overflow": "hidden"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

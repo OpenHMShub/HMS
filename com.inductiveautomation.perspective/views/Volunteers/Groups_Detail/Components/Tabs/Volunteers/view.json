@@ -1,0 +1,102 @@
+{
+  "custom": {},
+  "params": {
+    "groupId": 99
+  },
+  "propConfig": {
+    "params.groupId": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {},
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "Edit"
+        },
+        "position": {
+          "basis": "50%"
+        },
+        "props": {
+          "params": {
+            "searchSelection": []
+          },
+          "path": "Volunteers/Groups_Detail/Tabs/Volunteers/Edit/VolunteerSearch"
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Table"
+        },
+        "position": {
+          "basis": "45%"
+        },
+        "propConfig": {
+          "custom.selectedMember": {
+            "binding": {
+              "config": {
+                "path": "this.props.params.selectedMember"
+              },
+              "type": "property"
+            }
+          },
+          "props.params.data": {
+            "binding": {
+              "config": {
+                "parameters": {
+                  "groupId": "{view.params.groupId}"
+                },
+                "queryPath": "Volunteers/Group/GroupsMembers"
+              },
+              "type": "query"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "selectedMember": {}
+          },
+          "path": "Volunteers/Groups_Detail/Components/Tables/Volunteer_Table",
+          "style": {
+            "marginLeft": 40,
+            "marginRight": 40
+          }
+        },
+        "type": "ia.display.view"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column",
+      "style": {
+        "classes": "Background/Alternative"
+      }
+    },
+    "scripts": {
+      "customMethods": [],
+      "extensionFunctions": null,
+      "messageHandlers": [
+        {
+          "messageType": "add-group-members",
+          "pageScope": true,
+          "script": "\tif self.view.params.groupId !\u003d \"\":\n\t\tgroupId \u003d self.view.params.groupId\n\t\thumanIds \u003d \",\".join([str(x[\"humanId\"]) for x in self.getChild(\"Edit\").props.params.searchSelection])\n\t\tsql \u003d \"UPDATE staff.Volunteer SET staff.Volunteer.volunteerGroupId\u003d%s FROM staff.Volunteer V INNER JOIN humans.Human H on V.humanId\u003dH.id WHERE H.id in (%s);\" % (groupId, humanIds)\n\t\tresult \u003d system.db.runUpdateQuery(sql)\n\t\tsystem.perspective.navigate(\"/Volunteers/Groups/Detail/\"+str(groupId))\n\t\tself.getChild(\"Table\").refreshBinding(\"props.params.data\")",
+          "sessionScope": false,
+          "viewScope": false
+        },
+        {
+          "messageType": "remove-group-members",
+          "pageScope": true,
+          "script": "\tif self.view.params.groupId !\u003d \"\":\n\t\tgroupId \u003d self.view.params.groupId\n\t\thumanIds \u003d \",\".join([str(x[\"humanId\"]) for x in self.getChild(\"Edit\").props.params.searchSelection])\n\t\tsql \u003d \"UPDATE staff.Volunteer SET staff.Volunteer.volunteerGroupId\u003dNULL FROM staff.Volunteer V INNER JOIN humans.Human H on V.humanId\u003dH.id WHERE H.id in (%s);\" % (humanIds)\n\t\tresult \u003d system.db.runUpdateQuery(sql)\n\t\tsystem.perspective.navigate(\"/Volunteers/Groups/Detail/\"+str(groupId))\n\t\tself.getChild(\"Table\").refreshBinding(\"props.params.data\")",
+          "sessionScope": false,
+          "viewScope": false
+        }
+      ]
+    },
+    "type": "ia.container.flex"
+  }
+}

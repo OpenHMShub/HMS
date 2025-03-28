@@ -1,0 +1,316 @@
+{
+  "custom": {},
+  "params": {},
+  "props": {
+    "defaultSize": {
+      "width": 1383
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "KPI"
+        },
+        "position": {
+          "basis": "175px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.CalenderBreezeId": {
+            "binding": {
+              "config": {
+                "path": "../Table Header.props.params.CalenderId"
+              },
+              "transforms": [
+                {
+                  "code": "\tif value !\u003d \u0027\u0027 and value !\u003d None:\n\t\tresult \u003d system.db.runPrepQuery(\"SELECT BreezeId FROM calendar.calendars Where id \u003d ?\", [value])\n\t\tCalenderBreezeId \u003d result[0][0]\n\telse:\n\t\tCalenderBreezeId \u003d None\n\treturn CalenderBreezeId",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          },
+          "props.params.DaysToAdd": {
+            "binding": {
+              "config": {
+                "path": "../Table Header.props.params.activity_range"
+              },
+              "type": "property"
+            }
+          },
+          "props.params.EventName": {
+            "binding": {
+              "config": {
+                "path": "../Table Header.props.params.Events"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "path": "Volunteers/Dashboard/Cards/KPI_Header"
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "custom": {
+          "search": ""
+        },
+        "meta": {
+          "name": "Table Header"
+        },
+        "position": {
+          "basis": "30px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "custom.hoursEnd": {
+            "binding": {
+              "config": {
+                "path": "this.props.params.hours"
+              },
+              "transforms": [
+                {
+                  "code": "\tif not value:\n\t\treturn 0\n\tif value \u003d\u003d -1:\n\t\tvalue \u003d 0\n\telif value[0] \u003d\u003d \"\u003c5\":\n\t\tvalue \u003d 5\n\telif value[0] \u003d\u003d \"\u003e20\":\n\t\tvalue \u003d 20\n\telse:\n\t\tvalue \u003d value[0].split(\"-\")[1]\n\treturn value",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          },
+          "custom.hoursStart": {
+            "binding": {
+              "config": {
+                "path": "this.props.params.hours"
+              },
+              "transforms": [
+                {
+                  "code": "\tif not value:\n\t\treturn 0\n\tif value \u003d\u003d -1:\n\t\tvalue \u003d 0\n\telif value[0] \u003d\u003d \"\u003c5\":\n\t\tvalue \u003d 0\n\telif value[0] \u003d\u003d \"\u003e20\":\n\t\tvalue \u003d 21\n\telse:\n\t\tvalue \u003d value[0].split(\"-\")[0]\n\treturn value",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          },
+          "props.params.exportDataset": {
+            "binding": {
+              "config": {
+                "path": "../Table.props.params.exportDataset"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "CalenderId": null,
+            "Events": null,
+            "Gender": null,
+            "HoursPast6MonthsFilter": null,
+            "activity_range": 365,
+            "maxAge": null,
+            "minAge": null,
+            "search": ""
+          },
+          "path": "Volunteers/Dashboard/Components/Tables/Filter/TableFilter_Volunteers",
+          "style": {
+            "paddingLeft": "35px"
+          }
+        },
+        "scripts": {
+          "customMethods": [],
+          "extensionFunctions": null,
+          "messageHandlers": [
+            {
+              "messageType": "datasetFilter",
+              "pageScope": true,
+              "script": "#\tself.custom.search \u003d payload[\"searchText\"]\n#\tself.getSibling(\"Table\").refreshBinding(\"props.params.data\")",
+              "sessionScope": true,
+              "viewScope": true
+            }
+          ]
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Table"
+        },
+        "position": {
+          "basis": "200px",
+          "grow": 1
+        },
+        "propConfig": {
+          "props.params.CalenderId": {
+            "binding": {
+              "config": {
+                "path": "../Table Header.props.params.CalenderId"
+              },
+              "transforms": [
+                {
+                  "code": "\tcalendarId \u003d value\n\tif calendarId !\u003d None and calendarId !\u003d \u0027\u0027:\n\t\twhere \u003d \"calendarId \u003d \" + str(calendarId)\n\telse:\n\t\twhere \u003d \"1\u003d1\"\n\treturn where",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          },
+          "props.params.Events": {
+            "binding": {
+              "config": {
+                "path": "../Table Header.props.params.Events"
+              },
+              "type": "property"
+            }
+          },
+          "props.params.Gender": {
+            "binding": {
+              "config": {
+                "path": "../Table Header.props.params.Gender"
+              },
+              "transforms": [
+                {
+                  "code": "\tif isinstance(value, list):\n\t\treturn None\n\telif value \u003d\u003d []:\n\t\treturn None\n\treturn value",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          },
+          "props.params.dayRange": {
+            "binding": {
+              "config": {
+                "path": "../Table Header.props.params.activity_range"
+              },
+              "type": "property"
+            }
+          },
+          "props.params.maxAge": {
+            "binding": {
+              "config": {
+                "path": "../Table Header.props.params.maxAge"
+              },
+              "type": "property"
+            }
+          },
+          "props.params.minAge": {
+            "binding": {
+              "config": {
+                "path": "../Table Header.props.params.minAge"
+              },
+              "type": "property"
+            }
+          },
+          "props.params.searchText": {
+            "binding": {
+              "config": {
+                "path": "../Table Header.props.params.search"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "data": null,
+            "exportDataset": {
+              "$": [
+                "ds",
+                192,
+                1667469593912
+              ],
+              "$columns": [
+                {
+                  "data": [],
+                  "name": "Name",
+                  "type": "String"
+                },
+                {
+                  "data": [],
+                  "name": "Phone Number",
+                  "type": "String"
+                },
+                {
+                  "data": [],
+                  "name": "Email",
+                  "type": "String"
+                },
+                {
+                  "data": [],
+                  "name": "dob",
+                  "type": "Date"
+                },
+                {
+                  "data": [],
+                  "name": "Age",
+                  "type": "Integer"
+                },
+                {
+                  "data": [],
+                  "name": "EventName",
+                  "type": "String"
+                },
+                {
+                  "data": [],
+                  "name": "EventDate",
+                  "type": "Date"
+                },
+                {
+                  "data": [],
+                  "name": "calendarId",
+                  "type": "Integer"
+                },
+                {
+                  "data": [],
+                  "name": "id",
+                  "type": "Integer"
+                },
+                {
+                  "data": [],
+                  "name": "checkin",
+                  "type": "Date"
+                },
+                {
+                  "data": [],
+                  "name": "checkout",
+                  "type": "Date"
+                },
+                {
+                  "data": [],
+                  "name": "Hours",
+                  "type": "Double"
+                },
+                {
+                  "data": [],
+                  "name": "Gender",
+                  "type": "String"
+                },
+                {
+                  "data": [],
+                  "name": "eventAttendeeId",
+                  "type": "Integer"
+                }
+              ]
+            }
+          },
+          "path": "Volunteers/Dashboard/Components/Tables/Volunteer_Table",
+          "style": {
+            "marginLeft": "35px"
+          }
+        },
+        "type": "ia.display.view"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column",
+      "style": {
+        "classes": "Background/Alternative"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

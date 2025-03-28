@@ -1,0 +1,339 @@
+{
+  "custom": {},
+  "params": {
+    "instanceID": 25
+  },
+  "propConfig": {
+    "params.instanceID": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "width": 560
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "Header"
+        },
+        "position": {
+          "basis": "62px"
+        },
+        "props": {
+          "params": {
+            "text": "Edit People"
+          },
+          "path": "Overview/Dashboard/EventPopupHeader",
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Facilitators"
+        },
+        "propConfig": {
+          "position.basis": {
+            "binding": {
+              "config": {
+                "path": "this.props.params.items"
+              },
+              "transforms": [
+                {
+                  "code": "\treturn str(75 + ( 40 * len(value) )) + \"px\"",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          },
+          "props.params.items": {
+            "binding": {
+              "config": {
+                "parameters": {
+                  "instanceID": "{view.params.instanceID}"
+                },
+                "queryPath": "Calendar/Event Instance People/GetInstanceFacilitators"
+              },
+              "transforms": [
+                {
+                  "code": "\tarray \u003d []\n\tfor row in range(value.getRowCount()):\n\t\tname \u003d value.getValueAt(row, \"name\")\n\t\tid \u003d value.getValueAt(row, \"facilitatorID\")\n\t\tarray.append({\u0027text\u0027: name, \u0027id\u0027: id})\n\treturn array",
+                  "type": "script"
+                }
+              ],
+              "type": "query"
+            }
+          },
+          "props.params.options": {
+            "binding": {
+              "config": {
+                "queryPath": "Calendar/GetFacilitatorsOptions"
+              },
+              "type": "query"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "text": "Facilitators"
+          },
+          "path": "Events/Dashboard/TextRepeat",
+          "style": {
+            "marginBottom": 5,
+            "marginLeft": 25,
+            "marginRight": 25,
+            "marginTop": 5
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "children": [
+          {
+            "meta": {
+              "name": "Volunteers"
+            },
+            "position": {
+              "basis": "320px"
+            },
+            "propConfig": {
+              "props.params.items": {
+                "binding": {
+                  "config": {
+                    "parameters": {
+                      "eventInstanceID": "{view.params.instanceID}"
+                    },
+                    "queryPath": "Calendar/Event Instance People/GetInstanceVolunteers"
+                  },
+                  "transforms": [
+                    {
+                      "code": "\t\n\tarray \u003d []\n\tfor row in range(value.getRowCount()):\n\t\tname \u003d value.getValueAt(row, \"name\")\n\t\tid \u003d value.getValueAt(row, \"volunteerID\")\n\t\tarray.append({\u0027text\u0027: name, \u0027id\u0027: id})\n\treturn array",
+                      "type": "script"
+                    }
+                  ],
+                  "type": "query"
+                }
+              },
+              "props.params.options": {
+                "binding": {
+                  "config": {
+                    "queryPath": "Calendar/GetVolunteersOptions"
+                  },
+                  "type": "query"
+                }
+              }
+            },
+            "props": {
+              "params": {
+                "text": "Volunteers"
+              },
+              "path": "Events/Dashboard/TextRepeat",
+              "style": {
+                "overflow": "auto"
+              }
+            },
+            "type": "ia.display.view"
+          },
+          {
+            "meta": {
+              "name": "Staff"
+            },
+            "position": {
+              "basis": "320px"
+            },
+            "propConfig": {
+              "props.params.items": {
+                "binding": {
+                  "config": {
+                    "parameters": {
+                      "instanceID": "{view.params.instanceID}"
+                    },
+                    "queryPath": "Calendar/Event Instance People/GetInstanceStaff"
+                  },
+                  "transforms": [
+                    {
+                      "code": "\tarray \u003d []\n\tfor row in range(value.getRowCount()):\n\t\tname \u003d value.getValueAt(row, \"name\")\n\t\tid \u003d value.getValueAt(row, \"staffID\")\n\t\tarray.append({\u0027text\u0027: name, \u0027id\u0027: id})\n\treturn array",
+                      "type": "script"
+                    }
+                  ],
+                  "type": "query"
+                }
+              },
+              "props.params.options": {
+                "binding": {
+                  "config": {
+                    "queryPath": "Calendar/GetStaffOptions"
+                  },
+                  "type": "query"
+                }
+              }
+            },
+            "props": {
+              "params": {
+                "text": "Staff"
+              },
+              "path": "Events/Dashboard/TextRepeat"
+            },
+            "type": "ia.display.view"
+          }
+        ],
+        "meta": {
+          "name": "FlexContainer_Volunteers_Staff_Assigned"
+        },
+        "propConfig": {
+          "custom.staffAssignedNum": {
+            "binding": {
+              "config": {
+                "path": "./Staff.props.params.items"
+              },
+              "transforms": [
+                {
+                  "code": "\treturn len(value)",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          },
+          "custom.volunteersAssignedNum": {
+            "binding": {
+              "config": {
+                "path": "./Volunteers.props.params.items"
+              },
+              "transforms": [
+                {
+                  "code": "\treturn len(value)",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          },
+          "position.basis": {
+            "binding": {
+              "config": {
+                "expression": "If({this.custom.volunteersAssignedNum} \u003e {this.custom.staffAssignedNum},\r\nconcat(toStr(75 + ({this.custom.volunteersAssignedNum} * 40)), \"px\"),\r\nconcat(toStr(75 + ({this.custom.staffAssignedNum} * 40)), \"px\"))"
+              },
+              "type": "expr"
+            }
+          }
+        },
+        "props": {
+          "justify": "space-between",
+          "style": {
+            "marginBottom": 5,
+            "marginLeft": 25,
+            "marginRight": 25,
+            "marginTop": 5
+          }
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "children": [
+          {
+            "events": {
+              "component": {
+                "onActionPerformed": [
+                  {
+                    "config": {
+                      "script": "\t\t\t\n\t#get the event id\n\tinstanceID \u003d self.view.params.instanceID\n\t\n\t#delete existing attendees\n\tsystem.db.runNamedQuery(\"Calendar/Event Instance People/DeleteInstanceFacilitator\",{\u0027instanceID\u0027: instanceID })\n\tsystem.db.runNamedQuery(\"Calendar/Event Instance People/DeleteInstanceStaff\",{\u0027instanceID\u0027: instanceID })\n\tsystem.db.runNamedQuery(\"Calendar/Event Instance People/DeleteInstanceVolunteer\",{\u0027instanceID\u0027: instanceID })\n\t\n\tfacilitators \u003d self.parent.parent.getChild(\"Facilitators\").props.params.items\n\tvolunteers \u003d self.parent.parent.getChild(\"FlexContainer_Volunteers_Staff_Assigned\").getChild(\"Volunteers\").props.params.items\n\tstaff \u003d self.parent.parent.getChild(\"FlexContainer_Volunteers_Staff_Assigned\").getChild(\"Staff\").props.params.items\n\t\n\t# add the facilitators, volunteers and staff by looping through the elements\n\tfor f in facilitators:\n\t\tfacilitatorID \u003d f[\u0027id\u0027]\n\t\tsystem.db.runNamedQuery(\"Calendar/Event Instance People/AddInstanceFacilitator\", {\u0027instanceID\u0027: instanceID, \u0027facilitatorID\u0027: facilitatorID})\n\t\t\n\tfor v in volunteers:\n\t\tvolunteerID \u003d v[\u0027id\u0027]\n\t\tsystem.db.runNamedQuery(\"Calendar/Event Instance People/AddInstanceVolunteer\", {\u0027instanceID\u0027: instanceID, \u0027volunteerID\u0027: volunteerID})\n\t\t\n\tfor s in staff:\n\t\tstaffID \u003d s[\u0027id\u0027]\n\t\tsystem.db.runNamedQuery(\"Calendar/Event Instance People/AddInstanceStaff\", {\u0027instanceID\u0027: instanceID, \u0027staffID\u0027: staffID})\n\t\t\t\t\n\t\t\t\n\t#send a message that will reload the events in the calendar\n\tpayload \u003d None\n\tsystem.perspective.sendMessage(\u0027CreateCalendarEvent\u0027, payload, scope \u003d \u0027session\u0027)\n\tpayload \u003d {\u0027Refresh\u0027 : True}\n\tsystem.perspective.sendMessage(\u0027RefreshEventList\u0027, payload, scope \u003d \u0027session\u0027)\n\tpayload \u003d None\n\tsystem.perspective.sendMessage(\"refreshPeople\",  scope \u003d \"session\")"
+                    },
+                    "scope": "G",
+                    "type": "script"
+                  },
+                  {
+                    "config": {
+                      "id": "EditPeople",
+                      "type": "close"
+                    },
+                    "scope": "C",
+                    "type": "dock"
+                  }
+                ]
+              }
+            },
+            "meta": {
+              "name": "Create_Btn"
+            },
+            "position": {
+              "basis": "150px"
+            },
+            "props": {
+              "style": {
+                "classes": "Buttons/Main",
+                "marginLeft": 20,
+                "marginRight": 20
+              },
+              "text": "Update"
+            },
+            "type": "ia.input.button"
+          },
+          {
+            "events": {
+              "component": {
+                "onActionPerformed": {
+                  "config": {
+                    "id": "EditPeople",
+                    "type": "close"
+                  },
+                  "scope": "C",
+                  "type": "dock"
+                }
+              }
+            },
+            "meta": {
+              "name": "Cancel_Btn"
+            },
+            "position": {
+              "basis": "150px"
+            },
+            "props": {
+              "style": {
+                "classes": "Buttons/Btn_Orange_Smooth",
+                "marginLeft": 20,
+                "marginRight": 20
+              },
+              "text": "Cancel"
+            },
+            "type": "ia.input.button"
+          }
+        ],
+        "meta": {
+          "name": "FlexContainer Buttons"
+        },
+        "position": {
+          "basis": "60px"
+        },
+        "props": {
+          "alignContent": "center",
+          "style": {
+            "borderBottomColor": "#e6e6e6",
+            "borderBottomStyle": "solid",
+            "borderBottomWidth": 1,
+            "borderTopColor": "#E6E6E6",
+            "borderTopStyle": "solid",
+            "borderTopWidth": 1,
+            "paddingBottom": "20px",
+            "paddingTop": "5px"
+          }
+        },
+        "type": "ia.container.flex"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column",
+      "style": {
+        "classes": "Background/Default"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

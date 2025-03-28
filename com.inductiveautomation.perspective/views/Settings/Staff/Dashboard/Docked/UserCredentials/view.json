@@ -1,0 +1,995 @@
+{
+  "custom": {
+    "password": "",
+    "password2": "",
+    "userRole": 1
+  },
+  "events": {
+    "system": {
+      "onStartup": {
+        "config": {
+          "script": "\tsystem.perspective.print(\"Open user creds\" + str(self.params.newUser))\n\t"
+        },
+        "scope": "G",
+        "type": "script"
+      }
+    }
+  },
+  "params": {
+    "email": "",
+    "firstName": "",
+    "lastName": "",
+    "newUser": true,
+    "staffId": -1
+  },
+  "propConfig": {
+    "custom.password": {
+      "persistent": true
+    },
+    "custom.password2": {
+      "persistent": true
+    },
+    "custom.userRole": {
+      "persistent": true
+    },
+    "params.email": {
+      "onChange": {
+        "enabled": null,
+        "script": "\tif currentValue is not None:\n\t\tself.custom.userRole \u003d 1\n\t\tself.getChild(\"root\").getChild(\"FlexContainer\").custom.changeRights \u003d False\n\t\tif not self.params.newUser:\n\t\t\tuser \u003d system.user.getUser(\u0027default\u0027, self.params.email)\n\t\t\ttry: #If the user can\u0027t be found this will throw an exception\n\t\t\t\tuserRoles \u003d user.getRoles()\n\t\t\t\tif \u0027Care Coordinator\u0027 in userRoles:\n\t\t\t\t\tself.custom.userRole \u003d 1\n\t\t\t\tif \u0027Support Coordinator\u0027 in userRoles:\n\t\t\t\t\tself.custom.userRole \u003d 2\n\t\t\t\tif \u0027WS Support Coordinator\u0027 in userRoles:\n\t\t\t\t\tself.custom.userRole \u003d 3\n\t\t\t\tif \u0027Manager\u0027 in userRoles:\n\t\t\t\t\tself.custom.userRole \u003d 4\n\t\t\t\tif \u0027WS Manager\u0027 in userRoles:\n\t\t\t\t\tself.custom.userRole \u003d 5\n\t\t\t\tif \u0027Administrator\u0027 in userRoles:\n\t\t\t\t\tself.custom.userRole \u003d 6\n\t\t\texcept:\n\t\t\t\tself.params.newUser \u003d True"
+      },
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.firstName": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.lastName": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.newUser": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.staffId": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "width": 600
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "Header"
+        },
+        "position": {
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.text": {
+            "binding": {
+              "config": {
+                "path": "view.params.newUser"
+              },
+              "transforms": [
+                {
+                  "code": "\tif value:\n\t\treturn \u0027Staff User Credentials (New)\u0027\n\telse:\n\t\treturn \u0027Staff User Credentials (Existing)\u0027",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "dockName": "UserCredentials",
+            "messageName": null
+          },
+          "path": "1_TEMPLATES/Header/HeaderDock",
+          "style": {
+            "marginLeft": "-50px",
+            "marginRight": "-50px"
+          },
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Name"
+        },
+        "position": {
+          "basis": "55px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.inputText": {
+            "binding": {
+              "config": {
+                "expression": "{view.params.firstName} + \u0027 \u0027 + {view.params.lastName}"
+              },
+              "type": "expr"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "hasHeader": true,
+            "placeHolder": "Name",
+            "requiredField": false,
+            "text": "Name"
+          },
+          "path": "WinterShelterGlobal/Registration/Cards/TextInputReadOnly",
+          "style": {
+            "marginTop": "20px"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "email"
+        },
+        "position": {
+          "basis": "55px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.inputText": {
+            "binding": {
+              "config": {
+                "bidirectional": true,
+                "path": "view.params.email"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "hasHeader": true,
+            "placeHolder": "email@email.com",
+            "requiredField": false,
+            "text": "Email"
+          },
+          "path": "WinterShelterGlobal/Registration/Cards/TextInputReadOnly",
+          "style": {
+            "marginTop": "20px"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "children": [
+          {
+            "meta": {
+              "name": "Label"
+            },
+            "position": {
+              "shrink": 0
+            },
+            "props": {
+              "style": {
+                "classes": "Text/Add_HeaderText"
+              },
+              "text": "Special User Rights"
+            },
+            "type": "ia.display.label"
+          },
+          {
+            "meta": {
+              "name": "Label_0"
+            },
+            "position": {
+              "basis": "10px",
+              "shrink": 0
+            },
+            "props": {
+              "style": {
+                "color": "#D80000"
+              }
+            },
+            "type": "ia.display.label"
+          }
+        ],
+        "meta": {
+          "name": "UserRights"
+        },
+        "position": {
+          "basis": "25px",
+          "shrink": 0
+        },
+        "props": {
+          "style": {
+            "marginTop": "20px"
+          }
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "children": [
+          {
+            "custom": {
+              "userRole": 1
+            },
+            "meta": {
+              "name": "CareCoordinator"
+            },
+            "position": {
+              "shrink": 0
+            },
+            "propConfig": {
+              "props.selected": {
+                "binding": {
+                  "config": {
+                    "expression": "{parent.custom.userRole} \u003d {this.custom.userRole}"
+                  },
+                  "type": "expr"
+                },
+                "onChange": {
+                  "enabled": null,
+                  "script": "\tif origin !\u003d \u0027Binding\u0027:\n\t\tself.parent.custom.userRole \u003d self.custom.userRole"
+                }
+              }
+            },
+            "props": {
+              "checkedIcon": {
+                "color": {
+                  "enabled": "#0066FF"
+                },
+                "path": "material/radio_button_checked"
+              },
+              "indeterminateIcon": {
+                "path": "material/radio_button_checked"
+              },
+              "style": {
+                "paddingRight": "20px"
+              },
+              "text": "Care Coordinator",
+              "uncheckedIcon": {
+                "color": {
+                  "enabled": "#9db8d1"
+                },
+                "path": "material/radio_button_unchecked"
+              }
+            },
+            "type": "ia.input.checkbox"
+          },
+          {
+            "custom": {
+              "userRole": 2
+            },
+            "meta": {
+              "name": "SupportCoordinator"
+            },
+            "position": {
+              "shrink": 0
+            },
+            "propConfig": {
+              "props.selected": {
+                "binding": {
+                  "config": {
+                    "expression": "{parent.custom.userRole} \u003d {this.custom.userRole}"
+                  },
+                  "type": "expr"
+                },
+                "onChange": {
+                  "enabled": null,
+                  "script": "\tif origin !\u003d \u0027Binding\u0027:\n\t\tself.parent.custom.userRole \u003d self.custom.userRole"
+                }
+              }
+            },
+            "props": {
+              "checkedIcon": {
+                "color": {
+                  "enabled": "#0066FF"
+                },
+                "path": "material/radio_button_checked"
+              },
+              "indeterminateIcon": {
+                "path": "material/radio_button_checked"
+              },
+              "style": {
+                "paddingRight": "20px"
+              },
+              "text": "Support Coordinator",
+              "uncheckedIcon": {
+                "color": {
+                  "enabled": "#9db8d1"
+                },
+                "path": "material/radio_button_unchecked"
+              }
+            },
+            "type": "ia.input.checkbox"
+          },
+          {
+            "custom": {
+              "userRole": 3
+            },
+            "meta": {
+              "name": "WSSupportCoordinator"
+            },
+            "position": {
+              "shrink": 0
+            },
+            "propConfig": {
+              "props.selected": {
+                "binding": {
+                  "config": {
+                    "expression": "{parent.custom.userRole} \u003d {this.custom.userRole}"
+                  },
+                  "type": "expr"
+                },
+                "onChange": {
+                  "enabled": null,
+                  "script": "\tif origin !\u003d \u0027Binding\u0027:\n\t\tself.parent.custom.userRole \u003d self.custom.userRole"
+                }
+              }
+            },
+            "props": {
+              "checkedIcon": {
+                "color": {
+                  "enabled": "#0066FF"
+                },
+                "path": "material/radio_button_checked"
+              },
+              "indeterminateIcon": {
+                "path": "material/radio_button_checked"
+              },
+              "style": {
+                "paddingRight": "20px"
+              },
+              "text": "WS Support Coordinator",
+              "uncheckedIcon": {
+                "color": {
+                  "enabled": "#9db8d1"
+                },
+                "path": "material/radio_button_unchecked"
+              }
+            },
+            "type": "ia.input.checkbox"
+          },
+          {
+            "custom": {
+              "userRole": 4
+            },
+            "meta": {
+              "name": "Manager"
+            },
+            "position": {
+              "shrink": 0
+            },
+            "propConfig": {
+              "props.selected": {
+                "binding": {
+                  "config": {
+                    "expression": "{parent.custom.userRole} \u003d {this.custom.userRole}"
+                  },
+                  "type": "expr"
+                },
+                "onChange": {
+                  "enabled": null,
+                  "script": "\tif origin !\u003d \u0027Binding\u0027:\n\t\tself.parent.custom.userRole \u003d self.custom.userRole"
+                }
+              }
+            },
+            "props": {
+              "checkedIcon": {
+                "color": {
+                  "enabled": "#0066FF"
+                },
+                "path": "material/radio_button_checked"
+              },
+              "indeterminateIcon": {
+                "path": "material/radio_button_checked"
+              },
+              "style": {
+                "paddingRight": "20px"
+              },
+              "text": "Manager",
+              "uncheckedIcon": {
+                "color": {
+                  "enabled": "#9db8d1"
+                },
+                "path": "material/radio_button_unchecked"
+              }
+            },
+            "type": "ia.input.checkbox"
+          },
+          {
+            "custom": {
+              "userRole": 5
+            },
+            "meta": {
+              "name": "WSManager"
+            },
+            "position": {
+              "shrink": 0
+            },
+            "propConfig": {
+              "props.selected": {
+                "binding": {
+                  "config": {
+                    "expression": "{parent.custom.userRole} \u003d {this.custom.userRole}"
+                  },
+                  "type": "expr"
+                },
+                "onChange": {
+                  "enabled": null,
+                  "script": "\tif origin !\u003d \u0027Binding\u0027:\n\t\tself.parent.custom.userRole \u003d self.custom.userRole"
+                }
+              }
+            },
+            "props": {
+              "checkedIcon": {
+                "color": {
+                  "enabled": "#0066FF"
+                },
+                "path": "material/radio_button_checked"
+              },
+              "indeterminateIcon": {
+                "path": "material/radio_button_checked"
+              },
+              "style": {
+                "paddingRight": "20px"
+              },
+              "text": "WS Manager",
+              "uncheckedIcon": {
+                "color": {
+                  "enabled": "#9db8d1"
+                },
+                "path": "material/radio_button_unchecked"
+              }
+            },
+            "type": "ia.input.checkbox"
+          },
+          {
+            "custom": {
+              "userRole": 6
+            },
+            "meta": {
+              "name": "Administrator"
+            },
+            "position": {
+              "shrink": 0
+            },
+            "propConfig": {
+              "props.selected": {
+                "binding": {
+                  "config": {
+                    "expression": "{parent.custom.userRole} \u003d {this.custom.userRole}"
+                  },
+                  "type": "expr"
+                },
+                "onChange": {
+                  "enabled": null,
+                  "script": "\tif origin !\u003d \u0027Binding\u0027:\n\t\tself.parent.custom.userRole \u003d self.custom.userRole"
+                }
+              }
+            },
+            "props": {
+              "checkedIcon": {
+                "color": {
+                  "enabled": "#0066FF"
+                },
+                "path": "material/radio_button_checked"
+              },
+              "indeterminateIcon": {
+                "path": "material/radio_button_checked"
+              },
+              "style": {
+                "paddingRight": "20px"
+              },
+              "text": "Administrator",
+              "uncheckedIcon": {
+                "color": {
+                  "enabled": "#9db8d1"
+                },
+                "path": "material/radio_button_unchecked"
+              }
+            },
+            "type": "ia.input.checkbox"
+          }
+        ],
+        "custom": {
+          "userRole": 1
+        },
+        "meta": {
+          "name": "UserRightsSelect"
+        },
+        "position": {
+          "basis": "60px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "custom.userRole": {
+            "binding": {
+              "config": {
+                "bidirectional": true,
+                "path": "view.custom.userRole"
+              },
+              "type": "property"
+            },
+            "onChange": {
+              "enabled": null,
+              "script": "\tif not self.view.params.newUser:\n\t\tself.getSibling(\"SaveUserRights\").custom.changeRights \u003d True"
+            },
+            "persistent": true
+          }
+        },
+        "props": {
+          "style": {
+            "classes": "Text/Add_HeaderText",
+            "marginLeft": "-5px",
+            "overflow": "hidden"
+          },
+          "wrap": "wrap"
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "children": [
+          {
+            "events": {
+              "component": {
+                "onActionPerformed": {
+                  "config": {
+                    "script": "\tif not self.view.params.newUser:\n\t\temail \u003d self.view.params.email\n\t\tfirstName \u003d self.view.params.firstName\n\t\tlastName \u003d self.view.params.lastName\n\t\teditUser \u003d system.user.getUser(\u0027default\u0027, email)\n\t\t#Erase all the old roles, the re-insert the new roles\n\t\tuserRoles \u003d editUser.getRoles()\n\t\t#Set the roles\n\t\tfor role in userRoles:\n\t\t\teditUser.removeRole(role)\n\t\t#Add each selected role\n\t\troles \u003d []\n\t\tuserRole \u003d self.view.custom.userRole\n\t\tif userRole \u003d\u003d 1:\n\t\t\troles.append(\u0027Care Coordinator\u0027)\n\t\telif userRole \u003d\u003d 2:\n\t\t\troles.append(\u0027Support Coordinator\u0027)\n\t\telif userRole \u003d\u003d 3:\n\t\t\troles.append(\u0027WS Support Coordinator\u0027)\n\t\telif userRole \u003d\u003d 4:\n\t\t\troles.append(\u0027Manager\u0027)\n\t\telif userRole \u003d\u003d 5:\n\t\t\troles.append(\u0027WS Manager\u0027)\n\t\telif userRole \u003d\u003d 6:\n\t\t\troles.append(\u0027Administrator\u0027)\n\t\n\t\teditUser.addRoles(roles)\n\t\teditUser.set(\"firstname\", firstName)\n\t\teditUser.set(\"lastname\", lastName)\n\t\taddUserResult \u003d system.user.editUser(\u0027default\u0027, editUser)\n\t\n\t## send message to refresh\n\tsystem.perspective.sendMessage(messageType\u003d\"refreshStaffSettings\", payload\u003d{}, scope\u003d\"session\")\n\tsystem.perspective.sendMessage(messageType\u003d\"refreshStaffSettingsQuery\", payload\u003d{}, scope\u003d\"session\")\n\t#Clean up and close\n\tself.view.custom.password \u003d \u0027\u0027\n\tself.view.custom.password2 \u003d \u0027\u0027\n\tself.view.params.email \u003d \u0027\u0027\n\tself.view.params.firstName \u003d \u0027\u0027\n\tself.view.params.lastName \u003d \u0027\u0027\n\tself.parent.custom.changeRights \u003d False\n\tself.view.custom.userRole \u003d 1\n\t\n\tsystem.perspective.closeDock(\u0027UserCredentials\u0027)"
+                  },
+                  "scope": "G",
+                  "type": "script"
+                }
+              }
+            },
+            "meta": {
+              "name": "SaveRights"
+            },
+            "position": {
+              "basis": "140px"
+            },
+            "props": {
+              "style": {
+                "classes": "Buttons/Main",
+                "marginRight": "30px"
+              },
+              "text": "Save User Rights"
+            },
+            "type": "ia.input.button"
+          },
+          {
+            "events": {
+              "component": {
+                "onActionPerformed": {
+                  "config": {
+                    "script": "\tself.view.custom.password \u003d \u0027\u0027\n\tself.view.custom.password2 \u003d \u0027\u0027\n\tself.view.params.email \u003d \u0027\u0027\n\tself.view.params.firstName \u003d \u0027\u0027\n\tself.view.params.lastName \u003d \u0027\u0027\n\tsystem.perspective.closeDock(\u0027UserCredentials\u0027)\n\t"
+                  },
+                  "scope": "G",
+                  "type": "script"
+                }
+              }
+            },
+            "meta": {
+              "name": "Cancel Button"
+            },
+            "position": {
+              "basis": "140px"
+            },
+            "props": {
+              "image": {
+                "icon": {
+                  "color": "#AAAAAA"
+                }
+              },
+              "style": {
+                "classes": "Buttons/Delete Buttons/Secondary_Orange",
+                "marginRight": "30px"
+              },
+              "text": "Cancel"
+            },
+            "type": "ia.input.button"
+          }
+        ],
+        "custom": {
+          "changeRights": true
+        },
+        "meta": {
+          "name": "SaveUserRights"
+        },
+        "position": {
+          "basis": "35px"
+        },
+        "propConfig": {
+          "position.display": {
+            "binding": {
+              "config": {
+                "path": "this.custom.changeRights"
+              },
+              "transforms": [
+                {
+                  "code": "\tif self.view.params.newUser:\n\t\t\treturn False\n\telse:\n\t\treturn value",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "style": {
+            "marginBottom": "20px",
+            "marginTop": "20px",
+            "overflow": "visible"
+          }
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "children": [
+          {
+            "meta": {
+              "name": "Label"
+            },
+            "position": {
+              "shrink": 0
+            },
+            "props": {
+              "style": {
+                "classes": "Text/Add_HeaderText"
+              },
+              "text": "Password"
+            },
+            "type": "ia.display.label"
+          },
+          {
+            "meta": {
+              "name": "Label_0"
+            },
+            "position": {
+              "basis": "10px",
+              "shrink": 0
+            },
+            "props": {
+              "style": {
+                "color": "#D80000"
+              },
+              "text": "*"
+            },
+            "type": "ia.display.label"
+          }
+        ],
+        "meta": {
+          "name": "Password"
+        },
+        "position": {
+          "basis": "25px",
+          "shrink": 0
+        },
+        "props": {
+          "style": {
+            "marginTop": "20px"
+          }
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "meta": {
+          "name": "PasswordField"
+        },
+        "position": {
+          "basis": "32px"
+        },
+        "propConfig": {
+          "props.text": {
+            "binding": {
+              "config": {
+                "bidirectional": true,
+                "path": "view.custom.password"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "style": {
+            "classes": "Text/Add_TextFieldWhite",
+            "marginBottom": "0px"
+          }
+        },
+        "type": "ia.input.password-field"
+      },
+      {
+        "children": [
+          {
+            "meta": {
+              "name": "Label"
+            },
+            "position": {
+              "shrink": 0
+            },
+            "props": {
+              "style": {
+                "classes": "Text/Add_HeaderText"
+              },
+              "text": "Confirm Password"
+            },
+            "type": "ia.display.label"
+          },
+          {
+            "meta": {
+              "name": "Label_0"
+            },
+            "position": {
+              "shrink": 0
+            },
+            "propConfig": {
+              "props.text": {
+                "binding": {
+                  "config": {
+                    "expression": "if ({view.custom.password2}\u003d\u0027\u0027\r\n\t, \u0027*\u0027\r\n\t,if({view.custom.password} \u003d {view.custom.password2}, \u0027*\u0027, \u0027* Passwords must match\u0027))"
+                  },
+                  "type": "expr"
+                }
+              }
+            },
+            "props": {
+              "style": {
+                "color": "#D80000",
+                "fontSize": "14px"
+              }
+            },
+            "type": "ia.display.label"
+          }
+        ],
+        "meta": {
+          "name": "PasswordConfirm"
+        },
+        "position": {
+          "basis": "25px",
+          "shrink": 0
+        },
+        "props": {
+          "style": {
+            "marginTop": "20px"
+          }
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "meta": {
+          "name": "PasswordFieldConfirm"
+        },
+        "position": {
+          "basis": "32px"
+        },
+        "propConfig": {
+          "props.text": {
+            "binding": {
+              "config": {
+                "bidirectional": true,
+                "path": "view.custom.password2"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "style": {
+            "classes": "Text/Add_TextFieldWhite",
+            "marginBottom": "0px"
+          }
+        },
+        "type": "ia.input.password-field"
+      },
+      {
+        "children": [
+          {
+            "events": {
+              "component": {
+                "onActionPerformed": {
+                  "config": {
+                    "script": "\timport traceback\n\tfrom com.inductiveautomation.ignition.common.user import ContactInfo\n\ttry:\n\t\tnewUser \u003d self.view.params.newUser\n\t\t#Check valid entries.\n\t\tfirstName \u003d self.view.params.firstName\n\t\tlastName \u003d self.view.params.lastName\n\t\temail \u003d self.view.params.email\n\t\tpassword \u003d self.view.custom.password\n\t\tpassword2 \u003d self.view.custom.password2\n\t\tif email \u003d\u003d \u0027\u0027:\n\t\t\tself.parent.parent.getChild(\"Label\").showMessage(\"Email Error\")\n\t\t\treturn\n\t\tif password \u003d\u003d \u0027\u0027:\n\t\t\tself.parent.parent.getChild(\"Label\").showMessage(\"Password Error\")\n\t\t\treturn\n\t\tif password !\u003d password2:\n\t\t\tself.parent.parent.getChild(\"Label\").showMessage(\"Password Error\")\n\t\t\treturn\n\t\t\n\t\tsystem.perspective.print(\"In reset new user \u003d \" + str(self.view.params.newUser))\n\t\t#Lookup the user and set credentials.\n\t\tif not newUser:\n\t\t\tmodifyUser \u003d system.user.getUser(\u0027default\u0027, email)\n\t\t\tmodifyUser.set(\u0027password\u0027, password)\n\t\t\t# Edit the user.\n\t\t\tsystem.user.editUser(\u0027default\u0027, modifyUser)\n\t\t\t\n\t\t#Email username and passwords to staff\n\t\t#This will need to be updated once email profile is worked out.\n\t\tfromAddress \u003d \"test@yahoo.com\"\n\t\ttoAddress \u003d [email]\n\t\tsubject \u003d \u0027DISCOVERY: Staff Username\u0027\n\t\tbody \u003d \"The username for \" + firstName + \u0027 \u0027 +lastName + \" is \u0027\" + email + \"\u0027 and the password is \u0027\" + password + \"\u0027. \"\n\t\tsmtpProfile \u003d \u0027Email\u0027\n\t\tsmtp \u003d \u0027smtp.mail.yahoo.com\u0027\n\t\t#system.net.sendEmail(smtp, fromAddress, subject, body, to\u003dtoAddress,smtpProfile \u003d smtpProfile)\n\n\t\tlogger \u003d system.util.getLogger(\u0027EmailLogs\u0027)\n\t\tlogger.info(\u0027Subject: \u0027 + subject + \u0027 \\nBody: \u0027 + body + \u0027 \\nTo: \u0027 + email)\n\t\tself.parent.parent.getChild(\"Label\").showMessage(email + \u0027 successfully updated.\u0027)\n\t\tself.view.custom.password \u003d \u0027\u0027\n\t\tself.view.custom.password2 \u003d \u0027\u0027\n\t\tself.view.params.email \u003d \u0027\u0027\n\t\tself.view.params.firstName \u003d \u0027\u0027\n\t\tself.view.params.lastName \u003d \u0027\u0027\n\t\tself.parent.parent.getChild(\"SaveUserRights\").custom.changeRights \u003d False\n\t\tself.custom.careCoordinator \u003d False\n\t\tself.custom.supportCoordinator \u003d False\n\t\tself.custom.WSsupportCoordinator \u003d False\n\t\tself.custom.manager \u003d False\n\t\tself.custom.WSmanager \u003d False\n\t\tself.custom.administrator \u003d False\n\t\tsystem.perspective.closeDock(\u0027UserCredentials\u0027)\n\t\t\n\texcept:\n\t\tlogger \u003d system.util.getLogger(\"System Settings Reset Staff Password\")\n\t\tmsg \u003d traceback.format_exc()\n\t\tlogger.error(msg)"
+                  },
+                  "scope": "G",
+                  "type": "script"
+                }
+              }
+            },
+            "meta": {
+              "name": "ResetButton"
+            },
+            "position": {
+              "basis": "100px"
+            },
+            "propConfig": {
+              "position.display": {
+                "binding": {
+                  "config": {
+                    "path": "parent.custom.valid"
+                  },
+                  "transforms": [
+                    {
+                      "code": "\tif self.view.params.newUser:\n\t\treturn False\n\telse:\n\t\treturn value",
+                      "type": "script"
+                    }
+                  ],
+                  "type": "property"
+                }
+              }
+            },
+            "props": {
+              "style": {
+                "classes": "Buttons/Main",
+                "marginRight": "30px"
+              },
+              "text": "Reset Password"
+            },
+            "type": "ia.input.button"
+          },
+          {
+            "events": {
+              "component": {
+                "onActionPerformed": {
+                  "config": {
+                    "script": "\timport traceback\n\tfrom com.inductiveautomation.ignition.common.user import ContactInfo\n\ttry:\n\t\tproject \u003d \"RITI\"\n\t\tnewUser \u003d self.view.params.newUser\n\t\t#Check valid entries.\n\t\tstaffId \u003d self.view.params.staffId\n\t\tfirstName \u003d self.view.params.firstName\n\t\tlastName \u003d self.view.params.lastName\n\t\temail \u003d self.view.params.email\n\t\tpassword \u003d self.view.custom.password\n\t\tpassword2 \u003d self.view.custom.password2\n\t\tif email \u003d\u003d \u0027\u0027:\n\t\t\tself.parent.parent.getChild(\"Label\").showMessage(\"Email Error\")\n\t\t\treturn\n\t\tif password \u003d\u003d \u0027\u0027:\n\t\t\tself.parent.parent.getChild(\"Label\").showMessage(\"Password Error\")\n\t\t\treturn\n\t\tif password !\u003d password2:\n\t\t\tself.parent.parent.getChild(\"Label\").showMessage(\"Password Error\")\n\t\t\treturn\n\t\tif self.view.params.newUser:\n\t\t\t#Create a new user and credentials.\n\t\t\tnewEmail \u003d ContactInfo(\u0027email\u0027,email)\n\t\t\tnewUser \u003d system.user.getNewUser(\u0027default\u0027, email)\n\t\t\tnewUser.set(\"password\", password)\n\t\t\tnewUser.set(\"firstname\", firstName)\n\t\t\tnewUser.set(\"lastname\", lastName)\n\t\t\tnewUser.setContactInfo([newEmail])\n\t\t\t#All staff are volunteers at a minimum\n#\t\t\tnewUser.addRole(\u0027Volunteer\u0027)\n\t\t\t#Add other roles as necessary\n\t\t\tuserRole \u003d self.view.custom.userRole\n\t\t\tif userRole \u003d\u003d 1:\n\t\t\t\tnewUser.addRole(\u0027Care Coordinator\u0027)\n\t\t\telif userRole \u003d\u003d 2:\n\t\t\t\tnewUser.addRole(\u0027Support Coordinator\u0027)\n\t\t\telif userRole \u003d\u003d 3:\n\t\t\t\tnewUser.addRole(\u0027WS Support Coordinator\u0027)\n\t\t\telif userRole \u003d\u003d 4:\n\t\t\t\tnewUser.addRole(\u0027Manager\u0027)\n\t\t\telif userRole \u003d\u003d 5:\n\t\t\t\tnewUser.addRole(\u0027WS Manager\u0027)\n\t\t\telif userRole \u003d\u003d 6:\n\t\t\t\tnewUser.addRole(\u0027Administrator\u0027)\n\t\t\taddUserResult \u003d system.user.addUser(\u0027default\u0027, newUser)\n\t\t\t#Add the username to the Staff table\n\t\t\tpath \u003d \"Settings/Staff/UpdateStaffUsername\"\n\t\t\tparameters \u003d {\"username\":email,\"staffId\":staffId}\n\t\t\tusername \u003d system.db.runNamedQuery(project\u003dproject,path\u003dpath,parameters\u003dparameters)\n\t\telse:\n\t\t\t#Exisitng user to be updated\n\t\t\teditUser \u003d system.user.getUser(\u0027default\u0027, email)\n\t\t\t#Erase all the old roles, the re-insert the new roles\n\t\t\tuserRoles \u003d editUser.getRoles()\n\t\t\t#Set the roles\n\t\t\tfor role in userRoles:\n\t\t\t\teditUser.removeRole(role)\n\t\t\t#Add each selected role\n\t\t\troles \u003d []\n\t\t\tuserRole \u003d self.view.custom.userRole\n\t\t\tif userRole \u003d\u003d 1:\n\t\t\t\troles.append(\u0027Care Coordinator\u0027)\n\t\t\telif userRole \u003d\u003d 2:\n\t\t\t\troles.append(\u0027Support Coordinator\u0027)\n\t\t\telif userRole \u003d\u003d 3:\n\t\t\t\troles.append(\u0027WS Support Coordinator\u0027)\n\t\t\telif userRole \u003d\u003d 4:\n\t\t\t\troles.append(\u0027Manager\u0027)\n\t\t\telif userRole \u003d\u003d 5:\n\t\t\t\troles.append(\u0027WS Manager\u0027)\n\t\t\telif userRole \u003d\u003d 6:\n\t\t\t\troles.append(\u0027Administrator\u0027)\n\t\t\teditUser.addRoles(roles)\n\t\t\teditUser.set(\"password\", password)\n\t\t\teditUser.set(\"firstname\", firstName)\n\t\t\teditUser.set(\"lastname\", lastName)\n\t\t\taddUserResult \u003d system.user.editUser(\u0027default\u0027, editUser)\n\t\t\n\n\t\t\t\n\t\t#Email username and passwords to staff\n\t\t#This will need to be updated once email profile is worked out.\n\t\tfromAddress \u003d \"test@yahoo.com\"\n\t\ttoAddress \u003d [email]\n\t\tsubject \u003d \u0027DISCOVERY: Staff Username\u0027\n\t\tbody \u003d \"The username for \" + firstName + \u0027 \u0027 +lastName + \" is \u0027\" + email + \"\u0027 and the password is \u0027\" + password + \"\u0027. \"\n\t\tsmtpProfile \u003d \u0027Email\u0027\n\t\tsmtp \u003d \u0027smtp.mail.yahoo.com\u0027\n\t\t#system.net.sendEmail(smtp, fromAddress, subject, body, to\u003dtoAddress,smtpProfile \u003d smtpProfile)\n\n\t\tlogger \u003d system.util.getLogger(\u0027EmailLogs\u0027)\n\t\tlogger.info(\u0027Subject: \u0027 + subject + \u0027 \\nBody: \u0027 + body + \u0027 \\nTo: \u0027 + email)\n\t\tself.parent.parent.getChild(\"Label\").showMessage(email + \u0027 successfully updated.\u0027)\n\t\tself.view.custom.password \u003d \u0027\u0027\n\t\tself.view.custom.password2 \u003d \u0027\u0027\n\t\tself.view.params.email \u003d \u0027\u0027\n\t\tself.view.params.firstName \u003d \u0027\u0027\n\t\tself.view.params.lastName \u003d \u0027\u0027\n\t\tself.parent.parent.getChild(\"SaveUserRights\").custom.changeRights \u003d False\n\t\tself.view.custom.userRole \u003d 1\n\t\tsystem.perspective.sendMessage(messageType\u003d\"refreshStaffSettings\", payload\u003d{}, scope\u003d\"session\")\n\t\tsystem.perspective.sendMessage(messageType\u003d\"refreshStaffSettingsQuery\", payload\u003d{}, scope\u003d\"session\")\n\t\tsystem.perspective.closeDock(\u0027UserCredentials\u0027)\n\texcept:\n\t\tlogger \u003d system.util.getLogger(\"System Settings Create New Staff\")\n\t\tmsg \u003d traceback.format_exc()\n\t\tlogger.error(msg)"
+                  },
+                  "scope": "G",
+                  "type": "script"
+                }
+              }
+            },
+            "meta": {
+              "name": "CreateButton"
+            },
+            "position": {
+              "basis": "100px"
+            },
+            "propConfig": {
+              "position.display": {
+                "binding": {
+                  "config": {
+                    "path": "parent.custom.valid"
+                  },
+                  "transforms": [
+                    {
+                      "code": "\tif not self.view.params.newUser:\n\t\treturn False\n\telse:\n\t\treturn value",
+                      "type": "script"
+                    }
+                  ],
+                  "type": "property"
+                }
+              }
+            },
+            "props": {
+              "style": {
+                "classes": "Buttons/Main",
+                "marginRight": "30px"
+              },
+              "text": "Create User"
+            },
+            "type": "ia.input.button"
+          },
+          {
+            "events": {
+              "component": {
+                "onActionPerformed": {
+                  "config": {
+                    "script": "\tself.view.custom.password \u003d \u0027\u0027\n\tself.view.custom.password2 \u003d \u0027\u0027\n\tself.view.params.email \u003d \u0027\u0027\n\tself.view.params.firstName \u003d \u0027\u0027\n\tself.view.params.lastName \u003d \u0027\u0027\n\tself.parent.parent.getChild(\"SaveUserRights\").custom.changeRights \u003d False\n\tself.custom.careCoordinator \u003d False\n\tself.custom.supportCoordinator \u003d False\n\tself.custom.WSsupportCoordinator \u003d False\n\tself.custom.manager \u003d False\n\tself.custom.WSmanager \u003d False\n\tself.custom.administrator \u003d False\n\tsystem.perspective.closeDock(\u0027UserCredentials\u0027)\n\t"
+                  },
+                  "scope": "G",
+                  "type": "script"
+                }
+              }
+            },
+            "meta": {
+              "name": "Cancel Button"
+            },
+            "position": {
+              "basis": "100px"
+            },
+            "props": {
+              "image": {
+                "icon": {
+                  "color": "#AAAAAA"
+                }
+              },
+              "style": {
+                "classes": "Buttons/Delete Buttons/Secondary_Orange",
+                "marginRight": "30px"
+              },
+              "text": "Cancel"
+            },
+            "type": "ia.input.button"
+          }
+        ],
+        "custom": {
+          "changeRights": false
+        },
+        "meta": {
+          "name": "FlexContainer"
+        },
+        "position": {
+          "basis": "35px"
+        },
+        "propConfig": {
+          "custom.valid": {
+            "binding": {
+              "config": {
+                "expression": "len({view.params.email}) \u0026\u0026\r\n{view.custom.password2} \u003d {view.custom.password} \u0026\u0026\r\nlen({view.custom.password}) \u003e 6 \u0026\u0026\r\nlen({view.custom.password2}) \u003e 6"
+              },
+              "type": "expr"
+            }
+          }
+        },
+        "props": {
+          "style": {
+            "marginBottom": "20px",
+            "marginTop": "20px",
+            "overflow": "visible"
+          }
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "meta": {
+          "name": "Label",
+          "visible": false
+        },
+        "position": {
+          "basis": "50px"
+        },
+        "props": {
+          "style": {
+            "classes": "Text/Error_Message"
+          },
+          "text": "Congregation Name Error"
+        },
+        "scripts": {
+          "customMethods": [
+            {
+              "name": "showMessage",
+              "params": [
+                "message"
+              ],
+              "script": "\timport time\n\tself.props.text \u003d message\n\tself.meta.visible \u003d True\n\ttime.sleep(5)\n\tself.meta.visible \u003d False\n\t"
+            }
+          ],
+          "extensionFunctions": null,
+          "messageHandlers": []
+        },
+        "type": "ia.display.label"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column",
+      "style": {
+        "classes": "Background/Default",
+        "paddingLeft": "50px",
+        "paddingRight": "50px"
+      }
+    },
+    "scripts": {
+      "customMethods": [],
+      "extensionFunctions": null,
+      "messageHandlers": [
+        {
+          "messageType": "resetWinterRegistration",
+          "pageScope": true,
+          "script": "\tself.view.custom.createNew \u003d False\n\tself.view.custom.password2 \u003d \u0027\u0027\n\tself.view.custom.newRegistration \u003d False\n\t",
+          "sessionScope": true,
+          "viewScope": false
+        }
+      ]
+    },
+    "type": "ia.container.flex"
+  }
+}

@@ -1,0 +1,454 @@
+{
+  "custom": {
+    "sqlData": {
+      "$": [
+        "ds",
+        192,
+        1692701930463
+      ],
+      "$columns": [
+        {
+          "data": [],
+          "name": "name",
+          "type": "String"
+        },
+        {
+          "data": [],
+          "name": "nick_name",
+          "type": "String"
+        },
+        {
+          "data": [],
+          "name": "tri_morbid",
+          "type": "Boolean"
+        },
+        {
+          "data": [],
+          "name": "chronic_homeless",
+          "type": "Boolean"
+        },
+        {
+          "data": [],
+          "name": "phone",
+          "type": "String"
+        },
+        {
+          "data": [],
+          "name": "alt_phone",
+          "type": "String"
+        },
+        {
+          "data": [],
+          "name": "email",
+          "type": "String"
+        },
+        {
+          "data": [],
+          "name": "communication_type_id",
+          "type": "Integer"
+        },
+        {
+          "data": [],
+          "name": "insurance_type_id",
+          "type": "Integer"
+        },
+        {
+          "data": [],
+          "name": "insurance_type",
+          "type": "String"
+        },
+        {
+          "data": [],
+          "name": "communication_type",
+          "type": "String"
+        }
+      ]
+    }
+  },
+  "params": {
+    "employee_id": -1,
+    "participant_id": -1,
+    "referral_date": ""
+  },
+  "propConfig": {
+    "custom.sqlData": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "participant_id": "{view.params.participant_id}"
+          },
+          "queryPath": "Participants/Personal/PersonalQuickDetailSelect"
+        },
+        "type": "query"
+      },
+      "persistent": true
+    },
+    "params.employee_id": {
+      "paramDirection": "inout"
+    },
+    "params.participant_id": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.referral_date": {
+      "paramDirection": "inout",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 80,
+      "width": 1700
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "Embed_Employee"
+        },
+        "position": {
+          "basis": "165px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.options": {
+            "binding": {
+              "config": {
+                "queryPath": "Participants/EmployeeDropdownList"
+              },
+              "type": "query"
+            }
+          },
+          "props.params.selection": {
+            "binding": {
+              "config": {
+                "bidirectional": true,
+                "path": "view.params.employee_id"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "text": "Staff"
+          },
+          "path": "Participants/Templates/120px/top/Input_DropDownSingle",
+          "style": {
+            "classes": "InputCards/InputCard InputCards/InputCard_NoBorder"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Embed_Referral_Date"
+        },
+        "position": {
+          "basis": "140px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.date": {
+            "binding": {
+              "config": {
+                "bidirectional": true,
+                "path": "view.params.referral_date"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "text": "Referral Date"
+          },
+          "path": "Participants/Templates/60px/top/Input_Date_No_FutureDates",
+          "style": {
+            "classes": "InputCards/InputCard"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Embed_ParticipantName"
+        },
+        "position": {
+          "basis": "200px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.text": {
+            "binding": {
+              "config": {
+                "path": "view.custom.sqlData"
+              },
+              "transforms": [
+                {
+                  "code": "\tif value is not None and value.getRowCount() \u003e 0:\n\t\treturn value.getValueAt(0,\u0027name\u0027)\n\telse:\n\t\treturn \u0027(No Data)\u0027",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "label": "Participant Name:"
+          },
+          "path": "Participants/Templates/60px/top/ReadOnly_Text",
+          "style": {
+            "classes": "InputCards/InputCard InputCards/InputCard_NoBorder",
+            "overflow": "hidden"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Embed_ParticipantNickName"
+        },
+        "position": {
+          "basis": "130px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.text": {
+            "binding": {
+              "config": {
+                "path": "view.custom.sqlData"
+              },
+              "transforms": [
+                {
+                  "code": "\tif value is not None and value.getRowCount() \u003e 0: \n\t\treturn value.getValueAt(0,\u0027nick_name\u0027)\n\telse:\n\t\treturn \u0027(No Data)\u0027",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "label": "Nick Name:"
+          },
+          "path": "Participants/Templates/60px/top/ReadOnly_Text",
+          "style": {
+            "classes": "InputCards/InputCard InputCards/InputCard_NoBorder",
+            "overflow": "hidden"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Embed_ParticipantPhone"
+        },
+        "position": {
+          "basis": "120px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.text": {
+            "binding": {
+              "config": {
+                "path": "view.custom.sqlData"
+              },
+              "transforms": [
+                {
+                  "code": "\tinValue \u003d None\n\tif value is not None and value.getRowCount() \u003e 0:\n\t\tinValue \u003d value.getValueAt(0,\u0027phone\u0027)\n\tif inValue !\u003d None:\n\t\toutString \u003d inValue\n\telse:\n\t\toutString \u003d \u0027(No Data)\u0027\n\treturn outString",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "label": "Phone:"
+          },
+          "path": "Participants/Templates/60px/top/ReadOnly_Text",
+          "style": {
+            "classes": "InputCards/InputCard InputCards/InputCard_NoBorder",
+            "overflow": "hidden"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Embed_ParticipantEmail"
+        },
+        "position": {
+          "basis": "200px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.text": {
+            "binding": {
+              "config": {
+                "path": "view.custom.sqlData"
+              },
+              "transforms": [
+                {
+                  "code": "\tinValue \u003d None\n\tif value is not None and value.getRowCount() \u003e 0:\n\t\tinValue \u003d value.getValueAt(0,\u0027email\u0027)\n\tif inValue !\u003d None:\n\t\toutString \u003d inValue\n\telse:\n\t\toutString \u003d \u0027(No Data)\u0027\n\treturn outString",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "label": "Email:"
+          },
+          "path": "Participants/Templates/60px/top/ReadOnly_Text",
+          "style": {
+            "classes": "InputCards/InputCard InputCards/InputCard_NoBorder",
+            "overflow": "hidden"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Embed_ParticipantInsurance"
+        },
+        "position": {
+          "basis": "110px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.text": {
+            "binding": {
+              "config": {
+                "path": "view.custom.sqlData"
+              },
+              "transforms": [
+                {
+                  "code": "\tinValue \u003d None\n\tif value is not None and value.getRowCount() \u003e 0:\n\t\tinValue \u003d value.getValueAt(0,\u0027insurance_type\u0027)\n\tif inValue \u003d\u003d None:\n\t\toutString \u003d \u0027(No Data)\u0027\n\telse:\n\t\toutString \u003d inValue\n\treturn outString",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "label": "Insurance:"
+          },
+          "path": "Participants/Templates/60px/top/ReadOnly_Text",
+          "style": {
+            "classes": "InputCards/InputCard InputCards/InputCard_NoBorder",
+            "overflow": "hidden"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Embed_ParticipantTriMorbid"
+        },
+        "position": {
+          "basis": "110px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.text": {
+            "binding": {
+              "config": {
+                "path": "view.custom.sqlData"
+              },
+              "transforms": [
+                {
+                  "code": "\tinValue \u003dNone\n\tif value is not None and value.getRowCount() \u003e 0:\n\t\tinValue \u003d value.getValueAt(0,\u0027tri_morbid\u0027)\n\toutString \u003d \u0027(No Data)\u0027\n\tif inValue \u003d\u003d True:\n\t\toutString \u003d \u0027Yes\u0027\n\telif inValue \u003d\u003d False:\n\t\toutString \u003d \u0027No\u0027\n\t\n\treturn outString",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "label": "Tri-Morbid:"
+          },
+          "path": "Participants/Templates/60px/top/ReadOnly_Text",
+          "style": {
+            "classes": "InputCards/InputCard InputCards/InputCard_NoBorder",
+            "overflow": "hidden"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Embed_ParticipantChronicHomeless"
+        },
+        "position": {
+          "basis": "130px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.text": {
+            "binding": {
+              "config": {
+                "path": "view.custom.sqlData"
+              },
+              "transforms": [
+                {
+                  "code": "\tinValue \u003d None\n\tif value is not None and value.getRowCount() \u003e 0:\n\t\tinValue \u003d value.getValueAt(0,\u0027chronic_homeless\u0027)\n\toutString \u003d \u0027(No Data)\u0027\n\tif inValue \u003d\u003d True:\n\t\toutString \u003d \u0027Yes\u0027\n\telif inValue \u003d\u003d False:\n\t\toutString \u003d \u0027No\u0027\n\t\n\treturn outString",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "label": "Chronic Homeless:"
+          },
+          "path": "Participants/Templates/60px/top/ReadOnly_Text",
+          "style": {
+            "classes": "InputCards/InputCard InputCards/InputCard_NoBorder",
+            "overflow": "hidden"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Embed_Placeholder"
+        },
+        "position": {
+          "basis": "1px",
+          "grow": 1
+        },
+        "props": {
+          "path": "Participants/Templates/Placeholder",
+          "style": {
+            "classes": "InputCards/InputCard"
+          }
+        },
+        "type": "ia.display.view"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "style": {
+        "classes": "Background/Default",
+        "overflow": "hidden"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

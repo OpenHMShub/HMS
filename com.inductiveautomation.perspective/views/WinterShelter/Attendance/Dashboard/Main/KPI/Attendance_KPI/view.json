@@ -1,0 +1,387 @@
+{
+  "custom": {
+    "ActiveCongregation_Current": 111,
+    "ActiveCongregation_Prev": 0,
+    "ActiveParticipant_Current": 701,
+    "ActiveParticipant_Prev": 0,
+    "TotalBeds_Current": 0,
+    "TotalBeds_Prev": 0,
+    "currentSeason": 14,
+    "monthly_Current": [
+      {
+        "Value": 2633,
+        "time": "2022-11-30 00:00:00"
+      },
+      {
+        "Value": 3084,
+        "time": "2022-12-31 00:00:00"
+      },
+      {
+        "Value": 3223,
+        "time": "2023-01-31 00:00:00"
+      },
+      {
+        "Value": 2866,
+        "time": "2023-02-28 00:00:00"
+      },
+      {
+        "Value": 2857,
+        "time": "2023-03-31 00:00:00"
+      }
+    ],
+    "monthly_Prev": []
+  },
+  "params": {
+    "genderId": -1,
+    "hostLocationTypeId": -1,
+    "locationId": -1,
+    "seasonId": 12,
+    "totalBeds": 0,
+    "veteranId": -1
+  },
+  "propConfig": {
+    "custom.ActiveCongregation_Current": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "dateRange": "{session.custom.filters.WinterShelterAttendance.checkinDate.where}",
+            "genderId": "{view.params.genderId}",
+            "hostLocationTypeId": "{view.params.hostLocationTypeId}",
+            "locationId": "{view.params.locationId}",
+            "search": "{session.custom.filters.WinterShelterAttendance.search.where}",
+            "seasonId": "{view.params.seasonId}",
+            "veteranId": "{view.params.veteranId}"
+          },
+          "queryPath": "WinterShelter/Attendance/GetKPIActiveCongregations",
+          "returnFormat": "dataset"
+        },
+        "transforms": [
+          {
+            "code": "\tif value is not None and value.getRowCount() \u003e 0:\n\t\treturn value.getValueAt(0,0)\n\telse:\n\t\treturn 0",
+            "type": "script"
+          }
+        ],
+        "type": "query"
+      },
+      "persistent": true
+    },
+    "custom.ActiveCongregation_Prev": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "seasonId": "{view.params.seasonId}"
+          },
+          "queryPath": "WinterShelter/Attendance/Get_Attendance_KPI_PreviousSeason"
+        },
+        "transforms": [
+          {
+            "code": "\tdataset \u003d value\t\n\tif dataset is not None and dataset.getRowCount() \u003e 0:\n\t\tactive_Congregations \u003d dataset.getValueAt(0,\u0027active_Congregations\u0027)\n\telse:\n\t\tactive_Congregations \u003d 0\n\treturn active_Congregations",
+            "type": "script"
+          }
+        ],
+        "type": "query"
+      },
+      "persistent": true
+    },
+    "custom.ActiveParticipant_Current": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "dateRange": "{session.custom.filters.WinterShelterAttendance.checkinDate.where}",
+            "genderId": "{view.params.genderId}",
+            "hostLocationTypeId": "{view.params.hostLocationTypeId}",
+            "locationId": "{view.params.locationId}",
+            "search": "{session.custom.filters.WinterShelterAttendance.search.where}",
+            "seasonId": "{view.params.seasonId}",
+            "veteranId": "{view.params.veteranId}"
+          },
+          "queryPath": "WinterShelter/Attendance/GetKPIActiveParticipants",
+          "returnFormat": "dataset"
+        },
+        "transforms": [
+          {
+            "code": "\tif value is not None and value.getRowCount() \u003e 0:\n\t\treturn value.getValueAt(0,0)\n\telse:\n\t\treturn 0",
+            "type": "script"
+          }
+        ],
+        "type": "query"
+      },
+      "persistent": true
+    },
+    "custom.ActiveParticipant_Prev": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "seasonId": "{view.params.seasonId}"
+          },
+          "queryPath": "WinterShelter/Attendance/Get_Attendance_KPI_PreviousSeason"
+        },
+        "transforms": [
+          {
+            "code": "\tdataset \u003d value\t\n\tif dataset is not None and dataset.getRowCount() \u003e 0:\n\t\tactive_Participants \u003d dataset.getValueAt(0,\u0027active_Participants\u0027)\n\telse:\n\t\tactive_Participants \u003d 0\n\treturn active_Participants",
+            "type": "script"
+          }
+        ],
+        "type": "query"
+      },
+      "persistent": true
+    },
+    "custom.TotalBeds_Current": {
+      "binding": {
+        "config": {
+          "path": "view.params.totalBeds"
+        },
+        "type": "property"
+      },
+      "persistent": true
+    },
+    "custom.TotalBeds_Prev": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "seasonId": "{view.params.seasonId}"
+          },
+          "queryPath": "WinterShelter/Attendance/Get_Attendance_KPI_PreviousSeason"
+        },
+        "transforms": [
+          {
+            "code": "\tdataset \u003d value\t\n\tif dataset is not None and dataset.getRowCount() \u003e 0:\n\t\ttotalBeds \u003d dataset.getValueAt(0,\u0027totalBeds\u0027)\n\telse:\n\t\ttotalBeds \u003d 0\n\treturn totalBeds",
+            "type": "script"
+          }
+        ],
+        "type": "query"
+      },
+      "persistent": true
+    },
+    "custom.currentSeason": {
+      "binding": {
+        "config": {
+          "queryPath": "WinterShelterGlobal/getCurrentSeason"
+        },
+        "transforms": [
+          {
+            "code": "\treturn value.getValueAt(0,0)",
+            "type": "script"
+          }
+        ],
+        "type": "query"
+      },
+      "persistent": true
+    },
+    "custom.monthly_Current": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "dateRange": "{session.custom.filters.WinterShelterAttendance.checkinDate.where}",
+            "genderId": "{view.params.genderId}",
+            "hostLocationTypeId": "{view.params.hostLocationTypeId}",
+            "locationId": "{view.params.locationId}",
+            "search": "{session.custom.filters.WinterShelterAttendance.search.where}",
+            "seasonId": "{view.params.seasonId}",
+            "veteranId": "{view.params.veteranId}"
+          },
+          "queryPath": "WinterShelter/Attendance/GetMonthwiseAttendance"
+        },
+        "transforms": [
+          {
+            "code": "\tchartData \u003d []\n\tif value is not None and value.getRowCount() \u003e 0:\n\t\tfor i in range(value.getRowCount()):\n\t\t\toneData \u003d {}\n\t\t\toneData[\u0027Value\u0027] \u003d value.getValueAt(i,\u0027total\u0027)\n\t\t\toneData[\u0027time\u0027] \u003d system.date.format(value.getValueAt(i,\u0027monthDate\u0027), \u0027yyyy-MM-dd 00:00:00\u0027)\n\t\t\tchartData.append(oneData)\n\treturn chartData",
+            "type": "script"
+          }
+        ],
+        "type": "query"
+      },
+      "persistent": true
+    },
+    "custom.monthly_Prev": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "seasonId": "{view.params.seasonId}"
+          },
+          "queryPath": "WinterShelter/Attendance/Get_Attendance_KPI_PreviousSeason"
+        },
+        "transforms": [
+          {
+            "code": "\tdataset \u003d value\t\n\tgetSeason_Q \u003d system.db.runPrepQuery(\"SELECT Seasons FROM shelter.Seasons where id \u003d \" + str(self.params.seasonId))\n\tPrev_Season \u003d (getSeason_Q.getValueAt(0,0)).split(\u0027-\u0027)[0]\n\tCurr_Season \u003d (getSeason_Q.getValueAt(0,0)).split(\u0027-\u0027)[1]\n\tchartData \u003d []\n\tmonthList \u003d [10,11,0,1,2] #[Nov,Dec,Jan,Feb,March]\n\tValuesPerMonth \u003d [\u0027nov_attendance\u0027,\u0027dec_attendance\u0027,\u0027jan_attendance\u0027,\u0027feb_attendance\u0027,\u0027march_attendance\u0027]\n\tYearPerMonth \u003d [Prev_Season,Prev_Season,Curr_Season,Curr_Season,Curr_Season]\n\tif dataset is not None and dataset.getRowCount() \u003e 0:\n\t\tfor i in range(len(monthList)):\n\t\t\toneData \u003d {}\n\t\t\toneData[\u0027Value\u0027] \u003d dataset.getValueAt(0,ValuesPerMonth[i])\n\t\t\tdate \u003d system.date.addDays(system.date.addMonths(system.date.getDate(int(YearPerMonth[i]), monthList[i], 1),1),-1)\n\t\t\toneData[\u0027time\u0027] \u003d system.date.format(date, \u0027yyyy-MM-dd 00:00:00\u0027)\n\t\t\tchartData.append(oneData)\n\treturn chartData",
+            "type": "script"
+          }
+        ],
+        "type": "query"
+      },
+      "persistent": true
+    },
+    "params.genderId": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.hostLocationTypeId": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.locationId": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.seasonId": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.totalBeds": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.veteranId": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 185,
+      "width": 1470
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "KPI1"
+        },
+        "position": {
+          "basis": "345px",
+          "grow": 1,
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.Value": {
+            "binding": {
+              "config": {
+                "expression": "if({view.params.seasonId}\u003c12,{view.custom.ActiveCongregation_Prev},{view.custom.ActiveCongregation_Current})"
+              },
+              "type": "expr"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "Title": "Active Congregations"
+          },
+          "path": "Participants/Dashboard/Cards/KPI/Metric_Flex",
+          "style": {
+            "classes": "KPIs/KPI_Card",
+            "marginLeft": "40px"
+          },
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "KPI2"
+        },
+        "position": {
+          "basis": "270px",
+          "grow": 1,
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.Value": {
+            "binding": {
+              "config": {
+                "expression": "if({view.params.seasonId}\u003c12,{view.custom.ActiveParticipant_Prev},{view.custom.ActiveParticipant_Current})"
+              },
+              "type": "expr"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "Title": "Active Participants"
+          },
+          "path": "Participants/Dashboard/Cards/KPI/Metric_Flex",
+          "style": {
+            "classes": "KPIs/KPI_Card"
+          },
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "KPI4"
+        },
+        "position": {
+          "basis": "270px",
+          "grow": 1,
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.Value": {
+            "binding": {
+              "config": {
+                "expression": "if({view.params.seasonId} \u003c 12,{view.custom.TotalBeds_Prev},{view.custom.TotalBeds_Current})"
+              },
+              "type": "expr"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "Title": "TOTAL BEDS"
+          },
+          "path": "Participants/Dashboard/Cards/KPI/Total_Flex",
+          "style": {
+            "classes": "KPIs/KPI_Card",
+            "marginRight": "40px"
+          },
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "KPI3"
+        },
+        "position": {
+          "basis": "345px",
+          "grow": 1,
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.Value": {
+            "binding": {
+              "config": {
+                "expression": "if({view.params.seasonId}\u003c12,{view.custom.monthly_Prev},{view.custom.monthly_Current})"
+              },
+              "type": "expr"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "Title": "Attendance monthly"
+          },
+          "path": "Participants/Templates/KPI/Graph_Flex _bar",
+          "style": {
+            "classes": "KPIs/KPI_Card"
+          },
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "alignContent": "flex-start",
+      "alignItems": "center",
+      "style": {
+        "classes": "KPIs/KPI_Flex_Container",
+        "overflow": "hidden",
+        "overflowY": "hidden"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

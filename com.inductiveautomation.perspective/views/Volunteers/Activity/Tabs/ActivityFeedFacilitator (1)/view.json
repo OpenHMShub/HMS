@@ -1,0 +1,125 @@
+{
+  "custom": {},
+  "params": {
+    "facilitatorId": 0,
+    "groupId": 2
+  },
+  "propConfig": {
+    "params.facilitatorId": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.groupId": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {},
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "EmbeddedView"
+        },
+        "propConfig": {
+          "props.params.volunteerId": {
+            "binding": {
+              "config": {
+                "path": "view.params.facilitatorId"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "selection": null
+          },
+          "path": "Volunteers/Activity/Filter/ActivityFilter"
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "FlexRepeater_Activity"
+        },
+        "position": {
+          "grow": 1
+        },
+        "propConfig": {
+          "props.instances": {
+            "binding": {
+              "config": {
+                "parameters": {
+                  "facilitatorId": "{view.params.facilitatorId}"
+                },
+                "queryPath": "Volunteers/Facilitator/FacilitatorActivityFeed",
+                "returnFormat": "dataset"
+              },
+              "transforms": [
+                {
+                  "code": "\timport traceback\n\ttry:\n\t\t#table_data is the data object to return\n\t\tinstances \u003d []\n\t\t\t\n\t\t#Iterate over the results of the query\n\t\tfor row in range(value.getRowCount()):\n\t\t\tobject \u003d {}\n\t\t\t\n\t\t\t#object[\u0027instanceStyle\u0027] \u003d {\"classes\":\"\"}\n\t\t\t#object[\u0027instancePosition\u0027] \u003d {\"grow\":0, \"shrink\":1,\"basis\":\"50px\"}\n\t\t\tobject[\u0027ID\u0027] \u003d value.getValueAt(row, \"ID\")\n\t\t\tobject[\u0027CardType\u0027] \u003d value.getValueAt(row, \"CardType\")\n\t\t\tobject[\u0027Date\u0027] \u003d system.date.toMillis(value.getValueAt(row, \"Date\"))\n\t\t\tobject[\u0027Size\u0027] \u003d \"\"\n\t\t\tinstances.append(object)\n\t\t\n\t\treturn instances\n\t\n\t\n\texcept:\n\t\tlogger \u003d system.util.getLogger(\"Volunteers ActivityFeed FlexRepeater_Activity.props.instances\")\n\t\tmsg \u003d traceback.format_exc()\n\t\tlogger.error(msg)",
+                  "type": "script"
+                }
+              ],
+              "type": "query"
+            }
+          }
+        },
+        "props": {
+          "alignContent": "flex-start",
+          "direction": "column",
+          "elementPosition": {
+            "basis": "auto",
+            "grow": 0,
+            "shrink": 0
+          },
+          "elementStyle": {
+            "classes": "ActivityCards/Card"
+          },
+          "path": "Volunteers/Activity/ActivityCard",
+          "useDefaultViewWidth": false
+        },
+        "type": "ia.display.flex-repeater"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "propConfig": {
+      "custom.filteredInstances": {
+        "binding": {
+          "config": {
+            "path": "./EmbeddedView.props.params.selection"
+          },
+          "transforms": [
+            {
+              "code": "\tfilteredInstances \u003d []\n\tinstances \u003d self.custom.instances\n\tif value is not None and len(value) \u003e 0:\n\t\tfor instance in instances:\n\t\t\tif instance[\"CardType\"] in value:\n\t\t\t\tfilteredInstances.append(instance)\n\telse:\n\t\tfilteredInstances \u003d instances\n\treturn filteredInstances",
+              "type": "script"
+            }
+          ],
+          "type": "property"
+        }
+      },
+      "custom.instances": {
+        "binding": {
+          "config": {
+            "parameters": {
+              "facilitatorId": "{view.params.facilitatorId}"
+            },
+            "queryPath": "Volunteers/Facilitator/FacilitatorActivityFeed",
+            "returnFormat": "dataset"
+          },
+          "type": "query"
+        }
+      }
+    },
+    "props": {
+      "direction": "column",
+      "style": {
+        "classes": "Background/Alternative"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

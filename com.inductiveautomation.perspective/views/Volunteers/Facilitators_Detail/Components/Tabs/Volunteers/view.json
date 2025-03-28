@@ -1,0 +1,162 @@
+{
+  "custom": {},
+  "params": {
+    "facilitatorId": 0
+  },
+  "propConfig": {
+    "params.facilitatorId": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "width": 1383
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "custom": {
+          "search": ""
+        },
+        "meta": {
+          "name": "Table Header"
+        },
+        "position": {
+          "basis": "5%",
+          "shrink": 0
+        },
+        "propConfig": {
+          "custom.hoursEnd": {
+            "binding": {
+              "config": {
+                "path": "this.props.params.hours"
+              },
+              "transforms": [
+                {
+                  "code": "\tif not value:\n\t\treturn 0\n\tif value \u003d\u003d -1:\n\t\tvalue \u003d 0\n\telif value[0] \u003d\u003d \"\u003c5\":\n\t\tvalue \u003d 5\n\telif value[0] \u003d\u003d \"\u003e20\":\n\t\tvalue \u003d 20\n\telse:\n\t\tvalue \u003d value[0].split(\"-\")[1]\n\treturn value",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          },
+          "custom.hoursStart": {
+            "binding": {
+              "config": {
+                "path": "this.props.params.hours"
+              },
+              "transforms": [
+                {
+                  "code": "\tif not value:\n\t\treturn 0\n\tif value \u003d\u003d -1:\n\t\tvalue \u003d 0\n\telif value[0] \u003d\u003d \"\u003c5\":\n\t\tvalue \u003d 0\n\telif value[0] \u003d\u003d \"\u003e20\":\n\t\tvalue \u003d 21\n\telse:\n\t\tvalue \u003d value[0].split(\"-\")[0]\n\treturn value",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          },
+          "props.params.hours": {
+            "onChange": {
+              "enabled": null,
+              "script": "\tself.getSibling(\"Table\").refreshBinding(\"props.params.data\")"
+            }
+          },
+          "props.params.lastServiceDateEnd": {
+            "onChange": {
+              "enabled": null,
+              "script": "\tself.getSibling(\"Table\").refreshBinding(\"props.params.data\")"
+            }
+          },
+          "props.params.lastServiceDateStart": {
+            "onChange": {
+              "enabled": null,
+              "script": "\tself.getSibling(\"Table\").refreshBinding(\"props.params.data\")"
+            }
+          },
+          "props.params.nextServiceDateEnd": {
+            "onChange": {
+              "enabled": null,
+              "script": "\tself.getSibling(\"Table\").refreshBinding(\"props.params.data\")"
+            }
+          },
+          "props.params.nextServiceDateStart": {
+            "onChange": {
+              "enabled": null,
+              "script": "\tself.getSibling(\"Table\").refreshBinding(\"props.params.data\")"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "HoursPast6MonthsFilter": null,
+            "hours": -1,
+            "lastServiceDateEnd": "",
+            "lastServiceDateStart": "",
+            "nextServiceDateEnd": "",
+            "nextServiceDateStart": ""
+          },
+          "path": "Volunteers/Dashboard/Components/Tables/Filter/TableFilter_Volunteers"
+        },
+        "scripts": {
+          "customMethods": [],
+          "extensionFunctions": null,
+          "messageHandlers": [
+            {
+              "messageType": "datasetFilter",
+              "pageScope": true,
+              "script": "\tself.custom.search \u003d payload[\"searchText\"]\n\tself.getSibling(\"Table\").refreshBinding(\"props.params.data\")",
+              "sessionScope": true,
+              "viewScope": true
+            }
+          ]
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Table"
+        },
+        "position": {
+          "basis": "200px",
+          "grow": 1
+        },
+        "propConfig": {
+          "props.params.data": {
+            "binding": {
+              "config": {
+                "designerUseLimit": false,
+                "parameters": {
+                  "id": "{view.params.facilitatorId}",
+                  "search": "{../Table Header.custom.search}"
+                },
+                "queryPath": "Volunteers/Facilitator/facilitatorVolunteers"
+              },
+              "transforms": [
+                {
+                  "code": "\theaders \u003d [\"Name\",\"Phone Number\",\"Email\",\"dob\",\"id\",\"gender\",\"nextServiceDate\",\"nextAssignment\",\"lastServiceDate\",\"lastAssignment\",\"hoursPastSixMonths\"]\n\toriginalDataset \u003d value\n\tfilteredDataset \u003d originalDataset\n\t#system.perspective.print(\u0027rows\u003d \u0027+str(filteredDataset.getRowCount()))\n\tlastServiceDateStart \u003d self.getSibling(\"Table Header\").props.params.lastServiceDateStart\n\tlastServiceDateEnd \u003d self.getSibling(\"Table Header\").props.params.lastServiceDateEnd\n\tnextServiceDateStart \u003d self.getSibling(\"Table Header\").props.params.nextServiceDateStart\n\tnextServiceDateEnd \u003d self.getSibling(\"Table Header\").props.params.nextServiceDateEnd\n\thoursLastSix \u003d self.getSibling(\"Table Header\").props.params.hours\n\t\n\tdef getHours(hourValue):\n\t\tif hourValue \u003d\u003d \"\u003c5\":\n\t\t\tstart \u003d 0\n\t\t\tend \u003d 4\n\t\telif hourValue \u003d\u003d \"\u003c20\":\n\t\t\tstart \u003d 21\n\t\t\tend \u003d 10000\n\t\telse:\n\t\t\tstart \u003d int(hourValue.split(\"-\")[0])\n\t\t\tend \u003d int(hourValue.split(\"-\")[1])\n\t\treturn start, end\n\t\n\treturnDataset \u003d []\n\tfor i in range (filteredDataset.getRowCount()):\n\t\taddRow \u003d True\n\t\toneRow \u003d[]\n\t\tnextServiceDate \u003d filteredDataset.getValueAt(i,\"nextServiceDate\")\n\t\tlastServiceDate \u003d filteredDataset.getValueAt(i,\"lastServiceDate\")\n\t\thours \u003d filteredDataset.getValueAt(i,\"hoursPastSixMonths\")\n\t\t\n\t\tif lastServiceDateStart is not None and lastServiceDateStart \u003c\u003e \"\":\n\t\t\tif lastServiceDate is None:\n\t\t\t\taddRow \u003d False\n\t\t\telse:\n\t\t\t\tif system.date.isBefore(lastServiceDate, lastServiceDateStart):\n\t\t\t\t\taddRow \u003d False\n\t\t\n\t\tif lastServiceDateEnd is not None and lastServiceDateEnd \u003c\u003e \"\":\n\t\t\tif lastServiceDate is None:\n\t\t\t\taddRow \u003d False\n\t\t\telse:\n\t\t\t\tif system.date.isAfter(lastServiceDate, lastServiceDateEnd):\n\t\t\t\t\taddRow \u003d False\n\t\t\t\t\n\t\tif nextServiceDateStart is not None and nextServiceDateStart \u003c\u003e \"\":\n\t\t\tif nextServiceDate is None:\n\t\t\t\taddRow \u003d False\n\t\t\telse:\n\t\t\t\tif system.date.isBefore(nextServiceDate, nextServiceDateStart):\n\t\t\t\t\taddRow \u003d False\n\t\t\n\t\tif nextServiceDateEnd is not None and nextServiceDateEnd \u003c\u003e \"\":\n\t\t\tif nextServiceDate is None:\n\t\t\t\taddRow \u003d False\n\t\t\telse:\n\t\t\t\tif system.date.isAfter(nextServiceDate, nextServiceDateEnd):\n\t\t\t\t\taddRow \u003d False\n\t\t\n\t\tif hoursLastSix \u003c\u003e -1 and hoursLastSix is not None:\n\t\t\tinHours \u003d False\n#\t\t\tif hours is None:\n#\t\t\t\thours \u003d 0\n\t\t\tfor item in hoursLastSix:\n\t\t\t\tif item \u003d\u003d \"\u003c5\":\n\t\t\t\t\tstart \u003d 0\n\t\t\t\t\tend \u003d 4\n\t\t\t\telif item \u003d\u003d \"\u003c20\":\n\t\t\t\t\tstart \u003d 21\n\t\t\t\t\tend \u003d 10000\n\t\t\t\telse:\n\t\t\t\t\tstart \u003d int(item.split(\"-\")[0])\n\t\t\t\t\tend \u003d int(item.split(\"-\")[1])\n\t\t\t\tif int(hours) \u003e\u003d start and int(hours) \u003c\u003d end:\n\t\t\t\t\tinHours \u003d True\n\t\t\tif not inHours:\n\t\t\t\taddRow \u003d False\n\t\tif addRow:\n\t\t\treturnDataset.append([filteredDataset.getValueAt(i,0),filteredDataset.getValueAt(i,1),filteredDataset.getValueAt(i,2),filteredDataset.getValueAt(i,3),filteredDataset.getValueAt(i,4),filteredDataset.getValueAt(i,5),filteredDataset.getValueAt(i,6),filteredDataset.getValueAt(i,7),filteredDataset.getValueAt(i,8),filteredDataset.getValueAt(i,9),filteredDataset.getValueAt(i,10)])\n\tfilteredDataset \u003d system.dataset.toDataSet(headers, returnDataset)\t\n\t\n\treturn filteredDataset",
+                  "type": "script"
+                }
+              ],
+              "type": "query"
+            }
+          }
+        },
+        "props": {
+          "path": "Volunteers/Dashboard/Components/Tables/Volunteer_Table_OLD"
+        },
+        "type": "ia.display.view"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column",
+      "style": {
+        "classes": "Background/Alternative"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

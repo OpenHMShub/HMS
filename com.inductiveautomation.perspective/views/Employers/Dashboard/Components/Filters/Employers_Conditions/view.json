@@ -1,0 +1,691 @@
+{
+  "custom": {},
+  "events": {
+    "system": {
+      "onStartup": {
+        "config": {
+          "script": "\ttry:\n\t\troot \u003d self.getChild(\"root\")\n\t\troot.setPropsDropdowns()\n\t\troot.clearAll()\n\t\t#payload \u003d {}\n\t\t#root.sendMsgCondition(payload)\n\t\t#emvSearch \u003d root.getChild(\"emvSearch\")\n\t\t#emvSearch.props.params.keyUpPulse \u003d False\n\texcept:\n\t\timport traceback\n\t\tlogger \u003d system.util.getLogger(\"Providers\")\n\t\tmsg \u003d self.name + \u0027:\\n\u0027\n\t\tmsg +\u003d traceback.format_exc()\n\t\tlogger.error(msg)\t\t\t"
+        },
+        "scope": "G",
+        "type": "script"
+      }
+    }
+  },
+  "params": {},
+  "props": {
+    "defaultSize": {
+      "height": 30,
+      "width": 1820
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "emvActivityRange"
+        },
+        "position": {
+          "basis": "140px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.actionPerformedPulse": {
+            "onChange": {
+              "enabled": null,
+              "script": "\troot \u003d self.parent\n\troot.sendMsgCondition()\t"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "actionPerformedPulse": false,
+            "clear": false,
+            "multiSelect": false,
+            "options": [
+              {
+                "label": "Yesterday",
+                "value": {
+                  "$": [
+                    "ts",
+                    192,
+                    1675847478875
+                  ],
+                  "$ts": 1675749600000
+                }
+              },
+              {
+                "label": "7 Days",
+                "value": {
+                  "$": [
+                    "ts",
+                    192,
+                    1675847478875
+                  ],
+                  "$ts": 1675231200000
+                }
+              },
+              {
+                "label": "14 Days",
+                "value": {
+                  "$": [
+                    "ts",
+                    192,
+                    1675847478875
+                  ],
+                  "$ts": 1674626400000
+                }
+              },
+              {
+                "label": "30 Days",
+                "value": {
+                  "$": [
+                    "ts",
+                    192,
+                    1675847478875
+                  ],
+                  "$ts": 1673244000000
+                }
+              },
+              {
+                "label": "60 Days",
+                "value": {
+                  "$": [
+                    "ts",
+                    192,
+                    1675847478875
+                  ],
+                  "$ts": 1670652000000
+                }
+              },
+              {
+                "label": "90 Days",
+                "value": {
+                  "$": [
+                    "ts",
+                    192,
+                    1675847478875
+                  ],
+                  "$ts": 1668060000000
+                }
+              },
+              {
+                "label": "180 Days",
+                "value": {
+                  "$": [
+                    "ts",
+                    192,
+                    1675847478875
+                  ],
+                  "$ts": 1660280400000
+                }
+              },
+              {
+                "label": "1 Year",
+                "value": {
+                  "$": [
+                    "ts",
+                    192,
+                    1675847478875
+                  ],
+                  "$ts": 1644300000000
+                }
+              },
+              {
+                "label": "2 Years",
+                "value": {
+                  "$": [
+                    "ts",
+                    192,
+                    1675847478875
+                  ],
+                  "$ts": 1612764000000
+                }
+              },
+              {
+                "label": "3 Years",
+                "value": {
+                  "$": [
+                    "ts",
+                    192,
+                    1675847478875
+                  ],
+                  "$ts": 1581141600000
+                }
+              },
+              {
+                "label": "4 Years",
+                "value": {
+                  "$": [
+                    "ts",
+                    192,
+                    1675847478875
+                  ],
+                  "$ts": 1549605600000
+                }
+              },
+              {
+                "label": "5 Years",
+                "value": {
+                  "$": [
+                    "ts",
+                    192,
+                    1675847478875
+                  ],
+                  "$ts": 1518069600000
+                }
+              },
+              {
+                "label": "All Time",
+                "value": {
+                  "$": [
+                    "ts",
+                    192,
+                    1675847478875
+                  ],
+                  "$ts": -1479924000000
+                }
+              }
+            ],
+            "placeholder": "Activity Range",
+            "selection": null
+          },
+          "path": "1_TEMPLATES/Filtering/Conditionals/Conditional_DropDown_TealBlue_ActivityRange",
+          "style": {
+            "classes": "Filter/Filter_Container",
+            "marginLeft": "40px"
+          }
+        },
+        "scripts": {
+          "customMethods": [
+            {
+              "name": "setOptions",
+              "params": [],
+              "script": "\tmidnight \u003d system.date.midnight(system.date.now())\n\t\n\tlstDateFrom \u003d \t[\n\t[system.date.addDays(midnight, -1), \u0027Yesterday\u0027],\n\t[system.date.addDays(midnight,-7), \u00277 Days\u0027],\n\t[system.date.addDays(midnight, -14), \u002714 Days\u0027],\n\t[-2, \u0027Month to Date\u0027],\n\t[system.date.addDays(midnight, -30), \u002730 Days\u0027],\n\t[system.date.addDays(midnight,-60), \u002760 Days\u0027],\n\t[system.date.addDays(midnight,-90), \u002790 Days\u0027],\n\t[system.date.addDays(midnight,-180), \u0027180 Days\u0027],\n\t[-3, \u0027Year to Date\u0027],\n\t[system.date.addYears(midnight, -1), \u00271 Year\u0027],\n\t[system.date.addYears(midnight, -2), \u00272 Years\u0027],\n\t[system.date.addYears(midnight, -3), \u00273 Years\u0027],\n\t[system.date.addYears(midnight, -4), \u00274 Years\u0027],\n\t[system.date.addYears(midnight, -5), \u00275 Years\u0027],\n\t[system.date.addYears(midnight, -100), \u0027All Time\u0027]\t\n\t]\n\t\t\n\tself.props.params.options \u003d [ dict(value \u003d x[0],label \u003d x[1]) for x in lstDateFrom]\n"
+            }
+          ],
+          "extensionFunctions": null,
+          "messageHandlers": []
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "emvBusinessDescription"
+        },
+        "position": {
+          "basis": "200px"
+        },
+        "propConfig": {
+          "props.params.actionPerformedPulse": {
+            "onChange": {
+              "enabled": null,
+              "script": "\troot \u003d self.parent\n\troot.sendMsgCondition()\n"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "actionPerformedPulse": false,
+            "clear": false,
+            "multiSelect": false,
+            "options": [
+              {
+                "label": "NA",
+                "value": 1
+              },
+              {
+                "label": "Airport",
+                "value": 2
+              },
+              {
+                "label": "Business Management",
+                "value": 3
+              },
+              {
+                "label": "Business Solutions",
+                "value": 4
+              },
+              {
+                "label": "Career Services",
+                "value": 5
+              },
+              {
+                "label": "Catering \u0026 Hospitality Services",
+                "value": 6
+              },
+              {
+                "label": "Charter Bus Service",
+                "value": 7
+              },
+              {
+                "label": "Convention Center",
+                "value": 8
+              },
+              {
+                "label": "Dining Services",
+                "value": 9
+              },
+              {
+                "label": "Driver License Program",
+                "value": 10
+              },
+              {
+                "label": "Electric Utility",
+                "value": 11
+              },
+              {
+                "label": "Hotel",
+                "value": 12
+              },
+              {
+                "label": "Hotel Management",
+                "value": 13
+              },
+              {
+                "label": "Housekeeping",
+                "value": 14
+              },
+              {
+                "label": "Janitorial Services",
+                "value": 15
+              },
+              {
+                "label": "Management Services",
+                "value": 16
+              },
+              {
+                "label": "Manufacturer",
+                "value": 17
+              },
+              {
+                "label": "Marketing",
+                "value": 18
+              },
+              {
+                "label": "Outlet Store",
+                "value": 19
+              },
+              {
+                "label": "Printing Services",
+                "value": 20
+              },
+              {
+                "label": "Recycling",
+                "value": 21
+              },
+              {
+                "label": "Religious Services",
+                "value": 22
+              },
+              {
+                "label": "Restaurant",
+                "value": 23
+              },
+              {
+                "label": "Staffing Placement",
+                "value": 24
+              },
+              {
+                "label": "Systems Integrator",
+                "value": 25
+              },
+              {
+                "label": "Test Business",
+                "value": 26
+              },
+              {
+                "label": "Veteran Services",
+                "value": 27
+              }
+            ],
+            "placeholder": "All Business Description",
+            "selection": null
+          },
+          "path": "Employers/Dashboard/Components/Filters/Conditional_DropDown",
+          "style": {
+            "classes": "Filter/Filter_Container"
+          }
+        },
+        "scripts": {
+          "customMethods": [
+            {
+              "name": "setOptions",
+              "params": [],
+              "script": "\tquery \u003d \"\"\"\nSELECT \n\t [BusinessDescriptionID]\n\t,[BusinessDescription]\nFROM [organization].[BusinessDescription]\n\"\"\"\n\t\n\tresult \u003d system.db.runPrepQuery(query,[],\u0027RITIOps\u0027)\n\t\n\t# Version 1 set options as list of dictionaries\n\tself.props.params.options \u003d [ dict(value \u003d x[\u0027BusinessDescriptionID\u0027],label \u003d x[\u0027BusinessDescription\u0027]) for x in result]\t\n\n\n\t\n\t"
+            }
+          ],
+          "extensionFunctions": null,
+          "messageHandlers": []
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "emvCity"
+        },
+        "position": {
+          "basis": "150px"
+        },
+        "propConfig": {
+          "props.params.actionPerformedPulse": {
+            "onChange": {
+              "enabled": null,
+              "script": "\troot \u003d self.parent\n\troot.sendMsgCondition()\n"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "actionPerformedPulse": false,
+            "clear": false,
+            "multiSelect": false,
+            "options": [
+              {
+                "label": "Brentwood",
+                "value": "Brentwood"
+              },
+              {
+                "label": "Cordova",
+                "value": "Cordova"
+              },
+              {
+                "label": "Hendersonville",
+                "value": "Hendersonville"
+              },
+              {
+                "label": "Knoxville",
+                "value": "Knoxville"
+              },
+              {
+                "label": "Mount Juliet",
+                "value": "Mount Juliet"
+              },
+              {
+                "label": "Murfreesboro",
+                "value": "Murfreesboro"
+              },
+              {
+                "label": "Nash",
+                "value": "Nash"
+              },
+              {
+                "label": "Nashville",
+                "value": "Nashville"
+              }
+            ],
+            "placeholder": "All Cities",
+            "selection": null
+          },
+          "path": "Employers/Dashboard/Components/Filters/Conditional_DropDown",
+          "style": {
+            "classes": "Filter/Filter_Container"
+          }
+        },
+        "scripts": {
+          "customMethods": [
+            {
+              "name": "setOptions",
+              "params": [],
+              "script": "\tcities \u003d [\n\t\"Brentwood\"\n\t,\"Cordova\"\n\t,\"Hendersonville\"\n\t,\"Knoxville\"\n\t,\"Mount Juliet\"\n\t,\"Murfreesboro\"\n\t,\"Nash\"\n\t,\"Nashville\"\n]\n\t\n\t# Version 1 set options as list of dictionaries\n\tself.props.params.options \u003d [ dict(value \u003d x, label \u003d x) for x in cities]\n\n\t"
+            }
+          ],
+          "extensionFunctions": null,
+          "messageHandlers": []
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "emvQualifier"
+        },
+        "position": {
+          "basis": "400px",
+          "grow": 1,
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.actionPerformedPulse": {
+            "onChange": {
+              "enabled": null,
+              "script": "\troot \u003d self.parent\n\troot.sendMsgCondition()\n"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "actionPerformedPulse": false,
+            "clear": false,
+            "multiSelect": true,
+            "options": [
+              {
+                "label": "Felony Friendly",
+                "value": 1
+              },
+              {
+                "label": "Full Time Positions",
+                "value": 2
+              },
+              {
+                "label": "Part Time Positions",
+                "value": 3
+              },
+              {
+                "label": "PRN Positions",
+                "value": 4
+              },
+              {
+                "label": "Requires Background Check",
+                "value": 5
+              },
+              {
+                "label": "Requires Drivers Licence",
+                "value": 6
+              },
+              {
+                "label": "Requires Drug Screen",
+                "value": 7
+              },
+              {
+                "label": "Requires NO Experience",
+                "value": 8
+              },
+              {
+                "label": "Requires Prior Experience",
+                "value": 9
+              },
+              {
+                "label": "Requires Uniform to Start",
+                "value": 10
+              },
+              {
+                "label": "Seasonal Positions",
+                "value": 11
+              },
+              {
+                "label": "Sex Offender Friendly",
+                "value": 12
+              },
+              {
+                "label": "Skilled Labor Positions",
+                "value": 13
+              },
+              {
+                "label": "Temporary Positions",
+                "value": 14
+              }
+            ],
+            "placeholder": "All Qualifiers",
+            "selection": null
+          },
+          "path": "Employers/Dashboard/Components/Filters/Conditional_DropDown",
+          "style": {
+            "classes": "Filter/Filter_Container"
+          }
+        },
+        "scripts": {
+          "customMethods": [
+            {
+              "name": "setOptions",
+              "params": [],
+              "script": "\tquery \u003d \"\"\"\nSELECT\n\t [ID]\n\t,[Qualifier_Description]\nFROM [organization].[Qualifier]\n\t\"\"\"\n\t\n\tresult \u003d system.db.runPrepQuery(query,[],\u0027RITIOps\u0027)\n\t\n\t# Version 1 set options as list of dictionaries\n\tself.props.params.options \u003d [ dict(value \u003d x[0],label \u003d x[1]) for x in result]\n\t\n\t# Version 2 set options as dataset\n\t#self.props.params.options \u003d result\n\t"
+            }
+          ],
+          "extensionFunctions": null,
+          "messageHandlers": []
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Placeholder"
+        },
+        "position": {
+          "basis": "10px",
+          "grow": 1
+        },
+        "props": {
+          "path": "1_TEMPLATES/Filtering/Filter_Placeholder"
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "lblSearch"
+        },
+        "position": {
+          "basis": "50px"
+        },
+        "props": {
+          "style": {
+            "classes": "Table/Filter_Header",
+            "textAlign": "end"
+          },
+          "text": "Search:"
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "meta": {
+          "name": "emvSearch"
+        },
+        "position": {
+          "basis": "220px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.keyUpPulse": {
+            "onChange": {
+              "enabled": null,
+              "script": "\troot \u003d self.parent\n\troot.sendMsgCondition()\t"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "clear": false,
+            "keyUpPulse": false,
+            "searchText": ""
+          },
+          "path": "Employers/Dashboard/Components/Filters/Search_Bar",
+          "style": {
+            "classes": "Table/Search_Bar"
+          },
+          "useDefaultViewWidth": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "events": {
+          "component": {
+            "onActionPerformed": {
+              "config": {
+                "script": "\troot \u003d self.parent \n\n\troot.clearAll()"
+              },
+              "scope": "G",
+              "type": "script"
+            }
+          }
+        },
+        "meta": {
+          "name": "clearConditions"
+        },
+        "position": {
+          "basis": "30px",
+          "shrink": 0
+        },
+        "props": {
+          "image": {
+            "height": 16,
+            "icon": {
+              "color": "#0C4E8B",
+              "path": "material/close"
+            },
+            "position": "center",
+            "width": 16
+          },
+          "style": {
+            "classes": "Filter/Filter_Border_Default Filter/Filter_Container",
+            "marginRight": "37px"
+          },
+          "text": "",
+          "textStyle": {
+            "classes": "GreyColor"
+          }
+        },
+        "type": "ia.input.button"
+      }
+    ],
+    "custom": {
+      "_devPulse": false,
+      "_isDev": false
+    },
+    "meta": {
+      "name": "root"
+    },
+    "propConfig": {
+      "custom._devPulse": {
+        "onChange": {
+          "enabled": null,
+          "script": "\t\n\temvActivityRange \u003d self.getChild(\"emvActivityRange\")\n\temvBusinessDescription \u003d self.getChild(\"emvBusinessDescription\")\n\temvCity \u003d self.getChild(\"emvCity\")\n\temvQualifier \u003d self.getChild(\"emvQualifier\")\n\temvSearch \u003d self.getChild(\"emvSearch\")\n\t\n\t\n\tif self.custom._isDev:\n\t\tif currentValue.value is True:\n\t\t\tself.setPropsDropdowns()\n\t\telse:\n\t\t\temvActivityRange.props.params.options \u003d []\n\t\t\temvBusinessDescription.props.params.options \u003d []\n\t\t\temvCity.props.params.options \u003d []\n\t\t\temvQualifier.props.params.options \u003d []\n\n\temvActivityRange.props.params.actionPerformedPulse \u003d False\t\n\temvBusinessDescription.props.params.actionPerformedPulse \u003d False\n\temvCity.props.params.actionPerformedPulse \u003d False\n\temvQualifier.props.params.actionPerformedPulse \u003d False\n\t\n\temvSearch.props.params.keyUpPulse \u003d False"
+        }
+      }
+    },
+    "props": {
+      "style": {
+        "classes": "Filter/Header_Text"
+      }
+    },
+    "scripts": {
+      "customMethods": [
+        {
+          "name": "setPropsDropdowns",
+          "params": [],
+          "script": "\temvActivityRange \u003d self.getChild(\"emvActivityRange\")\n\temvBusinessDescription \u003d self.getChild(\"emvBusinessDescription\")\n\temvCity \u003d self.getChild(\"emvCity\")\n\temvQualifier \u003d self.getChild(\"emvQualifier\")\n\t\n\temvActivityRange.setOptions()\n\temvBusinessDescription.setOptions()\n\temvCity.setOptions()\n\temvQualifier.setOptions()\n"
+        },
+        {
+          "name": "sendMsgCondition",
+          "params": [
+            "payload\u003dNone"
+          ],
+          "script": "\t\n\temvActivityRange \u003d self.getChild(\"emvActivityRange\")\n\temvBusinessDescription \u003d self.getChild(\"emvBusinessDescription\")\n\temvCity \u003d self.getChild(\"emvCity\")\n\temvQualifier \u003d self.getChild(\"emvQualifier\")\n\temvSearch \u003d self.getChild(\"emvSearch\")\n\t\n\tif payload is None:\n\t\tpayload \u003d {}\n\n\t\tpayload[\u0027activityStart\u0027] \u003d emvActivityRange.props.params.selection\n\t\t\n\t\tpayload[\u0027businessDescriptionId\u0027] \u003d emvBusinessDescription.props.params.selection\n\t\tpayload[\u0027city\u0027] \u003d emvCity.props.params.selection\n\t\tpayload[\u0027qualifier\u0027] \u003d emvQualifier.props.params.selection\n\t\tpayload[\u0027searchText\u0027] \u003d emvSearch.props.params.searchText\n\t\n\tsystem.perspective.print((\"payload - filters: \",payload))\n\t\n\tsystem.perspective.print((\u0027mhByCondition\u0027,payload)) \n\t\n\tsystem.perspective.sendMessage(\u0027mhByCondition\u0027, payload \u003d payload)\n\t\n"
+        },
+        {
+          "name": "clearAll",
+          "params": [],
+          "script": "\t\n\troot \u003d self\n\temvActivityRange \u003d root.getChild(\"emvActivityRange\")\n\temvBusinessDescription \u003d root.getChild(\"emvBusinessDescription\")\n\temvCity \u003d root.getChild(\"emvCity\")\n\temvQualifier \u003d root.getChild(\"emvQualifier\")\n\temvSearch \u003d root.getChild(\"emvSearch\")\n\n\temvActivityRange.props.params.clear \u003d True\n\temvBusinessDescription.props.params.clear \u003d True\n\temvCity.props.params.clear \u003d True\n\temvQualifier.props.params.clear \u003d True\n\temvSearch.props.params.clear \u003d True\n\n\tpayload \u003d {}\n\n\tpayload[\u0027activityStart\u0027] \u003d None\n\tpayload[\u0027businessDescriptionId\u0027] \u003d None\n\tpayload[\u0027city\u0027] \u003d None\n\tpayload[\u0027qualifier\u0027] \u003d None\n\tpayload[\u0027searchText\u0027] \u003d None\n\n\troot.sendMsgCondition(payload)"
+        }
+      ],
+      "extensionFunctions": null,
+      "messageHandlers": [
+        {
+          "messageType": "refreshEmployerTableFromFilter",
+          "pageScope": true,
+          "script": "\tself.sendMsgCondition()",
+          "sessionScope": false,
+          "viewScope": false
+        }
+      ]
+    },
+    "type": "ia.container.flex"
+  }
+}

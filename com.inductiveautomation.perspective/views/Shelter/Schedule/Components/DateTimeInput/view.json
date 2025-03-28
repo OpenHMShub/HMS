@@ -1,0 +1,140 @@
+{
+  "custom": {},
+  "events": {
+    "system": {
+      "onStartup": {
+        "config": {
+          "script": "\troot \u003d self.getChild(\"root\")\n\tdti \u003d root.getChild(\"DateTimeInput\")\n\t\n\troot.setByExpo()\n\t\n\tfrom system.date import getDate, getYear, getMonth, getDayOfMonth, now\n\n\tnowClient \u003d root.getAsClientTime(now())\n\tnowDateOnly \u003dsystem.date.setTime(nowClient,0,0,0)\n\n\tdti.props.value \u003d nowDateOnly\n"
+        },
+        "scope": "G",
+        "type": "script"
+      }
+    }
+  },
+  "params": {
+    "base": {},
+    "expo": {
+      "Label_props_text": "TestDate"
+    },
+    "wherePlusOut": [
+      {
+        "arg": "2021-01-18 00:00:00",
+        "type": "datetime"
+      }
+    ]
+  },
+  "propConfig": {
+    "params.base": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.expo": {
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.wherePlusOut": {
+      "paramDirection": "output",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 50,
+      "width": 150
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "Label"
+        },
+        "position": {
+          "basis": "25px"
+        },
+        "props": {
+          "style": {
+            "classes": "Text/Add_HeaderText"
+          },
+          "text": "TestDate"
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "meta": {
+          "name": "DateTimeInput"
+        },
+        "position": {
+          "basis": "32px"
+        },
+        "propConfig": {
+          "props.value": {
+            "onChange": {
+              "enabled": null,
+              "script": "\t\n\troot \u003d self.parent\n\t# Add to wherePlusOut condition \u0027cnd\u0027 which is specified in props base\n\t# \u0027cnd\u0027 is condition with full column name: \"[table].[column] \u003d ?\"\n\t# or if nothing is selected - special case \"always True\" like -1 \u003d ? (and arg is -1). \n\t# For example: \"cnd\":\"[[Reservation].[reservationStart] \u003e\u003d ?\"\n\t# example for wherePlusOut: [{\u0027cnd\u0027:\u0027[Reservation].[reservationStart] \u003e\u003d ?\u0027,\u0027arg\u0027:\u00272020-11-19 12:00:00\u0027,\u0027type\u0027:\u0027datetime\u0027}]\n\t# example for wherePlusOut: [{\"arg\": -1,\"cnd\":\"-1 \u003d ?\"}]\n\t\n\ttry:\n\t\tbase \u003d self.view.params.base\n\t\tcondition \u003d base[\u0027cnd\u0027]\n\texcept:\n\t\tcondition \u003d None\n\t\n\tif currentValue.value and currentValue.value \u003e 0:\n\t\ttimeClient \u003d system.date.setTime(root.getAsClientTime(currentValue.value),0,0,0)\n\t\tformatedDate \u003d system.date.format(timeClient, \u0027yyy-MM-dd HH:mm:ss\u0027)\n\t\t\n\t\tlistWherePlusOut \u003d [{\u0027arg\u0027:formatedDate,\u0027type\u0027:\u0027datetime\u0027}] if condition is None else [{\u0027arg\u0027:formatedDate,  \u0027cnd\u0027: condition, \u0027type\u0027:\u0027datetime\u0027}]\n\telse:\n\t\tlistWherePlusOut \u003d [{\u0027arg\u0027: -1, \u0027cnd\u0027: \u0027-1 \u003d ?\u0027,\u0027type\u0027:\u0027datetime\u0027}]\n\t\n\tself.view.params.wherePlusOut \u003d listWherePlusOut"
+            }
+          }
+        },
+        "props": {
+          "format": "ll",
+          "formattedValue": "Jan 18, 2021",
+          "formattedValues": {
+            "date": "Jun 23, 2020",
+            "datetime": "Jun 23, 2020 10:49 AM",
+            "time": "10:49 AM"
+          },
+          "inputProps": {
+            "style": {
+              "classes": "DateTime/Add_Date_NoBorder",
+              "textAlign": "left"
+            }
+          },
+          "modalStyle": {
+            "classes": "DateTime/Add_Date_NoBorder"
+          },
+          "pickerType": "date",
+          "style": {
+            "classes": "DateTime/Add_Date_NoBorder"
+          },
+          "value": {
+            "$": [
+              "ts",
+              0,
+              1611383534891
+            ],
+            "$ts": 1610967600000
+          }
+        },
+        "type": "ia.input.date-time-input"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column",
+      "style": {
+        "overflow": "hidden"
+      }
+    },
+    "scripts": {
+      "customMethods": [
+        {
+          "name": "setByExpo",
+          "params": [],
+          "script": "\t# For example: expo \u003d \u0027{\"Label_props_text\":\"Participants\"}\u0027\n\texpo \u003d self.view.params.expo\n\n\t#ystem.perspective.print((\u0027expo:\u0027,expo,expo.get(\u0027Dropdown_props_showClearIcon\u0027, \u0027nothing\u0027)))\n\t\n\tlbl \u003d self.getChild(\"Label\")\n\tlbl.props.text \u003d expo.get(\u0027Label_props_text\u0027,\u0027x\u0027)\n"
+        },
+        {
+          "name": "getAsClientTime",
+          "params": [
+            "datetimeInput"
+          ],
+          "script": "\ttimeClientOffset \u003d self.session.props.device.timezone.utcOffset - system.date.getTimezoneOffset()\n\ttimeClient \u003d system.date.addMinutes(datetimeInput,int(timeClientOffset*60))\n\t\n\treturn timeClient"
+        }
+      ],
+      "extensionFunctions": null,
+      "messageHandlers": []
+    },
+    "type": "ia.container.flex"
+  }
+}

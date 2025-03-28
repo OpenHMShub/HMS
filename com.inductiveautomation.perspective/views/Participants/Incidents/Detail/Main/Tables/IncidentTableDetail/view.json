@@ -1,0 +1,1622 @@
+{
+  "custom": {
+    "incident_data": [],
+    "suspension_data": [],
+    "table_data": []
+  },
+  "params": {
+    "participantID": -1,
+    "selection_data": []
+  },
+  "propConfig": {
+    "custom.incident_data": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "participant_id": "{view.params.participantID}"
+          },
+          "queryPath": "Participants/Incidents/IncidentDetailSelect"
+        },
+        "transforms": [
+          {
+            "code": "\t\"\"\"\n\t####THIS SECTION FOR INFORMATION ONLY####\n\t#Example Drug Screen Detail data object should look like this:\n\t{\n\t\t\"value\": {\n\t\t  \"id\": 0\n\t\t  \"employee_id\": 0\n\t\t  \"employee_name\": \"John Q Smith\"\n\t\t  \"incident_date\": 654789666,\n\t\t  \"incident_name\": \"The Big Food Fight\",\n\t\t  \"incident_location\": \"Lunch Room\",\n\t\t  \"incident_location_description\": \"North Side\",\n\t\t  \"incident_description\": \"It was a big food fight started by Fat Freddy\"\n\t\t  \"physical_injury\":True\n\t\t  \"property_damage\": True,\n\t\t  \"bar_participant\" : False,\n\t\t  \"time_created\":657488990\n\t\t  \"participant_role_id\":0\n\t\t  \"participant_role\":\"Secondary\"\n\t\t \t }\n\t\t\"style\": {\n\t\t      \"classes\" \u003d \"Table/Cell_Dashboard\"\n\t\t\t  }\n\t\t}\n\t####END INFORMATION####\n\t\t\n\t####BEGIN ACTUAL SCRIPT####\n\t\"\"\"\n\timport traceback\n\ttry:\n\t\t#query variables\n\t\tproject \u003d \"RITI\"\n\t\t#table_data is the data object to return\n\t\ttable_data \u003d []\n\t\n\t\t#Iterate over the results of the query\n\t\tfor row in range(value.getRowCount()):\n\t\t\trow_struct \u003d {}\n\t\t\trow_data \u003d {}\n\t\t\tstyle \u003d {}\n\t\t\tstaff_list \u003d []\t\n\t\t\t#Map query results into correct attributes\n\t\t\trow_data[\u0027id\u0027] \u003d value.getValueAt(row, \"id\")\n\t\t\trow_data[\u0027incident_date\u0027] \u003d system.date.toMillis(value.getValueAt(row, \"incident_date\"))\n\t\t\trow_data[\u0027incident_name\u0027] \u003d value.getValueAt(row, \"incident_name\")\n\t\t\trow_data[\u0027incident_location_id\u0027] \u003d value.getValueAt(row, \"incident_location_id\")\n\t\t\trow_data[\u0027incident_location_name\u0027] \u003d value.getValueAt(row, \"incident_location_name\")\n\t\t\tdesc \u003d value.getValueAt(row, \"incident_description\")\n\t\t\tif desc !\u003d None:\n\t\t\t\tif len(desc) \u003e 70:\n\t\t\t\t\trow_data[\u0027incident_description_trunc\u0027] \u003d value.getValueAt(row, \"incident_description\")[0:70]\n\t\t\t\telse:\n\t\t\t\t\trow_data[\u0027incident_description_trunc\u0027] \u003d value.getValueAt(row, \"incident_description\")\n\t\t\telse:\n\t\t\t\trow_data[\u0027incident_description_trunc\u0027] \u003d \u0027\u0027\n\t\t\trow_data[\u0027incident_description\u0027] \u003d value.getValueAt(row, \"incident_description\")\n\t\t\trow_data[\u0027physical_injury\u0027] \u003d value.getValueAt(row, \"physical_injury\")\n\t\t\trow_data[\u0027property_damage\u0027] \u003d value.getValueAt(row, \"property_damage\")\n\t\t\trow_data[\u0027bar_participant\u0027] \u003d value.getValueAt(row, \"bar_participant\")\n\t\t\trow_data[\u0027participant_human_id\u0027] \u003d value.getValueAt(row, \"participant_human_id\")\n\t\t\t#Set the default style for the row\n\t\t\tstyle[\u0027classes\u0027] \u003d \"Table/Cell_Dashboard\"\n\t\t\trow_struct[\u0027value\u0027] \u003d row_data\n\t\t\trow_struct[\u0027style\u0027] \u003d style\n\t\t\t#Append the individual row date to the table data object\n\t\t\ttable_data.append(row_struct)\n\t\treturn table_data\n\texcept:\n\t\tlogger \u003d system.util.getLogger(\"Participants IncidentTableDetail view.custom.incident_data\")\n\t\tmsg \u003d traceback.format_exc()\n\t\tlogger.error(msg)",
+            "type": "script"
+          }
+        ],
+        "type": "query"
+      },
+      "persistent": true
+    },
+    "custom.suspension_data": {
+      "binding": {
+        "config": {
+          "path": "view.custom.incident_data"
+        },
+        "transforms": [
+          {
+            "code": "\timport traceback\n\ttry:\n\t\tincident_data \u003d value\n\t\tproject \u003d \"RITI\"\n\t\t#table_data is the data object to return\n\t\tsuspension_data \u003d []\n\t\t\t\t\n\t\tif len(incident_data) \u003e 0:\n\t\t\tfor row in range(len(incident_data)):\n\t\t\t\ttry:\n\t\t\t\t\tincident_log_id \u003d  int(self.custom.incident_data[row].value.id)\n\t\t\t\t\tbar_participant \u003d self.custom.incident_data[row].value.bar_participant\n\t\t\t\t\t#system.perspective.print(incident_log_id)\n\t\t\t\t\t#system.perspective.print(bar_participant)\n\t\t\t\t\t#Format the query data\n\t\t\t\t\trow_struct \u003d {}\n\t\t\t\t\trow_data \u003d {}\n\t\t\t\t\tstyle \u003d {}\t\n\t\t\t\t\t#Only query if it is expected to return a result\n\t\t\t\t\t#if bar_participant:\n\t\t\t\t\tif bar_participant:\n\t\t\t\t\t\tpath \u003d \"Participants/Incidents/SuspensionDetailSelect\"\n\t\t\t\t\t\tparameters \u003d {\"incident_log_id\":incident_log_id}\n\t\t\t\t\t\tsuspension \u003d system.db.runNamedQuery(project\u003dproject,path\u003dpath,parameters\u003dparameters, getKey\u003dTrue)\n\t\t\t\t\telse:\n\t\t\t\t\t\theader \u003d [\u0027empty_dataset\u0027]\n\t\t\t\t\t\trows \u003d []\n\t\t\t\t\t\tsuspension \u003d system.dataset.toDataSet(header, rows)\n\t\t\t\t\tif suspension.getRowCount():\n\t\t\t\t\t\t#Map query results into correct attributes\n\t\t\t\t\t\trow_data[\u0027suspension_id\u0027] \u003d suspension.getValueAt(0, \"suspension_id\")\n\t\t\t\t\t\trow_data[\u0027suspension_type_id\u0027] \u003d suspension.getValueAt(0, \"suspension_type_id\")\n\t\t\t\t\t\trow_data[\u0027suspension_type_name\u0027] \u003d suspension.getValueAt(0, \"suspension_type_name\")\n\t\t\t\t\t\trow_data[\u0027suspension_notes\u0027] \u003d suspension.getValueAt(0, \"suspension_notes\")\n\t\t\t\t\t\trow_data[\u0027suspension_notes_trunc\u0027] \u003d suspension.getValueAt(0, \"suspension_notes\")[0:80]\n\t\t\t\t\t\trow_data[\u0027suspension_duration\u0027] \u003d suspension.getValueAt(0, \"suspension_duration\")\n\t\t\t\t\t\trow_data[\u0027suspension_time_begin\u0027] \u003d suspension.getValueAt(0, \"suspension_time_begin\")\n\t\t\t\t\t\trow_data[\u0027suspension_time_end\u0027] \u003d suspension.getValueAt(0, \"suspension_time_end\")\n\t\t\t\t\t\trow_data[\u0027reinstateRequired\u0027] \u003d suspension.getValueAt(0, \"reinstateRequired\")\n\t\t\t\t\t\trow_data[\u0027reinstated\u0027] \u003d suspension.getValueAt(0,\"reinstated\")\n\t\t\t\t\t#Insert empty data to hold the place in the row if no suspension\n\t\t\t\t\telse:\n\t\t\t\t\t\trow_data[\u0027suspension_id\u0027] \u003d -1\n\t\t\t\t\t\trow_data[\u0027suspension_type_id\u0027] \u003d -1\n\t\t\t\t\t\trow_data[\u0027suspension_type_name\u0027] \u003d \u0027\u0027\n\t\t\t\t\t\trow_data[\u0027suspension_notes\u0027] \u003d \u0027\u0027\n\t\t\t\t\t\trow_data[\u0027suspension_notes_trunc\u0027] \u003d \u0027\u0027\n\t\t\t\t\t\trow_data[\u0027suspension_duration\u0027] \u003d 0\n\t\t\t\t\t\trow_data[\u0027suspension_time_begin\u0027] \u003d \u0027\u0027\n\t\t\t\t\t\trow_data[\u0027suspension_time_end\u0027] \u003d \u0027\u0027\n\t\t\t\t\t\trow_data[\u0027reinstateRequired\u0027] \u003d -1\n\t\t\t\t\t\trow_data[\u0027reinstated\u0027] \u003d  -1\n\t\t\t\t\t#Set the default style for the row\n\t\t\t\t\tstyle[\u0027classes\u0027] \u003d \"Table/Cell_Detail\"\n\t\t\t\t\trow_struct[\u0027value\u0027] \u003d row_data\n\t\t\t\t\trow_struct[\u0027style\u0027] \u003d style\n\t\t\t\t\t#Append the individual row date to the table data object\n\t\t\t\t\tsuspension_data.append(row_struct)\n\t\t\t\texcept:\n\t\t\t\t\tpass\t\t\t\n\t\t\treturn suspension_data\n\t\n\t\telse:\n\t\t\treturn suspension_data\n\texcept:\n\t\tlogger \u003d system.util.getLogger(\"Participants IncidentTableDetail view.custom.suspension_data\")\n\t\tmsg \u003d traceback.format_exc()\n\t\tlogger.error(msg)",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      },
+      "onChange": {
+        "enabled": null,
+        "script": "\t#Refresh the table data any time the suspension data has changed\n\tself.refreshBinding(\"custom.table_data\")"
+      },
+      "persistent": true
+    },
+    "custom.table_data": {
+      "binding": {
+        "config": {
+          "path": "view.custom.incident_data"
+        },
+        "transforms": [
+          {
+            "code": "\timport traceback\n\ttry:\n\t\tincident_data \u003d value\n\t\tsuspension_data \u003d self.custom.suspension_data\n\t\tif suspension_data is None:\n\t\t\tsuspension_data \u003d []\n\t\telif len(suspension_data) \u003c 1:\n\t\t\tsuspension_data \u003d []\n\t\ttable_data \u003d []\n\t\t#Move the date from the incidents directly to the table\n\t\t#system.perspective.print(\u0027# of Incidents:\u0027 + str(len(incident_data)))\n\t\t#system.perspective.print(\u0027# of Suspensions:\u0027 + str(len(suspension_data)))\n\t\tif len(incident_data) \u003e 0 and len(incident_data)\u003d\u003dlen(suspension_data):\n\t\t\tfor row in range(len(incident_data)):\n\t\t\t\trow_struct \u003d {}\n\t\t\t\trow_data \u003d {}\n\t\t\t\tstyle \u003d {}\t\n\t\t\t\t#Map query results into correct attributes\n\t\t\t\trow_data[\u0027id\u0027] \u003d incident_data[row].value.id\n\t\t\t\trow_data[\u0027incident_date\u0027] \u003d incident_data[row].value.incident_date\n\t\t\t\trow_data[\u0027incident_name\u0027] \u003d incident_data[row].value.incident_name\n\t\t\t\trow_data[\u0027incident_location_id\u0027] \u003d incident_data[row].value.incident_location_id\n\t\t\t\trow_data[\u0027incident_location_name\u0027] \u003d incident_data[row].value.incident_location_name\n\t\t\t\trow_data[\u0027incident_description_trunc\u0027] \u003d incident_data[row].value.incident_description_trunc\n\t\t\t\trow_data[\u0027incident_description\u0027] \u003d incident_data[row].value.incident_description\n\t\t\t\trow_data[\u0027physical_injury\u0027] \u003d incident_data[row].value.physical_injury\n\t\t\t\trow_data[\u0027property_damage\u0027] \u003d incident_data[row].value.property_damage\n\t\t\t\trow_data[\u0027bar_participant\u0027] \u003d incident_data[row].value.bar_participant\n\t\t\t\trow_data[\u0027participant_human_id\u0027] \u003d incident_data[row].value.participant_human_id\n\t\t\t\trow_data[\u0027suspension_id\u0027] \u003d suspension_data[row].value.suspension_id\n\t\t\t\trow_data[\u0027suspension_type_id\u0027] \u003d suspension_data[row].value.suspension_type_id\n\t\t\t\trow_data[\u0027suspension_type_name\u0027] \u003d suspension_data[row].value.suspension_type_name\n\t\t\t\trow_data[\u0027suspension_notes\u0027] \u003d suspension_data[row].value.suspension_notes\n\t\t\t\trow_data[\u0027suspension_notes_trunc\u0027] \u003d suspension_data[row].value.suspension_notes_trunc\n\t\t\t\trow_data[\u0027suspension_duration\u0027] \u003d suspension_data[row].value.suspension_duration\n\t\t\t\trow_data[\u0027suspension_time_begin\u0027] \u003d suspension_data[row].value.suspension_time_begin\n\t\t\t\trow_data[\u0027suspension_time_end\u0027] \u003d  suspension_data[row].value.suspension_time_end\n\t\t\t\trow_data[\u0027reinstateRequired\u0027] \u003d  suspension_data[row].value.reinstateRequired\n\t\t\t\trow_data[\u0027reinstated\u0027] \u003d  suspension_data[row].value.reinstated\n\t\t\t\t#Set the default style for the row\n\t\t\t\t#style[\u0027classes\u0027] \u003d \"Table/Cell_Detail\"\n\t\t\t\t#note[\u0027services\u0027] \u003d service_list\n\t\t\t\t#row_struct[\u0027value\u0027] \u003d row_data\n\t\t\t\t#row_struct[\u0027style\u0027] \u003d style\n\t\t\t\t#Append the individual row date to the table data object\n\t\t\t\t#table_data.append(row_struct)\n\t\t\t\ttable_data.append(row_data)\n\t\t\n\t\treturn table_data\n\texcept:\n\t\tlogger \u003d system.util.getLogger(\"Participants IncidentTableDetail view.custom.table_data\")\n\t\tmsg \u003d traceback.format_exc()\n\t\tlogger.error(msg)\t",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      },
+      "onChange": {
+        "enabled": null,
+        "script": "\t#Send the message to refresh the table\n\tsystem.perspective.sendMessage(messageType\u003d\"refreshIncidentDetail\", payload\u003d{}, scope\u003d\"session\")"
+      },
+      "persistent": true
+    },
+    "params.participantID": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.selection_data": {
+      "binding": {
+        "config": {
+          "path": "/root/Table.props.selection.data"
+        },
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 908,
+      "width": 1811
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "Table"
+        },
+        "position": {
+          "basis": "100%"
+        },
+        "propConfig": {
+          "props.data": {
+            "binding": {
+              "config": {
+                "path": "view.custom.table_data"
+              },
+              "type": "property"
+            }
+          },
+          "props.selection.style.backgroundColor": {
+            "binding": {
+              "config": {
+                "path": "this.props.selection.selectedRow"
+              },
+              "transforms": [
+                {
+                  "code": "\treturn \"#FFFFFF00\" if value is None or value \u003d\u003d -1 else \"#9AF4EB4D\"",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "cells": {
+            "allowEditOn": "single-click",
+            "style": {
+              "classes": "Table/Cell_Detail_NoBG"
+            }
+          },
+          "columns": [
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "id",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header_Detail"
+                },
+                "title": "ID"
+              },
+              "justify": "auto",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal_Detail"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": false,
+              "width": 60
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY hh:mm a",
+              "editable": false,
+              "field": "incident_date",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header_Detail"
+                },
+                "title": "Incident Time"
+              },
+              "justify": "auto",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "date",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal_Detail",
+                "paddingLeft": "25px"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 160
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "incident_name",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header_Detail"
+                },
+                "title": "Incident Name"
+              },
+              "justify": "auto",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": false,
+              "style": {
+                "classes": "Table/Column_Normal_Detail"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": false,
+              "width": 80
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "incident_location_id",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header_Detail"
+                },
+                "title": "Location ID"
+              },
+              "justify": "auto",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal_Detail"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": false,
+              "width": 120
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "incident_location_name",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header_Detail"
+                },
+                "title": "Location"
+              },
+              "justify": "auto",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal_Detail"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 120
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "incident_description_trunc",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header_Detail"
+                },
+                "title": "Incident Description"
+              },
+              "justify": "auto",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": false,
+              "style": {
+                "classes": "Table/Column_Normal_Detail"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 80
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "incident_description",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header_Detail"
+                },
+                "title": "Incident Description"
+              },
+              "justify": "auto",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal_Detail"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": false,
+              "width": 80
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "physical_injury",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header_Detail"
+                },
+                "title": "Physical Injury"
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "view",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal_Detail"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "1_TEMPLATES/Tables/TableAlert",
+              "visible": true,
+              "width": 80
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "property_damage",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header_Detail"
+                },
+                "title": "Property Damage"
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "view",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal_Detail"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "1_TEMPLATES/Tables/TableAlert",
+              "visible": true,
+              "width": 80
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "bar_participant",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header_Detail"
+                },
+                "title": "Suspension"
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "view",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal_Detail"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "1_TEMPLATES/Tables/TableAlert",
+              "visible": true,
+              "width": 100
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "suspension_id",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header_Detail"
+                },
+                "title": "Suspension ID"
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal_Detail"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": false,
+              "width": 100
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "suspension_type_id",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header_Detail"
+                },
+                "title": "Suspension Type"
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal_Detail"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": false,
+              "width": 100
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "suspension_type_name",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header_Detail"
+                },
+                "title": "Suspension Type"
+              },
+              "justify": "left",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal_Detail"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 160
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "participant_human_id",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header_Detail"
+                },
+                "title": "Human ID"
+              },
+              "justify": "auto",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "string",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal_Detail"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": false,
+              "width": 80
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "suspension_notes_trunc",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header_Detail"
+                },
+                "title": "Suspension Notes"
+              },
+              "justify": "auto",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "string",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": false,
+              "style": {
+                "classes": "Table/Column_Normal_Detail"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": false,
+              "width": 80
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "suspension_notes",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header_Detail"
+                },
+                "title": "Suspension Notes"
+              },
+              "justify": "auto",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "string",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal_Detail"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": false,
+              "width": 80
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "suspension_time_begin",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header_Detail"
+                },
+                "title": "Susp Begin"
+              },
+              "justify": "auto",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal_Detail"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 100
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "suspension_time_end",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header_Detail"
+                },
+                "title": "Susp End"
+              },
+              "justify": "auto",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal_Detail"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 100
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "suspension_duration",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header_Detail"
+                },
+                "title": "Duration"
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal_Detail"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": false,
+              "width": 80
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "reinstateRequired",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header_Detail"
+                },
+                "title": "Reinstate Required"
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "view",
+              "resizable": false,
+              "sort": "none",
+              "sortable": false,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal_Detail"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "1_TEMPLATES/Tables/TableBooleanTrueOnly",
+              "visible": true,
+              "width": 80
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "reinstated",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header_Detail"
+                },
+                "title": "reinstated"
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "auto",
+              "resizable": false,
+              "sort": "none",
+              "sortable": false,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal_Detail"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": false,
+              "width": 80
+            }
+          ],
+          "pager": {
+            "initialOption": 5
+          },
+          "rows": {
+            "highlight": {
+              "color": "#CCFFFF"
+            },
+            "striped": {
+              "color": {
+                "even": "#8AFFFF"
+              },
+              "enabled": false
+            },
+            "style": {
+              "cursor": "pointer"
+            }
+          },
+          "selection": {
+            "selectedColumn": "",
+            "selectedRow": -1
+          },
+          "style": {
+            "classes": "Background/Default"
+          }
+        },
+        "scripts": {
+          "customMethods": [],
+          "extensionFunctions": null,
+          "messageHandlers": [
+            {
+              "messageType": "refreshIncidentDetail",
+              "pageScope": true,
+              "script": "\t### Refresh data\n\tsystem.perspective.print(\"Refresh Incident Detail\")\n\tself.refreshBinding(\"props.data\")\n\tself.props.selection.selectedRow \u003d -1\n",
+              "sessionScope": true,
+              "viewScope": true
+            },
+            {
+              "messageType": "tableToExcel",
+              "pageScope": true,
+              "script": "\t# implement your handler here\n\timport traceback\n\ttry:\n\t\t#Send the dataset to Excel\n\t\tfilename \u003d \u0027Participant_Incidents_\u0027 + str(system.date.format(system.date.now(),\"yyyyMMddHHmmss\")) + \u0027.xls\u0027\n\t\tdataset \u003d self.props.data\n\t\tNewDataSet \u003d []\n\t\theaders \u003d [\"Incident Time\",\"Location\",\"Incident Description\",\"Physical Injury\",\"Property Damage\",\"Suspension\",\"Suspension Type\",\"Susp Begin\",\"Susp End\",\"Reinstate Required\"]\n\t\t\n\t\tfor i in range(len(dataset)):\n\t\t\tincident_date \u003d None\n\t\t\tsus_begin \u003d None\n\t\t\tsus_end \u003d None\n\t\t\tif dataset[i][\u0027incident_date\u0027] is not None and dataset[i][\u0027incident_date\u0027] !\u003d \u0027\u0027:\n\t\t\t\tincident_date \u003d system.date.format(system.date.fromMillis(dataset[i][\u0027incident_date\u0027]), \u0027MM/dd/yyyy hh:mm a\u0027)\n\t\t\tif dataset[i][\u0027reinstateRequired\u0027] !\u003d None and dataset[i][\u0027reinstateRequired\u0027] !\u003d \u0027\u0027 and dataset[i][\u0027reinstateRequired\u0027] !\u003d -1:\n\t\t\t\tif dataset[i][\u0027reinstateRequired\u0027] \u003d\u003d 0:\n\t\t\t\t\treinstateRequired \u003d \u0027FALSE\u0027\n\t\t\t\tif dataset[i][\u0027reinstateRequired\u0027] \u003d\u003d 1:\n\t\t\t\t\treinstateRequired \u003d \u0027TRUE\u0027\n\t\t\telse:\n\t\t\t\treinstateRequired \u003d \u0027\u0027\n\t\t\tif dataset[i][\u0027suspension_time_begin\u0027] is not None and dataset[i][\u0027suspension_time_begin\u0027] !\u003d \u0027\u0027:\n\t\t\t\tsus_begin \u003d system.date.format(system.date.parse(dataset[i][\u0027suspension_time_begin\u0027],\u0027MMM dd yyyy\u0027), \u0027MMM dd yyyy\u0027)\n\t\t\tif dataset[i][\u0027suspension_time_end\u0027] is not None and dataset[i][\u0027suspension_time_end\u0027] !\u003d \u0027\u0027:\n\t\t\t\tsus_end \u003d system.date.format(system.date.parse(dataset[i][\u0027suspension_time_end\u0027],\u0027MMM dd yyyy\u0027), \u0027MMM dd yyyy\u0027)\n\t\t\tNewDataSet.append([incident_date,dataset[i][\u0027incident_location_name\u0027],dataset[i][\u0027incident_description\u0027],dataset[i][\u0027physical_injury\u0027],dataset[i][\u0027property_damage\u0027],dataset[i][\u0027bar_participant\u0027],dataset[i][\u0027suspension_type_name\u0027],sus_begin,sus_end,reinstateRequired])\t\n\t\tNewDataSet \u003d system.dataset.toDataSet(headers, NewDataSet)\n\t\t\n\t\txlFile \u003d system.dataset.toExcel(True,NewDataSet)\n\t\tsystem.perspective.download(filename, xlFile)\n\texcept:   \n\t\tlogger \u003d system.util.getLogger(\"Participant Incidents tableToExcel\")\n\t\tmsg \u003d traceback.format_exc()\n\t\tlogger.error(msg)",
+              "sessionScope": false,
+              "viewScope": true
+            },
+            {
+              "messageType": "tableToPDF",
+              "pageScope": true,
+              "script": "\t# implement your handler here\n\timport traceback\n\ttry:\n\t\t#Generate the report\n\t\tproject \u003d \"RITI\"\n\t\tpath \u003d \"Participant/Participant_Incidents\"\n\t\tparameters \u003d {\u0027ParticipantId\u0027:self.view.params.participantID}\n#\t\tsystem.perspective.print(parameters)\n\t\tpdfFile \u003d system.report.executeReport(path,project,parameters,fileType\u003d\u0027pdf\u0027)\n\t\tfilename \u003d \u0027Participant_Incidents_\u0027 + str(system.date.format(system.date.now(),\"yyyyMMddHHmmss\")) + \u0027.pdf\u0027\n\n\t\tsystem.perspective.download(filename, pdfFile)\n\texcept:   \n\t\tlogger \u003d system.util.getLogger(\"Participant Incidents tableToPDF\")\n\t\tmsg \u003d traceback.format_exc()\n\t\tlogger.error(msg)",
+              "sessionScope": false,
+              "viewScope": true
+            }
+          ]
+        },
+        "type": "ia.display.table"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column"
+    },
+    "scripts": {
+      "customMethods": [],
+      "extensionFunctions": null,
+      "messageHandlers": [
+        {
+          "messageType": "RefreshIncidentsData",
+          "pageScope": true,
+          "script": "\t### Refresh data\n\tsystem.perspective.print(\"Refresh Incident Data\")\n\tview \u003d self.view\n\tview.refreshBinding(\"custom.incident_data\")\n\tview.refreshBinding(\"custom.suspension_data\")",
+          "sessionScope": true,
+          "viewScope": true
+        }
+      ]
+    },
+    "type": "ia.container.flex"
+  }
+}

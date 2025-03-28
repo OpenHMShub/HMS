@@ -1,0 +1,1 @@
+SELECT * FROM participant.EventNotes Where eventId = :event_id 

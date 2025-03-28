@@ -1,0 +1,674 @@
+{
+  "custom": {
+    "participant": "Bernard Armstead",
+    "selectedBinStatus": {
+      "bin": 88,
+      "createdOn": 1667446383730,
+      "disposedByStaffEmployeeId": null,
+      "disposedOn": null,
+      "exitAction": null,
+      "exitedByStaffEmployeeId": null,
+      "exitedOn": null,
+      "id": 3,
+      "location": "Guest House Bin",
+      "participantId": 431371,
+      "selectedMedications": "Amlodipine 10mg,Atorvastatin 40mg,Buproprion Hydrochloride 150mg,Cetirizine 10mg,Diclofenac 75mg,Doxycycline 100mg,Duloxetine 60mg,Fish Oil 1000mg,Folic Acid 1mg,Glimepiride 4mg,Hydroxyzine 10mg,Loperamide 2mg,Medication Tray,Metformin 1000mg,Mirtazapine 30mg,Omeprazole 40mg,Oxybutynin Chloride 10mg,Trazodone 100mg",
+      "shelterId": 11,
+      "startOn": 1667444668923
+    }
+  },
+  "params": {
+    "Action": null,
+    "Bin": 3,
+    "ExitAction": 2,
+    "StorageBinLogId": 3,
+    "location": "A"
+  },
+  "propConfig": {
+    "custom.ParticipantId": {
+      "persistent": true
+    },
+    "custom.blankArray": {
+      "persistent": true
+    },
+    "custom.eventFacilitators": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "eventID": "{view.params.eventId}"
+          },
+          "queryPath": "Calendar/GetEventFacilitators"
+        },
+        "transforms": [
+          {
+            "code": "\tarray \u003d []\n\tfor row in range(value.getRowCount()):\n\t\tname \u003d value.getValueAt(row, \"name\")\n\t\tid \u003d value.getValueAt(row, \"id\")\n\t\tarray.append({\u0027text\u0027: name, \u0027id\u0027: id})\n\treturn array",
+            "type": "script"
+          }
+        ],
+        "type": "query"
+      }
+    },
+    "custom.eventParams": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "eventID": "{view.params.eventId}"
+          },
+          "queryPath": "Calendar/GetEventByID"
+        },
+        "transforms": [
+          {
+            "code": "\tdef getByWeekDay(row):\n\t\tweekDayDict \u003d {\n\t\t\u0027mo\u0027: value.getValueAt(row, \"monday\"),\n\t\t\u0027tu\u0027: value.getValueAt(row, \"tuesday\"),\n\t\t\u0027we\u0027: value.getValueAt(row, \"wednesday\"),\n\t\t\u0027th\u0027: value.getValueAt(row, \"thursday\"),\n\t\t\u0027fr\u0027: value.getValueAt(row, \"friday\"),\n\t\t\u0027sa\u0027: value.getValueAt(row, \"saturday\"),\n\t\t\u0027su\u0027: value.getValueAt(row, \"sunday\")}\n\t\t\t\n\t\tbyweekday \u003d []\n\t\tfor key in [\u0027mo\u0027, \u0027tu\u0027, \u0027we\u0027, \u0027th\u0027, \u0027fr\u0027, \u0027sa\u0027, \u0027su\u0027,]:\n\t\t\tif weekDayDict[key]:\n\t\t\t\tbyweekday.append(key)\n\t\t\t\n\t\treturn byweekday\n\t\n\teventParams \u003d {}\n\tif value.getRowCount() \u003d\u003d 0:\n\t\treturn {\n\t\t\u0027category\u0027: None,\n\t\t\u0027subCategory\u0027: None,\n\t\t\u0027title\u0027: None,\n\t\t\u0027description\u0027: None,\n\t\t\u0027audienceMen\u0027: None,\n\t\t\u0027audienceMinors\u0027: None,\n\t\t\u0027audienceParticipants\u0027: None,\n\t\t\u0027audienceStaff\u0027: None,\n\t\t\u0027audienceVolunteers\u0027: None,\n\t\t\u0027audienceWomen\u0027: None,\n\t\t\u0027venue\u0027: None,\n\t\t\u0027room\u0027: None,\n\t\t\u0027volunteersNeeded\u0027: None,\n\t\t\u0027staffNeeded\u0027: None,\n\t\t\u0027frequency\u0027: None,\n\t\t\u0027monday\u0027: None,\n\t\t\u0027tuesday\u0027: None,\n\t\t\u0027wednesday\u0027: None,\n\t\t\u0027thursday\u0027: None,\n\t\t\u0027friday\u0027: None,\n\t\t\u0027saturday\u0027: None,\n\t\t\u0027sunday\u0027: None,\n\t\t\u0027bysetpos\u0027: None,\n\t\t\u0027startDate\u0027: None,\n\t\t\u0027endDate\u0027: None,\n\t\t\u0027byweekday\u0027: None,\n\t\t\u0027bymonthday\u0027: None,\n\t\t\u0027bymonth\u0027: None,\n\t\t\u0027interval\u0027: None,\n\t\t\u0027yearlyType\u0027: None,\n\t\t\u0027monthlyType\u0027: None\n\t\t}\n\t\n\teventParams[\u0027category\u0027] \u003d value.getValueAt(0, \u0027category\u0027)\n\teventParams[\u0027subCategory\u0027] \u003d value.getValueAt(0, \u0027subCategory\u0027)\n\teventParams[\u0027title\u0027] \u003d value.getValueAt(0, \u0027title\u0027)\n\teventParams[\u0027description\u0027] \u003d value.getValueAt(0, \u0027description\u0027)\n\teventParams[\u0027audienceMen\u0027] \u003d value.getValueAt(0, \u0027audienceMen\u0027)\n\teventParams[\u0027audienceMinors\u0027] \u003d value.getValueAt(0, \u0027audienceMinors\u0027)\n\teventParams[\u0027audienceParticipants\u0027] \u003d value.getValueAt(0, \u0027audienceParticipants\u0027)\n\teventParams[\u0027audienceStaff\u0027] \u003d value.getValueAt(0, \u0027audienceStaff\u0027)\n\teventParams[\u0027audienceVolunteers\u0027] \u003d value.getValueAt(0, \u0027audienceVolunteers\u0027)\n\teventParams[\u0027audienceWomen\u0027] \u003d value.getValueAt(0, \u0027audienceWomen\u0027)\n\teventParams[\u0027venue\u0027] \u003d value.getValueAt(0, \u0027venue\u0027)\n\teventParams[\u0027room\u0027] \u003d value.getValueAt(0, \u0027room\u0027)\n\teventParams[\u0027volunteersNeeded\u0027] \u003d value.getValueAt(0, \u0027volunteersNeeded\u0027)\n\teventParams[\u0027staffNeeded\u0027] \u003d value.getValueAt(0, \u0027staffNeeded\u0027)\n\teventParams[\u0027frequency\u0027] \u003d value.getValueAt(0, \u0027freq\u0027)\n\teventParams[\u0027monday\u0027] \u003d value.getValueAt(0, \u0027monday\u0027)\n\teventParams[\u0027tuesday\u0027] \u003d value.getValueAt(0, \u0027tuesday\u0027)\n\teventParams[\u0027wednesday\u0027] \u003d value.getValueAt(0, \u0027wednesday\u0027)\n\teventParams[\u0027thursday\u0027] \u003d value.getValueAt(0, \u0027thursday\u0027)\n\teventParams[\u0027friday\u0027] \u003d value.getValueAt(0, \u0027friday\u0027)\n\teventParams[\u0027saturday\u0027] \u003d value.getValueAt(0, \u0027saturday\u0027)\n\teventParams[\u0027sunday\u0027] \u003d value.getValueAt(0, \u0027sunday\u0027)\n\teventParams[\u0027bysetpos\u0027] \u003d value.getValueAt(0, \u0027bysetpos\u0027)\n\teventParams[\u0027startDate\u0027] \u003d startDate \u003d value.getValueAt(0, \u0027startDate\u0027)\n\teventParams[\u0027endDate\u0027] \u003d endDate \u003d value.getValueAt(0, \u0027endDate\u0027)\n\teventParams[\u0027byweekday\u0027] \u003d byweekday \u003d getByWeekDay(0)\n\teventParams[\u0027bymonthday\u0027] \u003d system.date.getDayOfMonth(startDate)\n\teventParams[\u0027bymonth\u0027] \u003d value.getValueAt(0, \u0027bymonth\u0027)\n\teventParams[\u0027interval\u0027] \u003d value.getValueAt(0, \u0027interval\u0027)\n\tif len(byweekday) \u003d\u003d 0:\n\t\teventParams[\u0027yearlyType\u0027] \u003d \u0027yearlydate\u0027\n\t\teventParams[\u0027monthlyType\u0027] \u003d \u0027monthlydate\u0027\n\telse:\n\t\teventParams[\u0027yearlyType\u0027] \u003d \u0027yearlyday\u0027\n\t\teventParams[\u0027monthlyType\u0027] \u003d \u0027monthlyday\u0027\n\t\n\t\n\treturn eventParams",
+            "type": "script"
+          }
+        ],
+        "type": "query"
+      }
+    },
+    "custom.participant": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "participantId": "{view.custom.selectedBinStatus.participantId}"
+          },
+          "queryPath": "Participants/Storage Bins/GetParticipantName"
+        },
+        "transforms": [
+          {
+            "expression": "{value}[0,\u0027full_name\u0027]",
+            "type": "expression"
+          }
+        ],
+        "type": "query"
+      },
+      "persistent": true
+    },
+    "custom.participantId": {
+      "persistent": true
+    },
+    "custom.selectedBinStatus": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "id": "{view.params.StorageBinLogId}"
+          },
+          "queryPath": "Participants/Medications/GetSpecificBinIdStatus",
+          "returnFormat": "json"
+        },
+        "transforms": [
+          {
+            "expression": "{value}[0]",
+            "type": "expression"
+          }
+        ],
+        "type": "query"
+      },
+      "persistent": true
+    },
+    "custom.taskData": {
+      "persistent": true
+    },
+    "params.Bin": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.ExitAction": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.ExpDate": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.Participant": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.ParticipantId": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.Row_Data": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.StorageBinLogId": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.isUpdateTask": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.location": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.taskID": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 755,
+      "width": 550
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "EmbeddedView"
+        },
+        "position": {
+          "basis": "141px",
+          "display": false
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "OBSOLETE_Action"
+        },
+        "position": {
+          "basis": "60px",
+          "display": false,
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.selectedId": {
+            "binding": {
+              "config": {
+                "bidirectional": true,
+                "path": "view.params.Action"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginBottom": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.bottom-margin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginLeft": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.left-margin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginRight": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.right-margin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginTop": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.top-margin"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "colourOverride": "",
+            "options": {
+              "$": [
+                "ds",
+                192,
+                1635956141426
+              ],
+              "$columns": [
+                {
+                  "data": [
+                    1,
+                    2,
+                    3,
+                    4
+                  ],
+                  "name": "id",
+                  "type": "Integer"
+                },
+                {
+                  "data": [
+                    "Create",
+                    "Extend",
+                    "Exit",
+                    "Evict"
+                  ],
+                  "name": "Action",
+                  "type": "String"
+                }
+              ]
+            },
+            "text": "Action"
+          },
+          "path": "Participants/Storage Bins/Cards/Dock/TextRepeat"
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Participant_0"
+        },
+        "position": {
+          "basis": "60px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.displayText": {
+            "binding": {
+              "config": {
+                "bidirectional": true,
+                "path": "view.params.location"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginBottom": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.bottom-margin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginLeft": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.left-margin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginRight": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.right-margin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginTop": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.top-margin"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "colourOverride": "",
+            "text": "Location"
+          },
+          "path": "Participants/Storage Bins/Cards/Dock/TextShow"
+        },
+        "scripts": {
+          "customMethods": [],
+          "extensionFunctions": null,
+          "messageHandlers": [
+            {
+              "messageType": "sbin_selected_participant",
+              "pageScope": true,
+              "script": "\tsystem.perspective.print(payload[\u0027participantId\u0027])\n\tself.view.custom.ParticipantId \u003d payload[\u0027participantId\u0027]",
+              "sessionScope": false,
+              "viewScope": false
+            }
+          ]
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Participant_1"
+        },
+        "position": {
+          "basis": "60px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.displayText": {
+            "binding": {
+              "config": {
+                "path": "view.params.Bin"
+              },
+              "transforms": [
+                {
+                  "code": "\tif value is None or value \u003d\u003d -1:\n\t\treturn \u0027\u0027\n\telse:\n\t\treturn value",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          },
+          "props.style.marginBottom": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.bottom-margin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginLeft": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.left-margin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginRight": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.right-margin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginTop": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.top-margin"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "colourOverride": "",
+            "text": "Bin"
+          },
+          "path": "Participants/Storage Bins/Cards/Dock/TextShow"
+        },
+        "scripts": {
+          "customMethods": [],
+          "extensionFunctions": null,
+          "messageHandlers": [
+            {
+              "messageType": "sbin_selected_participant",
+              "pageScope": true,
+              "script": "\tsystem.perspective.print(payload[\u0027participantId\u0027])\n\tself.view.custom.ParticipantId \u003d payload[\u0027participantId\u0027]",
+              "sessionScope": false,
+              "viewScope": false
+            }
+          ]
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "StaffName"
+        },
+        "position": {
+          "basis": "60px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.options": {
+            "binding": {
+              "config": {
+                "queryPath": "StaffEmployeeDropdownold"
+              },
+              "type": "query"
+            }
+          },
+          "props.style.marginBottom": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.bottom-margin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginLeft": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.left-margin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginRight": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.right-margin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginTop": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.top-margin"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "attentionRequired": true,
+            "selectedId": "",
+            "text": "Staff *"
+          },
+          "path": "Participants/Storage Bins/Cards/Dock/TextRepeat"
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Participant"
+        },
+        "position": {
+          "basis": "60px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.displayText": {
+            "binding": {
+              "config": {
+                "path": "view.custom.participant"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginBottom": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.bottom-margin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginLeft": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.left-margin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginRight": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.right-margin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginTop": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.top-margin"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "colourOverride": "",
+            "text": "Participant"
+          },
+          "path": "Participants/Storage Bins/Cards/Dock/TextShow"
+        },
+        "scripts": {
+          "customMethods": [],
+          "extensionFunctions": null,
+          "messageHandlers": [
+            {
+              "messageType": "sbin_selected_participant",
+              "pageScope": true,
+              "script": "\tsystem.perspective.print(payload[\u0027participantId\u0027])\n\tself.view.custom.ParticipantId \u003d payload[\u0027participantId\u0027]",
+              "sessionScope": false,
+              "viewScope": false
+            }
+          ]
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "TESTING"
+        },
+        "position": {
+          "basis": "20px",
+          "display": false,
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.text": {
+            "binding": {
+              "config": {
+                "expression": "\u0027Bin ID: \u0027 + {view.params.StorageBinLogId} + \u0027 (FOR TESTING ONLY)\u0027"
+              },
+              "type": "expr"
+            }
+          }
+        },
+        "props": {
+          "style": {
+            "classes": "Text/Detail_Action",
+            "paddingLeft": "10px",
+            "textAlign": "left"
+          }
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "children": [
+          {
+            "events": {
+              "component": {
+                "onActionPerformed": {
+                  "config": {
+                    "script": "\timport traceback\n\t\n\ttry:\n\t\t#  Add to db\n\t\t\n\t\tallData \u003d 1\n\t\t\n\t\taction \u003d self.view.params.ExitAction\n\t\tid \u003d self.view.custom.selectedBinStatus[\u0027id\u0027]\n\t\t\n\t\t\n\t\tlocation \u003d self.view.custom.selectedBinStatus[\u0027location\u0027]\n\t\t# system.perspective.print(column)\n\t\tallData \u0026\u003d location !\u003d \u0027\u0027\n\t\t\t\n\t\t\n\t\tbin \u003d self.view.custom.selectedBinStatus[\u0027bin\u0027]\n\t\t# system.perspective.print(bin)\n#\t\tallData \u0026\u003d bin !\u003d \u0027\u0027 \n\t\t     \n\t\tst \u003d self.parent.parent.getChild(\"StaffName\")\n\t\tstaffEmployeeId \u003d st.props.params.selectedId\n\t\t# system.perspective.print(staff)\n\t\tallData \u0026\u003d getAttention(st, \u0027Staff\u0027, staffEmployeeId\u003d\u003d\u0027\u0027)\n\t\t\n\t\tp \u003d self.parent.parent.getChild(\"Participant\")\n\t\tparticipant \u003d self.view.custom.selectedBinStatus[\u0027participantId\u0027]\n\t\t\n\t\tallData \u0026\u003d getAttention(p, \u0027Participant\u0027, participant\u003d\u003d\u0027\u0027)\n\t\t\n\t\tif allData \u003d\u003d False:\n\t\t\tsystem.perspective.print(\"EXIT\")\n\t\t\treturn\n\t\t\n\t\tnow \u003d system.date.now()\n\t\t\n\t\tparams \u003d {\u0027exitAction\u0027   : action,\n\t\t\t\t  \u0027staffEmployeeId\u0027   : staffEmployeeId,\n\t\t\t\t  \u0027id\u0027\t\t\t : id,\n\t\t\t\t  \u0027exitedOn\u0027     : now\n\t\t\t\t }\n\t\t\n\t\tsystem.perspective.print(\"\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003dStorageBin Insert params\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\")\n\t\tsystem.perspective.print(params)\t\n\t\tsystem.db.runNamedQuery(\u0027Participants/Medications/ExitBin\u0027, params)\n\t\t\n\t\tsystem.perspective.sendMessage(\u0027storage_bin_refresh\u0027, payload \u003d {})\n\t\t\n\t\tgetAttention(st, \u0027Staff\u0027, 0)\n\t\t\n\t\tsystem.perspective.print(\"\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003dClose dock\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\")\n\t\tsystem.perspective.closeDock(\u0027MedicationBinModify\u0027)\n\t\n\texcept:\n\t\tsystem.perspective.print(\"\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003dError\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\")\n\t\tsystem.perspective.print(traceback.format_exc())\n\t\t\n\t\ndef getAttention(embView, name, draw):\n\tif draw \u003d\u003d 1:\n\t\tembView.props.params.attentionRequired \u003d True\n\t\treturn 0\n\telse:\n\t\tembView.props.params.attentionRequired \u003d False\n\t\treturn 1\n\t"
+                  },
+                  "scope": "G",
+                  "type": "script"
+                }
+              }
+            },
+            "meta": {
+              "name": "CreateBtn"
+            },
+            "position": {
+              "basis": "120px"
+            },
+            "propConfig": {
+              "props.text": {
+                "binding": {
+                  "config": {
+                    "expression": "case({view.params.ExitAction}\r\n\t,1, \u0027Exit\u0027\r\n\t,2, \u0027Dispose\u0027\r\n\t,\u0027INVALID\u0027\r\n)"
+                  },
+                  "type": "expr"
+                }
+              }
+            },
+            "props": {
+              "style": {
+                "classes": "Buttons/Main"
+              }
+            },
+            "type": "ia.input.button"
+          },
+          {
+            "events": {
+              "component": {
+                "onActionPerformed": {
+                  "config": {
+                    "script": "#\tcol \u003d self.parent.parent.getChild(\"Column\")\n#\tb \u003d self.parent.parent.getChild(\"Bin\")\t\t\t\n\tst \u003d self.parent.parent.getChild(\"StaffName\")\n\tp \u003d self.parent.parent.getChild(\"Participant\")\n\t\n#\tgetAttention(col, \u0027Column\u0027, 0)\n#\tgetAttention(b, \u0027Bin\u0027, 0)\n\tgetAttention(st, \u0027Staff\u0027, 0)\n\tgetAttention(p, \u0027Participant\u0027, 0)\n\tsystem.perspective.closeDock(\u0027MedicationBinModify\u0027)\n\t\n\t\t\ndef getAttention(embView, name, draw):\n\tif draw \u003d\u003d 1:\n\t\tembView.props.params.colourOverride \u003d \u0027#FF0000\u0027\n\t\tembView.props.params.text \u003d name + \u0027 *\u0027\n\t\treturn 0\n\telse:\n\t\tembView.props.params.colourOverride \u003d \u0027\u0027\n\t\tembView.props.params.text \u003d name\n\t\treturn 1\n\t"
+                  },
+                  "scope": "G",
+                  "type": "script"
+                }
+              }
+            },
+            "meta": {
+              "name": "CancelBtn"
+            },
+            "position": {
+              "basis": "120px"
+            },
+            "props": {
+              "style": {
+                "classes": "Buttons/Delete"
+              },
+              "text": "Cancel"
+            },
+            "type": "ia.input.button"
+          }
+        ],
+        "meta": {
+          "name": "FlexContainer Buttons"
+        },
+        "position": {
+          "basis": "60px",
+          "shrink": 0
+        },
+        "props": {
+          "alignContent": "center",
+          "style": {
+            "borderTopColor": "#E6E6E6",
+            "borderTopStyle": "solid",
+            "borderTopWidth": 1,
+            "gap": "20px",
+            "paddingBottom": "15px",
+            "paddingLeft": "20px",
+            "paddingTop": "5px"
+          }
+        },
+        "type": "ia.container.flex"
+      }
+    ],
+    "custom": {
+      "bottom-margin": "5px",
+      "left-margin": "5px",
+      "right-margin": "5px",
+      "top-margin": "5px"
+    },
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column",
+      "style": {
+        "classes": "Background/Default"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

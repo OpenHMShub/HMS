@@ -1,0 +1,101 @@
+{
+  "custom": {},
+  "params": {
+    "OneCase": {
+      "Date": "2021-12-29 11:12:13",
+      "InfoList": [
+        {
+          "Label": "value",
+          "Value": "value"
+        },
+        {
+          "Label": "value",
+          "Value": "value"
+        },
+        {
+          "Label": "value",
+          "Value": "value"
+        },
+        {
+          "Label": "value",
+          "Value": "value"
+        }
+      ],
+      "Title": "Abcd"
+    },
+    "Size": 50
+  },
+  "propConfig": {
+    "params.OneCase": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.OneCase.Date": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.Size": {
+      "access": "PUBLIC",
+      "binding": {
+        "config": {
+          "path": "view.props.defaultSize.height"
+        },
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 50
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "Label"
+        },
+        "position": {
+          "basis": "100%",
+          "grow": 1
+        },
+        "propConfig": {
+          "props.text": {
+            "binding": {
+              "config": {
+                "path": "view.params.OneCase.Date"
+              },
+              "transforms": [
+                {
+                  "code": "\ttry:\n\t\tretVal \u003d system.date.format(system.date.parse(value),\u0027MMMM yyyy\u0027)\n\texcept:\n\t\tretVal \u003d \u0027\u0027\n\treturn retVal",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "alignVertical": "bottom",
+          "style": {
+            "classes": "ActivityCards/Card_Title",
+            "paddingBottom": "5px"
+          }
+        },
+        "type": "ia.display.label"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column",
+      "style": {
+        "classes": "ActivityCards/Header_Card"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

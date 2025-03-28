@@ -1,0 +1,921 @@
+{
+  "custom": {
+    "dob": "",
+    "first_name": "",
+    "func_add_participant": true,
+    "func_select_participant": false,
+    "last_name": "",
+    "output_id": 3822,
+    "output_name": "Brian Adams",
+    "race": "",
+    "selected_id": -1,
+    "selected_name": -1,
+    "ssn": ""
+  },
+  "params": {
+    "output_id": -1,
+    "output_name": "",
+    "participant_search": false,
+    "selected_id": 3114
+  },
+  "propConfig": {
+    "custom.dob": {
+      "binding": {
+        "config": {
+          "expression": "If(isNull({/root/FlexContainer Personal/FlexContainer RightCenter/DateOfBirth.props.params.date}),\"\",toStr(dateFormat({/root/FlexContainer Personal/FlexContainer RightCenter/DateOfBirth.props.params.date},\"yyyyMMdd\")))"
+        },
+        "type": "expr"
+      },
+      "persistent": true
+    },
+    "custom.first_name": {
+      "binding": {
+        "config": {
+          "path": "/root/FlexContainer Personal/FlexContainer Left/FirstName.props.params.inputText"
+        },
+        "type": "property"
+      },
+      "persistent": true
+    },
+    "custom.func_select_participant": {
+      "binding": {
+        "config": {
+          "bidirectional": true,
+          "path": "/root/Embed_Buttons.props.params.func_select_participant"
+        },
+        "type": "property"
+      },
+      "onChange": {
+        "enabled": null,
+        "script": "\tif currentValue.value:\n\t\t#system.perspective.print(currentValue)\n\t\tvalid \u003d True\n\t\t#Verify its gretaer then -1\n\t\tif self.custom.selected_id \u003c 0:\n\t\t\tvalid \u003d False\n\t\t\tsystem.perspective.print(\u0027Participant ID not valid\u0027)\n\t\tif valid:\t\t\n\t\t\tself.custom.output_id \u003d self.custom.selected_id\n\t\t\tself.custom.output_name \u003d self.custom.selected_name\n\t\t#Reset the script trigger\n\t\tself.custom.func_select_participant \u003d False\n\t\tself.params.participant_search \u003d False"
+      },
+      "persistent": true
+    },
+    "custom.last_name": {
+      "binding": {
+        "config": {
+          "path": "/root/FlexContainer Personal/FlexContainer LeftCenter/LastName.props.params.inputText"
+        },
+        "type": "property"
+      },
+      "persistent": true
+    },
+    "custom.output_id": {
+      "persistent": true
+    },
+    "custom.output_name": {
+      "persistent": true
+    },
+    "custom.race": {
+      "binding": {
+        "config": {
+          "expression": "If(isNull({/root/FlexContainer Personal/FlexContainer Right/Race.props.params.SelectedValue}),\u0027\u0027,{/root/FlexContainer Personal/FlexContainer Right/Race.props.params.SelectedValue})"
+        },
+        "type": "expr"
+      },
+      "persistent": true
+    },
+    "custom.selected_id": {
+      "binding": {
+        "config": {
+          "path": "/root/Table.props.selection.data"
+        },
+        "transforms": [
+          {
+            "code": "\tif len(value):\n\t\treturn value[0].participant_id\n\telse:\n\t\treturn -1",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      },
+      "persistent": true
+    },
+    "custom.selected_name": {
+      "binding": {
+        "config": {
+          "path": "/root/Table.props.selection.data"
+        },
+        "transforms": [
+          {
+            "code": "\tif len(value):\n\t\treturn str(value[0].first_name) + \" \" + str(value[0].last_name)\n\telse:\n\t\treturn -1",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      },
+      "persistent": true
+    },
+    "custom.ssn": {
+      "binding": {
+        "config": {
+          "path": "/root/FlexContainer Personal/FlexContainer Center/SocialSecurityNumber.props.params.inputText"
+        },
+        "type": "property"
+      },
+      "persistent": true
+    },
+    "params.output_id": {
+      "binding": {
+        "config": {
+          "path": "view.custom.output_id"
+        },
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.output_name": {
+      "binding": {
+        "config": {
+          "path": "view.custom.output_name"
+        },
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.participant_search": {
+      "paramDirection": "inout",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 500,
+      "width": 975
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "Embed_Header"
+        },
+        "position": {
+          "basis": "25px",
+          "shrink": 0
+        },
+        "props": {
+          "params": {
+            "func_add_participant": false
+          },
+          "path": "Participants/Templates/ParticipantSearch/SearchHeader",
+          "useDefaultViewHeight": true
+        },
+        "scripts": {
+          "customMethods": [],
+          "messageHandlers": [
+            {
+              "messageType": "ResetParticipantSearch",
+              "pageScope": true,
+              "script": "\tself.parent.getChild(\"FlexContainer Personal\").getChild(\"FlexContainer Left\").getChild(\"FirstName\").props.params.inputText \u003d \"\"\n\tself.parent.getChild(\"FlexContainer Personal\").getChild(\"FlexContainer LeftCenter\").getChild(\"LastName\").props.params.inputText \u003d \"\"\n\tself.parent.getChild(\"FlexContainer Personal\").getChild(\"FlexContainer Center\").getChild(\"SocialSecurityNumber\").props.params.inputText \u003d \"\"\n\tself.parent.getChild(\"FlexContainer Personal\").getChild(\"FlexContainer RightCenter\").getChild(\"DateOfBirth\").props.params.date \u003d None\n\tself.parent.getChild(\"FlexContainer Personal\").getChild(\"FlexContainer Right\").getChild(\"Race\").props.params.SelectedValue \u003d None\n\tself.view.params.output_id \u003d -1\n\tself.view.params.output_name \u003d \u0027\u0027",
+              "sessionScope": true,
+              "viewScope": true
+            }
+          ]
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Embed_Buttons"
+        },
+        "position": {
+          "basis": "50px",
+          "shrink": 0
+        },
+        "props": {
+          "params": {
+            "func_select_participant": false
+          },
+          "path": "Participants/Templates/ParticipantSearch/Buttons",
+          "style": {
+            "classes": "InputCards/InputCard_NoBorder"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "meta": {
+                  "name": "FirstName"
+                },
+                "position": {
+                  "shrink": 0
+                },
+                "props": {
+                  "params": {
+                    "inputText": "",
+                    "text": "First Name*"
+                  },
+                  "path": "Participants/Templates/ParticipantSearch/TextInput",
+                  "style": {
+                    "marginTop": "5px"
+                  },
+                  "useDefaultViewHeight": true
+                },
+                "type": "ia.display.view"
+              }
+            ],
+            "meta": {
+              "name": "FlexContainer Left"
+            },
+            "position": {
+              "basis": "200px",
+              "grow": 1
+            },
+            "props": {
+              "direction": "column",
+              "style": {
+                "paddingLeft": "15px",
+                "paddingRight": "5px"
+              }
+            },
+            "type": "ia.container.flex"
+          },
+          {
+            "children": [
+              {
+                "meta": {
+                  "name": "LastName"
+                },
+                "position": {
+                  "shrink": 0
+                },
+                "props": {
+                  "params": {
+                    "inputText": "",
+                    "text": "Last Name*"
+                  },
+                  "path": "Participants/Templates/ParticipantSearch/TextInput",
+                  "style": {
+                    "marginTop": "5px"
+                  },
+                  "useDefaultViewHeight": true
+                },
+                "type": "ia.display.view"
+              }
+            ],
+            "meta": {
+              "name": "FlexContainer LeftCenter"
+            },
+            "position": {
+              "basis": "200px",
+              "grow": 1
+            },
+            "props": {
+              "direction": "column",
+              "style": {
+                "paddingLeft": "5px",
+                "paddingRight": "5px"
+              }
+            },
+            "type": "ia.container.flex"
+          },
+          {
+            "children": [
+              {
+                "meta": {
+                  "name": "SocialSecurityNumber"
+                },
+                "position": {
+                  "shrink": 0
+                },
+                "props": {
+                  "params": {
+                    "inputText": "",
+                    "text": "SSN"
+                  },
+                  "path": "Participants/Templates/ParticipantSearch/TextInput",
+                  "style": {
+                    "marginTop": "5px"
+                  },
+                  "useDefaultViewHeight": true
+                },
+                "type": "ia.display.view"
+              }
+            ],
+            "meta": {
+              "name": "FlexContainer Center"
+            },
+            "position": {
+              "basis": "200px",
+              "grow": 1
+            },
+            "props": {
+              "direction": "column",
+              "style": {
+                "paddingLeft": "5px",
+                "paddingRight": "5px"
+              }
+            },
+            "type": "ia.container.flex"
+          },
+          {
+            "children": [
+              {
+                "meta": {
+                  "name": "DateOfBirth"
+                },
+                "position": {
+                  "shrink": 0
+                },
+                "propConfig": {
+                  "props.params.maxDate": {
+                    "binding": {
+                      "config": {
+                        "expression": "now(0)"
+                      },
+                      "type": "expr"
+                    }
+                  },
+                  "props.params.minDate": {
+                    "binding": {
+                      "config": {
+                        "expression": "toDate(\u00271900-01-01\u0027)"
+                      },
+                      "type": "expr"
+                    }
+                  }
+                },
+                "props": {
+                  "params": {
+                    "date": null,
+                    "text": "Date of Birth"
+                  },
+                  "path": "Participants/Templates/ParticipantSearch/DateInput",
+                  "style": {
+                    "marginTop": "5px"
+                  },
+                  "useDefaultViewHeight": true
+                },
+                "type": "ia.display.view"
+              }
+            ],
+            "meta": {
+              "name": "FlexContainer RightCenter"
+            },
+            "position": {
+              "basis": "200px",
+              "grow": 1
+            },
+            "props": {
+              "direction": "column",
+              "style": {
+                "paddingLeft": "5px",
+                "paddingRight": "5px"
+              }
+            },
+            "type": "ia.container.flex"
+          },
+          {
+            "children": [
+              {
+                "meta": {
+                  "name": "Race"
+                },
+                "propConfig": {
+                  "props.params.Options": {
+                    "binding": {
+                      "config": {
+                        "queryPath": "Participants/Registration/GetRaces",
+                        "returnFormat": "json"
+                      },
+                      "type": "query"
+                    }
+                  }
+                },
+                "props": {
+                  "params": {
+                    "SelectedValue": null,
+                    "Text": "Race*"
+                  },
+                  "path": "Participants/Templates/ParticipantSearch/SelectionInput",
+                  "style": {
+                    "marginTop": "5px"
+                  },
+                  "useDefaultViewHeight": true
+                },
+                "type": "ia.display.view"
+              }
+            ],
+            "meta": {
+              "name": "FlexContainer Right"
+            },
+            "position": {
+              "basis": "200px",
+              "grow": 1
+            },
+            "props": {
+              "direction": "column",
+              "style": {
+                "paddingLeft": "5px",
+                "paddingRight": "15px"
+              }
+            },
+            "type": "ia.container.flex"
+          }
+        ],
+        "meta": {
+          "name": "FlexContainer Personal"
+        },
+        "position": {
+          "shrink": 0
+        },
+        "props": {
+          "style": {
+            "borderBottomColor": "#e6e6e6",
+            "borderBottomWidth": 1,
+            "paddingBottom": "20px",
+            "paddingTop": "5px"
+          }
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "meta": {
+          "name": "Label"
+        },
+        "position": {
+          "basis": "32px",
+          "display": false
+        },
+        "propConfig": {
+          "props.text": {
+            "binding": {
+              "config": {
+                "expression": "\"First Name: \" +\r\n{view.custom.first_name} +\r\n\", Last Name: \" +\r\n{view.custom.last_name} + \r\n\", SSN: \" +\r\n{view.custom.ssn} + \r\n\", DOB: \"+\r\n{view.custom.dob} +\r\n\", Race: \" +\r\n{view.custom.race}"
+              },
+              "type": "expr"
+            }
+          }
+        },
+        "props": {
+          "style": {
+            "classes": "Text/Error_Message"
+          }
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "events": {
+          "component": {
+            "onRowClick": {
+              "config": {
+                "script": "\t#Highlight the selected row\n\t#system.perspective.print(\u0027Single Click\u0027)\n\tfor item in range(len(self.props.data)):\n\t\tif item \u003d\u003d event.row:\n\t\t\tself.props.data[item].style.classes \u003d \u0027Table/Row_Select_Detail\u0027\n\t\telse:\n\t\t\tself.props.data[item].style.classes \u003d \u0027Table/Cell_Detail\u0027"
+              },
+              "scope": "G",
+              "type": "script"
+            },
+            "onRowDoubleClick": {
+              "config": {
+                "script": "\t#Trigger the add participant script\n\t#system.perspective.print(self.view.params.func_add_participant)\n\tself.view.custom.func_select_participant \u003d True\t"
+              },
+              "scope": "G",
+              "type": "script"
+            }
+          }
+        },
+        "meta": {
+          "name": "Table"
+        },
+        "position": {
+          "basis": "100%"
+        },
+        "propConfig": {
+          "props.data": {
+            "binding": {
+              "config": {
+                "parameters": {
+                  "dob": "{view.custom.dob}",
+                  "firstName": "{view.custom.first_name}",
+                  "lastName": "{view.custom.last_name}",
+                  "race": "{view.custom.race}",
+                  "ssn": "{view.custom.ssn}"
+                },
+                "queryPath": "Participants/FindParticipants"
+              },
+              "transforms": [
+                {
+                  "code": "\tFirstName \u003d self.view.custom.first_name\n\tLastName \u003d self.view.custom.last_name\n\tDOB \u003d self.view.custom.dob\n\tRace \u003d self.view.custom.race\n\tSSN \u003d self.view.custom.ssn\n\tif FirstName !\u003d \"\" or LastName !\u003d \"\" or DOB !\u003d \"\" or Race !\u003d \"\" or SSN !\u003d \"\":\n\t\t#table_data is the data object to return\n\t\ttable_data \u003d []\n\t\t#Iterate over the results of the query\n\t\tfor row in range(value.getRowCount()):\n\t\t\trow_struct \u003d {}\n\t\t\trow_data \u003d {}\n\t\t\tstyle \u003d {}\t\n\t\t\trow_data[\u0027participant_id\u0027] \u003d value.getValueAt(row, \"participant_id\")\n\t\t\trow_data[\u0027first_name\u0027] \u003d value.getValueAt(row, \"first_name\")\n\t\t\trow_data[\u0027last_name\u0027] \u003d value.getValueAt(row, \"last_name\")\n\t\t\trow_data[\u0027dob\u0027] \u003d value.getValueAt(row, \"dob\")\n\t\t\trow_data[\u0027race\u0027] \u003d value.getValueAt(row, \"race\")\n\t\t\trow_data[\u0027ssn\u0027] \u003d value.getValueAt(row, \"ssn\")\t\n\t\t\t#Set the default style for the row\n\t\t\tstyle[\u0027classes\u0027] \u003d \"Table/Cell_Detail\"\n\t\t\trow_struct[\u0027value\u0027] \u003d row_data\n\t\t\trow_struct[\u0027style\u0027] \u003d style\n\t\t\t#Append the individual row date to the table data object\n\t\t\ttable_data.append(row_struct)\t\t\t\n\t\treturn table_data\n\telse:\n\t\treturn [] ",
+                  "type": "script"
+                }
+              ],
+              "type": "query"
+            }
+          }
+        },
+        "props": {
+          "columns": [
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "participant_id",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header_Detail\nBackground/Default"
+                },
+                "title": "ID"
+              },
+              "justify": "auto",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal_Detail"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 80
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "first_name",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header_Detail\nBackground/Default"
+                },
+                "title": "First Name"
+              },
+              "justify": "auto",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": false,
+              "style": {
+                "classes": "Table/Column_Normal_Detail"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": ""
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "last_name",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Background/Default Table/Column_Header_Detail"
+                },
+                "title": "Last Name"
+              },
+              "justify": "auto",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": false,
+              "style": {
+                "classes": "Table/Column_Normal_Detail"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": ""
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "dob",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Background/Default Table/Column_Header_Detail"
+                },
+                "title": "DOB"
+              },
+              "justify": "auto",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "date",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": false,
+              "style": {
+                "classes": "Table/Column_Normal_Detail"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": ""
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "ssn",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Background/Default Table/Column_Header_Detail"
+                },
+                "title": "SSN"
+              },
+              "justify": "auto",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": false,
+              "style": {
+                "classes": "Table/Column_Normal_Detail"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": ""
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "race",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Background/Default Table/Column_Header_Detail"
+                },
+                "title": "Race"
+              },
+              "justify": "auto",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": false,
+              "style": {
+                "classes": "Table/Column_Normal_Detail"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": ""
+            }
+          ],
+          "pager": {
+            "bottom": false
+          },
+          "rows": {
+            "striped": {
+              "enabled": false
+            },
+            "style": {
+              "cursor": "pointer"
+            }
+          },
+          "style": {
+            "classes": "Background/Default"
+          }
+        },
+        "scripts": {
+          "customMethods": [],
+          "messageHandlers": [
+            {
+              "messageType": "RefreshParticipantSearch",
+              "pageScope": true,
+              "script": "\t\t### Refresh data\n\tsystem.perspective.print(\"Refresh Participant Search\")\n\tself.refreshBinding(\"props.data\")\n\tself.props.selection.selectedRow \u003d None",
+              "sessionScope": true,
+              "viewScope": true
+            }
+          ]
+        },
+        "type": "ia.display.table"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column",
+      "style": {
+        "classes": "Background/Default"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

@@ -1,0 +1,374 @@
+{
+  "custom": {},
+  "params": {},
+  "props": {
+    "defaultSize": {
+      "height": 629,
+      "width": 1043
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "Label"
+        },
+        "position": {
+          "basis": "32px",
+          "display": false
+        },
+        "propConfig": {
+          "props.text": {
+            "binding": {
+              "config": {
+                "expression": "\u0027Employee:\u0027 +\r\n{view.custom.edit_data.employee_id} +\r\n\u0027, Enrollment:\u0027 +\r\n{view.custom.edit_data.enrollment_id} + \r\n\u0027, Service:\u0027 +\r\n{view.custom.edit_data.service_id} + \r\n\u0027, Selected_ID:\u0027 +\r\n{view.custom.edit_data.selected_id} + \r\n\u0027, Add Function:\u0027 +\r\n{view.custom.func_add_participant}"
+              },
+              "type": "expr"
+            }
+          }
+        },
+        "props": {
+          "style": {
+            "classes": "Text/Error_Message"
+          }
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "meta": {
+          "name": "Label_0"
+        },
+        "position": {
+          "basis": "32px",
+          "display": false
+        },
+        "propConfig": {
+          "props.text": {
+            "binding": {
+              "config": {
+                "path": "view.custom.edit_data.search_selection"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "style": {
+            "classes": "Text/Error_Message"
+          }
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "meta": {
+          "name": "Label_1"
+        },
+        "position": {
+          "basis": "32px",
+          "display": false
+        },
+        "propConfig": {
+          "props.text": {
+            "binding": {
+              "config": {
+                "path": "view.custom.edit_data.selected_id_list"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "style": {
+            "classes": "Text/Error_Message"
+          }
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "meta": {
+          "name": "Label_2"
+        },
+        "position": {
+          "basis": "32px",
+          "display": false
+        },
+        "propConfig": {
+          "props.text": {
+            "binding": {
+              "config": {
+                "path": "view.custom.edit_data.selected_participants"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "style": {
+            "classes": "Text/Error_Message"
+          }
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "meta": {
+          "name": "EmbeddedViewSpacer"
+        },
+        "position": {
+          "basis": "24px"
+        },
+        "props": {
+          "params": {
+            "HMIS": "",
+            "comment": "",
+            "employee_id": -1,
+            "enrollment_id": 39,
+            "quantity": -1,
+            "service_id": 0
+          },
+          "path": "Volunteers/ListGeneration/Cards/PanelSpacer"
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "EmbeddedView"
+        },
+        "position": {
+          "basis": "200px",
+          "grow": 1
+        },
+        "props": {
+          "path": "Volunteers/ListGeneration/Cards/PanelSearchSelect",
+          "style": {
+            "marginLeft": 25,
+            "marginRight": 25
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "children": [
+          {
+            "meta": {
+              "name": "Label_1"
+            },
+            "position": {
+              "basis": "50px",
+              "grow": 1
+            },
+            "props": {
+              "text": "Label"
+            },
+            "type": "ia.display.label"
+          },
+          {
+            "meta": {
+              "name": "dropdownFilter"
+            },
+            "position": {
+              "basis": "140px"
+            },
+            "props": {
+              "options": [
+                {
+                  "label": "Filter 1",
+                  "value": 1
+                },
+                {
+                  "label": "Filter 2",
+                  "value": 2
+                },
+                {
+                  "label": "Filter 3",
+                  "value": 3
+                },
+                {
+                  "label": "Filter 4",
+                  "value": 4
+                },
+                {
+                  "label": "Filter 5",
+                  "value": 5
+                },
+                {
+                  "label": "Filter 6",
+                  "value": 6
+                },
+                {
+                  "label": "Filter 7",
+                  "value": 7
+                },
+                {
+                  "label": "Filter 8",
+                  "value": 8
+                }
+              ],
+              "placeholder": {
+                "text": "Select Filter"
+              },
+              "style": {
+                "classes": "Dropdowns/DD_Options"
+              }
+            },
+            "type": "ia.input.dropdown"
+          },
+          {
+            "events": {
+              "component": {
+                "onActionPerformed": {
+                  "config": {
+                    "script": "\tFilter \u003d self.getSibling(\"dropdownFilter\").props.value\n\tif Filter \u003e 0:\n\t\tmT \u003d \u0027SaveFilterDataset\u0027\n\t\tpayload \u003d {\"filter\":Filter}\n\t\tsystem.perspective.sendMessage(mT, payload\u003dpayload)\n\telse:\n\t\tsystem.perspective.print(\u0027No filter selected\u0027)"
+                  },
+                  "scope": "G",
+                  "type": "script"
+                }
+              }
+            },
+            "meta": {
+              "name": "buttonSaveFilter"
+            },
+            "position": {
+              "basis": "140px"
+            },
+            "propConfig": {
+              "props.enabled": {
+                "binding": {
+                  "config": {
+                    "expression": "{../dropdownFilter.props.value} \u003e 0"
+                  },
+                  "type": "expr"
+                }
+              }
+            },
+            "props": {
+              "style": {
+                "classes": "Buttons/Main",
+                "marginBottom": "5px",
+                "marginLeft": "10px",
+                "marginTop": "5px"
+              },
+              "text": "Save Filter"
+            },
+            "type": "ia.input.button"
+          },
+          {
+            "events": {
+              "component": {
+                "onActionPerformed": {
+                  "config": {
+                    "script": "\tmT \u003d \u0027ExportVolunteerListCSV\u0027\n\tsystem.perspective.sendMessage(mT)"
+                  },
+                  "scope": "G",
+                  "type": "script"
+                }
+              }
+            },
+            "meta": {
+              "name": "buttonSaveCSV"
+            },
+            "position": {
+              "basis": "140px",
+              "shrink": 0
+            },
+            "props": {
+              "style": {
+                "classes": "Buttons/Main",
+                "marginBottom": "5px",
+                "marginLeft": "10px",
+                "marginTop": "5px"
+              },
+              "text": "Save CSV"
+            },
+            "type": "ia.input.button"
+          },
+          {
+            "events": {
+              "component": {
+                "onActionPerformed": {
+                  "config": {
+                    "script": "\tmT \u003d \u0027ExportVolunteerListExcel\u0027\n\tsystem.perspective.sendMessage(mT)"
+                  },
+                  "scope": "G",
+                  "type": "script"
+                }
+              }
+            },
+            "meta": {
+              "name": "buttonSaveExcel"
+            },
+            "position": {
+              "basis": "140px"
+            },
+            "props": {
+              "style": {
+                "classes": "Buttons/Main",
+                "marginBottom": "5px",
+                "marginLeft": "10px",
+                "marginTop": "5px"
+              },
+              "text": "Save Excel"
+            },
+            "type": "ia.input.button"
+          },
+          {
+            "meta": {
+              "name": "Label",
+              "visible": false
+            },
+            "position": {
+              "basis": "50px",
+              "grow": 1
+            },
+            "props": {
+              "style": {
+                "classes": "Text/Error_Message"
+              },
+              "text": "Please fill in all the fields correctly before saving."
+            },
+            "scripts": {
+              "customMethods": [
+                {
+                  "name": "showMessage",
+                  "params": [
+                    "message"
+                  ],
+                  "script": "\timport time\n\tself.props.text \u003d message\n\tself.meta.visible \u003d True\n\ttime.sleep(5)\n\tself.meta.visible \u003d False\n\t"
+                }
+              ],
+              "extensionFunctions": null,
+              "messageHandlers": []
+            },
+            "type": "ia.display.label"
+          }
+        ],
+        "meta": {
+          "name": "root Actions"
+        },
+        "position": {
+          "basis": "50px"
+        },
+        "props": {
+          "style": {
+            "borderTopColor": "#9db8d1",
+            "borderTopStyle": "solid",
+            "borderTopWidth": "1px",
+            "classes": "Background/Default",
+            "marginTop": "5px",
+            "paddingTop": "5px"
+          }
+        },
+        "type": "ia.container.flex"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column",
+      "style": {
+        "classes": "Background/Default"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

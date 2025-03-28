@@ -1,0 +1,202 @@
+{
+  "custom": {
+    "events": [],
+    "note": ""
+  },
+  "params": {
+    "column": "",
+    "rowData": {
+      "date": {
+        "style": "value",
+        "value": "2023-06-26 07:00:00"
+      }
+    },
+    "value": {
+      "style": "",
+      "value": ""
+    }
+  },
+  "propConfig": {
+    "custom.events": {
+      "binding": {
+        "config": {
+          "path": "view.params.value.value"
+        },
+        "transforms": [
+          {
+            "code": "\tdata \u003d []\n\tif value is not None and value !\u003d \u0027\u0027 and value !\u003d \u0027 \u0027:\n\t\tdata \u003d value.split(\",\")\n\t\t\n\treturn data",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      },
+      "persistent": true
+    },
+    "custom.note": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "Time": "{view.params.rowData.date.value}",
+            "location": "{view.params.column}"
+          },
+          "queryPath": "Event/ParticipantEvents/WeeklySchedule/Get_WeeklyScheduleNote"
+        },
+        "transforms": [
+          {
+            "code": "\tdataset \u003d value\n\tif dataset.getRowCount()\u003e0:\n\t\treturn dataset.getValueAt(0,\u0027note\u0027)\n\telse:\n\t\treturn \u0027\u0027",
+            "type": "script"
+          }
+        ],
+        "type": "query"
+      },
+      "persistent": true
+    },
+    "params.column": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.rowData": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.value": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "props.defaultSize.height": {
+      "binding": {
+        "config": {
+          "struct": {
+            "events": "{view.custom.events}",
+            "note": "{view.custom.note}"
+          },
+          "waitOnAll": true
+        },
+        "transforms": [
+          {
+            "code": "\tnote \u003d value[\u0027note\u0027]\n\tevents \u003d value[\u0027events\u0027]\n\n\tnoteHeight \u003d 30\n\tif note !\u003d None and note !\u003d \u0027\u0027:\n\t\tif events !\u003d None and len(events) \u003e 1:\n\t\t\theightValue \u003d noteHeight + (len (events) * 30)\n\t\telse:\n\t\t\theightValue \u003d 30\n\telse:\n\t\tif events !\u003d None and len(events) \u003e 1:\n\t\t\theightValue \u003d 20 + (len (events) * 30)\n\t\telse:\n\t\t\theightValue \u003d 30\n\t\t\t\n\t\n\treturn heightValue",
+            "type": "script"
+          }
+        ],
+        "type": "expr-struct"
+      }
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "width": 100
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "Note_0"
+        },
+        "position": {
+          "grow": 1
+        },
+        "propConfig": {
+          "position.display": {
+            "binding": {
+              "config": {
+                "path": "view.custom.note"
+              },
+              "transforms": [
+                {
+                  "code": "\tif value !\u003d None and value !\u003d \u0027\u0027:\n\t\treturn True\n\telse:\n\t\treturn False",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          },
+          "props.text": {
+            "binding": {
+              "config": {
+                "path": "view.custom.note"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "style": {
+            "overflow": "visible"
+          },
+          "textStyle": {
+            "color": "#FF0000",
+            "overflowWrap": "break-word",
+            "textAlign": "left"
+          }
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "meta": {
+          "name": "FlexRepeater"
+        },
+        "position": {
+          "grow": 1
+        },
+        "propConfig": {
+          "position.display": {
+            "binding": {
+              "config": {
+                "expression": "{this.props.instances} !\u003d None \u0026\u0026 len({this.props.instances}) \u003e 0"
+              },
+              "type": "expr"
+            }
+          },
+          "props.instances": {
+            "binding": {
+              "config": {
+                "path": "view.custom.events"
+              },
+              "transforms": [
+                {
+                  "code": "\tinstances \u003d []\n\t\n\tfor oneData in value:\n\t\toneInstance \u003d {\n\t\t  \"instanceStyle\": {\n\t\t    \"classes\": \"\"\n\t\t  },\n\t\t  \"instancePosition\": {},\n\t\t  \"value\": oneData\n\t\t}\n\t\tinstances.append(oneInstance)\n\treturn instances",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "direction": "column",
+          "path": "Events/ParticipantEvents/Event_WeeklyClassSchedule/Dashboard/Main/Templates/EventNameSubView",
+          "style": {
+            "overflow": "hidden"
+          },
+          "useDefaultViewWidth": false
+        },
+        "type": "ia.display.flex-repeater"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column",
+      "justify": "center",
+      "style": {
+        "gap": 5
+      }
+    },
+    "scripts": {
+      "customMethods": [],
+      "extensionFunctions": null,
+      "messageHandlers": [
+        {
+          "messageType": "refreshTable",
+          "pageScope": true,
+          "script": "\t# implement your handler here\n\tself.view.refreshBinding(\u0027custom.note\u0027)",
+          "sessionScope": true,
+          "viewScope": false
+        }
+      ]
+    },
+    "type": "ia.container.flex"
+  }
+}

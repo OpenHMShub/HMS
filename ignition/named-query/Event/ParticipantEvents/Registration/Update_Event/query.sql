@@ -1,0 +1,22 @@
+Update 
+	[participant].[Events]
+SET
+	[categoryId]=:categoryId,
+	[name]=:eventName,
+	[startsOn]=:startsOn,
+	[endsOn]=:endsOn,
+	[allDayEvent]=:all_day,
+	[description]=:description,
+	[repeatFrequencyTypeId]=:repeatFrequencyTypeId,
+	[dateSelectionPattern]=:dateSelectionPattern,
+	[dateSelectionDays]=:dateSelectionDays,
+	[points]=:points,
+	[facilitatorEmployeeId]=:facilitatorEmployeeId,
+	[IsEventRepeat]=:IsEventRepeat,
+	[repeatDateUntil]=:repeatDateUntil,
+	[scheduledWeekdays]=:scheduledWeekdays,
+	[duration_hours]=:duration_hours,
+	[locationId]=:locationId,
+	[timeRetired]=:timeRetired
+Where
+	id = :eventId

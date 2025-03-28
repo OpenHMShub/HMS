@@ -1,0 +1,296 @@
+{
+  "custom": {
+    "edit_data": {
+      "note": "Start typing to create a case note...",
+      "note_id": -1,
+      "volunteerId": 2
+    }
+  },
+  "params": {
+    "row_data": {
+      "note": "Start typing to create a case note...",
+      "note_id": -1,
+      "volunteerId": 2
+    }
+  },
+  "propConfig": {
+    "custom.edit_data": {
+      "binding": {
+        "config": {
+          "path": "view.params.row_data"
+        },
+        "type": "property"
+      },
+      "persistent": true
+    },
+    "custom.edit_data.id": {
+      "binding": {
+        "config": {
+          "path": "view.params.row_data.id"
+        },
+        "type": "property"
+      },
+      "onChange": {
+        "enabled": null,
+        "script": "\t#Move the row data to the edit data any time the row id changes\n\tself.custom.edit_data \u003d self.params.row_data"
+      }
+    },
+    "custom.edit_data.note_id": {
+      "onChange": {
+        "enabled": null,
+        "script": "\t#Move the row data to the edit data any time the row id changes\n\tself.custom.edit_data \u003d self.params.row_data"
+      }
+    },
+    "custom.edit_data[0].id": {
+      "binding": {
+        "config": {
+          "path": "view.params.drugscreenlogid"
+        },
+        "type": "property"
+      }
+    },
+    "params.row_data": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.row_data.note_id": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 200,
+      "width": 1043
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "EmbeddedView Header"
+        },
+        "position": {
+          "basis": "25px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.Text": {
+            "binding": {
+              "config": {
+                "path": "view.custom.edit_data.note_id"
+              },
+              "transforms": [
+                {
+                  "expression": "if({value} \u003d -1,\u0027New Note\u0027,\u0027Edit Note\u0027)",
+                  "type": "expression"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "path": "Volunteers/Notes/Cards/EditNoteHeader"
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "EmbeddedView Row1"
+        },
+        "position": {
+          "basis": "110px"
+        },
+        "propConfig": {
+          "props.params.note": {
+            "binding": {
+              "config": {
+                "bidirectional": true,
+                "path": "view.custom.edit_data.note"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "path": "Volunteers/Detail/Cards/Notes/Detail/Cards/Row1",
+          "style": {
+            "marginLeft": 25,
+            "marginRight": 25
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "children": [
+          {
+            "events": {
+              "component": {
+                "onActionPerformed": {
+                  "config": {
+                    "script": "\t#system.perspective.print(\"New Case Note Button Pressed\")\n\t#Send the message to refresh the table\n\tmessageType \u003d \u0027refreshNotesDetail\u0027\n\tsystem.perspective.sendMessage(messageType)\n\tself.view.params.row_data.note \u003d \u0027\u0027"
+                  },
+                  "scope": "G",
+                  "type": "script"
+                }
+              }
+            },
+            "meta": {
+              "name": "button_new"
+            },
+            "position": {
+              "basis": "120px",
+              "shrink": 0
+            },
+            "props": {
+              "style": {
+                "classes": "Buttons/Secondary",
+                "marginBottom": "5px",
+                "marginLeft": "20px",
+                "marginTop": "5px"
+              },
+              "text": "New Note"
+            },
+            "type": "ia.input.button"
+          },
+          {
+            "events": {
+              "component": {
+                "onActionPerformed": {
+                  "config": {
+                    "script": "\t### Declare parameters\n\tproject \u003d \"RITI\" \n\tnote_id \u003d self.view.custom.edit_data.note_id\n\t\t\n\t## Check if parameters are filled in correctly \n\tif (note_id is None) or (int(note_id) \u003c 0):\n\t\tvalid \u003d False\n\t\tsystem.perspective.print(\"Note ID Error\")\n\telse:\n\t\tvalid \u003d True\n\t\tsystem.perspective.print(\"Data Valid\")\n\t\t\t\n\t### Check if data is valid otherwise show error message.\n\tif valid:\n\t\ttry:\n\t\t#Delete the Case Note\n\t\t\tpath \u003d \"Volunteers/Notes/VolunteerNotesDelete\"\n\t\t\tparameters \u003d {\"id\":note_id}\n\t\t\t#system.perspective.print(\u0027Delete Case Note: \u0027 + str(note_id))\n\t\t\tRefresh \u003d system.db.runNamedQuery(project\u003dproject,path\u003dpath,parameters\u003dparameters, getKey\u003dTrue)\t\t\n\t\n\t\t\t##### Refresh the table\n\t\t\tsystem.perspective.sendMessage(messageType\u003d\"refreshNotesData\", payload\u003d{}, scope\u003d\"session\")\n\t\t\t\n\t\texcept:\n\t\t\tself.getSibling(\"Label\").showMessage(\"Something went wrong while deleting data. Please try again.\")\t\n\telse:\n\t\tself.getSibling(\"Label\").showMessage(\"Something went wrong while saving data. Please try again.\")\t\n\t"
+                  },
+                  "scope": "G",
+                  "type": "script"
+                }
+              }
+            },
+            "meta": {
+              "name": "button_delete"
+            },
+            "position": {
+              "basis": "120px",
+              "shrink": 0
+            },
+            "propConfig": {
+              "position.display": {
+                "binding": {
+                  "config": {
+                    "expression": "if({view.custom.edit_data.note_id} \u003d -1, False, True)"
+                  },
+                  "type": "expr"
+                }
+              }
+            },
+            "props": {
+              "style": {
+                "classes": "Buttons/Delete",
+                "marginBottom": "5px",
+                "marginLeft": "10px",
+                "marginTop": "5px"
+              },
+              "text": "Delete Note"
+            },
+            "type": "ia.input.button"
+          },
+          {
+            "events": {
+              "component": {
+                "onActionPerformed": {
+                  "config": {
+                    "script": "\t\n\tproject \u003d \"RITI\"\n\t### Declare parameters \n\tnote_id \u003d self.view.custom.edit_data.note_id\n\tuser_name \u003d self.session.props.auth.user.userName\n\tvolunteerId \u003d self.view.custom.edit_data.volunteerId\n\tnote \u003d self.view.custom.edit_data.note\n\n\t\n\t## Check if parameters are filled in correctly \n\tvalid \u003d True\n\tif (note_id is None):\n\t\tvalid \u003d False\n\t\tsystem.perspective.print(\"Note ID Error\")\n\telif (volunteerId is None) or (int(volunteerId) \u003c 0):\n\t\tvalid \u003d False\n\t\tsystem.perspective.print(\"Provider ID Error\")\n\telif valid \u003d\u003d True:\n\t\tsystem.perspective.print(\"Data Valid\")\n\t\t\n\t### Check if data is valid otherwise show error message.\n\tif valid:\n#\t\ttry:\n\t\t\t### Check if the user is creating new data\n\t\tif note_id \u003d\u003d -1:#Insert new data, no row_id\n\t\t\t#system.perspective.print(\"Insert New Data\")\n\t\t\tpath \u003d \"Volunteers/Notes/NotesDetailInsert\"\n\t\t\tparameters \u003d {\"volunteerId\":volunteerId,\n\t\t\t\t\t\t\"note\":note,\n\t\t\t\t\t\t\"userName\":user_name}\n\t\t\tnote_row \u003d system.db.runNamedQuery(project\u003dproject,path\u003dpath,parameters\u003dparameters, getKey\u003dTrue)\t\t\n\t\t\t#system.perspective.print(\"Insert Note\")\n\t\t\t#system.perspective.print(note_row)\t\t\t\t\t\t\t\t\t\t\t\n\t\t\tRefresh \u003d True\n\t\t\t\n\t\t##### Check if the user is editing existing data\n\t\telif note_id \u003e\u003d 0:#Update existing data on specified row_id\n\t\t\t#self.getSibling(\"Label\").showMessage(\"Note id greater than 0\")\n\t\t\t#system.perspective.print(\"Update Exisiting Data\")\n\t\t\tpath \u003d \"Volunteers/Notes/NotesDetailUpdate\"\n\t\t\tparameters \u003d {\"volunteerId\":volunteerId,\n\t\t\t\t\t\t\"note\":note,\n\t\t\t\t\t\t\"id\":note_id,\n\t\t\t\t\t\t\"userName\":user_name}\n\t\t\tnothing \u003d system.db.runNamedQuery(project\u003dproject,path\u003dpath,parameters\u003dparameters, getKey\u003dTrue)\n\t\t\t#system.perspective.print(\"Insert Note\")\n\t\t\t#system.perspective.print(note_id)\n\t\t\tRefresh \u003d True\n\t\t\t\n\t\tif Refresh:\n\t\t\tsystem.perspective.print(\"Query Success\")\n\t\tsystem.perspective.sendMessage(messageType\u003d\"refreshNotesData\", payload\u003d{}, scope\u003d\"session\")\n\t\tself.view.params.row_data.note \u003d \u0027\u0027\n\t\t\n#\t\texcept:\n#\t\t\tself.getSibling(\"Label\").showMessage(\"Something went wrong while saving data. Please try again.\")\t\n\telse:\n\t\tself.getSibling(\"Label\").showMessage(\"Please fill in all the fields correctly before saving.\")"
+                  },
+                  "scope": "G",
+                  "type": "script"
+                }
+              }
+            },
+            "meta": {
+              "name": "button_save"
+            },
+            "position": {
+              "basis": "120px"
+            },
+            "propConfig": {
+              "props.text": {
+                "binding": {
+                  "config": {
+                    "expression": "if({view.custom.edit_data.note_id} \u003d -1,\u0027Save Note\u0027,\u0027Update Note\u0027)"
+                  },
+                  "type": "expr"
+                }
+              }
+            },
+            "props": {
+              "style": {
+                "classes": "Buttons/Main",
+                "marginBottom": "5px",
+                "marginLeft": "10px",
+                "marginTop": "5px"
+              }
+            },
+            "type": "ia.input.button"
+          },
+          {
+            "meta": {
+              "name": "Label",
+              "visible": false
+            },
+            "position": {
+              "basis": "50px",
+              "grow": 1
+            },
+            "props": {
+              "style": {
+                "classes": "Text/Error_Message"
+              },
+              "text": "Note id -1"
+            },
+            "scripts": {
+              "customMethods": [
+                {
+                  "name": "showMessage",
+                  "params": [
+                    "message"
+                  ],
+                  "script": "\timport time\n\tself.props.text \u003d message\n\tself.meta.visible \u003d True\n\ttime.sleep(5)\n\tself.meta.visible \u003d False\n\t"
+                }
+              ],
+              "extensionFunctions": null,
+              "messageHandlers": []
+            },
+            "type": "ia.display.label"
+          }
+        ],
+        "meta": {
+          "name": "root Actions"
+        },
+        "position": {
+          "basis": "50px"
+        },
+        "props": {
+          "style": {
+            "borderTopColor": "#9db8d1",
+            "borderTopStyle": "solid",
+            "borderTopWidth": "1px",
+            "classes": "Background/Default",
+            "marginTop": "5px",
+            "paddingTop": "5px"
+          }
+        },
+        "type": "ia.container.flex"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column",
+      "style": {
+        "classes": "Background/Default"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

@@ -1,0 +1,478 @@
+{
+  "custom": {},
+  "params": {
+    "participantId": 20
+  },
+  "propConfig": {
+    "params.participantId": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 250,
+      "width": 390
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "children": [
+          {
+            "meta": {
+              "name": "Label"
+            },
+            "position": {
+              "basis": "40%"
+            },
+            "props": {
+              "style": {
+                "classes": "Text/Summary_Title"
+              },
+              "text": "Search Shelters",
+              "textStyle": {
+                "textAlign": "start"
+              }
+            },
+            "type": "ia.display.label"
+          },
+          {
+            "meta": {
+              "name": "EmbeddedView"
+            },
+            "position": {
+              "basis": "55%"
+            },
+            "props": {
+              "params": {
+                "placeholder": "Search",
+                "text": ""
+              },
+              "path": "1_globalTEMPLATES/Filtering/Conditionals/Conditional_Text"
+            },
+            "type": "ia.display.view"
+          }
+        ],
+        "meta": {
+          "name": "Header"
+        },
+        "position": {
+          "basis": "35px"
+        },
+        "props": {
+          "style": {
+            "classes": "Background/Default"
+          }
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "children": [
+          {
+            "events": {
+              "component": {
+                "onRowClick": {
+                  "config": {
+                    "script": "\tselectedColumn \u003d self.props.selection.selectedColumn\n\tif selectedColumn \u003d\u003d \"facilty_id\":\n\t\tid \u003d \"PreviewShelter\" \n\t\tparams \u003d {\"shelterID\":self.props.selection.data[0].facilty_id}\n\t\tsystem.perspective.openDock(id\u003did,params\u003dparams)\n\telif selectedColumn \u003d\u003d \"check_in\" or selectedColumn \u003d\u003d \"facility_name\":\n\t\tsystem.perspective.navigate(view \u003d \u0027Shelter/Detail/Shelter_Detail\u0027, params \u003d {\u0027shelterID\u0027:self.props.selection.data[0].facilty_id})"
+                  },
+                  "scope": "G",
+                  "type": "script"
+                }
+              }
+            },
+            "meta": {
+              "name": "Table"
+            },
+            "position": {
+              "basis": "100%"
+            },
+            "propConfig": {
+              "props.data": {
+                "binding": {
+                  "config": {
+                    "parameters": {
+                      "participantId": "{view.params.participantId}",
+                      "shelterName": "{/root.custom.searchText}"
+                    },
+                    "queryPath": "Participants/DetailsSummary/ParticipantsAttendedSheltersList"
+                  },
+                  "transforms": [
+                    {
+                      "code": "\treturnData \u003d []\n\tif value is not None and value.getRowCount() \u003e 0:\n\t\tfor i in range(value.getRowCount()):\n\t\t\toneData \u003d {}\n\t\t\tstyleNone \u003d {}\n\t\t\tstyleNone[\u0027classes\u0027] \u003d None\n\t\t\t\n\t\t\tstyleGrey \u003d {}\n\t\t\tstyleGrey[\u0027classes\u0027] \u003d \"Text/Add_HeaderText\"\n\t\t\toneData[\u0027participant_id\u0027] \u003d {\u0027value\u0027:value.getValueAt(i,\u0027participant_id\u0027), \u0027style\u0027:styleNone}\n\t\t\toneData[\u0027facility_name\u0027] \u003d {\u0027value\u0027:value.getValueAt(i,\u0027facility_name\u0027), \u0027style\u0027:styleNone}\n\t\t\toneData[\u0027facilty_id\u0027] \u003d {\u0027value\u0027:value.getValueAt(i,\u0027facilty_id\u0027), \u0027style\u0027:styleNone}\n\t\t\toneData[\u0027room_id\u0027] \u003d {\u0027value\u0027:value.getValueAt(i,\u0027room_id\u0027), \u0027style\u0027:styleNone}\n\t\t\toneData[\u0027room_name\u0027] \u003d {\u0027value\u0027:value.getValueAt(i,\u0027room_name\u0027), \u0027style\u0027:styleNone}\n\t\t\toneData[\u0027bed_id\u0027] \u003d {\u0027value\u0027:value.getValueAt(i,\u0027bed_id\u0027), \u0027style\u0027:styleNone}\n\t\t\toneData[\u0027bed_name\u0027] \u003d {\u0027value\u0027:value.getValueAt(i,\u0027bed_name\u0027), \u0027style\u0027:styleNone}\n\t\t\toneData[\u0027check_out\u0027] \u003d {\u0027value\u0027:value.getValueAt(i,\u0027check_out\u0027), \u0027style\u0027:styleNone}\n\t\t\tif value.getValueAt(i,\u0027check_out\u0027) is None or value.getValueAt(i,\u0027check_out\u0027) \u003d\u003d \"\":\n\t\t\t\toneData[\u0027check_in\u0027] \u003d {\u0027value\u0027:value.getValueAt(i,\u0027check_in\u0027), \u0027style\u0027:styleNone}\n\t\t\telse:\n\t\t\t\toneData[\u0027check_in\u0027] \u003d {\u0027value\u0027:value.getValueAt(i,\u0027check_in\u0027), \u0027style\u0027:styleGrey}\n\t\t\t\n\t\t\treturnData.append(oneData)\n\treturn returnData",
+                      "type": "script"
+                    }
+                  ],
+                  "type": "query"
+                }
+              },
+              "props.selection.style.backgroundColor": {
+                "binding": {
+                  "config": {
+                    "path": "this.props.selection.selectedRow"
+                  },
+                  "transforms": [
+                    {
+                      "code": "\treturn \"#FFFFFF00\" if value is None or value \u003d\u003d -1 else \"#9AF4EB4D\"",
+                      "type": "script"
+                    }
+                  ],
+                  "type": "property"
+                }
+              }
+            },
+            "props": {
+              "cells": {
+                "allowEditOn": "single-click",
+                "style": {
+                  "classes": "Table/Cell_Detail_NoBG"
+                }
+              },
+              "columns": [
+                {
+                  "align": "center",
+                  "boolean": "checkbox",
+                  "dateFormat": "MM/DD/YYYY",
+                  "editable": false,
+                  "field": "facilty_id",
+                  "footer": {
+                    "align": "center",
+                    "justify": "left",
+                    "style": {
+                      "classes": ""
+                    },
+                    "title": ""
+                  },
+                  "header": {
+                    "align": "center",
+                    "justify": "left",
+                    "style": {
+                      "classes": "Table/Column_Header_Detail"
+                    },
+                    "title": " "
+                  },
+                  "justify": "auto",
+                  "number": "value",
+                  "numberFormat": "0,0.##",
+                  "progressBar": {
+                    "bar": {
+                      "color": "",
+                      "style": {
+                        "classes": ""
+                      }
+                    },
+                    "max": 100,
+                    "min": 0,
+                    "track": {
+                      "color": "",
+                      "style": {
+                        "classes": ""
+                      }
+                    },
+                    "value": {
+                      "enabled": true,
+                      "format": "0,0.##",
+                      "justify": "center",
+                      "style": {
+                        "classes": ""
+                      }
+                    }
+                  },
+                  "render": "view",
+                  "resizable": true,
+                  "sort": "none",
+                  "sortable": false,
+                  "strictWidth": true,
+                  "style": {
+                    "classes": ""
+                  },
+                  "toggleSwitch": {
+                    "color": {
+                      "selected": "",
+                      "unselected": ""
+                    }
+                  },
+                  "viewParams": {},
+                  "viewPath": "1_TEMPLATES/Tables/TableOptions",
+                  "visible": true,
+                  "width": 30
+                },
+                {
+                  "align": "center",
+                  "boolean": "checkbox",
+                  "dateFormat": "MM/DD/YYYY",
+                  "editable": false,
+                  "field": "facility_name",
+                  "footer": {
+                    "align": "center",
+                    "justify": "left",
+                    "style": {
+                      "classes": ""
+                    },
+                    "title": ""
+                  },
+                  "header": {
+                    "align": "center",
+                    "justify": "left",
+                    "style": {
+                      "classes": "Table/Column_Header_Detail"
+                    },
+                    "title": "Shelter"
+                  },
+                  "justify": "auto",
+                  "number": "value",
+                  "numberFormat": "0,0.##",
+                  "progressBar": {
+                    "bar": {
+                      "color": "",
+                      "style": {
+                        "classes": ""
+                      }
+                    },
+                    "max": 100,
+                    "min": 0,
+                    "track": {
+                      "color": "",
+                      "style": {
+                        "classes": ""
+                      }
+                    },
+                    "value": {
+                      "enabled": true,
+                      "format": "0,0.##",
+                      "justify": "center",
+                      "style": {
+                        "classes": ""
+                      }
+                    }
+                  },
+                  "render": "auto",
+                  "resizable": true,
+                  "sort": "none",
+                  "sortable": true,
+                  "strictWidth": false,
+                  "style": {
+                    "classes": "",
+                    "cursor": "pointer"
+                  },
+                  "toggleSwitch": {
+                    "color": {
+                      "selected": "",
+                      "unselected": ""
+                    }
+                  },
+                  "viewParams": {},
+                  "viewPath": "",
+                  "visible": true,
+                  "width": 80
+                },
+                {
+                  "align": "center",
+                  "boolean": "checkbox",
+                  "dateFormat": "MM/DD/YYYY",
+                  "editable": false,
+                  "field": "check_in",
+                  "footer": {
+                    "align": "center",
+                    "justify": "left",
+                    "style": {
+                      "classes": ""
+                    },
+                    "title": ""
+                  },
+                  "header": {
+                    "align": "center",
+                    "justify": "left",
+                    "style": {
+                      "classes": "Table/Column_Header_Detail"
+                    },
+                    "title": "Check-In"
+                  },
+                  "justify": "auto",
+                  "number": "value",
+                  "numberFormat": "0,0.##",
+                  "progressBar": {
+                    "bar": {
+                      "color": "",
+                      "style": {
+                        "classes": ""
+                      }
+                    },
+                    "max": 100,
+                    "min": 0,
+                    "track": {
+                      "color": "",
+                      "style": {
+                        "classes": ""
+                      }
+                    },
+                    "value": {
+                      "enabled": true,
+                      "format": "0,0.##",
+                      "justify": "center",
+                      "style": {
+                        "classes": ""
+                      }
+                    }
+                  },
+                  "render": "date",
+                  "resizable": true,
+                  "sort": "none",
+                  "sortable": true,
+                  "strictWidth": false,
+                  "style": {
+                    "classes": "",
+                    "cursor": "pointer"
+                  },
+                  "toggleSwitch": {
+                    "color": {
+                      "selected": "",
+                      "unselected": ""
+                    }
+                  },
+                  "viewParams": {},
+                  "viewPath": "",
+                  "visible": true,
+                  "width": 50
+                },
+                {
+                  "align": "center",
+                  "boolean": "checkbox",
+                  "dateFormat": "MM/DD/YYYY",
+                  "editable": false,
+                  "field": "check_out",
+                  "footer": {
+                    "align": "center",
+                    "justify": "left",
+                    "style": {
+                      "classes": ""
+                    },
+                    "title": ""
+                  },
+                  "header": {
+                    "align": "center",
+                    "justify": "left",
+                    "style": {
+                      "classes": "Table/Column_Header_Detail"
+                    },
+                    "title": "Check-Out"
+                  },
+                  "justify": "auto",
+                  "number": "value",
+                  "numberFormat": "0,0.##",
+                  "progressBar": {
+                    "bar": {
+                      "color": "",
+                      "style": {
+                        "classes": ""
+                      }
+                    },
+                    "max": 100,
+                    "min": 0,
+                    "track": {
+                      "color": "",
+                      "style": {
+                        "classes": ""
+                      }
+                    },
+                    "value": {
+                      "enabled": true,
+                      "format": "0,0.##",
+                      "justify": "center",
+                      "style": {
+                        "classes": ""
+                      }
+                    }
+                  },
+                  "render": "date",
+                  "resizable": true,
+                  "sort": "none",
+                  "sortable": true,
+                  "strictWidth": false,
+                  "style": {
+                    "classes": "",
+                    "cursor": "pointer"
+                  },
+                  "toggleSwitch": {
+                    "color": {
+                      "selected": "",
+                      "unselected": ""
+                    }
+                  },
+                  "viewParams": {},
+                  "viewPath": "",
+                  "visible": true,
+                  "width": 50
+                }
+              ],
+              "pager": {
+                "bottom": false,
+                "initialOption": 100
+              },
+              "rows": {
+                "highlight": {
+                  "color": "#CCFFFF"
+                },
+                "striped": {
+                  "color": {
+                    "even": "#8AFFFF"
+                  },
+                  "enabled": false
+                },
+                "style": {
+                  "classes": "Table/Cell_Detail"
+                }
+              },
+              "selection": {
+                "selectedRow": -1
+              },
+              "style": {
+                "classes": "Text/Summary_Title"
+              }
+            },
+            "type": "ia.display.table"
+          }
+        ],
+        "meta": {
+          "name": "Details"
+        },
+        "position": {
+          "basis": "200px",
+          "grow": 1
+        },
+        "props": {
+          "style": {
+            "classes": "Background/Default"
+          }
+        },
+        "type": "ia.container.flex"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "propConfig": {
+      "custom.searchText": {
+        "binding": {
+          "config": {
+            "path": "./Header/EmbeddedView.props.params.text"
+          },
+          "transforms": [
+            {
+              "code": "\tif value is None or value \u003d\u003d \"\":\n\t\treturn None\n\telse:\n\t\treturn \"%\" + str(value) + \"%\"",
+              "type": "script"
+            }
+          ],
+          "type": "property"
+        }
+      }
+    },
+    "props": {
+      "direction": "column",
+      "style": {
+        "classes": "Background/Default"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

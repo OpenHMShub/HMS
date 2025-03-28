@@ -1,0 +1,163 @@
+{
+  "custom": {
+    "data": [
+      {
+        "Date": "",
+        "Note": "",
+        "Time": "",
+        "User": "No Case Note Entered Yet."
+      }
+    ]
+  },
+  "params": {
+    "More": false,
+    "trackID": -1
+  },
+  "propConfig": {
+    "custom.data": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "vendor_id": "{view.params.trackID}"
+          },
+          "queryPath": "Vendors/NotesPreviewSelect",
+          "returnFormat": "json"
+        },
+        "transforms": [
+          {
+            "code": "\tif len(value):\n\t\treturn value\n\telse:\n\t\treturn [{\n\t  \"Note\": \"\",\n\t  \"User\": \"No Case Note Entered Yet.\",\n\t  \"Date\": \"\",\n\t  \"Time\": \"\"\n\t}]",
+            "type": "script"
+          }
+        ],
+        "type": "query"
+      },
+      "persistent": true
+    },
+    "params.More": {
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.trackID": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 118,
+      "width": 600
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "Label_0"
+        },
+        "position": {
+          "basis": "32px"
+        },
+        "propConfig": {
+          "props.text": {
+            "binding": {
+              "config": {
+                "expression": "{view.custom.data[0]}"
+              },
+              "transforms": [
+                {
+                  "code": "\t\n\t#if(isNull({view.custom.data[0].Date}),\u0027\u0027,(if({view.custom.data[0].Date} !\u003d \"\", concat(dateFormat({view.custom.data[0].Date},\u0027MMMM d, YYYY\u0027),\u0027 - \u0027,{view.custom.data[0].user}),{view.custom.data[0].user})))\n\t#system.date.format( dateIn,\u0027MMMM d, YYYY\u0027)\n\ttry:\n\t\tdateIn \u003d value.get(\u0027Date\u0027)\n\t\tuserIn \u003d value.get(\u0027user\u0027)\n\t\tif value.get(\u0027Date\u0027):\n\t\t\tdateFormatted \u003d system.date.format(system.date.parse(dateIn,\u0027MM/dd/yyyy\u0027), \u0027MMM d, yyyy\u0027)\n\t\t\treturn \u0027{} - {}\u0027.format(dateFormatted,userIn)\n\t\telse:\n\t\t\treturn \u0027{}\u0027.format(userIn)\n\texcept:\n\t\treturn \u0027\u0027\t\n\t\n\t",
+                  "type": "script"
+                }
+              ],
+              "type": "expr"
+            }
+          }
+        },
+        "props": {
+          "style": {
+            "classes": "Text/About_description",
+            "paddingLeft": "20px"
+          }
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "meta": {
+          "name": "Label_1"
+        },
+        "position": {
+          "basis": "44px"
+        },
+        "propConfig": {
+          "props.text": {
+            "binding": {
+              "config": {
+                "expression": "if(isNull({view.custom.data[0].note}),\u0027\u0027,{view.custom.data[0].note})"
+              },
+              "type": "expr"
+            }
+          }
+        },
+        "props": {
+          "alignVertical": "top",
+          "style": {
+            "classes": "Text/About_info",
+            "overflow": "hidden",
+            "overflowWrap": "break-word",
+            "paddingLeft": "20px",
+            "paddingTop": "5px",
+            "textOverflow": "ellipsis"
+          }
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "events": {
+          "dom": {
+            "onClick": {
+              "config": {
+                "script": "\tself.view.params.More \u003d not self.view.params.More "
+              },
+              "scope": "G",
+              "type": "script"
+            }
+          }
+        },
+        "meta": {
+          "name": "Label"
+        },
+        "position": {
+          "basis": "32px"
+        },
+        "propConfig": {
+          "props.text": {
+            "binding": {
+              "config": {
+                "expression": "if({view.params.More}, \u0027LESS\u0027, \u0027MORE\u0027)"
+              },
+              "type": "expr"
+            }
+          }
+        },
+        "props": {
+          "style": {
+            "classes": "Text/About_info",
+            "paddingLeft": "20px",
+            "textDecoration": "underline"
+          }
+        },
+        "type": "ia.display.label"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column",
+      "style": {
+        "classes": "Background/Default"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

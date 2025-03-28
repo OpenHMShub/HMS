@@ -1,0 +1,184 @@
+{
+  "custom": {
+    "Data": {
+      "$": [
+        "ds",
+        192,
+        1674646131557
+      ],
+      "$columns": [
+        {
+          "data": [
+            2
+          ],
+          "name": "id",
+          "type": "Integer"
+        },
+        {
+          "data": [
+            430202
+          ],
+          "name": "participantId",
+          "type": "Integer"
+        },
+        {
+          "data": [
+            "task_added"
+          ],
+          "name": "activityType",
+          "type": "String"
+        },
+        {
+          "data": [
+            "Task 14"
+          ],
+          "name": "activityDescription",
+          "type": "String"
+        },
+        {
+          "data": [
+            1674642569887
+          ],
+          "name": "timeCreated",
+          "type": "Date"
+        },
+        {
+          "data": [
+            "In Progress"
+          ],
+          "name": "status",
+          "type": "String"
+        }
+      ]
+    }
+  },
+  "params": {
+    "Date": "Apr. 19, 2020 at 11:32 AM",
+    "ID": 2,
+    "Name": "Update Room Availability",
+    "Size": 50
+  },
+  "propConfig": {
+    "custom.Data": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "id": "{view.params.ID}"
+          },
+          "queryPath": "Participants/Tasks/Get_TaskActivityLog"
+        },
+        "type": "query"
+      },
+      "persistent": true
+    },
+    "custom.Data[0].Name": {
+      "binding": {
+        "config": {
+          "path": "view.params.Name"
+        },
+        "type": "property"
+      }
+    },
+    "params.Date": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.ID": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.Name": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.Size": {
+      "binding": {
+        "config": {
+          "path": "view.props.defaultSize.height"
+        },
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 50
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "EmbeddedView"
+        },
+        "position": {
+          "basis": "40px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.Date": {
+            "binding": {
+              "config": {
+                "path": "view.custom.Data"
+              },
+              "transforms": [
+                {
+                  "code": "\treturn value.getValueAt(0,\u0027timeCreated\u0027)",
+                  "type": "script"
+                },
+                {
+                  "expression": "dateFormat({value},\"MMM. d, YYYY\") +\" at \"+ dateFormat({value},\"hh:mm a\")",
+                  "type": "expression"
+                }
+              ],
+              "type": "property"
+            }
+          },
+          "props.params.Desc": {
+            "binding": {
+              "config": {
+                "path": "view.custom.Data"
+              },
+              "transforms": [
+                {
+                  "code": "\treturn value.getValueAt(0,\u0027activityDescription\u0027)",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          },
+          "props.params.Title": {
+            "binding": {
+              "config": {
+                "expression": "\"Task Completed:   \" //+ upper({view.params.Name})"
+              },
+              "type": "expr"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "Icon": "material/check_circle_outline"
+          },
+          "path": "Participants/Activity/ActivityHeader_Tasks"
+        },
+        "type": "ia.display.view"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column",
+      "justify": "center",
+      "style": {
+        "classes": "Background/Default",
+        "overflow": "hidden"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

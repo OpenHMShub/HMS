@@ -1,0 +1,262 @@
+{
+  "custom": {
+    "serviceDate_where": "1\u003d1"
+  },
+  "params": {
+    "activity_range": 60
+  },
+  "propConfig": {
+    "custom.serviceDate_where": {
+      "binding": {
+        "config": {
+          "path": "session.custom.filters.servicesDashboard.serviceDate.value"
+        },
+        "transforms": [
+          {
+            "code": "\tif value !\u003d None and value !\u003d \u0027\u0027:\n\t\tif value[0] !\u003d None and value[1] !\u003d None:\n\t\t\tstartDate \u003d \"\u0027\" + str(system.date.format(value[0],\u0027MM/dd/yyyy\u0027)) + \" 00:00:00\u0027\"\n\t\t\tendDate \u003d \"\u0027\" + (system.date.format(value[1],\u0027MM/dd/yyyy\u0027)) + \" 23:59:59\u0027\"\n\t\t\twhere \u003d \u0027s.serviceDate BETWEEN \u0027 + str(startDate) + \u0027 AND \u0027 + str(endDate)\n\t\telse:\n\t\t\twhere \u003d \u00271\u003d1\u0027\n\telse:\n\t\twhere \u003d \u00271\u003d1\u0027\n\treturn where",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      },
+      "persistent": true
+    },
+    "params.activity_range": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 185,
+      "width": 1470
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "KPI1"
+        },
+        "position": {
+          "basis": "345px",
+          "grow": 1,
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.Value": {
+            "binding": {
+              "config": {
+                "parameters": {
+                  "HMIS": "{session.custom.filters.servicesDashboard.HMIS.where}",
+                  "activity_range": "{view.params.activity_range}",
+                  "employeeId": "{session.custom.filters.servicesDashboard.employeeId.where}",
+                  "firstName": "{session.custom.filters.servicesDashboard.firstName.where}",
+                  "genderId": "{session.custom.filters.servicesDashboard.GenderId.where}",
+                  "lastName": "{session.custom.filters.servicesDashboard.lastName.where}",
+                  "middleName": "{session.custom.filters.servicesDashboard.middleName.where}",
+                  "nickName": "{session.custom.filters.servicesDashboard.nickName.where}",
+                  "programId": "{session.custom.filters.servicesDashboard.programId.where}",
+                  "search": "{session.custom.filters.servicesDashboard.Search.where}",
+                  "serviceDate": "{view.custom.serviceDate_where}",
+                  "serviceId": "{session.custom.filters.servicesDashboard.serviceId.where}",
+                  "serviceLocation": "{session.custom.filters.servicesDashboard.ServiceLocationId.where}",
+                  "veteran": "{session.custom.filters.servicesDashboard.Veteran.where}"
+                },
+                "queryPath": "Participants/Services/KPI/TotalServices",
+                "returnFormat": "scalar"
+              },
+              "type": "query"
+            },
+            "onChange": {
+              "enabled": null,
+              "script": "\tself.getSibling(\"KPI4\").refreshBinding(\"props.params.Value\")"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "Title": "Services"
+          },
+          "path": "Participants/Dashboard/Cards/KPI/Metric_Flex",
+          "style": {
+            "classes": "KPIs/KPI_Card",
+            "marginLeft": "40px"
+          },
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "KPI2"
+        },
+        "position": {
+          "basis": "270px",
+          "grow": 1,
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.Value": {
+            "binding": {
+              "config": {
+                "parameters": {
+                  "HMIS": "{session.custom.filters.servicesDashboard.HMIS.where}",
+                  "activity_range": "{view.params.activity_range}",
+                  "employeeId": "{session.custom.filters.servicesDashboard.employeeId.where}",
+                  "firstName": "{session.custom.filters.servicesDashboard.firstName.where}",
+                  "genderId": "{session.custom.filters.servicesDashboard.GenderId.where}",
+                  "lastName": "{session.custom.filters.servicesDashboard.lastName.where}",
+                  "middleName": "{session.custom.filters.servicesDashboard.middleName.where}",
+                  "nickName": "{session.custom.filters.servicesDashboard.nickName.where}",
+                  "programId": "{session.custom.filters.servicesDashboard.programId.where}",
+                  "search": "{session.custom.filters.servicesDashboard.Search.where}",
+                  "serviceDate": "{view.custom.serviceDate_where}",
+                  "serviceId": "{session.custom.filters.servicesDashboard.serviceId.where}",
+                  "serviceLocation": "{session.custom.filters.servicesDashboard.ServiceLocationId.where}",
+                  "veteran": "{session.custom.filters.servicesDashboard.Veteran.where}"
+                },
+                "queryPath": "Participants/Services/KPI/UniqueParticipants",
+                "returnFormat": "scalar"
+              },
+              "type": "query"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "Title": "Unique Participants"
+          },
+          "path": "Participants/Dashboard/Cards/KPI/Metric_Flex",
+          "style": {
+            "classes": "KPIs/KPI_Card"
+          },
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "KPI3"
+        },
+        "position": {
+          "basis": "345px",
+          "grow": 1,
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.Value": {
+            "binding": {
+              "config": {
+                "parameters": {
+                  "HMIS": "{session.custom.filters.servicesDashboard.HMIS.where}",
+                  "activity_range": "{view.params.activity_range}",
+                  "employeeId": "{session.custom.filters.servicesDashboard.employeeId.where}",
+                  "firstName": "{session.custom.filters.servicesDashboard.firstName.where}",
+                  "genderId": "{session.custom.filters.servicesDashboard.GenderId.where}",
+                  "lastName": "{session.custom.filters.servicesDashboard.lastName.where}",
+                  "middleName": "{session.custom.filters.servicesDashboard.middleName.where}",
+                  "nickName": "{session.custom.filters.servicesDashboard.nickName.where}",
+                  "programId": "{session.custom.filters.servicesDashboard.programId.where}",
+                  "search": "{session.custom.filters.servicesDashboard.Search.where}",
+                  "serviceDate": "{view.custom.serviceDate_where}",
+                  "serviceId": "{session.custom.filters.servicesDashboard.serviceId.where}",
+                  "serviceLocation": "{session.custom.filters.servicesDashboard.ServiceLocationId.where}",
+                  "veteran": "{session.custom.filters.servicesDashboard.Veteran.where}"
+                },
+                "queryPath": "Participants/Services/KPI/ServicesMonthly",
+                "returnFormat": "dataset"
+              },
+              "transforms": [
+                {
+                  "code": "\tmonthlyDataSet \u003d value\n\tMonthCount \u003d 6\n\tservicesMonthly \u003d []\n\tnow \u003d system.date.now()\n\tfor i in reversed(range(MonthCount)):\n\t\timonthago \u003d system.date.addMonths(now, -i)\n\t\tcmonthago \u003d system.date.addMonths(imonthago, 1)\n\t\tmonth \u003d system.date.getMonth(imonthago) + 1\n\t\tdateMonth \u003d system.date.getMonth(imonthago)\n\t\tdateYear \u003d system.date.getYear(imonthago)\n\t\tdate \u003d system.date.getDate(dateYear, dateMonth, 01)\n\t\tdatetime \u003d system.date.setTime(date, 00, 00, 00)\n\t\tappend_item \u003d {\"time\": system.date.format(datetime, \"M/d/yyyy\") , \"Participants\": 0}\n\t\tresultMonths \u003d 0\n\t\tfor row in range(monthlyDataSet.getRowCount()):\n\t\t\tresultMonth \u003d monthlyDataSet.getValueAt(row, \"service_month\")\n\t\t\tif month \u003d\u003d resultMonth:\n\t\t\t\tappend_item[\"Participants\"] \u003d monthlyDataSet.getValueAt(row, \"totalParticipants\")\n\t\tservicesMonthly.append(append_item)\n\treturn servicesMonthly",
+                  "type": "script"
+                }
+              ],
+              "type": "query"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "Title": "Services"
+          },
+          "path": "Participants/Dashboard/Cards/KPI/Graph_Flex _bar",
+          "style": {
+            "classes": "KPIs/KPI_Card"
+          },
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "KPI4"
+        },
+        "position": {
+          "basis": "270px",
+          "grow": 1,
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.Value": {
+            "binding": {
+              "config": {
+                "parameters": {
+                  "HMIS": "{session.custom.filters.servicesDashboard.HMIS.where}",
+                  "activity_range": "{view.params.activity_range}",
+                  "employeeId": "{session.custom.filters.servicesDashboard.employeeId.where}",
+                  "firstName": "{session.custom.filters.servicesDashboard.firstName.where}",
+                  "genderId": "{session.custom.filters.servicesDashboard.GenderId.where}",
+                  "lastName": "{session.custom.filters.servicesDashboard.lastName.where}",
+                  "middleName": "{session.custom.filters.servicesDashboard.middleName.where}",
+                  "nickName": "{session.custom.filters.servicesDashboard.nickName.where}",
+                  "programId": "{session.custom.filters.servicesDashboard.programId.where}",
+                  "search": "{session.custom.filters.servicesDashboard.Search.where}",
+                  "serviceDate": "{view.custom.serviceDate_where}",
+                  "serviceId": "{session.custom.filters.servicesDashboard.serviceId.where}",
+                  "serviceLocation": "{session.custom.filters.servicesDashboard.ServiceLocationId.where}",
+                  "veteran": "{session.custom.filters.servicesDashboard.Veteran.where}"
+                },
+                "queryPath": "Participants/Services/KPI/HMIS",
+                "returnFormat": "dataset"
+              },
+              "transforms": [
+                {
+                  "code": "#\tsystem.perspective.print(\"HMIS:\"+str(self.getSibling(\"KPI1\").props.params.Value))\n\tnumRows \u003d self.getSibling(\"KPI1\").props.params.Value\n\tif (numRows \u003e 0):\n\t\tpctHMIS \u003d (100 * value )/ numRows\n\telse:\n\t\tpctHMIS \u003d 0\n\treturn pctHMIS",
+                  "type": "script"
+                }
+              ],
+              "type": "query"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "Title": "% HMIS"
+          },
+          "path": "Participants/Dashboard/Cards/KPI/Total_Flex",
+          "style": {
+            "classes": "KPIs/KPI_Card",
+            "marginRight": "40px"
+          },
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "alignContent": "flex-start",
+      "alignItems": "center",
+      "style": {
+        "classes": "KPIs/KPI_Flex_Container",
+        "overflow": "hidden",
+        "overflowY": "hidden"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

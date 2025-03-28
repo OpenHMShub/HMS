@@ -1,0 +1,409 @@
+{
+  "custom": {},
+  "params": {
+    "HoursPast6MonthsFilter": null,
+    "LastServiceEndDate": null,
+    "LastServiceStartDate": null,
+    "MemberCountFilter": null,
+    "NextServiceEndDate": null,
+    "NextServiceStartDate": null,
+    "searchText": ""
+  },
+  "propConfig": {
+    "params.HoursPast6MonthsFilter": {
+      "binding": {
+        "config": {
+          "path": "/root/Hours Past 6 Months.props.params.selectedValues"
+        },
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.LastServiceEndDate": {
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.LastServiceStartDate": {
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.MemberCountFilter": {
+      "binding": {
+        "config": {
+          "path": "/root/Member Count.props.params.selectedValues"
+        },
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.NextServiceEndDate": {
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.NextServiceStartDate": {
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.searchText": {
+      "binding": {
+        "config": {
+          "path": "/root/Search.props.params.searchText"
+        },
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 54,
+      "width": 1470
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "Label"
+        },
+        "position": {
+          "basis": "9.7%"
+        },
+        "props": {
+          "style": {
+            "classes": "Table/Filter_Header_Detail",
+            "paddingLeft": "40px"
+          },
+          "text": "Filter by:"
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "meta": {
+          "name": "SearchNextLastEvent"
+        },
+        "position": {
+          "basis": "250px"
+        },
+        "props": {
+          "path": "Volunteers/Templates/TableHeader/Search_Bar",
+          "style": {
+            "marginRight": 5
+          },
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "NextServiceDate"
+        },
+        "position": {
+          "basis": "280px"
+        },
+        "propConfig": {
+          "props.params.max": {
+            "binding": {
+              "config": {
+                "bidirectional": true,
+                "path": "view.params.NextServiceEndDate"
+              },
+              "type": "property"
+            }
+          },
+          "props.params.min": {
+            "binding": {
+              "config": {
+                "bidirectional": true,
+                "path": "view.params.NextServiceStartDate"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "header": "Next Service Date",
+            "return_message": "nextservicedate"
+          },
+          "path": "Volunteers/Templates/TableHeader/DateRange",
+          "style": {
+            "marginRight": 5
+          },
+          "useDefaultViewHeight": true
+        },
+        "scripts": {
+          "customMethods": [],
+          "extensionFunctions": null,
+          "messageHandlers": [
+            {
+              "messageType": "nextservicedate",
+              "pageScope": true,
+              "script": "\t# implement your handler here\n\tself.view.params.NextServiceStartDate \u003d payload[\u0027min\u0027]\n\tself.view.params.NextServiceEndDate \u003d payload[\u0027max\u0027]",
+              "sessionScope": false,
+              "viewScope": false
+            }
+          ]
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "LastServiceDate"
+        },
+        "position": {
+          "basis": "280px"
+        },
+        "propConfig": {
+          "props.params.max": {
+            "binding": {
+              "config": {
+                "bidirectional": true,
+                "path": "view.params.LastServiceEndDate"
+              },
+              "type": "property"
+            }
+          },
+          "props.params.min": {
+            "binding": {
+              "config": {
+                "bidirectional": true,
+                "path": "view.params.LastServiceStartDate"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "header": "Last Service Date",
+            "return_message": "lastservicedate"
+          },
+          "path": "Volunteers/Templates/TableHeader/DateRange",
+          "style": {
+            "marginRight": 5
+          },
+          "useDefaultViewHeight": true
+        },
+        "scripts": {
+          "customMethods": [],
+          "extensionFunctions": null,
+          "messageHandlers": [
+            {
+              "messageType": "lastservicedate",
+              "pageScope": true,
+              "script": "\t# implement your handler here\n\tself.view.params.LastServiceStartDate \u003d payload[\u0027min\u0027]\n\tself.view.params.LastServiceEndDate \u003d payload[\u0027max\u0027]",
+              "sessionScope": false,
+              "viewScope": false
+            }
+          ]
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Member Count"
+        },
+        "position": {
+          "basis": "200px"
+        },
+        "props": {
+          "params": {
+            "filterData": [
+              {
+                "label": "0 - 5",
+                "value": {
+                  "max": 5,
+                  "min": 0
+                }
+              },
+              {
+                "label": "5 - 10",
+                "value": {
+                  "max": 10,
+                  "min": 5
+                }
+              },
+              {
+                "label": "10 - 25",
+                "value": {
+                  "max": 25,
+                  "min": 10
+                }
+              },
+              {
+                "label": "25 - 50",
+                "value": {
+                  "max": 50,
+                  "min": 25
+                }
+              },
+              {
+                "label": "50 - 100",
+                "value": {
+                  "max": 100,
+                  "min": 50
+                }
+              }
+            ],
+            "filterName": "Member Count",
+            "selectedValues": null
+          },
+          "path": "Volunteers/Templates/TableHeader/MultiselectFilter",
+          "style": {
+            "marginRight": 5
+          },
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Hours Past 6 Months"
+        },
+        "position": {
+          "basis": "200px"
+        },
+        "props": {
+          "params": {
+            "filterData": [
+              {
+                "label": "0 - 2",
+                "value": {
+                  "max": 2,
+                  "min": 0
+                }
+              },
+              {
+                "label": "2 - 4",
+                "value": {
+                  "max": 4,
+                  "min": 2
+                }
+              },
+              {
+                "label": "4 - 6",
+                "value": {
+                  "max": 6,
+                  "min": 4
+                }
+              },
+              {
+                "label": "6 - 8",
+                "value": {
+                  "max": 8,
+                  "min": 6
+                }
+              },
+              {
+                "label": "8 - 10",
+                "value": {
+                  "max": 10,
+                  "min": 8
+                }
+              }
+            ],
+            "filterName": "Hours Past 6 Months",
+            "selectedValues": null
+          },
+          "path": "Volunteers/Templates/TableHeader/MultiselectFilter",
+          "style": {
+            "marginRight": 5
+          },
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "events": {
+          "component": {
+            "onActionPerformed": {
+              "config": {
+                "script": "\t\n\tself.getSibling(\"NextServiceDate\").props.params.min \u003d None\n\tself.getSibling(\"NextServiceDate\").props.params.max \u003d None\n\t\n\tself.getSibling(\"LastServiceDate\").props.params.min \u003d None\t\n\tself.getSibling(\"LastServiceDate\").props.params.max \u003d None\n\n\t# multi select filter + searchbar reset.\n\tsystem.perspective.sendMessage(\"clearText\",None)"
+              },
+              "scope": "G",
+              "type": "script"
+            }
+          }
+        },
+        "meta": {
+          "name": "Button"
+        },
+        "position": {
+          "basis": "40px"
+        },
+        "props": {
+          "image": {
+            "icon": {
+              "path": "material/close"
+            }
+          },
+          "style": {
+            "backgroundColor": "#0C4E8B",
+            "marginRight": 5
+          },
+          "text": ""
+        },
+        "type": "ia.input.button"
+      },
+      {
+        "meta": {
+          "name": "Filler"
+        },
+        "position": {
+          "basis": "100px"
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "meta": {
+          "name": "Search"
+        },
+        "position": {
+          "basis": "205px"
+        },
+        "propConfig": {
+          "props.params.searchText": {
+            "binding": {
+              "config": {
+                "path": "session.custom.filters.P_1_TEMPLATES_Filtering_Filters_Search_Bar[0].value"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "filter": "",
+            "key": " ",
+            "searchType": ""
+          },
+          "path": "1_TEMPLATES/Filtering/Filters/Search_Bar",
+          "style": {
+            "classes": "Event/Event_Searchbar",
+            "marginBottom": "5px",
+            "marginRight": "40px",
+            "marginTop": "5px"
+          },
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "alignItems": "center",
+      "style": {
+        "borderStyle": "none",
+        "classes": "Table/Filter_Header_Container",
+        "overflow": "hidden"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

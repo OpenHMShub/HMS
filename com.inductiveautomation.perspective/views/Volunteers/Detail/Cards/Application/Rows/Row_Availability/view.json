@@ -1,0 +1,386 @@
+{
+  "custom": {
+    "availability": {
+      "hours": [
+        {
+          "label": "daily",
+          "value": "daily"
+        },
+        {
+          "label": "weekly",
+          "value": "weekly"
+        },
+        {
+          "label": "monthly",
+          "value": "monthly"
+        },
+        {
+          "label": "one time",
+          "value": "one time"
+        }
+      ],
+      "weekly": [
+        {
+          "label": "First Week",
+          "value": 1
+        },
+        {
+          "label": "Second Week",
+          "value": 2
+        },
+        {
+          "label": "Third Week",
+          "value": 3
+        },
+        {
+          "label": "Fourth Week",
+          "value": 4
+        },
+        {
+          "label": "Fifth Week",
+          "value": 5
+        }
+      ]
+    }
+  },
+  "params": {
+    "availability_seasonal_availability_type": null,
+    "availability_seasonal_end_date": {
+      "$": [
+        "ts",
+        201,
+        1619387786527
+      ],
+      "$ts": 1591286400000
+    },
+    "availability_seasonal_start_date": {
+      "$": [
+        "ts",
+        201,
+        1620085300669
+      ],
+      "$ts": 1591286400000
+    },
+    "availability_upto_hours": "",
+    "availability_upto_type": null,
+    "availability_weekly_selection": ""
+  },
+  "propConfig": {
+    "custom.availability": {
+      "persistent": true
+    },
+    "custom.availability.type": {
+      "binding": {
+        "config": {
+          "queryPath": "Volunteers/Details/VolunteerAvailablityTypes",
+          "returnFormat": "json"
+        },
+        "transforms": [
+          {
+            "code": "\toptions \u003d []\n\tfor row in value:\n\t\toptions.append({\"value\":row[\"id\"], \"label\": row[\"name\"]})\n\treturn options",
+            "type": "script"
+          }
+        ],
+        "type": "query"
+      }
+    },
+    "custom.availability.types": {
+      "binding": {
+        "config": {
+          "queryPath": "Volunteers/Details/VolunteerAvailablityTypes",
+          "returnFormat": "json"
+        },
+        "transforms": [
+          {
+            "code": "\toptions \u003d []\n\tfor row in value:\n\t\toptions.append({\"value\": row[\"id\"],\"label\": row[\"name\"]})\n\treturn options",
+            "type": "script"
+          }
+        ],
+        "type": "query"
+      }
+    },
+    "params.availability_seasonal_availability_type": {
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.availability_seasonal_end_date": {
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.availability_seasonal_start_date": {
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.availability_upto_hours": {
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.availability_upto_type": {
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.availability_weekly_selection": {
+      "paramDirection": "inout",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 120,
+      "width": 1416
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "children": [
+          {
+            "meta": {
+              "name": "Embed_Availability_Type"
+            },
+            "position": {
+              "basis": "20%"
+            },
+            "propConfig": {
+              "props.params.Options": {
+                "binding": {
+                  "config": {
+                    "path": "view.custom.availability.type"
+                  },
+                  "type": "property"
+                }
+              },
+              "props.params.SelectedValue": {
+                "binding": {
+                  "config": {
+                    "bidirectional": true,
+                    "path": "view.params.availability_seasonal_availability_type"
+                  },
+                  "type": "property"
+                }
+              }
+            },
+            "props": {
+              "params": {
+                "Text": "My Availablity Is...",
+                "enabled": false
+              },
+              "path": "Volunteers/Templates/Application/SelectionInput",
+              "style": {
+                "classes": "InputCards/InputCard"
+              }
+            },
+            "type": "ia.display.view"
+          },
+          {
+            "meta": {
+              "name": "Embed_Availability_Type_0"
+            },
+            "position": {
+              "basis": "20%"
+            },
+            "propConfig": {
+              "props.params.inputText": {
+                "binding": {
+                  "config": {
+                    "bidirectional": true,
+                    "path": "view.params.availability_upto_hours"
+                  },
+                  "type": "property"
+                }
+              }
+            },
+            "props": {
+              "params": {
+                "enabled": false,
+                "text": "I would like to serve up to..."
+              },
+              "path": "Volunteers/Templates/Application/TextInput",
+              "style": {
+                "classes": "InputCards/InputCard"
+              }
+            },
+            "type": "ia.display.view"
+          },
+          {
+            "meta": {
+              "name": "Embed_Availability_Type_1"
+            },
+            "position": {
+              "basis": "20%"
+            },
+            "propConfig": {
+              "props.params.Options": {
+                "binding": {
+                  "config": {
+                    "path": "view.custom.availability.hours"
+                  },
+                  "type": "property"
+                }
+              },
+              "props.params.SelectedValue": {
+                "binding": {
+                  "config": {
+                    "bidirectional": true,
+                    "path": "view.params.availability_upto_type"
+                  },
+                  "type": "property"
+                }
+              }
+            },
+            "props": {
+              "params": {
+                "Text": "(Timeframe)",
+                "enabled": false
+              },
+              "path": "Volunteers/Templates/Application/SelectionInput",
+              "style": {
+                "classes": "InputCards/InputCard"
+              }
+            },
+            "type": "ia.display.view"
+          }
+        ],
+        "meta": {
+          "name": "FlexContainer_0"
+        },
+        "position": {
+          "basis": "50%"
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "children": [
+          {
+            "meta": {
+              "name": "Embed_Availability_Seasonal_Start"
+            },
+            "position": {
+              "basis": "20%"
+            },
+            "propConfig": {
+              "props.params.date": {
+                "binding": {
+                  "config": {
+                    "bidirectional": true,
+                    "path": "view.params.availability_seasonal_start_date"
+                  },
+                  "type": "property"
+                }
+              }
+            },
+            "props": {
+              "params": {
+                "enabled": false,
+                "maxDate": null,
+                "minDate": null,
+                "text": "Seasonal Start*"
+              },
+              "path": "Volunteers/Templates/Application/DateInput",
+              "style": {
+                "classes": "InputCards/InputCard"
+              }
+            },
+            "type": "ia.display.view"
+          },
+          {
+            "meta": {
+              "name": "Embed_Availability_Seasonal_End"
+            },
+            "position": {
+              "basis": "20%"
+            },
+            "propConfig": {
+              "props.params.date": {
+                "binding": {
+                  "config": {
+                    "bidirectional": true,
+                    "path": "view.params.availability_seasonal_end_date"
+                  },
+                  "type": "property"
+                }
+              }
+            },
+            "props": {
+              "params": {
+                "enabled": false,
+                "text": "Seasonal End*"
+              },
+              "path": "Volunteers/Templates/Application/DateInput",
+              "style": {
+                "classes": "InputCards/InputCard"
+              }
+            },
+            "type": "ia.display.view"
+          },
+          {
+            "meta": {
+              "name": "Embed_Availability_Weekly"
+            },
+            "position": {
+              "basis": "40%",
+              "grow": 1
+            },
+            "propConfig": {
+              "props.params.options": {
+                "binding": {
+                  "config": {
+                    "path": "view.custom.availability.weekly"
+                  },
+                  "type": "property"
+                }
+              },
+              "props.params.selection": {
+                "binding": {
+                  "config": {
+                    "bidirectional": true,
+                    "path": "view.params.availability_weekly_selection"
+                  },
+                  "type": "property"
+                }
+              }
+            },
+            "props": {
+              "params": {
+                "enabled": false,
+                "text": "Weekly Availability*"
+              },
+              "path": "Volunteers/Templates/Application/Input_DropDownMulti",
+              "style": {
+                "classes": "InputCards/InputCard"
+              }
+            },
+            "type": "ia.display.view"
+          }
+        ],
+        "meta": {
+          "name": "FlexContainer"
+        },
+        "position": {
+          "basis": "50%"
+        },
+        "propConfig": {
+          "position.display": {
+            "binding": {
+              "config": {
+                "expression": "{../FlexContainer_0/Embed_Availability_Type.props.params.selection}\u003e1"
+              },
+              "type": "expr"
+            }
+          }
+        },
+        "type": "ia.container.flex"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column",
+      "style": {
+        "classes": "Background/Default"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

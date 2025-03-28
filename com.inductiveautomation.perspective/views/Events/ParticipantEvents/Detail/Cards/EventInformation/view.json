@@ -1,0 +1,675 @@
+{
+  "custom": {
+    "Locations": null,
+    "background_color": "#FFFFFF",
+    "sql_data": {
+      "$": [
+        "ds",
+        192,
+        1691397386793
+      ],
+      "$columns": [
+        {
+          "data": [
+            995
+          ],
+          "name": "id",
+          "type": "Integer"
+        },
+        {
+          "data": [
+            61
+          ],
+          "name": "categoryId",
+          "type": "Integer"
+        },
+        {
+          "data": [
+            "Health"
+          ],
+          "name": "category",
+          "type": "String"
+        },
+        {
+          "data": [
+            "Morning Meditation"
+          ],
+          "name": "name",
+          "type": "String"
+        },
+        {
+          "data": [
+            1688731200000
+          ],
+          "name": "startsOn",
+          "type": "Date"
+        },
+        {
+          "data": [
+            1688738400000
+          ],
+          "name": "endsOn",
+          "type": "Date"
+        },
+        {
+          "data": [
+            false
+          ],
+          "name": "allDayEvent",
+          "type": "Boolean"
+        },
+        {
+          "data": [
+            "This event was arranged to maintain your good health."
+          ],
+          "name": "description",
+          "type": "String"
+        },
+        {
+          "data": [
+            0
+          ],
+          "name": "repeatFrequencyTypeId",
+          "type": "Integer"
+        },
+        {
+          "data": [
+            1
+          ],
+          "name": "dateSelectionPattern",
+          "type": "Integer"
+        },
+        {
+          "data": [
+            "[5,4]"
+          ],
+          "name": "dateSelectionDays",
+          "type": "String"
+        },
+        {
+          "data": [
+            1688750148000
+          ],
+          "name": "timeCreated",
+          "type": "Date"
+        },
+        {
+          "data": [
+            null
+          ],
+          "name": "timeRetired",
+          "type": "Date"
+        },
+        {
+          "data": [
+            10
+          ],
+          "name": "points",
+          "type": "Integer"
+        },
+        {
+          "data": [
+            -1
+          ],
+          "name": "facilitatorEmployeeId",
+          "type": "Integer"
+        },
+        {
+          "data": [
+            null
+          ],
+          "name": "facilitatorHumanId",
+          "type": "String"
+        },
+        {
+          "data": [
+            ""
+          ],
+          "name": "facilitator",
+          "type": "String"
+        },
+        {
+          "data": [
+            true
+          ],
+          "name": "IsEventRepeat",
+          "type": "Boolean"
+        },
+        {
+          "data": [
+            1690693200000
+          ],
+          "name": "repeatDateUntil",
+          "type": "Date"
+        },
+        {
+          "data": [
+            120
+          ],
+          "name": "scheduledWeekdays",
+          "type": "Short"
+        },
+        {
+          "data": [
+            2
+          ],
+          "name": "duration_hours",
+          "type": "Integer"
+        },
+        {
+          "data": [
+            24
+          ],
+          "name": "locationId",
+          "type": "Integer"
+        },
+        {
+          "data": [
+            "Activity Center Middle"
+          ],
+          "name": "location",
+          "type": "String"
+        },
+        {
+          "data": [
+            1690459200000
+          ],
+          "name": "eventLastOccurance",
+          "type": "Date"
+        }
+      ]
+    }
+  },
+  "params": {
+    "EventID": 995
+  },
+  "propConfig": {
+    "custom.Locations": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "EventId": "{view.params.EventID}"
+          },
+          "queryPath": "Event/ParticipantEvents/Detail/Get_SelectedLocations_ForEvent"
+        },
+        "type": "query"
+      },
+      "persistent": true
+    },
+    "custom.sql_data": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "eventId": "{view.params.EventID}"
+          },
+          "queryPath": "Event/ParticipantEvents/Detail/Get_Events_ByEventID"
+        },
+        "type": "query"
+      },
+      "persistent": true
+    },
+    "params.EventID": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "width": 254
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "Header"
+        },
+        "position": {
+          "basis": "170px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.EventID": {
+            "binding": {
+              "config": {
+                "path": "view.params.EventID"
+              },
+              "type": "property"
+            }
+          },
+          "props.params.Text": {
+            "binding": {
+              "config": {
+                "path": "view.custom.sql_data"
+              },
+              "transforms": [
+                {
+                  "code": "\tdataset \u003d value\n\tif dataset.getRowCount \u003e 0:\n\t\treturn value.getValueAt(0,\u0027name\u0027)\n\telse:\n\t\treturn \u0027NULL\u0027",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "path": "Events/ParticipantEvents/Detail/Cards/EventInfo/Header",
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Title"
+        },
+        "position": {
+          "shrink": 0
+        },
+        "props": {
+          "params": {
+            "Text": "About this Event"
+          },
+          "path": "Participants/Detail/Cards/Personal/AboutHeader",
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Registration_Date"
+        },
+        "position": {
+          "display": false,
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.Info": {
+            "binding": {
+              "config": {
+                "path": "view.custom.sql_data"
+              },
+              "transforms": [
+                {
+                  "code": "\titem \u003d value.getValueAt(0,\u0027timeCreated\u0027)\n\tif item is None:\n\t\treturn \u0027\u0027\n\telse:\n\t\treturn item",
+                  "type": "script"
+                },
+                {
+                  "formatType": "datetime",
+                  "formatValue": {
+                    "date": "medium"
+                  },
+                  "type": "format"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "Description": "Registration"
+          },
+          "path": "Participants/Detail/Cards/Personal/AboutLabel",
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Event_Name"
+        },
+        "position": {
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.Info": {
+            "binding": {
+              "config": {
+                "path": "view.custom.sql_data"
+              },
+              "transforms": [
+                {
+                  "code": "\titem \u003d value.getValueAt(0,\u0027name\u0027)\n\tif item is None:\n\t\treturn \u0027\u0027\n\telse:\n\t\treturn item",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "Description": "Event Name"
+          },
+          "path": "Participants/Detail/Cards/Personal/AboutLabel",
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Starts_On"
+        },
+        "position": {
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.Info": {
+            "binding": {
+              "config": {
+                "path": "view.custom.sql_data"
+              },
+              "transforms": [
+                {
+                  "code": "\titem \u003d value.getValueAt(0,\u0027startsOn\u0027)\n\tif item is None:\n\t\treturn \u0027\u0027\n\telse:\n\t\treturn item",
+                  "type": "script"
+                },
+                {
+                  "formatType": "datetime",
+                  "formatValue": {
+                    "date": "medium"
+                  },
+                  "type": "format"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "Description": "Starts On"
+          },
+          "path": "Participants/Detail/Cards/Personal/AboutLabel",
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Ends_On"
+        },
+        "position": {
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.Info": {
+            "binding": {
+              "config": {
+                "path": "view.custom.sql_data"
+              },
+              "transforms": [
+                {
+                  "code": "\trepeatUntil \u003d value.getValueAt(0,\u0027eventLastOccurance\u0027)\n\tif repeatUntil is None:\n\t\titem \u003d value.getValueAt(0,\u0027endsOn\u0027)\n\telse:\n\t\titem \u003d repeatUntil\n\tif item is None:\n\t\treturn \u0027\u0027\n\telse:\n\t\treturn item",
+                  "type": "script"
+                },
+                {
+                  "formatType": "datetime",
+                  "formatValue": {
+                    "date": "medium"
+                  },
+                  "type": "format"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "Description": "Ends On"
+          },
+          "path": "Participants/Detail/Cards/Personal/AboutLabel",
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "All_day"
+        },
+        "position": {
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.Info": {
+            "binding": {
+              "config": {
+                "path": "view.custom.sql_data"
+              },
+              "transforms": [
+                {
+                  "code": "\titem \u003d value.getValueAt(0,\u0027allDayEvent\u0027)\n\tif item is None:\n\t\treturn \u0027No\u0027\n\telse:\n\t\tif item \u003d\u003d True:\n\t\t\treturn \u0027Yes\u0027\n\t\telse:\n\t\t\treturn \u0027No\u0027\n\t\t",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "Description": "All Day"
+          },
+          "path": "Participants/Detail/Cards/Personal/AboutLabel",
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Duration"
+        },
+        "position": {
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.Info": {
+            "binding": {
+              "config": {
+                "path": "view.custom.sql_data"
+              },
+              "transforms": [
+                {
+                  "code": "\titem \u003d value.getValueAt(0,\u0027duration_hours\u0027)\n\tif item is None:\n\t\treturn 0\n\telse:\n\t\treturn item\n\t\t",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "Description": "Duration"
+          },
+          "path": "Participants/Detail/Cards/Personal/AboutLabel",
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "category"
+        },
+        "position": {
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.Info": {
+            "binding": {
+              "config": {
+                "path": "view.custom.sql_data"
+              },
+              "transforms": [
+                {
+                  "code": "\titem \u003d value.getValueAt(0,\u0027category\u0027)\n\tif item is None:\n\t\treturn \u0027\u0027\n\telse:\n\t\treturn item",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "Description": "Category"
+          },
+          "path": "Participants/Detail/Cards/Personal/AboutLabel",
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "points"
+        },
+        "position": {
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.Info": {
+            "binding": {
+              "config": {
+                "path": "view.custom.sql_data"
+              },
+              "transforms": [
+                {
+                  "code": "\titem \u003d value.getValueAt(0,\u0027points\u0027)\n\tif item is None:\n\t\treturn \u0027\u0027\n\telse:\n\t\treturn item",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "Description": "Points"
+          },
+          "path": "Participants/Detail/Cards/Personal/AboutLabel",
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "facilitator"
+        },
+        "position": {
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.Info": {
+            "binding": {
+              "config": {
+                "path": "view.custom.sql_data"
+              },
+              "transforms": [
+                {
+                  "code": "\titem \u003d value.getValueAt(0,\u0027facilitator\u0027)\n\tif item is None:\n\t\treturn \u0027\u0027\n\telse:\n\t\treturn item",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "Description": "Facilitator"
+          },
+          "path": "Participants/Detail/Cards/Personal/AboutLabel"
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Locations"
+        },
+        "position": {
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.Info": {
+            "binding": {
+              "config": {
+                "path": "view.custom.sql_data"
+              },
+              "transforms": [
+                {
+                  "code": "\titem \u003d value.getValueAt(0,\u0027Location\u0027)\n\tif item is None:\n\t\treturn \u0027\u0027\n\telse:\n\t\treturn item",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "Description": "Locations"
+          },
+          "path": "Participants/Detail/Cards/Personal/AboutLabel",
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "description"
+        },
+        "position": {
+          "grow": 1,
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.Info": {
+            "binding": {
+              "config": {
+                "path": "view.custom.sql_data"
+              },
+              "transforms": [
+                {
+                  "code": "\titem \u003d value.getValueAt(0,\u0027description\u0027)\n\tif item is None:\n\t\treturn \u0027\u0027\n\telse:\n\t\treturn item",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "Description": "Description"
+          },
+          "path": "Events/ParticipantEvents/Detail/Cards/EventInfo/DescriptionLabel"
+        },
+        "type": "ia.display.view"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column",
+      "style": {
+        "classes": "Background/Default"
+      }
+    },
+    "scripts": {
+      "customMethods": [],
+      "extensionFunctions": null,
+      "messageHandlers": [
+        {
+          "messageType": "refreshPersonalInformation",
+          "pageScope": true,
+          "script": "\tview \u003d self.view\n\tview.refreshBinding(\"custom.sql_data\")",
+          "sessionScope": true,
+          "viewScope": false
+        }
+      ]
+    },
+    "type": "ia.container.flex"
+  }
+}

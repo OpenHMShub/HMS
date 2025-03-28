@@ -1,0 +1,1372 @@
+{
+  "custom": {
+    "ageBelow": 120,
+    "filter": {},
+    "gender": {
+      "$": [
+        "ds",
+        192,
+        1620492378131
+      ],
+      "$columns": [
+        {
+          "data": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "name": "id",
+          "type": "Integer"
+        },
+        {
+          "data": [
+            "Male",
+            "Female",
+            "Transgender Male to Female",
+            "Transgender Female to Male",
+            "Client refused",
+            "Data not collected"
+          ],
+          "name": "gender",
+          "type": "String"
+        }
+      ]
+    },
+    "priorSelected": [],
+    "selectAll": 0,
+    "selectedVolunteers": []
+  },
+  "params": {
+    "searchSelection": [],
+    "selectedVolunteers": []
+  },
+  "propConfig": {
+    "custom.filter": {
+      "persistent": true
+    },
+    "custom.filter.ageAbove": {
+      "binding": {
+        "config": {
+          "bidirectional": true,
+          "path": "/root/Personal/Left/Age.props.params.inputAbove"
+        },
+        "type": "property"
+      }
+    },
+    "custom.filter.ageBelow": {
+      "binding": {
+        "config": {
+          "bidirectional": true,
+          "path": "/root/Personal/Left/Age.props.params.inputBelow"
+        },
+        "type": "property"
+      }
+    },
+    "custom.filter.availablilityDate": {
+      "binding": {
+        "config": {
+          "bidirectional": true,
+          "path": "/root/Personal/Right/Availability_Date.props.params.selection"
+        },
+        "type": "property"
+      }
+    },
+    "custom.filter.availablilityTime": {
+      "binding": {
+        "config": {
+          "bidirectional": true,
+          "path": "/root/Personal/Right/Availability_Time.props.params.selection"
+        },
+        "type": "property"
+      }
+    },
+    "custom.filter.facilitator": {
+      "binding": {
+        "config": {
+          "bidirectional": true,
+          "path": "/root/Personal/Center/Facilitator.props.params.selection"
+        },
+        "type": "property"
+      }
+    },
+    "custom.filter.firstName": {
+      "binding": {
+        "config": {
+          "bidirectional": true,
+          "path": "/root/Personal/Left/FirstName.props.params.inputText"
+        },
+        "type": "property"
+      }
+    },
+    "custom.filter.gender": {
+      "binding": {
+        "config": {
+          "bidirectional": true,
+          "path": "/root/Personal/Center/Gender.props.params.selection"
+        },
+        "type": "property"
+      }
+    },
+    "custom.filter.groupId": {
+      "binding": {
+        "config": {
+          "bidirectional": true,
+          "path": "/root/Personal/Right/Group.props.params.selection"
+        },
+        "type": "property"
+      }
+    },
+    "custom.filter.lastName": {
+      "binding": {
+        "config": {
+          "bidirectional": true,
+          "path": "/root/Personal/Center/LastName.props.params.inputText"
+        },
+        "type": "property"
+      }
+    },
+    "custom.filter.skills": {
+      "binding": {
+        "config": {
+          "bidirectional": true,
+          "path": "/root/Personal/Right/Skills.props.params.selection"
+        },
+        "type": "property"
+      }
+    },
+    "custom.filter.status": {
+      "binding": {
+        "config": {
+          "bidirectional": true,
+          "path": "/root/Personal/Left/Status.props.params.selection"
+        },
+        "type": "property"
+      }
+    },
+    "custom.filter.useGender": {
+      "binding": {
+        "config": {
+          "expression": "len({/root/Personal/Center/Gender.props.params.selection}) \u003e 0"
+        },
+        "type": "expr"
+      }
+    },
+    "custom.filter.useGroup": {
+      "binding": {
+        "config": {
+          "expression": "len({/root/Personal/Right/Group.props.params.selection}) \u003e 0"
+        },
+        "type": "expr"
+      }
+    },
+    "custom.gender": {
+      "persistent": true
+    },
+    "custom.priorSelected": {
+      "persistent": true
+    },
+    "custom.selectAll": {
+      "persistent": true
+    },
+    "custom.selectedVolunteers": {
+      "persistent": true
+    },
+    "params.searchSelection": {
+      "binding": {
+        "config": {
+          "expression": "if({view.custom.selectAll}, {view.custom.all}, {/root/Table.props.selection.data})"
+        },
+        "type": "expr"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.selectedVolunteers": {
+      "binding": {
+        "config": {
+          "path": "view.custom.selectedVolunteers"
+        },
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "width": 600
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "EmbeddedView"
+        },
+        "position": {
+          "shrink": 0
+        },
+        "props": {
+          "path": "Volunteers/ListGeneration/Cards/HeaderSearch",
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Label"
+        },
+        "position": {
+          "basis": "32px",
+          "display": false
+        },
+        "propConfig": {
+          "props.text": {
+            "binding": {
+              "config": {
+                "expression": "\"First Name: \" +\r\n{view.custom.first_name} +\r\n\", Last Name: \" +\r\n{view.custom.last_name} + \r\n\", SSN: \" +\r\n{view.custom.ssn} + \r\n\", DOB: \"+\r\n{view.custom.dob} +\r\n\", Availability: \"+\r\n{view.custom.availability} +\r\n\", Skills: \"+\r\n{view.custom.skills} +\r\n\", Status: \"+\r\n{view.custom.status} +\r\n\", Group: \"+\r\n{view.custom.group} +\r\n\", Facilitator: \"+\r\n{view.custom.facilitator} +\r\n\", Personal: \"+\r\n{view.custom.personal}"
+              },
+              "type": "expr"
+            }
+          }
+        },
+        "props": {
+          "style": {
+            "classes": "Text/Error_Message"
+          }
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "meta": {
+                  "name": "FirstName"
+                },
+                "position": {
+                  "shrink": 0
+                },
+                "props": {
+                  "params": {
+                    "inputText": "",
+                    "text": "First Name*"
+                  },
+                  "path": "Volunteers/ListGeneration/Cards/InputText",
+                  "style": {
+                    "marginTop": "5px"
+                  },
+                  "useDefaultViewHeight": true
+                },
+                "type": "ia.display.view"
+              },
+              {
+                "meta": {
+                  "name": "Age"
+                },
+                "position": {
+                  "shrink": 0
+                },
+                "props": {
+                  "params": {
+                    "inputAbove": 0,
+                    "inputBelow": 120,
+                    "inputText": 120,
+                    "text": "Age*",
+                    "tooltipAbove": "Age is equal or above this number.",
+                    "tooltipBelow": "Age is equal or below this number."
+                  },
+                  "path": "Volunteers/ListGeneration/Cards/InputNumericBetween",
+                  "style": {
+                    "marginTop": "5px"
+                  },
+                  "useDefaultViewHeight": true
+                },
+                "type": "ia.display.view"
+              },
+              {
+                "meta": {
+                  "name": "Status"
+                },
+                "position": {
+                  "basis": "64px"
+                },
+                "propConfig": {
+                  "props.params.options": {
+                    "binding": {
+                      "config": {
+                        "queryPath": "Volunteers/Details/VolunteerStatusList"
+                      },
+                      "type": "query"
+                    }
+                  }
+                },
+                "props": {
+                  "params": {
+                    "SelectedValue": "",
+                    "selection": "",
+                    "text": "Status*"
+                  },
+                  "path": "Volunteers/Templates/60px/top/Input_DropDownSingle",
+                  "style": {
+                    "marginTop": "5px"
+                  },
+                  "useDefaultViewHeight": true
+                },
+                "type": "ia.display.view"
+              }
+            ],
+            "meta": {
+              "name": "Left"
+            },
+            "position": {
+              "basis": "33%",
+              "grow": 1
+            },
+            "props": {
+              "direction": "column",
+              "style": {
+                "paddingLeft": "15px",
+                "paddingRight": "20px"
+              }
+            },
+            "type": "ia.container.flex"
+          },
+          {
+            "children": [
+              {
+                "meta": {
+                  "name": "LastName"
+                },
+                "position": {
+                  "shrink": 0
+                },
+                "props": {
+                  "params": {
+                    "inputText": "",
+                    "text": "Last Name*"
+                  },
+                  "path": "Volunteers/ListGeneration/Cards/InputText",
+                  "style": {
+                    "marginTop": "5px"
+                  },
+                  "useDefaultViewHeight": true
+                },
+                "type": "ia.display.view"
+              },
+              {
+                "meta": {
+                  "name": "Gender"
+                },
+                "position": {
+                  "basis": "61px"
+                },
+                "propConfig": {
+                  "props.params.options": {
+                    "binding": {
+                      "config": {
+                        "queryPath": "Participants/Registration/GetGender"
+                      },
+                      "type": "query"
+                    }
+                  }
+                },
+                "props": {
+                  "params": {
+                    "selection": "",
+                    "text": "Gender*"
+                  },
+                  "path": "Volunteers/Templates/60px/top/Input_DropDownMulti",
+                  "style": {
+                    "marginTop": "5px"
+                  },
+                  "useDefaultViewHeight": true
+                },
+                "type": "ia.display.view"
+              },
+              {
+                "meta": {
+                  "name": "Facilitator"
+                },
+                "position": {
+                  "basis": "68px"
+                },
+                "propConfig": {
+                  "custom.queryString": {
+                    "binding": {
+                      "config": {
+                        "path": "this.props.params.selection"
+                      },
+                      "transforms": [
+                        {
+                          "code": "\tqueryString \u003d \"1\u003d1\"\n\tif value is not None and value !\u003d \"\":\n\t\tqueryString \u003d \"eif.facilitatorID \u003d %s\" % value\n\treturn queryString",
+                          "type": "script"
+                        }
+                      ],
+                      "type": "property"
+                    }
+                  },
+                  "props.params.options": {
+                    "binding": {
+                      "config": {
+                        "queryPath": "Volunteers/Facilitator/FacilitatorOptions"
+                      },
+                      "type": "query"
+                    }
+                  }
+                },
+                "props": {
+                  "params": {
+                    "selection": null,
+                    "text": "Facilitator*"
+                  },
+                  "path": "Volunteers/Templates/60px/top/Input_DropDownSingle",
+                  "style": {
+                    "marginTop": "5px"
+                  },
+                  "useDefaultViewHeight": true
+                },
+                "type": "ia.display.view"
+              }
+            ],
+            "meta": {
+              "name": "Center"
+            },
+            "position": {
+              "basis": "33%",
+              "grow": 1
+            },
+            "props": {
+              "direction": "column",
+              "style": {
+                "paddingLeft": "15px",
+                "paddingRight": "20px"
+              }
+            },
+            "type": "ia.container.flex"
+          },
+          {
+            "children": [
+              {
+                "meta": {
+                  "name": "Availability_Date"
+                },
+                "position": {
+                  "basis": "60px"
+                },
+                "props": {
+                  "params": {
+                    "SelectedValue": null,
+                    "date": null,
+                    "inputText": null,
+                    "selection": "value",
+                    "text": "Availability Date*"
+                  },
+                  "path": "Volunteers/Templates/60px/top/Input_Date",
+                  "style": {
+                    "marginTop": "5px"
+                  },
+                  "useDefaultViewHeight": true
+                },
+                "type": "ia.display.view"
+              },
+              {
+                "meta": {
+                  "name": "Availability_Time"
+                },
+                "position": {
+                  "basis": "53px"
+                },
+                "props": {
+                  "params": {
+                    "SelectedValue": "",
+                    "inputText": "",
+                    "options": [
+                      {
+                        "label": "Morning",
+                        "value": "morning"
+                      },
+                      {
+                        "label": "Afternoon",
+                        "value": "afternoon"
+                      },
+                      {
+                        "label": "Evening",
+                        "value": "evening"
+                      }
+                    ],
+                    "selection": null,
+                    "text": "Availability Time*"
+                  },
+                  "path": "Volunteers/Templates/60px/top/Input_DropDownSingle",
+                  "style": {
+                    "marginTop": "5px"
+                  },
+                  "useDefaultViewHeight": true
+                },
+                "type": "ia.display.view"
+              },
+              {
+                "meta": {
+                  "name": "Skills"
+                },
+                "position": {
+                  "basis": "54px"
+                },
+                "propConfig": {
+                  "custom.queryString": {
+                    "binding": {
+                      "config": {
+                        "path": "this.props.params.selection"
+                      },
+                      "transforms": [
+                        {
+                          "code": "\tqueryString \u003d \"1\u003d1\"\n\tif value:\n\t\tqueryString \u003d \"vs.skillId IN (%s)\" % (\",\".join([str(int) for int in value]))\n\treturn queryString",
+                          "type": "script"
+                        }
+                      ],
+                      "type": "property"
+                    }
+                  },
+                  "props.params.options": {
+                    "binding": {
+                      "config": {
+                        "queryPath": "Volunteers/Skills/SkillsNamesIds"
+                      },
+                      "type": "query"
+                    }
+                  }
+                },
+                "props": {
+                  "params": {
+                    "selection": null,
+                    "text": "Skills*"
+                  },
+                  "path": "Volunteers/Templates/60px/top/Input_DropDownMulti",
+                  "style": {
+                    "marginTop": "5px"
+                  },
+                  "useDefaultViewHeight": true
+                },
+                "type": "ia.display.view"
+              },
+              {
+                "meta": {
+                  "name": "Group"
+                },
+                "position": {
+                  "basis": "56px"
+                },
+                "propConfig": {
+                  "props.params.options": {
+                    "binding": {
+                      "config": {
+                        "queryPath": "Volunteers/Group/GroupsSelectionOptions"
+                      },
+                      "type": "query"
+                    }
+                  }
+                },
+                "props": {
+                  "params": {
+                    "selection": null,
+                    "text": "Group*"
+                  },
+                  "path": "Volunteers/Templates/60px/top/Input_DropDownSingle",
+                  "style": {
+                    "marginTop": "5px"
+                  },
+                  "useDefaultViewHeight": true
+                },
+                "type": "ia.display.view"
+              }
+            ],
+            "meta": {
+              "name": "Right"
+            },
+            "position": {
+              "basis": "33%",
+              "grow": 1
+            },
+            "props": {
+              "direction": "column",
+              "style": {
+                "paddingLeft": "15px",
+                "paddingRight": "20px"
+              }
+            },
+            "type": "ia.container.flex"
+          }
+        ],
+        "meta": {
+          "name": "Personal"
+        },
+        "position": {
+          "basis": "280px",
+          "shrink": 0
+        },
+        "props": {
+          "style": {
+            "borderBottomColor": "#e6e6e6",
+            "borderBottomStyle": "solid",
+            "borderBottomWidth": 1,
+            "paddingBottom": "20px",
+            "paddingTop": "5px"
+          }
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "events": {
+          "component": {
+            "onRowClick": {
+              "config": {
+                "script": "\tself.view.custom.selectAll \u003d 0\n\tselectedColumn \u003d self.props.selection.selectedColumn\n\t#system.perspective.print(\u0027selectedColumn: %s\u0027 % selectedColumn)\n\tif selectedColumn \u003d\u003d \u0027humanId\u0027:\n\t\thId \u003d event.value[\u0027humanId\u0027]\n\t\tsystem.perspective.print(\"Opening dock with trackID: %s\" % hId)\n\t\tsystem.perspective.openDock(id\u003d\u0027PreviewVolunteer\u0027, params\u003d{\"trackID\":hId})\n\t\t\n\t#for item in range(len(self.props.data)):\n\t\t#if item \u003d\u003d event.row:\n\t\t\t#self.props.data[item].style.classes \u003d \u0027Table/Row_Select\u0027\n\t\t#else:\n\t\t\t#self.props.data[item].style.classes \u003d \u0027Table/Cell_Dashboard\u0027\n\n\t"
+              },
+              "scope": "G",
+              "type": "script"
+            },
+            "onRowDoubleClick": {
+              "config": {
+                "script": "\t#Triiger the add volunteer script\n\tmT \u003d \u0027AddVolunteer\u0027\n\tsystem.perspective.sendMessage(mT)"
+              },
+              "scope": "G",
+              "type": "script"
+            },
+            "onSelectionChange": {
+              "config": {
+                "script": "\t# the following styles the rows as selected that are selected and removes that from prior selected\n\t# this is made complex by the multi-select\n\tif self.view.custom.selectAll \u003d\u003d 0:\n\t\tSelectedRow \u003d event.selectedRow\n\t\tPriorSelected \u003d self.view.custom.priorSelected\n\t\tAllData \u003d self.props.data\n\t\t\n\t\tif SelectedRow \u003e -1:\n\t\t\tAllData[SelectedRow].style.classes \u003d \u0027Table/Row_Select_Detail\u0027\n\t\t\n\t\tCurrentIds \u003d []\n\t\tfor Row in event.data:\n\t\t\tNewRow \u003d Row[\u0027rowId\u0027]\n\t\t\tCurrentIds.append(NewRow)\n\t\t\n\t\tfor PriorRow in PriorSelected:\n\t\t\tif AllData:\n\t\t\t\tif PriorRow not in CurrentIds:\n\t\t\t\t\tAllData[PriorRow].style.classes \u003d \u0027Table/Cell_Detail\u0027\n\t\t\t\telse:\n\t\t\t\t\tAllData[SelectedRow].style.classes \u003d \u0027Table/Row_Select_Detail\u0027\n\t\t\n\t\tself.view.custom.priorSelected \u003d CurrentIds\n\telse:\n\t\tpass"
+              },
+              "scope": "G",
+              "type": "script"
+            }
+          }
+        },
+        "meta": {
+          "name": "Table"
+        },
+        "position": {
+          "basis": "100%",
+          "grow": 1
+        },
+        "propConfig": {
+          "props.data": {
+            "binding": {
+              "config": {
+                "parameters": {
+                  "ageAbove": "{view.custom.filter.ageAbove}",
+                  "ageBelow": "{view.custom.filter.ageBelow}",
+                  "facilitator": "{../Personal/Right/Skills.custom.queryString}",
+                  "firstName": "{view.custom.filter.firstName}",
+                  "gender": "{view.custom.filter.gender}",
+                  "groupId": "{view.custom.filter.groupId}",
+                  "lastName": "{view.custom.filter.lastName}",
+                  "skills": "{../Personal/Center/Facilitator.custom.queryString}",
+                  "useGender": "{view.custom.filter.useGender}",
+                  "useGroup": "{view.custom.filter.useGroup}"
+                },
+                "queryPath": "Volunteers/ListGeneration/SelectVolunteersNew"
+              },
+              "transforms": [
+                {
+                  "code": "\tFirstName \u003d self.view.custom.filter.firstName\n\tLastName \u003d self.view.custom.filter.lastName\n\tAgeAbove \u003d self.view.custom.filter.ageAbove\n\tAgeBelow \u003d self.view.custom.filter.ageBelow\n\tUseGender \u003d self.view.custom.filter.useGender\n\tuseGroup \u003d self.view.custom.filter.useGroup\n\tskills \u003d self.view.custom.filter.skills\n\t#UseRace \u003d self.view.custom.useRace\n\t#tableData is the data object to return\n\ttableData \u003d []\n\tRowId \u003d 0\n\t\n\tif FirstName !\u003d \"\" or LastName !\u003d \"\" or AgeAbove !\u003d 0 or AgeBelow !\u003d 120 or UseGender \u003d\u003d 1 or useGroup or skills is not None:\n\t# or UseRace \u003d\u003d 1:\n\t\t#Iterate over the results of the query\n\t\tfor row in range(value.getRowCount()):\n\t\t\trowStructure \u003d {}\n\t\t\trowData \u003d {}\n\t\t\tstyle \u003d {}\n\t\t\trowData[\u0027rowId\u0027] \u003d RowId\n\t\t\trowData[\u0027humanId\u0027] \u003d value.getValueAt(row, \"id\")\n\t\t\trowData[\u0027firstName\u0027] \u003d value.getValueAt(row, \"firstName\")\n\t\t\trowData[\u0027lastName\u0027] \u003d value.getValueAt(row, \"lastName\")\n\t\t\trowData[\u0027phone\u0027] \u003d value.getValueAt(row, \"phone\")\n\t\t\trowData[\u0027email\u0027] \u003d value.getValueAt(row, \"email\")\n\t\t\trowData[\u0027dob\u0027] \u003d value.getValueAt(row, \"dob\")\n\t\t\t#rowData[\u0027gender\u0027] \u003d value.getValueAt(row, \"gender\")\n\t\t\trowData[\u0027age\u0027] \u003d value.getValueAt(row, \"age\")\n\t\t\t#rowData[\u0027race\u0027] \u003d value.getValueAt(row, \"race\")\n\t\t\t\n\t\t\t#Set the default style for the row\n\t\t\tstyle[\u0027classes\u0027] \u003d \"Table/Cell_Detail\"\n\t\t\trowStructure[\u0027value\u0027] \u003d rowData\n\t\t\trowStructure[\u0027style\u0027] \u003d style\n\t\t\t#Append the individual\u0027s rowData to the tableData object\n\t\t\ttableData.append(rowStructure)\n\t\t\tRowId +\u003d 1\n\t\n\tself.props.selection.selectedRow \u003d -1\n\tself.view.custom.priorSelected \u003d []\n\tself.props.selection.data \u003d []\n\tself.view.custom.selectAll \u003d 0\n\t\n\treturn tableData",
+                  "type": "script"
+                }
+              ],
+              "type": "query"
+            }
+          }
+        },
+        "props": {
+          "columns": [
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "rowId",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": " "
+              },
+              "justify": "auto",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": false,
+              "style": {
+                "classes": "Table/Column_Normal_Detail"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "Participants/Templates/Table/TableOptions",
+              "visible": false,
+              "width": 40
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "humanId",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": " "
+              },
+              "justify": "auto",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": false,
+              "style": {
+                "classes": "Table/Column_Normal_Detail"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "1_TEMPLATES/Tables/TableOptions",
+              "visible": true,
+              "width": 40
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "firstName",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header_Detail\nBackground/Default"
+                },
+                "title": "First Name"
+              },
+              "justify": "auto",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": false,
+              "style": {
+                "classes": "Table/Column_Normal_Detail"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": ""
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "lastName",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Background/Default Table/Column_Header_Detail"
+                },
+                "title": "Last Name"
+              },
+              "justify": "auto",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": false,
+              "style": {
+                "classes": "Table/Column_Normal_Detail"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": ""
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "phone",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Background/Default Table/Column_Header_Detail"
+                },
+                "title": "Phone"
+              },
+              "justify": "auto",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": false,
+              "style": {
+                "classes": "Table/Column_Normal_Detail"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": ""
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "email",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Background/Default Table/Column_Header_Detail"
+                },
+                "title": "Email"
+              },
+              "justify": "auto",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": false,
+              "style": {
+                "classes": "Table/Column_Normal_Detail"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": ""
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "dob",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Background/Default Table/Column_Header_Detail"
+                },
+                "title": "DOB"
+              },
+              "justify": "auto",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": false,
+              "style": {
+                "classes": "Table/Column_Normal_Detail"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": false,
+              "width": ""
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "gender",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Background/Default Table/Column_Header_Detail"
+                },
+                "title": "Gender"
+              },
+              "justify": "auto",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": false,
+              "style": {
+                "classes": "Table/Column_Normal_Detail"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 70
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "age",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Background/Default Table/Column_Header_Detail"
+                },
+                "title": "Age"
+              },
+              "justify": "auto",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": false,
+              "style": {
+                "classes": "Table/Column_Normal_Detail"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 60
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "race",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Background/Default Table/Column_Header_Detail"
+                },
+                "title": "Race"
+              },
+              "justify": "auto",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": false,
+              "style": {
+                "classes": "Table/Column_Normal_Detail"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": ""
+            }
+          ],
+          "pager": {
+            "bottom": false
+          },
+          "rows": {
+            "striped": {
+              "enabled": false
+            },
+            "style": {
+              "cursor": "pointer"
+            }
+          },
+          "selection": {
+            "mode": "multiple interval",
+            "selectedColumn": "firstName",
+            "selectedRow": -1
+          },
+          "style": {
+            "classes": "Background/Default"
+          }
+        },
+        "type": "ia.display.table"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column",
+      "style": {
+        "classes": "Background/Default"
+      }
+    },
+    "scripts": {
+      "customMethods": [],
+      "extensionFunctions": null,
+      "messageHandlers": [
+        {
+          "messageType": "ResetSearchParameters",
+          "pageScope": true,
+          "script": "\t# Reset search parameters\n\tsystem.perspective.print(\"Resetting Volunteer List Generation Search Parameters\")\n\tself.getChild(\"Personal\").getChild(\"Left\").getChild(\"FirstName\").props.params.inputText \u003d \"\"\n\tself.getChild(\"Personal\").getChild(\"Left\").getChild(\"Age\").props.params.inputAbove \u003d 0\n\tself.getChild(\"Personal\").getChild(\"Left\").getChild(\"Age\").props.params.inputBelow \u003d 120\n\tself.getChild(\"Personal\").getChild(\"Left\").getChild(\"Status\").props.params.SelectedValue \u003d \"\"\n\tself.getChild(\"Personal\").getChild(\"Center\").getChild(\"LastName\").props.params.inputText \u003d \"\"\n\tself.getChild(\"Personal\").getChild(\"Center\").getChild(\"Gender\").props.params.selection \u003d None\n\tself.getChild(\"Personal\").getChild(\"Center\").getChild(\"Facilitator\").props.params.selection \u003d None\n\tself.getChild(\"Personal\").getChild(\"Right\").getChild(\"Availability_Date\").props.params.date \u003d None\n\tself.getChild(\"Personal\").getChild(\"Right\").getChild(\"Availability_Time\").props.params.selection \u003d None\n\tself.getChild(\"Personal\").getChild(\"Right\").getChild(\"Skills\").props.params.selection \u003d None\n\tself.getChild(\"Personal\").getChild(\"Right\").getChild(\"Group\").props.params.selection \u003d None\n\t\n\t# Refresh the data results\n\tsystem.perspective.print(\"Refresh Volunteer Search\")\n\tTable \u003d self.getChild(\"Table\")\n\tTable.refreshBinding(\"props.data\")\n\tself.view.custom.selectAll \u003d 0\n\tTable.props.selection.selectedRow \u003d None",
+          "sessionScope": false,
+          "viewScope": true
+        },
+        {
+          "messageType": "SearchSelectAll",
+          "pageScope": true,
+          "script": "\tTableProps \u003d self.getChild(\"Table\").props\n\tif TableProps.data:\n\t\tself.view.custom.selectAll \u003d 1\n\t\tself.getChild(\"Table\").props.selection.selectedRow \u003d 0\n\t\tnewSelected \u003d []\n\t\tSelectAll \u003d []\n\t\tsystem.perspective.print(\u0027Select All\u0027)\n\t\tfor Row in range(len(TableProps.data)):\n\t\t\tTableProps.data[Row].style.classes \u003d \u0027Table/Row_Select_Detail\u0027\n\t\t\tSelectAll.append(TableProps.data[Row].value)\n\t\t\tnewSelected.append(Row)\n\t\t\n\t\tself.view.custom.all \u003d SelectAll\n\t\tself.view.custom.priorSelected \u003d newSelected",
+          "sessionScope": false,
+          "viewScope": true
+        },
+        {
+          "messageType": "SearchClearSelection",
+          "pageScope": true,
+          "script": "\tTableProps \u003d self.getChild(\"Table\").props\n\tTableProps.selection.selectedRow \u003d None\n\tself.view.custom.priorSelected \u003d []\n\tself.view.custom.all \u003d []\n\tself.view.custom.selectAll \u003d 0\n\tfor Row in range(len(TableProps.data)):\n\t\tTableProps.data[Row].style.classes \u003d \u0027Table/Cell_Detail\u0027",
+          "sessionScope": false,
+          "viewScope": true
+        },
+        {
+          "messageType": "SaveListFilter",
+          "pageScope": true,
+          "script": "\tobject \u003d self.view.custom.filter\n\tlistname \u003d payload[\"listname\"]\n\tjson \u003d system.util.jsonEncode(object)\n\tuser \u003d self.session.props.auth.user.userName\n\tparams \u003d {\"filterName\": listname, \"filter\": json, \"username\": user}\n\tid \u003d system.db.runNamedQuery(project\u003d\"RITI\", path\u003d\"Volunteers/ListGeneration/CreateList\", parameters\u003dparams, getKey\u003d1)\n\tmt \u003d \"refreshAndSelectFilter\"\n\tpayload \u003d {\"id\":id}\n\tsystem.perspective.sendMessage(mt, payload\u003dpayload)",
+          "sessionScope": true,
+          "viewScope": true
+        },
+        {
+          "messageType": "ApplyListFilter",
+          "pageScope": true,
+          "script": "\tfilter \u003d payload[\"filter\"]\n\tparams \u003d {\"id\": filter}\n\tdata \u003d system.db.runNamedQuery(\"Volunteers/ListGeneration/GetFilter\", params)\n\tsystem.perspective.print(data.getValueAt(0, \"filter\"))\n\tself.view.custom.filter \u003d system.util.jsonDecode(data.getValueAt(0, \"filter\"))\n\tself.getChild(\"Table\").refreshBinding(\"props.data\")",
+          "sessionScope": true,
+          "viewScope": true
+        }
+      ]
+    },
+    "type": "ia.container.flex"
+  }
+}

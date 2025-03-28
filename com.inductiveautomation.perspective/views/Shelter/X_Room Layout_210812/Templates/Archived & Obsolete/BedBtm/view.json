@@ -1,0 +1,790 @@
+{
+  "custom": {
+    "Active": true,
+    "BedData": {
+      "$": [
+        "ds",
+        192,
+        1609560730442
+      ],
+      "$columns": [
+        {
+          "data": [],
+          "name": "bedId",
+          "type": "Integer"
+        },
+        {
+          "data": [],
+          "name": "roomId",
+          "type": "Integer"
+        },
+        {
+          "data": [],
+          "name": "facilityId",
+          "type": "Integer"
+        },
+        {
+          "data": [],
+          "name": "CheckIn",
+          "type": "Date"
+        },
+        {
+          "data": [],
+          "name": "CheckOut",
+          "type": "Date"
+        },
+        {
+          "data": [],
+          "name": "ResIn",
+          "type": "Date"
+        },
+        {
+          "data": [],
+          "name": "ResOut",
+          "type": "Date"
+        },
+        {
+          "data": [],
+          "name": "ReservedDate",
+          "type": "Date"
+        },
+        {
+          "data": [],
+          "name": "Bed",
+          "type": "String"
+        },
+        {
+          "data": [],
+          "name": "Participant",
+          "type": "String"
+        },
+        {
+          "data": [],
+          "name": "gender",
+          "type": "String"
+        },
+        {
+          "data": [],
+          "name": "Reserved",
+          "type": "Integer"
+        },
+        {
+          "data": [],
+          "name": "Occupied",
+          "type": "Integer"
+        },
+        {
+          "data": [],
+          "name": "ParticID",
+          "type": "Integer"
+        }
+      ]
+    },
+    "BedID": "",
+    "BedName": "Top Bunk 5",
+    "BedPos": "value",
+    "CheckIn": "",
+    "CheckOut": null,
+    "FacID": "",
+    "OccupantID": "value",
+    "OccupantName": "",
+    "Occupied": false,
+    "Reserved": false,
+    "RoomID": "",
+    "gender": ""
+  },
+  "params": {
+    "Active": true,
+    "BedId": 88,
+    "BedPos": "value",
+    "FacilityID": "",
+    "Occupied": false,
+    "RoomId": "",
+    "bedName": "Top Bunk 5",
+    "height": "value",
+    "selectedBed": 88,
+    "selectedPartic": "value",
+    "selectedRes": "value",
+    "width": "value",
+    "xLoc": "value",
+    "yLoc": "value"
+  },
+  "propConfig": {
+    "custom.Active": {
+      "persistent": true
+    },
+    "custom.BedData": {
+      "binding": {
+        "config": {
+          "bypassCache": true,
+          "parameters": {
+            "BedID": "{view.params.BedId}"
+          },
+          "polling": {
+            "enabled": true,
+            "rate": "30"
+          },
+          "queryPath": "Shelter/BedView/BedStatusByBed"
+        },
+        "type": "query"
+      },
+      "persistent": true
+    },
+    "custom.BedID": {
+      "binding": {
+        "config": {
+          "expression": "{view.custom.BedData}[0]"
+        },
+        "type": "expr"
+      },
+      "persistent": true
+    },
+    "custom.BedName": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "BedId": "{view.params.BedId}"
+          },
+          "polling": {
+            "enabled": true,
+            "rate": "30"
+          },
+          "queryPath": "Shelter/Room Layout/qryBedNameById",
+          "returnFormat": "scalar"
+        },
+        "type": "query"
+      },
+      "persistent": true
+    },
+    "custom.BedPos": {
+      "persistent": true
+    },
+    "custom.CheckIn": {
+      "binding": {
+        "config": {
+          "expression": "{view.custom.BedData}[3]"
+        },
+        "transforms": [
+          {
+            "formatType": "datetime",
+            "formatValue": {
+              "date": "short",
+              "time": "short"
+            },
+            "type": "format"
+          }
+        ],
+        "type": "expr"
+      },
+      "persistent": true
+    },
+    "custom.CheckOut": {
+      "binding": {
+        "config": {
+          "expression": "{view.custom.BedData}[4]"
+        },
+        "type": "expr"
+      },
+      "persistent": true
+    },
+    "custom.FacID": {
+      "binding": {
+        "config": {
+          "expression": "{view.custom.BedData}[2]"
+        },
+        "type": "expr"
+      },
+      "persistent": true
+    },
+    "custom.OccupantID": {
+      "binding": {
+        "config": {
+          "expression": "{view.custom.BedData}[13]"
+        },
+        "type": "expr"
+      },
+      "persistent": true
+    },
+    "custom.OccupantName": {
+      "binding": {
+        "config": {
+          "expression": "{view.custom.BedData}[9]"
+        },
+        "type": "expr"
+      },
+      "persistent": true
+    },
+    "custom.Occupied": {
+      "binding": {
+        "config": {
+          "expression": "if({view.custom.BedData}[12]\u003d1,true,false)"
+        },
+        "type": "expr"
+      },
+      "persistent": true
+    },
+    "custom.Reserved": {
+      "binding": {
+        "config": {
+          "expression": "if({view.custom.BedData}[11]\u003d1,true,false)"
+        },
+        "type": "expr"
+      },
+      "persistent": true
+    },
+    "custom.RoomID": {
+      "binding": {
+        "config": {
+          "expression": "{view.custom.BedData}[1]"
+        },
+        "type": "expr"
+      },
+      "persistent": true
+    },
+    "custom.gender": {
+      "binding": {
+        "config": {
+          "expression": "left({view.custom.BedData}[10],1)"
+        },
+        "type": "expr"
+      },
+      "persistent": true
+    },
+    "params.Active": {
+      "binding": {
+        "config": {
+          "bidirectional": true,
+          "path": "view.custom.Active"
+        },
+        "type": "property"
+      },
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.BedId": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.BedPos": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.FacilityID": {
+      "binding": {
+        "config": {
+          "path": "view.custom.FacID"
+        },
+        "type": "property"
+      },
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.Occupied": {
+      "binding": {
+        "config": {
+          "expression": "{view.custom.Occupied}"
+        },
+        "type": "expr"
+      },
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.RoomId": {
+      "binding": {
+        "config": {
+          "path": "view.custom.RoomID"
+        },
+        "type": "property"
+      },
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.bedName": {
+      "binding": {
+        "config": {
+          "bidirectional": true,
+          "path": "view.custom.BedName"
+        },
+        "type": "property"
+      },
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.height": {
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.selectedBed": {
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.selectedPartic": {
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.selectedRes": {
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.width": {
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.xLoc": {
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.yLoc": {
+      "paramDirection": "inout",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 139,
+      "width": 259
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "events": {
+          "dom": {
+            "onClick": {
+              "config": {
+                "script": "\tself.view.params.selectedBed \u003d self.view.params.BedId"
+              },
+              "scope": "G",
+              "type": "script"
+            }
+          }
+        },
+        "meta": {
+          "name": "BedTop"
+        },
+        "position": {
+          "height": 0.8489,
+          "rotate": {},
+          "width": 0.3861,
+          "x": 0.0463,
+          "y": 0.0971
+        },
+        "propConfig": {
+          "position.rotate.angle": {
+            "binding": {
+              "config": {
+                "expression": "if({view.params.BedPos} \u003d \u0027V\u0027,\u00270deg\u0027,\u0027-90deg\u0027)"
+              },
+              "type": "expr"
+            }
+          }
+        },
+        "props": {
+          "fit": {
+            "mode": "cover"
+          },
+          "source": "/system/images/SVGs/BedTop.svg"
+        },
+        "type": "ia.display.image"
+      },
+      {
+        "meta": {
+          "name": "Women"
+        },
+        "position": {
+          "height": 0.5468,
+          "rotate": {},
+          "width": 0.2432,
+          "x": 0.1178,
+          "y": 0.2482
+        },
+        "propConfig": {
+          "meta.visible": {
+            "binding": {
+              "config": {
+                "expression": "if({view.custom.gender}\u003d\u0027F\u0027 \u0026\u0026 {view.params.Occupied},true,false)"
+              },
+              "type": "expr"
+            }
+          },
+          "position.rotate.angle": {
+            "binding": {
+              "config": {
+                "expression": "if({view.params.BedPos} \u003d \u0027V\u0027,\u00270deg\u0027,\u0027-90deg\u0027)"
+              },
+              "type": "expr"
+            }
+          }
+        },
+        "props": {
+          "elements": [
+            {
+              "d": "M257,999 l0,-396 -147,0 119,-253 -229,0 0,-88 283,0 0,-56 -22,-18 -18,-25 -11,-28 -3,-29 7,-33 4,-14 21,-27 24,-20 28,-11 8,-1 9,0 8,0 31,3 27,13 20,17 18,26 10,26 3,35 -6,31 -15,25 -22,24 -10,8 0,54 285,0 0,88 -232,0 120,253 -146,0 0,396 -69,0 0,-396 -23,0 0,396 -72,0z",
+              "fill": {
+                "paint": "#00f"
+              },
+              "name": "path",
+              "stroke": {
+                "paint": "#4c4c4c",
+                "width": "2"
+              },
+              "style": {},
+              "type": "path"
+            }
+          ],
+          "viewBox": "0 0 679 999"
+        },
+        "type": "ia.shapes.svg"
+      },
+      {
+        "meta": {
+          "name": "Men"
+        },
+        "position": {
+          "height": 0.5468,
+          "rotate": {},
+          "width": 0.2432,
+          "x": 0.1178,
+          "y": 0.2482
+        },
+        "propConfig": {
+          "meta.visible": {
+            "binding": {
+              "config": {
+                "expression": "if({view.custom.gender}\u003d\u0027M\u0027\u0026\u0026 {view.params.Occupied},true,false)"
+              },
+              "type": "expr"
+            }
+          },
+          "position.rotate.angle": {
+            "binding": {
+              "config": {
+                "expression": "if({view.params.BedPos} \u003d \u0027V\u0027,\u00270deg\u0027,\u0027-90deg\u0027)"
+              },
+              "type": "expr"
+            }
+          }
+        },
+        "props": {
+          "elements": [
+            {
+              "d": "M255,999 l0,-396 -34,0 0,-253 -221,0 0,-87 281,0 0,-50 -23,-19 -17,-26 -11,-31 -2,-34 7,-30 16,-27 25,-26 30,-16 23,-4 12,0 12,0 33,8 28,20 22,27 13,28 4,30 -4,34 -14,29 -20,24 -16,13 0,50 285,0 0,87 -225,0 0,253 -32,0 0,396 -70,0 0,-398 -30,0 0,398 -72,0z",
+              "fill": {
+                "paint": "#00f"
+              },
+              "name": "path",
+              "stroke": {
+                "paint": "#4c4c4c",
+                "width": "2"
+              },
+              "style": {},
+              "type": "path"
+            }
+          ],
+          "viewBox": "0 0 684 999"
+        },
+        "type": "ia.shapes.svg"
+      },
+      {
+        "events": {
+          "dom": {
+            "onClick": {
+              "config": {
+                "script": "\tself.view.params.selectedBed \u003d self.view.params.BedId"
+              },
+              "scope": "G",
+              "type": "script"
+            }
+          }
+        },
+        "meta": {
+          "name": "lblBedID"
+        },
+        "position": {
+          "height": 0.1511,
+          "width": 0.4981,
+          "x": 0.0038,
+          "y": 0.0196
+        },
+        "propConfig": {
+          "props.text": {
+            "binding": {
+              "config": {
+                "path": "view.custom.BedName"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "style": {
+            "classes": "ActivityCards/Card_TextLight",
+            "textAlign": "center"
+          }
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "meta": {
+          "name": "lblCheckOut"
+        },
+        "position": {
+          "height": 0.2255,
+          "width": 0.5058,
+          "x": 0.4788,
+          "y": 0.7206
+        },
+        "propConfig": {
+          "meta.visible": {
+            "binding": {
+              "config": {
+                "path": "view.params.Occupied"
+              },
+              "type": "property"
+            }
+          },
+          "props.text": {
+            "binding": {
+              "config": {
+                "path": "view.custom.CheckOut"
+              },
+              "transforms": [
+                {
+                  "fallback": " ",
+                  "inputType": "scalar",
+                  "mappings": [],
+                  "outputType": "scalar",
+                  "type": "map"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "style": {
+            "classes": "ActivityCards/Card_TextLight"
+          }
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "meta": {
+          "name": "lblCheckIn"
+        },
+        "position": {
+          "height": 0.2255,
+          "width": 0.5058,
+          "x": 0.4788,
+          "y": 0.4603
+        },
+        "propConfig": {
+          "meta.visible": {
+            "binding": {
+              "config": {
+                "path": "view.params.Occupied"
+              },
+              "type": "property"
+            }
+          },
+          "props.text": {
+            "binding": {
+              "config": {
+                "path": "view.custom.CheckIn"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "style": {
+            "classes": "ActivityCards/Card_TextLight"
+          }
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "events": {
+          "dom": {
+            "onClick": {
+              "config": {
+                "script": "\tself.view.params.selectedPartic \u003d self.view.custom.OccupantID\n\tid \u003d \"PreviewParticipant\" \n\tparams \u003d {\"participantID\":self.view.custom.OccupantID}\n\tsystem.perspective.openDock(id,params \u003d params)"
+              },
+              "scope": "G",
+              "type": "script"
+            }
+          }
+        },
+        "meta": {
+          "name": "lblOccupant"
+        },
+        "position": {
+          "height": 0.2255,
+          "width": 0.5058,
+          "x": 0.4788,
+          "y": 0.1991
+        },
+        "propConfig": {
+          "meta.visible": {
+            "binding": {
+              "config": {
+                "path": "view.params.Occupied"
+              },
+              "type": "property"
+            }
+          },
+          "props.text": {
+            "binding": {
+              "config": {
+                "path": "view.custom.OccupantName"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "style": {
+            "classes": "ActivityCards/Card_TextLight"
+          }
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "meta": {
+          "name": "ResNoShow",
+          "visible": false
+        },
+        "position": {
+          "height": 0.6619,
+          "width": 0.2934,
+          "x": 0.0926,
+          "y": 0.1907
+        },
+        "props": {
+          "elements": [
+            {
+              "d": "M492,998 l0,-142 -36,-2 -35,-7 -33,-9 -32,-12 -31,-15 -29,-19 -28,-21 -25,-23 -23,-25 -20,-28 -18,-29 -15,-31 -12,-34 -9,-34 -5,-35 -2,-36 2,-37 5,-35 9,-34 12,-33 15,-31 18,-29 20,-28 23,-25 25,-23 28,-21 29,-18 31,-15 32,-12 33,-9 35,-5 18,-2 18,0 0,-136 -50,3 -49,8 -47,12 -45,17 -43,22 -40,25 -38,29 -35,32 -32,35 -29,39 -24,41 -21,43 -17,46 -12,47 -8,49 -2,26 0,25 0,26 5,50 10,48 15,46 19,45 22,42 27,40 30,36 34,34 36,31 40,27 42,22 44,19 46,15 47,10 49,5 26,0z",
+              "fill": {
+                "paint": "#f00"
+              },
+              "name": "path",
+              "style": {},
+              "type": "path"
+            },
+            {
+              "d": "M488,995 l0,-142 35,-3 35,-6 34,-9 32,-12 31,-16 29,-18 27,-21 25,-23 23,-25 21,-28 17,-29 15,-32 12,-33 9,-34 6,-35 1,-37 -1,-36 -6,-35 -9,-34 -12,-33 -15,-32 -17,-29 -21,-27 -23,-26 -25,-23 -27,-20 -29,-18 -31,-15 -32,-12 -34,-9 -35,-5 -17,-2 -18,0 0,-136 49,3 49,8 47,12 45,17 43,22 40,25 39,29 34,32 33,35 28,39 25,41 21,43 16,46 13,47 7,49 2,26 1,25 -1,26 -5,50 -10,48 -14,46 -19,45 -23,42 -27,40 -30,36 -34,34 -36,31 -39,26 -42,23 -44,19 -46,15 -48,10 -49,5 -25,0z",
+              "fill": {
+                "paint": "#f00"
+              },
+              "name": "path",
+              "style": {},
+              "type": "path"
+            },
+            {
+              "d": "M238,151 l575,575 -99,98 -575,-575 99,-98z",
+              "fill": {
+                "paint": "#f00"
+              },
+              "name": "path",
+              "style": {},
+              "type": "path"
+            }
+          ],
+          "viewBox": "0 0 980 998"
+        },
+        "type": "ia.shapes.svg"
+      },
+      {
+        "meta": {
+          "name": "Reserved"
+        },
+        "position": {
+          "height": 0.5683,
+          "width": 0.2819,
+          "x": 0.0985,
+          "y": 0.2374
+        },
+        "propConfig": {
+          "meta.visible": {
+            "binding": {
+              "config": {
+                "expression": "{view.custom.Reserved}"
+              },
+              "type": "expr"
+            }
+          }
+        },
+        "props": {
+          "elements": [
+            {
+              "cx": "499",
+              "cy": "499",
+              "fill": {
+                "paint": "#fff"
+              },
+              "name": "circle",
+              "r": "499",
+              "stroke": {
+                "paint": "#4c4c4c",
+                "width": "2"
+              },
+              "style": {},
+              "type": "circle"
+            },
+            {
+              "cx": "499",
+              "cy": "498",
+              "fill": {
+                "paint": "#00f"
+              },
+              "name": "circle",
+              "r": "465",
+              "stroke": {
+                "paint": "#4c4c4c",
+                "width": "2"
+              },
+              "style": {},
+              "type": "circle"
+            },
+            {
+              "d": "M773,331 l40,0 0,336 -42,0 0,-70 -542,-1 0,71 -44,0 0,-262 44,0 0,69 401,0 11,-27 23,-22 32,-14 34,-4 32,11 11,7 0,-94z",
+              "fill": {
+                "paint": "#fff"
+              },
+              "name": "path",
+              "stroke": {
+                "paint": "#4c4c4c",
+                "width": "2"
+              },
+              "style": {},
+              "type": "path"
+            }
+          ],
+          "viewBox": "0 0 999 999"
+        },
+        "type": "ia.shapes.svg"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "position": {
+      "x": -91,
+      "y": -82.5080680847168
+    },
+    "propConfig": {
+      "meta.visible": {
+        "binding": {
+          "config": {
+            "path": "view.custom.Active"
+          },
+          "type": "property"
+        }
+      }
+    },
+    "props": {
+      "mode": "percent"
+    },
+    "type": "ia.container.coord"
+  }
+}

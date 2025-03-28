@@ -1,0 +1,222 @@
+{
+  "custom": {
+    "WeekEnd": {
+      "$": [
+        "ts",
+        192,
+        1693833968001
+      ],
+      "$ts": 1694179568001
+    },
+    "WeekStart": {
+      "$": [
+        "ts",
+        192,
+        1693833968001
+      ],
+      "$ts": 1693833968001
+    }
+  },
+  "events": {
+    "system": {
+      "onStartup": {
+        "config": {
+          "script": "\ttoday \u003d system.date.now()\n\tDayOfWeek \u003d system.date.getDayOfWeek(today)\n\tsystem.perspective.print(\u0027DayOfWeek \u0027+str(DayOfWeek))\n\tif DayOfWeek \u003d\u003d 1:\n\t\tstartDate \u003d system.date.addDays(today, 1)\n\telif DayOfWeek \u003d\u003d 7:\n\t\tstartDate \u003d system.date.addDays(today, 2) ## on Saturday make it next Monday\n\telif DayOfWeek \u003d\u003d 2:\n\t\tstartDate \u003d today\n\telse:\n\t\tcount \u003d 0\n\t\twhile DayOfWeek !\u003d 2:\n\t\t\tDayOfWeek \u003d DayOfWeek - 1\n\t\t\tcount \u003d count + 1\n\t\tstartDate \u003d system.date.addDays(today, -count)\n\tsystem.perspective.print(\u0027startDate \u0027+str(startDate))\n\tself.custom.WeekStart \u003d startDate"
+        },
+        "scope": "G",
+        "type": "script"
+      }
+    }
+  },
+  "params": {
+    "WeekEndDate": {
+      "$": [
+        "ts",
+        192,
+        1693833968001
+      ],
+      "$ts": 1694179568001
+    },
+    "WeekStartDate": {
+      "$": [
+        "ts",
+        192,
+        1693833968001
+      ],
+      "$ts": 1693833968001
+    }
+  },
+  "propConfig": {
+    "custom.WeekEnd": {
+      "binding": {
+        "config": {
+          "expression": "addDays({view.custom.WeekStart}, 4)"
+        },
+        "type": "expr"
+      },
+      "onChange": {
+        "enabled": null,
+        "script": "\tself.getChild(\"root\").getChild(\"label\").refreshBinding(\u0027props.text\u0027)"
+      },
+      "persistent": true
+    },
+    "custom.WeekStart": {
+      "persistent": true
+    },
+    "params.WeekEndDate": {
+      "binding": {
+        "config": {
+          "path": "view.custom.WeekEnd"
+        },
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.WeekStartDate": {
+      "binding": {
+        "config": {
+          "path": "view.custom.WeekStart"
+        },
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 30,
+      "width": 1817
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "events": {
+          "dom": {
+            "onClick": {
+              "config": {
+                "script": "\tcurrentDate \u003d self.view.custom.WeekStart\n\tself.view.custom.WeekStart \u003d system.date.addDays(currentDate, -7)\n\t"
+              },
+              "scope": "G",
+              "type": "script"
+            }
+          }
+        },
+        "meta": {
+          "name": "Button_1"
+        },
+        "position": {
+          "basis": "40px"
+        },
+        "props": {
+          "image": {
+            "height": 30,
+            "icon": {
+              "color": "#0C4E85",
+              "path": "material/chevron_left"
+            },
+            "position": "right",
+            "style": {
+              "backgroundColor": "#FFFFFF"
+            },
+            "width": 30
+          },
+          "primary": false,
+          "style": {
+            "borderStyle": "none",
+            "classes": "Background/Alternative"
+          },
+          "text": "",
+          "textStyle": {
+            "color": "#0C4E85"
+          }
+        },
+        "type": "ia.input.button"
+      },
+      {
+        "meta": {
+          "name": "label"
+        },
+        "position": {
+          "basis": "400px"
+        },
+        "propConfig": {
+          "props.text": {
+            "binding": {
+              "config": {
+                "path": "view.custom.WeekStart"
+              },
+              "transforms": [
+                {
+                  "code": "\tWeekStart \u003d value\n\tWeekEnd \u003d self.view.custom.WeekEnd\n\tif system.date.format(WeekStart ,\u0027MMMM \u0027) \u003d\u003d system.date.format(WeekEnd ,\u0027MMMM \u0027):\n\t\treturn \u0027Weekly Class Schedule: \u0027 + str(system.date.format(WeekStart ,\u0027MMMM \u0027)) + str(system.date.format(WeekStart,\u0027dd\u0027)) + \u0027-\u0027 + str(system.date.format(WeekEnd ,\u0027dd \u0027))\n\telse:\n\t\treturn \u0027Weekly Class Schedule: \u0027 + str(system.date.format(WeekStart ,\u0027MMM \u0027)) + str(system.date.format(WeekStart,\u0027dd\u0027)) + \u0027-\u0027 + str(system.date.format(WeekEnd ,\u0027MMM \u0027)) + str(system.date.format(WeekEnd ,\u0027dd \u0027))\n\t",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "style": {
+            "classes": "Background/Alternative Table/Cell_Detail"
+          },
+          "textStyle": {
+            "classes": "Background/Alternative",
+            "fontSize": "25px",
+            "textAlign": "center"
+          }
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "events": {
+          "dom": {
+            "onClick": {
+              "config": {
+                "script": "\tcurrentDate \u003d self.view.custom.WeekStart\n\tself.view.custom.WeekStart \u003d system.date.addDays(currentDate, 7)\n\t"
+              },
+              "scope": "G",
+              "type": "script"
+            }
+          }
+        },
+        "meta": {
+          "name": "Button_2"
+        },
+        "position": {
+          "basis": "40px"
+        },
+        "props": {
+          "image": {
+            "height": 30,
+            "icon": {
+              "color": "#0C4E85",
+              "path": "material/chevron_right"
+            },
+            "width": 30
+          },
+          "primary": false,
+          "style": {
+            "borderStyle": "none",
+            "classes": "Background/Alternative",
+            "color": "#3EC3D9"
+          },
+          "text": ""
+        },
+        "type": "ia.input.button"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "justify": "center",
+      "style": {
+        "classes": "Filter/Header_Text"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

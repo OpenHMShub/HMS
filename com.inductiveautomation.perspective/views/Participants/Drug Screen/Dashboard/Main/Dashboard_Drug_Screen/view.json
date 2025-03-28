@@ -1,0 +1,145 @@
+{
+  "custom": {},
+  "params": {},
+  "props": {
+    "defaultSize": {
+      "width": 1550
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "KPI"
+        },
+        "position": {
+          "basis": "175px",
+          "shrink": 0
+        },
+        "props": {
+          "path": "Participants/Drug Screen/Dashboard/Main/KPI/Drug_Screen_KPI"
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Label"
+        },
+        "position": {
+          "basis": "32px",
+          "display": false
+        },
+        "propConfig": {
+          "props.text": {
+            "binding": {
+              "config": {
+                "path": "session.custom.filters"
+              },
+              "transforms": [
+                {
+                  "code": "\toutput \u003d \"Test Date: \" + str(self.session.custom.filters.drugScreenDashboard.testDate.where)\n\toutput +\u003d \", Administered: \" + str(self.session.custom.filters.drugScreenDashboard.administeredById.where)\n\toutput +\u003d \", Reason: \" + str(self.session.custom.filters.drugScreenDashboard.drugScreenReasonId.where)\n\toutput +\u003d \", Type: \" + str(self.session.custom.filters.drugScreenDashboard.drugScreenTypeId.where)\n\toutput +\u003d \", Passed: \" + str(self.session.custom.filters.drugScreenDashboard.passed.where)\n\toutput +\u003d \", First Name: \" + str(self.session.custom.filters.drugScreenDashboard.FirstName.where)\n\toutput +\u003d \", Middle Name: \" +str(self.session.custom.filters.drugScreenDashboard.MiddleName.where)\n\toutput +\u003d \", Last Name: \" +str(self.session.custom.filters.drugScreenDashboard.LastName.where)\n\toutput +\u003d \", Nick Name: \" +str(self.session.custom.filters.drugScreenDashboard.NickName.where)\n\n\treturn output",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "style": {
+            "classes": "Text/Error_Message"
+          }
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "meta": {
+          "name": "Filter_Row1"
+        },
+        "position": {
+          "basis": "30px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "custom.sqlData": {
+            "binding": {
+              "config": {
+                "parameters": {
+                  "activity_range": "{view.params.activity_range}",
+                  "administeredById": "",
+                  "drugScreenResonId": "",
+                  "drugScreenTypeId": "",
+                  "passed": "",
+                  "testDate": ""
+                },
+                "queryPath": "Participants/DrugScreen/DrugScreenDashboardSelect"
+              },
+              "type": "query"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "activity_range": 365
+          },
+          "path": "Participants/Drug Screen/Dashboard/Main/Filters/DrugScreen_Filter_Row1",
+          "style": {
+            "marginLeft": "35px",
+            "marginRight": "40px"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Filter_Row2"
+        },
+        "position": {
+          "basis": "30px",
+          "shrink": 0
+        },
+        "props": {
+          "path": "Participants/Drug Screen/Dashboard/Main/Filters/DrugScreen_Filter_Row2",
+          "style": {
+            "marginLeft": "35px",
+            "marginRight": "40px"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Table"
+        },
+        "position": {
+          "basis": "75%",
+          "grow": 1
+        },
+        "propConfig": {
+          "props.params.activity_range": {
+            "binding": {
+              "config": {
+                "path": "../Filter_Row1.props.params.activity_range"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "path": "Participants/Drug Screen/Dashboard/Main/Tables/Drug_Screen_Table"
+        },
+        "type": "ia.display.view"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column",
+      "style": {
+        "classes": "Background/Alternative"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

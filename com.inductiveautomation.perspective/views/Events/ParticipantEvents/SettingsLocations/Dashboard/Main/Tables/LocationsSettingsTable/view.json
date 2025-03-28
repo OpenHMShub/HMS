@@ -1,0 +1,666 @@
+{
+  "custom": {
+    "searchText": "\u0027%%\u0027",
+    "sql_data": {
+      "$": [
+        "ds",
+        192,
+        1699344156832
+      ],
+      "$columns": [
+        {
+          "data": [
+            21,
+            22,
+            1,
+            2,
+            15,
+            16,
+            23,
+            31,
+            29,
+            24,
+            25,
+            32,
+            30,
+            33,
+            35,
+            34
+          ],
+          "name": "id",
+          "type": "Integer"
+        },
+        {
+          "data": [
+            "Art Room",
+            "Life Skills Room",
+            "Class Room A",
+            "Class Room B",
+            "Class Room C",
+            "Music Room",
+            "Business Center",
+            "Chapel",
+            "Cafe",
+            "Activity Center Middle",
+            "Activity Center Back",
+            "Courtyard",
+            "Dining Room",
+            "Drexel House",
+            "Drexel House Stage",
+            "Drexel House Table Area"
+          ],
+          "name": "name",
+          "type": "String"
+        },
+        {
+          "data": [
+            21,
+            22,
+            1,
+            2,
+            15,
+            16,
+            23,
+            31,
+            29,
+            24,
+            25,
+            32,
+            30,
+            33,
+            35,
+            34
+          ],
+          "name": "arrowUp",
+          "type": "Integer"
+        },
+        {
+          "data": [
+            21,
+            22,
+            1,
+            2,
+            15,
+            16,
+            23,
+            31,
+            29,
+            24,
+            25,
+            32,
+            30,
+            33,
+            35,
+            34
+          ],
+          "name": "arrowDown",
+          "type": "Integer"
+        }
+      ]
+    }
+  },
+  "params": {
+    "SearchText": "",
+    "selectedRow": null
+  },
+  "propConfig": {
+    "custom.providerTypes": {
+      "persistent": true
+    },
+    "custom.searchText": {
+      "binding": {
+        "config": {
+          "path": "session.custom.filters.settingsPrograms.search.value"
+        },
+        "transforms": [
+          {
+            "code": "\tif value is not None and value !\u003d \"\" and value !\u003d \u0027null\u0027:\n\t\treturn \"\u0027%\" + str(value) + \"%\u0027\"\n\telse:\n\t\treturn \"\u0027%%\u0027\"",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      },
+      "persistent": true
+    },
+    "custom.sql_data": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "Location_Name": "{view.params.SearchText}"
+          },
+          "queryPath": "Event/ParticipantEvents/Locations/GetLocationsWithOrder"
+        },
+        "type": "query"
+      },
+      "persistent": true
+    },
+    "custom.tableData": {
+      "persistent": true
+    },
+    "params.SearchText": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.selectedRow": {
+      "binding": {
+        "config": {
+          "path": "/root/Table.props.selection.selectedRow"
+        },
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.selected_row": {
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.selection_data": {
+      "binding": {
+        "config": {
+          "path": "/root/Table.props.selection.data"
+        },
+        "type": "property"
+      },
+      "paramDirection": "output"
+    },
+    "params.tableData": {
+      "paramDirection": "output",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 620,
+      "width": 1222
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "events": {
+          "component": {
+            "onRowClick": {
+              "config": {
+                "script": "\tselectedColumn \u003d self.props.selection.selectedColumn\n\trow \u003d event.row\n\tdataSet \u003d self.view.custom.sql_data\n\tId \u003d self.props.selection.data[0].id\n\tLocationName \u003d self.props.selection.data[0].name\n\tif selectedColumn \u003d\u003d \u0027arrowUp\u0027:\n\t\tcurrentRow \u003d row\n\t\tprevRow \u003d row - 1\n\t\tcurrentId \u003d dataSet.getValueAt(currentRow, \u0027id\u0027)\n\t\tcurrentName \u003d dataSet.getValueAt(currentRow, \u0027name\u0027)\n\t\t\n\t\tprevId \u003d dataSet.getValueAt(prevRow, \u0027id\u0027)\n\t\tprevName \u003d dataSet.getValueAt(prevRow, \u0027name\u0027)\n\t\t\n\t\tdataSet \u003d system.dataset.setValue(dataSet, currentRow, \u0027id\u0027, prevId)\n\t\tdataSet \u003d system.dataset.setValue(dataSet, currentRow, \u0027name\u0027, prevName)\n\t\tdataSet \u003d system.dataset.setValue(dataSet, currentRow, \u0027arrowUp\u0027, prevId)\n\t\tdataSet \u003d system.dataset.setValue(dataSet, currentRow, \u0027arrowDown\u0027, prevId)\n\t\t\n\t\tdataSet \u003d system.dataset.setValue(dataSet, prevRow, \u0027id\u0027, currentId)\n\t\tdataSet \u003d system.dataset.setValue(dataSet, prevRow, \u0027name\u0027, currentName)\n\t\tdataSet \u003d system.dataset.setValue(dataSet, prevRow, \u0027arrowUp\u0027, currentId)\n\t\tdataSet \u003d system.dataset.setValue(dataSet, prevRow, \u0027arrowDown\u0027, currentId)\n\t\t\n\t\tself.view.custom.sql_data \u003d dataSet\n\t\tself.refreshBinding(\"props.data\")\n\telif selectedColumn \u003d\u003d \u0027arrowDown\u0027:\n\t\tcurrentRow \u003d row\n\t\tnextRow \u003d row + 1\n\t\tcurrentId \u003d dataSet.getValueAt(currentRow, \u0027id\u0027)\n\t\tcurrentName \u003d dataSet.getValueAt(currentRow, \u0027name\u0027)\n\t\t\n\t\tnextId \u003d dataSet.getValueAt(nextRow, \u0027id\u0027)\n\t\tnextName \u003d dataSet.getValueAt(nextRow, \u0027name\u0027)\n\t\t\n\t\tdataSet \u003d system.dataset.setValue(dataSet, currentRow, \u0027id\u0027, nextId)\n\t\tdataSet \u003d system.dataset.setValue(dataSet, currentRow, \u0027name\u0027, nextName)\n\t\tdataSet \u003d system.dataset.setValue(dataSet, currentRow, \u0027arrowUp\u0027, nextId)\n\t\tdataSet \u003d system.dataset.setValue(dataSet, currentRow, \u0027arrowDown\u0027, nextId)\n\t\t\n\t\tdataSet \u003d system.dataset.setValue(dataSet, nextRow, \u0027id\u0027, currentId)\n\t\tdataSet \u003d system.dataset.setValue(dataSet, nextRow, \u0027name\u0027, currentName)\n\t\tdataSet \u003d system.dataset.setValue(dataSet, nextRow, \u0027arrowUp\u0027, currentId)\n\t\tdataSet \u003d system.dataset.setValue(dataSet, nextRow, \u0027arrowDown\u0027, currentId)\n\t\t\n\t\tself.view.custom.sql_data \u003d dataSet\n\t\tself.refreshBinding(\"props.data\")\n\telse:\n\t\tsystem.perspective.sendMessage(\u0027LocationEdit\u0027, payload\u003d{\u0027Id\u0027:str(Id), \u0027LocationName\u0027:str(LocationName)}, scope\u003d\u0027session\u0027)"
+              },
+              "scope": "G",
+              "type": "script"
+            }
+          }
+        },
+        "meta": {
+          "name": "Table"
+        },
+        "position": {
+          "basis": "100%"
+        },
+        "propConfig": {
+          "props.columns[2].visible": {
+            "binding": {
+              "config": {
+                "path": "view.params.SearchText"
+              },
+              "transforms": [
+                {
+                  "code": "\tif value is not None and value !\u003d \"\" and value !\u003d \u0027null\u0027:\n\t\treturn False\n\telse:\n\t\treturn True",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          },
+          "props.columns[3].visible": {
+            "binding": {
+              "config": {
+                "path": "view.params.SearchText"
+              },
+              "transforms": [
+                {
+                  "code": "\tif value is not None and value !\u003d \"\" and value !\u003d \u0027null\u0027:\n\t\treturn False\n\telse:\n\t\treturn True",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          },
+          "props.data": {
+            "binding": {
+              "config": {
+                "path": "view.custom.sql_data"
+              },
+              "transforms": [
+                {
+                  "code": "\tif value is not None and value.getRowCount() \u003e 0:\n\t\tlastIndex \u003d value.getRowCount() - 1\n\t\tvalue \u003d system.dataset.setValue(value, 0, \u0027arrowUp\u0027, -1)\n\t\tvalue \u003d system.dataset.setValue(value, lastIndex, \u0027arrowDown\u0027, -1)\n\treturn value",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          },
+          "props.selection.style.backgroundColor": {
+            "binding": {
+              "config": {
+                "path": "this.props.selection.selectedRow"
+              },
+              "transforms": [
+                {
+                  "code": "\treturn \"#FFFFFF00\" if value is None or value \u003d\u003d -1 else \"#9AF4EB4D\"",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "cells": {
+            "allowEditOn": "single-click"
+          },
+          "columns": [
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "id",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header_Detail"
+                },
+                "title": " "
+              },
+              "justify": "auto",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "view",
+              "resizable": true,
+              "sort": "none",
+              "sortable": false,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal_Detail"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "1_globalTEMPLATES/Placeholder",
+              "visible": true,
+              "width": 40
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "name",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header_Detail"
+                },
+                "title": "Location Name"
+              },
+              "justify": "auto",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "number",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": false,
+              "style": {
+                "classes": "Table/Column_Normal_Detail"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 400
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "arrowUp",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header_Detail"
+                },
+                "title": " "
+              },
+              "justify": "auto",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "view",
+              "resizable": true,
+              "sort": "none",
+              "sortable": false,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal_Detail"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "1_TEMPLATES/Tables/TableUpArrow",
+              "width": 30
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "arrowDown",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header_Detail"
+                },
+                "title": " "
+              },
+              "justify": "auto",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "view",
+              "resizable": true,
+              "sort": "none",
+              "sortable": false,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal_Detail"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "1_TEMPLATES/Tables/TableDownArrow",
+              "width": 30
+            }
+          ],
+          "pager": {
+            "initialOption": 100,
+            "options": [
+              10,
+              15,
+              25,
+              50,
+              100
+            ]
+          },
+          "rows": {
+            "highlight": {
+              "color": "#CCFFFF"
+            },
+            "striped": {
+              "color": {
+                "even": "#8AFFFF"
+              },
+              "enabled": false
+            },
+            "style": {
+              "classes": "Table/Cell_Detail",
+              "cursor": "pointer"
+            }
+          },
+          "style": {
+            "classes": "Background/Default"
+          }
+        },
+        "scripts": {
+          "customMethods": [],
+          "extensionFunctions": null,
+          "messageHandlers": [
+            {
+              "messageType": "refreshProgramSettings",
+              "pageScope": true,
+              "script": "\t### Refresh data\n\t#system.perspective.print(\"Refresh Program Settings\")\n\t#self.refreshBinding(\"props.data\")\n\t#self.props.selection \u003d []\n\t\n\t\n\t\n\t#self.props.selection.selectedRow \u003d -1",
+              "sessionScope": true,
+              "viewScope": true
+            }
+          ]
+        },
+        "type": "ia.display.table"
+      },
+      {
+        "children": [
+          {
+            "meta": {
+              "name": "Error"
+            },
+            "position": {
+              "basis": "25px",
+              "grow": 1
+            },
+            "props": {
+              "style": {
+                "classes": "Text/Error_Message"
+              }
+            },
+            "type": "ia.display.label"
+          },
+          {
+            "events": {
+              "dom": {
+                "onClick": {
+                  "config": {
+                    "script": "\timport time\n\t\t\n\ttry:\n\t\t## update the new sequence in the database\n\t\tnewSeq \u003d []\n\t\tupdatedLocationsData \u003d self.view.custom.sql_data\n\t\tif updatedLocationsData is not None and updatedLocationsData.getRowCount() \u003e 0:\n\t\t\tfor i in range(updatedLocationsData.getRowCount()):\n\t\t\t\tlocName \u003d updatedLocationsData.getValueAt(i,\u0027name\u0027)\n\t\t\t\tnewSeq.append(locName)\n\t\t\tparticipants.updateLocationAliases(newSeq)\n\t\t\tself.getSibling(\"Error\").props.text \u003d \"Sequence updated successfully.\"\n\t\t\tself.view.refreshBinding(\"custom.sql_data\")\n\texcept Exception as e:\n\t\tsystem.perspective.print(str(e))\n\t\tself.getSibling(\"Error\").props.text \u003d \"Update error. Try again ...\"\n\t\n\ttime.sleep(3)\n\t## clear the message\n\tself.getSibling(\"Error\").props.text \u003d \"\"\n\t\t\t\n\t\t\t\n\t\t\n\t\t\n\t\t"
+                  },
+                  "scope": "G",
+                  "type": "script"
+                }
+              }
+            },
+            "meta": {
+              "name": "Update"
+            },
+            "position": {
+              "basis": "100px"
+            },
+            "props": {
+              "style": {
+                "classes": "Buttons/Main",
+                "margin": 2
+              },
+              "text": "Update"
+            },
+            "type": "ia.input.button"
+          },
+          {
+            "meta": {
+              "name": "Filler"
+            },
+            "position": {
+              "basis": "50px"
+            },
+            "type": "ia.container.flex"
+          },
+          {
+            "events": {
+              "dom": {
+                "onClick": {
+                  "config": {
+                    "script": "\tself.view.refreshBinding(\"custom.sql_data\")"
+                  },
+                  "scope": "G",
+                  "type": "script"
+                }
+              }
+            },
+            "meta": {
+              "name": "Clear"
+            },
+            "position": {
+              "basis": "100px"
+            },
+            "props": {
+              "style": {
+                "classes": "Buttons/Delete",
+                "margin": 2
+              },
+              "text": "CANCEL"
+            },
+            "type": "ia.input.button"
+          }
+        ],
+        "meta": {
+          "name": "Buttons"
+        },
+        "position": {
+          "basis": "47px"
+        },
+        "props": {
+          "justify": "flex-end",
+          "style": {
+            "overflow": "hidden",
+            "padding": "5px"
+          }
+        },
+        "type": "ia.container.flex"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column"
+    },
+    "scripts": {
+      "customMethods": [],
+      "extensionFunctions": null,
+      "messageHandlers": [
+        {
+          "messageType": "refreshLocationsSettings",
+          "pageScope": true,
+          "script": "\tsystem.perspective.print(\u0027Refresh Query\u0027)\n\tview \u003d self.view\n\tview.refreshBinding(\"custom.sql_data\")",
+          "sessionScope": true,
+          "viewScope": true
+        }
+      ]
+    },
+    "type": "ia.container.flex"
+  }
+}

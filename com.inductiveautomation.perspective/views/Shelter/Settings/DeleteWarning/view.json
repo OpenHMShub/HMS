@@ -1,0 +1,198 @@
+{
+  "custom": {
+    "data": [],
+    "function": 0
+  },
+  "params": {
+    "facilityId": 0
+  },
+  "propConfig": {
+    "custom.data": {
+      "persistent": true
+    },
+    "custom.function": {
+      "persistent": true
+    },
+    "params.eventStart": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.facilityId": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.participantId": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.reservationId": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 170,
+      "width": 300
+    },
+    "loading": {
+      "mode": "blocking"
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "EmbeddedView Header"
+        },
+        "position": {
+          "basis": "25px",
+          "shrink": 0
+        },
+        "props": {
+          "params": {
+            "Text": "Warning"
+          },
+          "path": "Shelter/Reservation/Cards/New Reservation/ReservationHeader"
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "children": [
+          {
+            "meta": {
+              "name": "Label"
+            },
+            "position": {
+              "basis": "50px",
+              "grow": 1
+            },
+            "props": {
+              "style": {
+                "classes": "Text/Error_Message"
+              },
+              "text": "Are you sure you want to delete the selected Shelter ?"
+            },
+            "type": "ia.display.label"
+          }
+        ],
+        "custom": {
+          "ReservationSaved": false
+        },
+        "meta": {
+          "name": "Message"
+        },
+        "position": {
+          "basis": "70px",
+          "shrink": 0
+        },
+        "props": {
+          "style": {
+            "borderTopColor": "#9db8d1",
+            "borderTopStyle": "solid",
+            "borderTopWidth": "1px",
+            "classes": "Background/Default",
+            "marginLeft": "10px",
+            "marginRight": "10px",
+            "marginTop": "5px",
+            "paddingTop": "5px"
+          }
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "children": [
+          {
+            "events": {
+              "component": {
+                "onActionPerformed": {
+                  "config": {
+                    "script": "\ttry:\n\t\tproject \u003d \"RITI\"\n\t\tpath \u003d \"Shelter/Settings/DeleteShelter\"\n\t\tparameters \u003d {\"facilityId\": self.view.params.facilityId}\n\t\tsystem.db.runNamedQuery(project\u003dproject,path\u003dpath,parameters\u003dparameters)\n\t\t## also send message to refresh the facility dropdown\n\t\tsystem.perspective.sendMessage(\"refreshShelters\",payload \u003d {},scope\u003d\"session\")\n\texcept Exception as e:\n\t\tpass\n\tsystem.perspective.closePopup(\"deleteWarning\")"
+                  },
+                  "scope": "G",
+                  "type": "script"
+                }
+              }
+            },
+            "meta": {
+              "name": "Button"
+            },
+            "position": {
+              "basis": "100px"
+            },
+            "props": {
+              "style": {
+                "classes": "Buttons/Main",
+                "marginBottom": "5px",
+                "marginLeft": "5px",
+                "marginTop": "5px"
+              },
+              "text": "Yes"
+            },
+            "type": "ia.input.button"
+          },
+          {
+            "events": {
+              "component": {
+                "onActionPerformed": {
+                  "config": {
+                    "script": "\tsystem.perspective.closePopup(\"deleteWarning\")"
+                  },
+                  "scope": "G",
+                  "type": "script"
+                }
+              }
+            },
+            "meta": {
+              "name": "Button_0"
+            },
+            "position": {
+              "basis": "100px"
+            },
+            "props": {
+              "style": {
+                "classes": "Buttons/Secondary",
+                "margin": "5px"
+              },
+              "text": "No"
+            },
+            "type": "ia.input.button"
+          }
+        ],
+        "custom": {
+          "ReservationSaved": false
+        },
+        "meta": {
+          "name": "root Actions"
+        },
+        "position": {
+          "basis": "51px"
+        },
+        "props": {
+          "justify": "center",
+          "style": {
+            "borderTopColor": "#9db8d1",
+            "borderTopStyle": "solid",
+            "borderTopWidth": "1px",
+            "classes": "Background/Default",
+            "marginLeft": "10px",
+            "marginRight": "10px",
+            "marginTop": "5px",
+            "paddingTop": "5px"
+          }
+        },
+        "type": "ia.container.flex"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column",
+      "style": {
+        "classes": "Background/Default"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

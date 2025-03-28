@@ -1,0 +1,156 @@
+{
+  "custom": {
+    "callTheNameService": "No",
+    "deceasedDate": null
+  },
+  "params": {
+    "callTheNameService": null,
+    "date": null,
+    "text": "Time"
+  },
+  "propConfig": {
+    "custom.callTheNameService": {
+      "persistent": true
+    },
+    "custom.deceasedDate": {
+      "binding": {
+        "config": {
+          "bidirectional": true,
+          "path": "view.params.date"
+        },
+        "type": "property"
+      },
+      "persistent": true
+    },
+    "params.callTheNameService": {
+      "binding": {
+        "config": {
+          "path": "view.custom.callTheNameService"
+        },
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.date": {
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.text": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 60,
+      "width": 150
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "Label"
+        },
+        "position": {
+          "basis": "25px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.text": {
+            "binding": {
+              "config": {
+                "path": "view.params.text"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "style": {
+            "classes": "Text/Add_HeaderText"
+          }
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "events": {
+          "dom": {
+            "onClick": {
+              "config": {
+                "script": "\tdeceasedDate \u003d self.view.params.date\n\tCallTheNameList \u003d self.view.params.callTheNameService\n\tparams \u003d {\u0027deceasedDate\u0027:deceasedDate, \u0027CallTheNameList\u0027:CallTheNameList}\n\tsystem.perspective.openPopup(\u0027Deceased_Date_Popup\u0027, \u0027Participants/Registration/Detail/Edit/Deceased_Date_Popup\u0027, params)"
+              },
+              "scope": "G",
+              "type": "script"
+            }
+          }
+        },
+        "meta": {
+          "name": "Label_0"
+        },
+        "position": {
+          "basis": "25px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.style.classes": {
+            "binding": {
+              "config": {
+                "path": "this.props.text"
+              },
+              "transforms": [
+                {
+                  "code": "\tstyle_class1 \u003d \"Text/Add_HeaderText\\nDateTime/Add_Date_NoBorder\"\n\tstyle_class2 \u003d \"DateTime/Add_Date_NoBorder\"\n\treturn style_class2 if value!\u003d\u0027Select date\u0027 else style_class1",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          },
+          "props.text": {
+            "binding": {
+              "config": {
+                "path": "view.custom.deceasedDate"
+              },
+              "transforms": [
+                {
+                  "code": "\tif value!\u003dNone and value!\u003d\u0027\u0027:\n\t\tdate \u003d system.date.parse(value, \u0027yyyy-MM-dd hh:mm:ss\u0027)\n\t\tdate \u003d system.date.format(date,\u0027MMM dd, yyyy\u0027)\n\telse:\n\t\tdate \u003d \u0027Select date\u0027\n\tsystem.perspective.print(\u0027date1: \u0027+str(date))\n\treturn date",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "style": {}
+        },
+        "type": "ia.display.label"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column",
+      "style": {
+        "overflow": "hidden"
+      }
+    },
+    "scripts": {
+      "customMethods": [],
+      "extensionFunctions": null,
+      "messageHandlers": [
+        {
+          "messageType": "setDeceasedDate",
+          "pageScope": true,
+          "script": "\t# implement your handler here\n\tcallTheNameService \u003d payload[\u0027callTheNameService\u0027]\n\tdeceasedDate \u003d payload[\u0027deceasedDate\u0027]\n\tsystem.perspective.print(\u0027deceasedDate: \u0027+str(deceasedDate))\n\tself.view.custom.deceasedDate \u003d deceasedDate\n\tsystem.perspective.print(\u0027deceasedDate1: \u0027+str(self.view.custom.deceasedDate))\n\tself.view.custom.callTheNameService \u003d callTheNameService",
+          "sessionScope": true,
+          "viewScope": true
+        }
+      ]
+    },
+    "type": "ia.container.flex"
+  }
+}

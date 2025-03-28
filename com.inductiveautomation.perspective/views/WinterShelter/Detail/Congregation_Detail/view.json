@@ -1,0 +1,183 @@
+{
+  "custom": {},
+  "events": {
+    "system": {
+      "onStartup": {
+        "config": {
+          "script": "\tlogger \u003d system.util.getLogger(\"myLogger\")\n\tlogger.info(\"Congregation Detail Page\")\n\tself.getChild(\"root\").getChild(\"Tabs\").props.params.tab_id \u003d self.params.tab_id"
+        },
+        "enabled": false,
+        "scope": "G",
+        "type": "script"
+      }
+    }
+  },
+  "params": {
+    "backID": "Congregations",
+    "locationId": 383,
+    "tab_id": 0
+  },
+  "permissions": {
+    "securityLevels": [
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [],
+                "name": "Administrator"
+              },
+              {
+                "children": [],
+                "name": "Care Coordinator"
+              },
+              {
+                "children": [],
+                "name": "Manager"
+              },
+              {
+                "children": [],
+                "name": "Support Coordinator"
+              },
+              {
+                "children": [],
+                "name": "WS Manager"
+              },
+              {
+                "children": [],
+                "name": "WS Support Coordinator"
+              }
+            ],
+            "name": "Roles"
+          }
+        ],
+        "name": "Authenticated"
+      }
+    ],
+    "type": "AnyOf"
+  },
+  "propConfig": {
+    "params.backID": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.locationId": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.tab_id": {
+      "onChange": {
+        "enabled": false,
+        "script": "\tvalue \u003d int(currentValue)"
+      },
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 900,
+      "width": 1273
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "Header"
+        },
+        "position": {
+          "basis": "90px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.backID": {
+            "binding": {
+              "config": {
+                "path": "view.params.backID"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "tabSelected": null
+          },
+          "path": "WinterShelter/Detail/Cards/CongregationDetail_Header"
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Label"
+        },
+        "position": {
+          "basis": "32px",
+          "display": false
+        },
+        "propConfig": {
+          "props.text": {
+            "binding": {
+              "config": {
+                "path": "view.params.tab_id"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "meta": {
+          "name": "Tabs"
+        },
+        "position": {
+          "basis": "810px",
+          "grow": 1
+        },
+        "propConfig": {
+          "props.params.locationID": {
+            "binding": {
+              "config": {
+                "path": "view.params.locationId"
+              },
+              "type": "property"
+            }
+          },
+          "props.params.tab_id": {
+            "binding": {
+              "config": {
+                "path": "view.params.tab_id"
+              },
+              "transforms": [
+                {
+                  "code": "\treturn int(value)",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "data": ""
+          },
+          "path": "WinterShelter/Detail/Cards/CongregationDetail_Tabs"
+        },
+        "type": "ia.display.view"
+      }
+    ],
+    "custom": {
+      "key": "value"
+    },
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column"
+    },
+    "type": "ia.container.flex"
+  }
+}

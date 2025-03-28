@@ -1,0 +1,293 @@
+{
+  "custom": {},
+  "params": {
+    "Row": 0,
+    "bedId": -1,
+    "endDate": "2020-08-04 00:00:00",
+    "facilityId": 1,
+    "participantId": -1,
+    "reservationId": 0,
+    "roomId": -1,
+    "startDate": "2020-08-03 00:00:00"
+  },
+  "propConfig": {
+    "params.Row": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.bedId": {
+      "binding": {
+        "config": {
+          "path": "/root/EmbeddedView Bed.props.params.SelectedValue"
+        },
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.endDate": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.facilityId": {
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.participantId": {
+      "binding": {
+        "config": {
+          "path": "/root/EmbeddedView Participant.props.params.SelectedValue"
+        },
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.reservationId": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.roomId": {
+      "binding": {
+        "config": {
+          "path": "/root/EmbeddedView Room.props.params.SelectedValue"
+        },
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.startDate": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 50,
+      "width": 600
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "EmbeddedView Participant"
+        },
+        "position": {
+          "basis": "320px",
+          "grow": 1
+        },
+        "propConfig": {
+          "props.params.Options": {
+            "binding": {
+              "config": {
+                "queryPath": "Shelter/Reservations/SelectParticipantsForReservation",
+                "returnFormat": "json"
+              },
+              "type": "query"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "SelectedValue": -1,
+            "Text": "Participant"
+          },
+          "path": "Shelter/Reservation/Cards/New Reservation/SelectionInput"
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "EmbeddedView Facility"
+        },
+        "position": {
+          "basis": "320px",
+          "grow": 1
+        },
+        "propConfig": {
+          "position.display": {
+            "binding": {
+              "config": {
+                "expression": "{view.params.facilityId} \u003d -2"
+              },
+              "type": "expr"
+            }
+          },
+          "props.params.Options": {
+            "binding": {
+              "config": {
+                "queryPath": "Shelter/Reservations/SelectFacilitiesForReservations",
+                "returnFormat": "json"
+              },
+              "type": "query"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "SelectedValue": -1,
+            "Text": "Facility"
+          },
+          "path": "Shelter/Reservation/Cards/New Reservation/SelectionInput"
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "EmbeddedView Room"
+        },
+        "position": {
+          "basis": "320px",
+          "grow": 1
+        },
+        "propConfig": {
+          "props.params.Options": {
+            "binding": {
+              "config": {
+                "parameters": {
+                  "endDate": "{view.params.endDate}",
+                  "facilityId": "{parent.custom.facilityIdForReservation}",
+                  "startDate": "{view.params.startDate}"
+                },
+                "queryPath": "Shelter/Reservations/SelectAvailableRoomsForReservation",
+                "returnFormat": "json"
+              },
+              "type": "query"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "SelectedValue": -1,
+            "Text": "Room"
+          },
+          "path": "Shelter/Reservation/Cards/New Reservation/SelectionInput"
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "EmbeddedView Bed"
+        },
+        "position": {
+          "basis": "320px",
+          "grow": 1
+        },
+        "propConfig": {
+          "props.params.Options": {
+            "binding": {
+              "config": {
+                "parameters": {
+                  "endDate": "{view.params.endDate}",
+                  "facilityId": "{parent.custom.facilityIdForReservation}",
+                  "roomId": "{view.params.roomId}",
+                  "startDate": "{view.params.startDate}"
+                },
+                "queryPath": "Shelter/Reservations/SelectAvailableBedsForReservation",
+                "returnFormat": "json"
+              },
+              "type": "query"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "SelectedValue": -1,
+            "Text": "Bed"
+          },
+          "path": "Shelter/Reservation/Cards/New Reservation/SelectionInput"
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "children": [
+          {
+            "events": {
+              "component": {
+                "onActionPerformed": {
+                  "config": {
+                    "script": "\tpayload \u003d {\"Row\":int(self.view.params.Row)}\n\tsystem.perspective.sendMessage(messageType\u003d\"RemoveService\",payload\u003dpayload,scope\u003d\"session\")"
+                  },
+                  "scope": "G",
+                  "type": "script"
+                }
+              }
+            },
+            "meta": {
+              "name": "Button"
+            },
+            "position": {
+              "basis": "25px",
+              "shrink": 0
+            },
+            "propConfig": {
+              "position.display": {
+                "binding": {
+                  "config": {
+                    "expression": "if({view.params.Row} \u003d 0, False, True)"
+                  },
+                  "type": "expr"
+                }
+              }
+            },
+            "props": {
+              "image": {
+                "icon": {
+                  "color": "#0c4e8b",
+                  "path": "material/remove"
+                }
+              },
+              "style": {
+                "classes": "Buttons/Detail_Action",
+                "marginBottom": "0px",
+                "marginTop": "0px"
+              },
+              "text": ""
+            },
+            "type": "ia.input.button"
+          }
+        ],
+        "meta": {
+          "name": "FlexContainer"
+        },
+        "position": {
+          "basis": "25px",
+          "shrink": 0
+        },
+        "props": {
+          "direction": "column",
+          "justify": "center"
+        },
+        "type": "ia.container.flex"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "propConfig": {
+      "custom.facilityIdForReservation": {
+        "binding": {
+          "config": {
+            "expression": "if({view.params.facilityId} !\u003d -2 , {view.params.facilityId}, {./EmbeddedView Facility.props.params.SelectedValue})"
+          },
+          "type": "expr"
+        }
+      }
+    },
+    "scripts": {
+      "customMethods": [],
+      "messageHandlers": [
+        {
+          "messageType": "reservationselected",
+          "pageScope": true,
+          "script": "\t# implement your handler here\n\t#payload \u003d {\u0027reservationId\u0027:reservationId, \u0027bedId\u0027:bedId, \u0027participantId\u0027:participantId, \u0027roomId\u0027:roomId\n\tif (self.getChild(\"EmbeddedView Facility\").position.display ):\n\t\tself.getChild(\"EmbeddedView Facility\").props.params.SelectedValue \u003d int(payload[\u0027facilityId\u0027])\n\tself.view.params.reservationId \u003d payload[\u0027reservationId\u0027]\n\tself.getChild(\"EmbeddedView Participant\").props.params.SelectedValue \u003d int(payload[\u0027participantId\u0027])\n\tself.getChild(\"EmbeddedView Room\").props.params.SelectedValue \u003d int(payload[\u0027roomId\u0027])\n\tself.getChild(\"EmbeddedView Bed\").props.params.SelectedValue \u003d int(payload[\u0027bedId\u0027])",
+          "sessionScope": true,
+          "viewScope": true
+        }
+      ]
+    },
+    "type": "ia.container.flex"
+  }
+}

@@ -1,0 +1,156 @@
+{
+  "custom": {},
+  "events": {
+    "system": {
+      "onStartup": {
+        "config": {
+          "script": "\t# set the filter date range options \n\t## query the all time startate\n\t\n\tproject \u003d \"RITI\"\n\tpath \u003d \"Shelter/Filter/getMinCheckInDate\"\n\tparams \u003d {}\n\t\n\n\tstartDateData \u003d system.db.runNamedQuery(project\u003dproject,path\u003dpath,parameters\u003dparams)\n\tif startDateData is not None and startDateData.getRowCount() \u003e 0:\n\t\tself.session.custom.dateRangeFromDate \u003d system.date.format(startDateData.getValueAt(0,0), \"MM/dd/yyyy\")\n\telse:\n\t\tself.session.custom.dateRangeFromDate \u003d system.date.format(system.date.now(), \"MM/dd/yyyy\")\n\tself.session.custom.dateRangeToDate \u003d system.date.format(system.date.now(), \"MM/dd/yyyy\")"
+        },
+        "scope": "G",
+        "type": "script"
+      }
+    }
+  },
+  "params": {
+    "participantID": 44
+  },
+  "propConfig": {
+    "params.participantID": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 1600,
+      "width": 1031
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "Filters"
+        },
+        "position": {
+          "basis": "40px"
+        },
+        "props": {
+          "params": {
+            "allSelection": 1,
+            "congregation": null,
+            "dateRangeFrom": "08/06/2010 00:00:00",
+            "dateRangeTo": "10/30/2024 23:59:59",
+            "program": null,
+            "searchText": "%%",
+            "shelter": null
+          },
+          "path": "Participants/Shelter/Detail/Main/Filter/TableFilter_Shelters",
+          "style": {
+            "marginTop": "10px"
+          },
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Table"
+        },
+        "position": {
+          "basis": "320px",
+          "grow": 1
+        },
+        "propConfig": {
+          "props.params.Filters.allSelection": {
+            "binding": {
+              "config": {
+                "path": "../Filters.props.params.allSelection"
+              },
+              "type": "property"
+            }
+          },
+          "props.params.Filters.congregation": {
+            "binding": {
+              "config": {
+                "path": "../Filters.props.params.congregation"
+              },
+              "type": "property"
+            }
+          },
+          "props.params.Filters.dateRangeFrom": {
+            "binding": {
+              "config": {
+                "path": "../Filters.props.params.dateRangeFrom"
+              },
+              "type": "property"
+            }
+          },
+          "props.params.Filters.dateRangeTo": {
+            "binding": {
+              "config": {
+                "path": "../Filters.props.params.dateRangeTo"
+              },
+              "type": "property"
+            }
+          },
+          "props.params.Filters.program": {
+            "binding": {
+              "config": {
+                "path": "../Filters.props.params.program"
+              },
+              "type": "property"
+            }
+          },
+          "props.params.Filters.searchText": {
+            "binding": {
+              "config": {
+                "path": "../Filters.props.params.searchText"
+              },
+              "type": "property"
+            }
+          },
+          "props.params.Filters.shelter": {
+            "binding": {
+              "config": {
+                "path": "../Filters.props.params.shelter"
+              },
+              "type": "property"
+            }
+          },
+          "props.params.participantId": {
+            "binding": {
+              "config": {
+                "path": "view.params.participantID"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "Filters": {},
+            "fetch": null,
+            "resultRowCount": 208
+          },
+          "path": "Participants/Shelter/Detail/Main/Table/Shelters_Table",
+          "style": {
+            "marginLeft": "40px",
+            "marginRight": "40px"
+          }
+        },
+        "type": "ia.display.view"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column",
+      "style": {
+        "classes": "Background/Alternative"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

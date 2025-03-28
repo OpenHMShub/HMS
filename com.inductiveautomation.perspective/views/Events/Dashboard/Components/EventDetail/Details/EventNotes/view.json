@@ -1,0 +1,300 @@
+{
+  "custom": {
+    "dataset": {
+      "$": [
+        "ds",
+        192,
+        1615389673615
+      ],
+      "$columns": [
+        {
+          "data": [],
+          "name": "instanceID",
+          "type": "Integer"
+        },
+        {
+          "data": [],
+          "name": "parentEventID",
+          "type": "Integer"
+        },
+        {
+          "data": [],
+          "name": "startDate",
+          "type": "Date"
+        },
+        {
+          "data": [],
+          "name": "endDate",
+          "type": "Date"
+        },
+        {
+          "data": [],
+          "name": "venue",
+          "type": "String"
+        },
+        {
+          "data": [],
+          "name": "room",
+          "type": "String"
+        },
+        {
+          "data": [],
+          "name": "note",
+          "type": "String"
+        },
+        {
+          "data": [],
+          "name": "eventID",
+          "type": "Integer"
+        },
+        {
+          "data": [],
+          "name": "allDay",
+          "type": "Boolean"
+        },
+        {
+          "data": [],
+          "name": "startDate",
+          "type": "Date"
+        },
+        {
+          "data": [],
+          "name": "endDate",
+          "type": "Date"
+        },
+        {
+          "data": [],
+          "name": "title",
+          "type": "String"
+        },
+        {
+          "data": [],
+          "name": "category",
+          "type": "String"
+        },
+        {
+          "data": [],
+          "name": "subCategory",
+          "type": "String"
+        },
+        {
+          "data": [],
+          "name": "description",
+          "type": "String"
+        },
+        {
+          "data": [],
+          "name": "audienceVolunteers",
+          "type": "Boolean"
+        },
+        {
+          "data": [],
+          "name": "audienceStaff",
+          "type": "Boolean"
+        },
+        {
+          "data": [],
+          "name": "audienceParticipants",
+          "type": "Boolean"
+        },
+        {
+          "data": [],
+          "name": "audienceMen",
+          "type": "Boolean"
+        },
+        {
+          "data": [],
+          "name": "audienceWomen",
+          "type": "Boolean"
+        },
+        {
+          "data": [],
+          "name": "audienceMinors",
+          "type": "Boolean"
+        },
+        {
+          "data": [],
+          "name": "venue",
+          "type": "String"
+        },
+        {
+          "data": [],
+          "name": "room",
+          "type": "String"
+        },
+        {
+          "data": [],
+          "name": "volunteersNeeded",
+          "type": "Integer"
+        },
+        {
+          "data": [],
+          "name": "staffNeeded",
+          "type": "Integer"
+        },
+        {
+          "data": [],
+          "name": "monday",
+          "type": "Boolean"
+        },
+        {
+          "data": [],
+          "name": "tuesday",
+          "type": "Boolean"
+        },
+        {
+          "data": [],
+          "name": "wednesday",
+          "type": "Boolean"
+        },
+        {
+          "data": [],
+          "name": "thursday",
+          "type": "Boolean"
+        },
+        {
+          "data": [],
+          "name": "friday",
+          "type": "Boolean"
+        },
+        {
+          "data": [],
+          "name": "saturday",
+          "type": "Boolean"
+        },
+        {
+          "data": [],
+          "name": "sunday",
+          "type": "Boolean"
+        },
+        {
+          "data": [],
+          "name": "freq",
+          "type": "String"
+        },
+        {
+          "data": [],
+          "name": "bymonth",
+          "type": "Integer"
+        },
+        {
+          "data": [],
+          "name": "bysetpos",
+          "type": "Integer"
+        },
+        {
+          "data": [],
+          "name": "interval",
+          "type": "Integer"
+        },
+        {
+          "data": [],
+          "name": "repeat",
+          "type": "Boolean"
+        },
+        {
+          "data": [],
+          "name": "deleted",
+          "type": "Boolean"
+        }
+      ]
+    }
+  },
+  "params": {
+    "instanceID": 166
+  },
+  "propConfig": {
+    "custom.dataset": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "instanceID": "{view.params.instanceID}"
+          },
+          "queryPath": "Calendar/EventInstance/GetEventInstanceByID"
+        },
+        "type": "query"
+      },
+      "persistent": true
+    },
+    "params.instanceID": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 225,
+      "width": 435
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "Label"
+        },
+        "position": {
+          "basis": "32px"
+        },
+        "props": {
+          "style": {
+            "classes": "Event/Event_DateText"
+          },
+          "text": "Notes"
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "events": {
+          "dom": {
+            "onBlur": {
+              "config": {
+                "script": "\tsystem.db.runNamedQuery(\"Calendar/EventInstance/UpdateEventInstanceNote\", {\u0027instanceID\u0027 : self.view.params.instanceID , \u0027note\u0027 : self.props.text})\n\t"
+              },
+              "scope": "G",
+              "type": "script"
+            }
+          }
+        },
+        "meta": {
+          "name": "TextArea"
+        },
+        "position": {
+          "basis": "160px"
+        },
+        "propConfig": {
+          "props.text": {
+            "binding": {
+              "config": {
+                "path": "view.custom.dataset"
+              },
+              "transforms": [
+                {
+                  "code": "\treturn value.getValueAt(0,\"note\") if value.getValueAt(0,\"note\") !\u003d \"\" else \"No notes yet.. Start typing!\"",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "style": {
+            "borderColor": "#A1BAD2BF",
+            "borderStyle": "solid",
+            "borderWidth": 1,
+            "classes": "Text/Add_TextArea"
+          }
+        },
+        "type": "ia.input.text-area"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column"
+    },
+    "type": "ia.container.flex"
+  }
+}

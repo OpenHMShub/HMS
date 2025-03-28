@@ -1,0 +1,767 @@
+{
+  "custom": {
+    "ParticipantId": 54
+  },
+  "params": {
+    "Action": 2,
+    "Bin": 5,
+    "Column": "A",
+    "ParticipantId": ""
+  },
+  "propConfig": {
+    "custom.ParticipantId": {
+      "binding": {
+        "config": {
+          "expression": "if(hasChanged({view.params.Bin}), 0,\r\nif(hasChanged({view.params.Column}), 0,\r\n1))"
+        },
+        "transforms": [
+          {
+            "code": "\taction \u003d self.params.Action\n\tif action !\u003d 1:\n\t\tbin \u003d self.params.Bin\n\t\tcol \u003d self.params.Column\n\t\tif bin \u003d\u003d \u0027\u0027 or col \u003d\u003d \u0027\u0027:\n\t\t\treturn self.params.ParticipantId\n\t\tres \u003d system.db.runNamedQuery(\u0027Participants/Storage Bins/GetSpecificBinStatus\u0027, \n\t\t\t\t\t\t\t\t      {\u0027col\u0027: col,\n\t\t\t\t\t\t\t\t       \u0027bin\u0027: bin})\n\t\tif res.getRowCount() \u003d\u003d 0:\n\t\t\treturn self.params.ParticipantId\n\t\treturn res.getValueAt(0,2)\t\t\t\n\treturn self.params.ParticipantId",
+            "type": "script"
+          }
+        ],
+        "type": "expr"
+      },
+      "persistent": true
+    },
+    "custom.blankArray": {
+      "persistent": true
+    },
+    "custom.eventFacilitators": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "eventID": "{view.params.eventId}"
+          },
+          "queryPath": "Calendar/GetEventFacilitators"
+        },
+        "transforms": [
+          {
+            "code": "\tarray \u003d []\n\tfor row in range(value.getRowCount()):\n\t\tname \u003d value.getValueAt(row, \"name\")\n\t\tid \u003d value.getValueAt(row, \"id\")\n\t\tarray.append({\u0027text\u0027: name, \u0027id\u0027: id})\n\treturn array",
+            "type": "script"
+          }
+        ],
+        "type": "query"
+      }
+    },
+    "custom.eventParams": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "eventID": "{view.params.eventId}"
+          },
+          "queryPath": "Calendar/GetEventByID"
+        },
+        "transforms": [
+          {
+            "code": "\tdef getByWeekDay(row):\n\t\tweekDayDict \u003d {\n\t\t\u0027mo\u0027: value.getValueAt(row, \"monday\"),\n\t\t\u0027tu\u0027: value.getValueAt(row, \"tuesday\"),\n\t\t\u0027we\u0027: value.getValueAt(row, \"wednesday\"),\n\t\t\u0027th\u0027: value.getValueAt(row, \"thursday\"),\n\t\t\u0027fr\u0027: value.getValueAt(row, \"friday\"),\n\t\t\u0027sa\u0027: value.getValueAt(row, \"saturday\"),\n\t\t\u0027su\u0027: value.getValueAt(row, \"sunday\")}\n\t\t\t\n\t\tbyweekday \u003d []\n\t\tfor key in [\u0027mo\u0027, \u0027tu\u0027, \u0027we\u0027, \u0027th\u0027, \u0027fr\u0027, \u0027sa\u0027, \u0027su\u0027,]:\n\t\t\tif weekDayDict[key]:\n\t\t\t\tbyweekday.append(key)\n\t\t\t\n\t\treturn byweekday\n\t\n\teventParams \u003d {}\n\tif value.getRowCount() \u003d\u003d 0:\n\t\treturn {\n\t\t\u0027category\u0027: None,\n\t\t\u0027subCategory\u0027: None,\n\t\t\u0027title\u0027: None,\n\t\t\u0027description\u0027: None,\n\t\t\u0027audienceMen\u0027: None,\n\t\t\u0027audienceMinors\u0027: None,\n\t\t\u0027audienceParticipants\u0027: None,\n\t\t\u0027audienceStaff\u0027: None,\n\t\t\u0027audienceVolunteers\u0027: None,\n\t\t\u0027audienceWomen\u0027: None,\n\t\t\u0027venue\u0027: None,\n\t\t\u0027room\u0027: None,\n\t\t\u0027volunteersNeeded\u0027: None,\n\t\t\u0027staffNeeded\u0027: None,\n\t\t\u0027frequency\u0027: None,\n\t\t\u0027monday\u0027: None,\n\t\t\u0027tuesday\u0027: None,\n\t\t\u0027wednesday\u0027: None,\n\t\t\u0027thursday\u0027: None,\n\t\t\u0027friday\u0027: None,\n\t\t\u0027saturday\u0027: None,\n\t\t\u0027sunday\u0027: None,\n\t\t\u0027bysetpos\u0027: None,\n\t\t\u0027startDate\u0027: None,\n\t\t\u0027endDate\u0027: None,\n\t\t\u0027byweekday\u0027: None,\n\t\t\u0027bymonthday\u0027: None,\n\t\t\u0027bymonth\u0027: None,\n\t\t\u0027interval\u0027: None,\n\t\t\u0027yearlyType\u0027: None,\n\t\t\u0027monthlyType\u0027: None\n\t\t}\n\t\n\teventParams[\u0027category\u0027] \u003d value.getValueAt(0, \u0027category\u0027)\n\teventParams[\u0027subCategory\u0027] \u003d value.getValueAt(0, \u0027subCategory\u0027)\n\teventParams[\u0027title\u0027] \u003d value.getValueAt(0, \u0027title\u0027)\n\teventParams[\u0027description\u0027] \u003d value.getValueAt(0, \u0027description\u0027)\n\teventParams[\u0027audienceMen\u0027] \u003d value.getValueAt(0, \u0027audienceMen\u0027)\n\teventParams[\u0027audienceMinors\u0027] \u003d value.getValueAt(0, \u0027audienceMinors\u0027)\n\teventParams[\u0027audienceParticipants\u0027] \u003d value.getValueAt(0, \u0027audienceParticipants\u0027)\n\teventParams[\u0027audienceStaff\u0027] \u003d value.getValueAt(0, \u0027audienceStaff\u0027)\n\teventParams[\u0027audienceVolunteers\u0027] \u003d value.getValueAt(0, \u0027audienceVolunteers\u0027)\n\teventParams[\u0027audienceWomen\u0027] \u003d value.getValueAt(0, \u0027audienceWomen\u0027)\n\teventParams[\u0027venue\u0027] \u003d value.getValueAt(0, \u0027venue\u0027)\n\teventParams[\u0027room\u0027] \u003d value.getValueAt(0, \u0027room\u0027)\n\teventParams[\u0027volunteersNeeded\u0027] \u003d value.getValueAt(0, \u0027volunteersNeeded\u0027)\n\teventParams[\u0027staffNeeded\u0027] \u003d value.getValueAt(0, \u0027staffNeeded\u0027)\n\teventParams[\u0027frequency\u0027] \u003d value.getValueAt(0, \u0027freq\u0027)\n\teventParams[\u0027monday\u0027] \u003d value.getValueAt(0, \u0027monday\u0027)\n\teventParams[\u0027tuesday\u0027] \u003d value.getValueAt(0, \u0027tuesday\u0027)\n\teventParams[\u0027wednesday\u0027] \u003d value.getValueAt(0, \u0027wednesday\u0027)\n\teventParams[\u0027thursday\u0027] \u003d value.getValueAt(0, \u0027thursday\u0027)\n\teventParams[\u0027friday\u0027] \u003d value.getValueAt(0, \u0027friday\u0027)\n\teventParams[\u0027saturday\u0027] \u003d value.getValueAt(0, \u0027saturday\u0027)\n\teventParams[\u0027sunday\u0027] \u003d value.getValueAt(0, \u0027sunday\u0027)\n\teventParams[\u0027bysetpos\u0027] \u003d value.getValueAt(0, \u0027bysetpos\u0027)\n\teventParams[\u0027startDate\u0027] \u003d startDate \u003d value.getValueAt(0, \u0027startDate\u0027)\n\teventParams[\u0027endDate\u0027] \u003d endDate \u003d value.getValueAt(0, \u0027endDate\u0027)\n\teventParams[\u0027byweekday\u0027] \u003d byweekday \u003d getByWeekDay(0)\n\teventParams[\u0027bymonthday\u0027] \u003d system.date.getDayOfMonth(startDate)\n\teventParams[\u0027bymonth\u0027] \u003d value.getValueAt(0, \u0027bymonth\u0027)\n\teventParams[\u0027interval\u0027] \u003d value.getValueAt(0, \u0027interval\u0027)\n\tif len(byweekday) \u003d\u003d 0:\n\t\teventParams[\u0027yearlyType\u0027] \u003d \u0027yearlydate\u0027\n\t\teventParams[\u0027monthlyType\u0027] \u003d \u0027monthlydate\u0027\n\telse:\n\t\teventParams[\u0027yearlyType\u0027] \u003d \u0027yearlyday\u0027\n\t\teventParams[\u0027monthlyType\u0027] \u003d \u0027monthlyday\u0027\n\t\n\t\n\treturn eventParams",
+            "type": "script"
+          }
+        ],
+        "type": "query"
+      }
+    },
+    "custom.taskData": {
+      "persistent": true
+    },
+    "params.Action": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.Bin": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.Column": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.ExpDate": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.ParticipantId": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.Row_Data": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.isUpdateTask": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.taskID": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 755,
+      "width": 550
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "EmbeddedView_0"
+        },
+        "position": {
+          "basis": "74px"
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "EmbeddedView"
+        },
+        "position": {
+          "basis": "141px",
+          "display": false
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "OBSOLETE_Action"
+        },
+        "position": {
+          "basis": "60px",
+          "display": false,
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.selectedId": {
+            "binding": {
+              "config": {
+                "bidirectional": true,
+                "path": "view.params.Action"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginBottom": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.bottom-margin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginLeft": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.left-margin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginRight": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.right-margin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginTop": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.top-margin"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "colourOverride": "",
+            "options": {
+              "$": [
+                "ds",
+                192,
+                1635956141426
+              ],
+              "$columns": [
+                {
+                  "data": [
+                    1,
+                    2,
+                    3,
+                    4
+                  ],
+                  "name": "id",
+                  "type": "Integer"
+                },
+                {
+                  "data": [
+                    "Create",
+                    "Extend",
+                    "Exit",
+                    "Evict"
+                  ],
+                  "name": "Action",
+                  "type": "String"
+                }
+              ]
+            },
+            "text": "Action"
+          },
+          "path": "Participants/Storage Bins/Cards/Dock/TextRepeat"
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Column"
+        },
+        "position": {
+          "basis": "60px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.selectedId": {
+            "binding": {
+              "config": {
+                "bidirectional": true,
+                "path": "view.params.Column"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginBottom": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.bottom-margin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginLeft": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.left-margin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginRight": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.right-margin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginTop": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.top-margin"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "colourOverride": "",
+            "options": [
+              {
+                "label": "A",
+                "value": "A"
+              },
+              {
+                "label": "B",
+                "value": "B"
+              },
+              {
+                "label": "C",
+                "value": "C"
+              },
+              {
+                "label": "D",
+                "value": "D"
+              },
+              {
+                "label": "E",
+                "value": "E"
+              },
+              {
+                "label": "F",
+                "value": "F"
+              },
+              {
+                "label": "G",
+                "value": "G"
+              },
+              {
+                "label": "H",
+                "value": "H"
+              },
+              {
+                "label": "J",
+                "value": "J"
+              },
+              {
+                "label": "K",
+                "value": "K"
+              },
+              {
+                "label": "L",
+                "value": "L"
+              },
+              {
+                "label": "M",
+                "value": "M"
+              },
+              {
+                "label": "N",
+                "value": "N"
+              },
+              {
+                "label": "N",
+                "value": "N"
+              },
+              {
+                "label": "O",
+                "value": "O"
+              },
+              {
+                "label": "P",
+                "value": "P"
+              },
+              {
+                "label": "Q",
+                "value": "Q"
+              },
+              {
+                "label": "R",
+                "value": "R"
+              },
+              {
+                "label": "S",
+                "value": "S"
+              },
+              {
+                "label": "T",
+                "value": "T"
+              },
+              {
+                "label": "U",
+                "value": "U"
+              },
+              {
+                "label": "V",
+                "value": "V"
+              },
+              {
+                "label": "W",
+                "value": "W"
+              },
+              {
+                "label": "X",
+                "value": "X"
+              },
+              {
+                "label": "Y",
+                "value": "Y"
+              },
+              {
+                "label": "Z",
+                "value": "Z"
+              }
+            ],
+            "text": "Column"
+          },
+          "path": "Participants/Storage Bins/Cards/Dock/TextRepeat"
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Bin"
+        },
+        "position": {
+          "basis": "60px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.selectedId": {
+            "binding": {
+              "config": {
+                "bidirectional": true,
+                "path": "view.params.Bin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginBottom": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.bottom-margin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginLeft": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.left-margin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginRight": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.right-margin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginTop": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.top-margin"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "colourOverride": "",
+            "options": [
+              {
+                "label": 1,
+                "value": 1
+              },
+              {
+                "label": 2,
+                "value": 2
+              },
+              {
+                "label": 3,
+                "value": 3
+              },
+              {
+                "label": 4,
+                "value": 4
+              },
+              {
+                "label": 5,
+                "value": 5
+              }
+            ],
+            "text": "Bin"
+          },
+          "path": "Participants/Storage Bins/Cards/Dock/TextRepeat"
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "StaffName"
+        },
+        "position": {
+          "basis": "60px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.options": {
+            "binding": {
+              "config": {
+                "queryPath": "StaffDropdown"
+              },
+              "type": "query"
+            }
+          },
+          "props.style.marginBottom": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.bottom-margin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginLeft": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.left-margin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginRight": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.right-margin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginTop": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.top-margin"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "colourOverride": "#FF0000",
+            "selectedId": "",
+            "text": "Staff *"
+          },
+          "path": "Participants/Storage Bins/Cards/Dock/TextRepeat"
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "OBSOLETE_ExpDate"
+        },
+        "position": {
+          "basis": "60px",
+          "display": false,
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.style.marginBottom": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.bottom-margin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginLeft": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.left-margin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginRight": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.right-margin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginTop": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.top-margin"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "colourOverride": "",
+            "selectedDate": {
+              "$": [
+                "ts",
+                201,
+                1635955986287
+              ],
+              "$ts": 1636581600000
+            },
+            "text": "Expiry Date"
+          },
+          "path": "Participants/Storage Bins/Cards/Dock/DateInput"
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Participant"
+        },
+        "position": {
+          "basis": "60px"
+        },
+        "propConfig": {
+          "props.params.displayText": {
+            "binding": {
+              "config": {
+                "expression": "if(hasChanged({view.custom.ParticipantId}),true,false)"
+              },
+              "transforms": [
+                {
+                  "code": "\tparams \u003d {\u0027participantId\u0027: self.view.custom.ParticipantId}\n\tname \u003d system.db.runNamedQuery(\u0027Participants/Storage Bins/GetParticipantName\u0027, params)\n\tif name.getRowCount() \u003d\u003d 0:\n\t\treturn \u0027\u0027\n\tfname \u003d name.getValueAt(0, 0)\n\tmname \u003d name.getValueAt(0, 1)\n\tlname \u003d name.getValueAt(0, 2)\n\tdname \u003d \u0027\u0027\n\tif fname !\u003d None:\n\t\tdname +\u003d fname + \u0027 \u0027\n\tif mname !\u003d None:\n\t\tdname +\u003d mname + \u0027 \u0027\n\tif lname !\u003d None:\n\t\tdname +\u003d lname + \u0027 \u0027\n\n\treturn dname ",
+                  "type": "script"
+                }
+              ],
+              "type": "expr"
+            }
+          },
+          "props.style.marginBottom": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.bottom-margin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginLeft": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.left-margin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginRight": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.right-margin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginTop": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.top-margin"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "colourOverride": "",
+            "text": "Participant"
+          },
+          "path": "Participants/Storage Bins/Cards/Dock/TextShow"
+        },
+        "scripts": {
+          "customMethods": [],
+          "extensionFunctions": null,
+          "messageHandlers": [
+            {
+              "messageType": "sbin_selected_participant",
+              "pageScope": true,
+              "script": "\tsystem.perspective.print(payload[\u0027participantId\u0027])\n\tself.view.custom.ParticipantId \u003d payload[\u0027participantId\u0027]",
+              "sessionScope": false,
+              "viewScope": false
+            }
+          ]
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "children": [
+          {
+            "events": {
+              "component": {
+                "onActionPerformed": {
+                  "config": {
+                    "script": "\t#  Add to db\n\t\n\tallData \u003d 1\n\t\n\taction \u003d self.view.params.Action\n\t\n\tcol \u003d self.parent.parent.getChild(\"Column\")\n\tcolumn \u003d col.props.params.selectedId\n\t# system.perspective.print(column)\n\tallData \u0026\u003d getAttention(col, \u0027Column\u0027, column\u003d\u003d\u0027\u0027)\n\t\t\n\tb \u003d self.parent.parent.getChild(\"Bin\")\t\t\t\n\tbin \u003d b.props.params.selectedId\n\t# system.perspective.print(bin)\n\tallData \u0026\u003d getAttention(b, \u0027Bin\u0027, bin\u003d\u003d\u0027\u0027)\n\t\n\tst \u003d self.parent.parent.getChild(\"StaffName\")\n\tstaff \u003d st.props.params.selectedId\n\t# system.perspective.print(staff)\n\tallData \u0026\u003d getAttention(st, \u0027Staff\u0027, staff\u003d\u003d\u0027\u0027)\n\t\t\n\tp \u003d self.parent.parent.getChild(\"Participant\")\n\tparticipant \u003d self.view.custom.ParticipantId\n\t# system.perspective.print(participant)\n\tallData \u0026\u003d getAttention(p, \u0027Participant\u0027, participant\u003d\u003d\u0027\u0027)\n\t\n\tif allData \u003d\u003d False:\n\t\tsystem.perspective.print(\"EXIT\")\n\t\treturn\n\t\n\tactiontodate \u003d system.date.parse(\"2000-01-0\"+str(action)+\" 00:00:00\", \"yyyy-MM-dd HH:mm:ss\") \n\tcurrentTime \u003d system.date.now()\n\t\n\tparams \u003d {\u0027action\u0027       : actiontodate,\n\t\t\t  \u0027column\u0027       : column,\n\t\t\t  \u0027bin\u0027          : bin,\n\t\t\t  \u0027employeeId\u0027   : staff,\n\t\t\t  \u0027participantId\u0027: participant,\n\t\t\t  \u0027date\u0027         : currentTime,\n\t\t\t  \u0027timeCreated\u0027  : currentTime}\n\t\n\tsystem.perspective.print(\"\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003dStorageBin Insert params\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\")\n\tsystem.perspective.print(params)\t\n\tsystem.db.runNamedQuery(\u0027Participants/Storage Bins/InsertBinAction\u0027, params)\n\t\n\tsystem.perspective.sendMessage(\u0027storage_bin_refresh\u0027, payload \u003d {})\n\t\n\tgetAttention(col, \u0027Column\u0027, 0)\n\tgetAttention(b, \u0027Bin\u0027, 0)\n\tgetAttention(st, \u0027Staff\u0027, 0)\n\tgetAttention(p, \u0027Participant\u0027, 0)\n\t\n\tsystem.perspective.print(\"\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003dClose dock\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\")\n\tsystem.perspective.closeDock(\u0027BinModify\u0027)\n\t\t\n\t\ndef getAttention(embView, name, draw):\n\tif draw \u003d\u003d 1:\n\t\tembView.props.params.colourOverride \u003d \u0027#FF0000\u0027\n\t\tembView.props.params.text \u003d name + \u0027 *\u0027\n\t\treturn 0\n\telse:\n\t\tembView.props.params.colourOverride \u003d \u0027\u0027\n\t\tembView.props.params.text \u003d name\n\t\treturn 1\n\t"
+                  },
+                  "scope": "G",
+                  "type": "script"
+                }
+              }
+            },
+            "meta": {
+              "name": "CreateBtn"
+            },
+            "position": {
+              "basis": "150px"
+            },
+            "propConfig": {
+              "props.text": {
+                "binding": {
+                  "config": {
+                    "expression": "if({view.params.Action}\u003d2, \u0027Exit\u0027, \u0027Evict\u0027)"
+                  },
+                  "type": "expr"
+                }
+              }
+            },
+            "props": {
+              "style": {
+                "classes": "Buttons/Main",
+                "marginLeft": 20,
+                "marginRight": 20
+              }
+            },
+            "type": "ia.input.button"
+          },
+          {
+            "events": {
+              "component": {
+                "onActionPerformed": {
+                  "config": {
+                    "script": "\tcol \u003d self.parent.parent.getChild(\"Column\")\n\tb \u003d self.parent.parent.getChild(\"Bin\")\t\t\t\n\tst \u003d self.parent.parent.getChild(\"StaffName\")\n\tp \u003d self.parent.parent.getChild(\"Participant\")\n\t\n\tgetAttention(col, \u0027Column\u0027, 0)\n\tgetAttention(b, \u0027Bin\u0027, 0)\n\tgetAttention(st, \u0027Staff\u0027, 0)\n\tgetAttention(p, \u0027Participant\u0027, 0)\n\tsystem.perspective.closeDock(\u0027BinModify\u0027)\n\t\n\t\t\ndef getAttention(embView, name, draw):\n\tif draw \u003d\u003d 1:\n\t\tembView.props.params.colourOverride \u003d \u0027#FF0000\u0027\n\t\tembView.props.params.text \u003d name + \u0027 *\u0027\n\t\treturn 0\n\telse:\n\t\tembView.props.params.colourOverride \u003d \u0027\u0027\n\t\tembView.props.params.text \u003d name\n\t\treturn 1\n\t"
+                  },
+                  "scope": "G",
+                  "type": "script"
+                }
+              }
+            },
+            "meta": {
+              "name": "CancelBtn"
+            },
+            "position": {
+              "basis": "150px"
+            },
+            "props": {
+              "style": {
+                "classes": "Buttons/Btn_Orange_Outline_1",
+                "marginLeft": 20,
+                "marginRight": 20
+              },
+              "text": "Cancel"
+            },
+            "type": "ia.input.button"
+          }
+        ],
+        "meta": {
+          "name": "FlexContainer Buttons"
+        },
+        "position": {
+          "basis": "60px",
+          "shrink": 0
+        },
+        "props": {
+          "alignContent": "center",
+          "style": {
+            "borderTopColor": "#E6E6E6",
+            "borderTopStyle": "solid",
+            "borderTopWidth": 1,
+            "paddingBottom": "20px",
+            "paddingTop": "5px"
+          }
+        },
+        "type": "ia.container.flex"
+      }
+    ],
+    "custom": {
+      "bottom-margin": "5px",
+      "left-margin": "5px",
+      "right-margin": "5px",
+      "top-margin": "5px"
+    },
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column",
+      "style": {
+        "classes": "Background/Default"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

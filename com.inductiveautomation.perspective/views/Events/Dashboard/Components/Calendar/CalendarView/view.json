@@ -1,0 +1,187 @@
+{
+  "custom": {},
+  "params": {},
+  "props": {
+    "defaultSize": {
+      "height": 638,
+      "width": 602
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "children": [
+          {
+            "meta": {
+              "name": "Label"
+            },
+            "position": {
+              "grow": 1
+            },
+            "props": {
+              "style": {
+                "classes": "Event/Event_DateText",
+                "fontSize": 34,
+                "marginLeft": 40,
+                "textTransform": "uppercase"
+              },
+              "text": "Calendar"
+            },
+            "type": "ia.display.label"
+          }
+        ],
+        "meta": {
+          "name": "FlexContainer"
+        },
+        "position": {
+          "shrink": 0
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "children": [
+          {
+            "meta": {
+              "name": "Label"
+            },
+            "position": {
+              "shrink": 0
+            },
+            "props": {
+              "style": {
+                "classes": "Text/Add_InfoText",
+                "marginRight": "10px",
+                "textAlign": "right"
+              },
+              "text": "Filter by:"
+            },
+            "type": "ia.display.label"
+          },
+          {
+            "meta": {
+              "name": "Dropdown"
+            },
+            "position": {
+              "basis": "120px",
+              "display": false
+            },
+            "propConfig": {
+              "props.options": {
+                "binding": {
+                  "config": {
+                    "queryPath": "Calendar/GetUniqueCategories"
+                  },
+                  "transforms": [
+                    {
+                      "code": "\titems \u003d []\n\titems.append({\u0027value\u0027 : \"%\", \u0027label\u0027 : \"All\"})\n\tfor x in range(value.getRowCount()) :\n\t\titems.append({\u0027value\u0027 : value.getValueAt(x,\"Category\"), \u0027label\u0027 : value.getValueAt(x,\"Category\")})\n\t\n\treturn items",
+                      "type": "script"
+                    }
+                  ],
+                  "type": "query"
+                }
+              }
+            },
+            "props": {
+              "dropdownOptionStyle": {
+                "classes": "Text/Add_InfoText"
+              },
+              "style": {
+                "classes": "Text/Add_InfoText"
+              },
+              "value": "%"
+            },
+            "type": "ia.input.dropdown"
+          },
+          {
+            "meta": {
+              "name": "EmbeddedView"
+            },
+            "position": {
+              "basis": "200px",
+              "shrink": 0
+            },
+            "props": {
+              "params": {
+                "filterData": [
+                  {
+                    "label": "Classes \u0026 Workshops",
+                    "value": "Classes \u0026 Workshops"
+                  },
+                  {
+                    "label": "Seminar",
+                    "value": "Seminar"
+                  },
+                  {
+                    "label": "Social Event",
+                    "value": "Social Event"
+                  },
+                  {
+                    "label": "Faith Meetings",
+                    "value": "Faith Meetings"
+                  },
+                  {
+                    "label": "Fundraising",
+                    "value": "Fundraising"
+                  },
+                  {
+                    "label": "Personal Growth",
+                    "value": "Personal Growth"
+                  }
+                ],
+                "filterName": "All",
+                "selectedValues": null
+              },
+              "path": "Events/Dashboard/Components/Calendar/MultiselectFilter"
+            },
+            "type": "ia.display.view"
+          }
+        ],
+        "meta": {
+          "name": "FlexContainer_Filter"
+        },
+        "position": {
+          "basis": "30px",
+          "shrink": 0
+        },
+        "props": {
+          "alignItems": "center",
+          "justify": "flex-end"
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "meta": {
+          "name": "EmbeddedView"
+        },
+        "position": {
+          "basis": "600px",
+          "grow": 1
+        },
+        "propConfig": {
+          "props.params.selectedCategories": {
+            "binding": {
+              "config": {
+                "path": "../FlexContainer/FlexContainer_0/EmbeddedView.props.params.selectedValues"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "path": "Events/Dashboard/Components/Calendar/Calendar",
+          "style": {
+            "overflow": "auto"
+          }
+        },
+        "type": "ia.display.view"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column"
+    },
+    "type": "ia.container.flex"
+  }
+}

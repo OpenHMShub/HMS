@@ -1,0 +1,594 @@
+{
+  "custom": {
+    "bedInfo": {
+      "$": [
+        "ds",
+        192,
+        1609771398455
+      ],
+      "$columns": [
+        {
+          "data": [
+            5
+          ],
+          "name": "facilityId",
+          "type": "Integer"
+        },
+        {
+          "data": [
+            "Night Shift Dorm"
+          ],
+          "name": "facilityName",
+          "type": "String"
+        },
+        {
+          "data": [
+            48
+          ],
+          "name": "roomId",
+          "type": "Integer"
+        },
+        {
+          "data": [
+            "Night Shift Dorm"
+          ],
+          "name": "roomName",
+          "type": "String"
+        },
+        {
+          "data": [
+            102
+          ],
+          "name": "bedId",
+          "type": "Integer"
+        },
+        {
+          "data": [
+            "Bottom Bunk 1"
+          ],
+          "name": "bedName",
+          "type": "String"
+        }
+      ]
+    },
+    "occupiedInfo": {
+      "$": [
+        "ds",
+        192,
+        1609771398463
+      ],
+      "$columns": [
+        {
+          "data": [
+            1597122000000
+          ],
+          "name": "eventStart",
+          "type": "Date"
+        },
+        {
+          "data": [
+            1597208400000
+          ],
+          "name": "eventEnd",
+          "type": "Date"
+        },
+        {
+          "data": [
+            "aName Test dSecond"
+          ],
+          "name": "participantName",
+          "type": "String"
+        },
+        {
+          "data": [
+            2
+          ],
+          "name": "participantId",
+          "type": "Integer"
+        }
+      ]
+    },
+    "reservedInfo": {
+      "$": [
+        "ds",
+        192,
+        1609771398461
+      ],
+      "$columns": [
+        {
+          "data": [
+            1596880349177
+          ],
+          "name": "reservationStart",
+          "type": "Date"
+        },
+        {
+          "data": [
+            1596901949177
+          ],
+          "name": "reservationEnd",
+          "type": "Date"
+        },
+        {
+          "data": [
+            "asunt D dAndrew"
+          ],
+          "name": "participantName",
+          "type": "String"
+        },
+        {
+          "data": [
+            1
+          ],
+          "name": "participantId",
+          "type": "Integer"
+        }
+      ]
+    }
+  },
+  "params": {
+    "bedId": 102,
+    "endDate": "2020-09-03",
+    "startDate": "2020-08-03"
+  },
+  "propConfig": {
+    "custom.bedInfo": {
+      "persistent": true
+    },
+    "custom.occupiedInfo": {
+      "persistent": true
+    },
+    "custom.reservedInfo": {
+      "persistent": true
+    },
+    "params.bedId": {
+      "onChange": {
+        "enabled": null,
+        "script": "\troot \u003d self.getChild(\"root\")\n\t\n\ttry:\n\t\tbedId \u003d long(currentValue.value)\n\texcept:\n\t\tsystem.perspective.print((\u0027bedId :\u0027,bedId))\n\telse:\n\n\t\troot.setBedInfo()\n\t\troot.setReservedInfo()\n\t\troot.setOccupiedInfo()"
+      },
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.endDate": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.startDate": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "width": 599
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "EmbeddedView"
+        },
+        "position": {
+          "basis": "62px"
+        },
+        "props": {
+          "path": "Shelter/Schedule/Preview/Cards/PreviewHeader",
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "HeaderEmbeddedView"
+        },
+        "position": {
+          "basis": "Auto",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.Text": {
+            "binding": {
+              "config": {
+                "path": "view.custom.bedInfo"
+              },
+              "transforms": [
+                {
+                  "code": "\tfullInfo \u003d \"{} / {} / {}\".format(value.getValueAt(0,\"facilityName\"),value.getValueAt(0,\"roomName\"),value.getValueAt(0,\"bedName\"))\n\treturn fullInfo",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "path": "Shelter/Schedule/Preview/Cards/Header"
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "AboutHeaderEmbeddedView_2"
+        },
+        "position": {
+          "basis": "Auto",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.Text": {
+            "binding": {
+              "config": {
+                "expression": "concat(\"Overview Interval \")"
+              },
+              "type": "expr"
+            }
+          }
+        },
+        "props": {
+          "path": "Shelter/Schedule/Preview/Cards/AboutHeader",
+          "style": {
+            "borderTopColor": "#e6e6e6",
+            "borderTopStyle": "solid",
+            "borderTopWidth": 1
+          },
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "IntervalEmbeddedView"
+        },
+        "position": {
+          "basis": "Auto",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.endDate": {
+            "binding": {
+              "config": {
+                "path": "view.params.endDate"
+              },
+              "transforms": [
+                {
+                  "code": "\treturn value[:10]",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          },
+          "props.params.startDate": {
+            "binding": {
+              "config": {
+                "path": "view.params.startDate"
+              },
+              "transforms": [
+                {
+                  "code": "\treturn value[:10]",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "path": "Shelter/Schedule/Preview/Cards/Interval",
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "AboutHeaderEmbeddedView_1"
+        },
+        "position": {
+          "basis": "Auto",
+          "shrink": 0
+        },
+        "props": {
+          "params": {
+            "Text": "About this Bed"
+          },
+          "path": "Shelter/Schedule/Preview/Cards/AboutHeader",
+          "style": {
+            "borderTopColor": "#e6e6e6",
+            "borderTopStyle": "solid",
+            "borderTopWidth": 1
+          },
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "FacilityNameEmbeddedView"
+        },
+        "position": {
+          "basis": "Auto",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.Info": {
+            "binding": {
+              "config": {
+                "path": "view.custom.bedInfo"
+              },
+              "transforms": [
+                {
+                  "code": "\treturn value.getValueAt(0,\"facilityName\")",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "Description": "Facility Name"
+          },
+          "path": "Shelter/Schedule/Preview/Cards/AboutLabel",
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "RoomNameEmbeddedView"
+        },
+        "position": {
+          "basis": "Auto",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.Info": {
+            "binding": {
+              "config": {
+                "path": "view.custom.bedInfo"
+              },
+              "transforms": [
+                {
+                  "code": "\treturn value.getValueAt(0,\"roomName\")",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "Description": "Room Name"
+          },
+          "path": "Shelter/Schedule/Preview/Cards/AboutLabel",
+          "style": {
+            "overflow": "hidden"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "BedNameEmbeddedView"
+        },
+        "position": {
+          "basis": "Auto",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.Info": {
+            "binding": {
+              "config": {
+                "path": "view.custom.bedInfo"
+              },
+              "transforms": [
+                {
+                  "code": "\treturn value.getValueAt(0,\"bedName\")",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "Description": "Bed Name"
+          },
+          "path": "Shelter/Schedule/Preview/Cards/AboutLabel",
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "BedNameEmbeddedView_0"
+        },
+        "position": {
+          "basis": "Auto",
+          "grow": 1,
+          "shrink": 0
+        },
+        "props": {
+          "params": {
+            "Description": "",
+            "Info": ""
+          },
+          "path": "Shelter/Schedule/Preview/Cards/AboutLabel",
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "AboutHeader_EmbeddedView_3"
+        },
+        "position": {
+          "basis": "Auto",
+          "shrink": 0
+        },
+        "props": {
+          "params": {
+            "Text": "Reserved"
+          },
+          "path": "Shelter/Schedule/Preview/Cards/AboutHeader",
+          "style": {
+            "borderTopColor": "#e6e6e6",
+            "borderTopStyle": "solid",
+            "borderTopWidth": 1
+          },
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Reserved_FlexRepeater"
+        },
+        "position": {
+          "basis": "25%",
+          "grow": 1
+        },
+        "props": {
+          "direction": "column",
+          "instances": [
+            {
+              "endDate": null,
+              "instancePosition": {},
+              "instanceStyle": {
+                "classes": ""
+              },
+              "participantName": null,
+              "startDate": null
+            }
+          ],
+          "path": "Shelter/Schedule/Preview/Cards/IntervalParticipant",
+          "style": {
+            "overflow": "visible"
+          }
+        },
+        "type": "ia.display.flex-repeater"
+      },
+      {
+        "meta": {
+          "name": "AboutHeader_EmbeddedView_4"
+        },
+        "position": {
+          "basis": "Auto",
+          "shrink": 0
+        },
+        "props": {
+          "params": {
+            "Text": "Occupied"
+          },
+          "path": "Shelter/Schedule/Preview/Cards/AboutHeader",
+          "style": {
+            "borderTopColor": "#e6e6e6",
+            "borderTopStyle": "solid",
+            "borderTopWidth": 1
+          },
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Occupied_FlexRepeater"
+        },
+        "position": {
+          "basis": "25%"
+        },
+        "props": {
+          "direction": "column",
+          "instances": [
+            {
+              "endDate": "2020-08-12 00:00:00",
+              "instancePosition": {},
+              "instanceStyle": {
+                "classes": ""
+              },
+              "participantName": "aName Test dSecond",
+              "startDate": "2020-08-11 00:00:00"
+            }
+          ],
+          "path": "Shelter/Schedule/Preview/Cards/IntervalParticipant",
+          "style": {
+            "overflow": "visible"
+          }
+        },
+        "type": "ia.display.flex-repeater"
+      },
+      {
+        "events": {
+          "component": {
+            "onActionPerformed": {
+              "config": {
+                "script": "\troot \u003d self.parent \n\tbedDict \u003d root.getBedAsDict(self.view.params.bedId)\n\tsystem.perspective.navigate(page \u003d \u0027Shelter/Detail/{}\u0027.format(bedDict[\"facilityId\"]))\n\t\n\t#params \u003d {\n\t\t#\"bedId\":bedDict[\u0027bedId\u0027], \n\t\t#\"shelterID\": bedDict[\u0027facilityId\u0027], \n\t\t#\"roomId\": bedDict[\u0027roomId\u0027],\n\t\t#\"selectedTab\": \"Current Residents\"\n\t#}\n\t#system.perspective.navigate(page \u003d \u0027Shelter/Detail/{}\u0027.format(params[\"shelterID\"]), params \u003d params)\n"
+              },
+              "scope": "G",
+              "type": "script"
+            }
+          }
+        },
+        "meta": {
+          "name": "Button"
+        },
+        "position": {
+          "basis": "48px"
+        },
+        "props": {
+          "style": {
+            "classes": "Buttons/Main",
+            "marginBottom": "15px",
+            "marginLeft": "240px",
+            "marginRight": "240px",
+            "marginTop": "15px"
+          },
+          "text": "View record"
+        },
+        "type": "ia.input.button"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column",
+      "style": {
+        "classes": "Background/Default"
+      }
+    },
+    "scripts": {
+      "customMethods": [
+        {
+          "name": "setBedInfo",
+          "params": [],
+          "script": "\tbedId \u003d self.view.params.bedId\n\t\n\tqueryBedInfo \u003d \"\"\"\n\tSELECT [Facility].[id] AS facilityId, [Facility].[facilityName], [Room].[id] AS roomId, [Room].[roomName], [Bed].[id] AS bedId,  [Bed].[bedName]\n\tFROM [lodging].[Bed]\n\t\tINNER JOIN [lodging].[Room] ON [Bed].[roomId] \u003d [Room].[id]\n\t\tINNER JOIN [lodging].[Facility] ON [Room].[facilityId] \u003d [Facility].[id]\n\tWHERE [Bed].[id] \u003d ?\"\"\"\n\t\n\tresult \u003d system.db.runPrepQuery(queryBedInfo,[bedId],\u0027RITIOps\u0027)\n\tself.view.custom.bedInfo \u003d result"
+        },
+        {
+          "name": "setReservedInfo",
+          "params": [],
+          "script": "\tflrReserved \u003d self.getChild(\"Reserved_FlexRepeater\")\n\t#flrReserved.meta.visible \u003d False\n\t\n\t\n\tbedId \u003d self.view.params.bedId\n\tstartDate \u003d self.view.params.startDate\n\tendDate \u003d self.view.params.endDate\n\n\tqueryReservedInfo \u003d \"\"\"\n\tDECLARE @StartInterval date \u003d ?   \n\tDECLARE @EndInterval date \u003d ?\n\t\n\tSELECT  [Reservation].[reservationStart] \n\t\t,[Reservation].[reservationEnd]\n\t\t,CONCAT_WS(\u0027 \u0027,[Human].[firstName],[Human].[middleName],[Human].[lastName]) AS participantName\n\t\t,[Reservation].participantId\n\tFROM [lodging].[Reservation] \n\tINNER JOIN [participant].[Participant] ON [Participant].[id] \u003d [Reservation].[participantId] \n\tINNER JOIN [humans].[Human] ON [Participant].[humanId] \u003d [Human].[id] \n\t\n\tWHERE ([Reservation].[timeRetired] IS NULL\n\t\tAND [Reservation].[reservationStart] IS NOT NULL    \n\t\tAND CAST([Reservation].[reservationStart] AS date) \u003c\u003d @EndInterval\n\t\tAND CAST(ISNULL([Reservation].[reservationEnd],@EndInterval) AS date) \u003e\u003d @StartInterval\n\t\tAND [Reservation].[bedId] \u003d ?) \n\t\n\tORDER BY [Reservation].[reservationStart]\"\"\"\n\t\n\tresult \u003d system.db.runPrepQuery(queryReservedInfo,[startDate,endDate, bedId],\u0027RITIOps\u0027)\n\tself.view.custom.reservedInfo \u003d result\n\t\n\tauxList \u003d []\n\tfor item in system.dataset.toPyDataSet(result):\n\t\tauxDict \u003d {}\n\t\ttry:\n#\t\t\tUTCOffset \u003d self.session.props.device.timezone.utcOffset\n#\t\t\treservationStart \u003d system.date.addMinutes(item[\u0027reservationStart\u0027],int(UTCOffset*60))\n#\t\t\tauxDict[\u0027startDate\u0027] \u003d system.date.format(reservationStart)\n\t\t\tauxDict[\u0027startDate\u0027] \u003d system.date.format(item[\u0027reservationStart\u0027])\n\t\texcept:\n\t\t\tauxDict[\u0027startDate\u0027] \u003d None\n\t\t\t\n\t\ttry:\n#\t\t\tUTCOffset \u003d self.session.props.device.timezone.utcOffset\n#\t\t\treservationEnd \u003d system.date.addMinutes(item[\u0027reservationEnd\u0027],int(UTCOffset*60))\n#\t\t\tauxDict[\u0027endDate\u0027] \u003d system.date.format(reservationEnd)\n\t\t\tauxDict[\u0027endDate\u0027] \u003d system.date.format(item[\u0027reservationEnd\u0027])\n\t\texcept:\n\t\t\tauxDict[\u0027endDate\u0027] \u003d None\t\t\t\t\n\n\t\tauxDict[\u0027participantName\u0027] \u003d item[\u0027participantName\u0027]\n\t\tauxDict[\u0027instanceStyle\u0027] \u003d {} \n\t\tauxDict[\u0027instanceStyle\u0027][\u0027classes\u0027] \u003d \u0027\u0027\n\t\tauxDict[\u0027instancePosition\u0027] \u003d {} \n\t\tauxList.append(auxDict)\n\n\n\tflrReserved.props.instances \u003d auxList\n\t#flrReserved.meta.visible \u003d True"
+        },
+        {
+          "name": "setOccupiedInfo",
+          "params": [],
+          "script": "\tbedId \u003d self.view.params.bedId\n\tstartDate \u003d self.view.params.startDate\n\tendDate \u003d self.view.params.endDate\n\n\tqueryOccupiedInfo \u003d \"\"\"\n\tDECLARE @StartInterval date \u003d ?\n\tDECLARE @EndInterval date \u003d ?\n\t\t\t\n\tSELECT eventStart\n\t\t,eventEnd\n\t\t,CONCAT_WS(\u0027 \u0027,[Human].[firstName],[Human].[middleName],[Human].[lastName]) AS participantName\n\t\t,[BedLog].participantId  \n\tFROM [lodging].[BedLog]  \n\tINNER JOIN [participant].[Participant] ON [Participant].[id] \u003d [BedLog].[participantId] \n\tINNER JOIN [humans].[Human] ON [Participant].[humanId] \u003d [Human].[id] \n\tWHERE ([BedLog].[eventStart] IS NOT NULL    \n\tAND CAST([BedLog].[eventStart] AS date) \u003c\u003d @EndInterval\n\tAND CAST(ISNULL([BedLog].[eventEnd],@EndInterval) AS date) \u003e\u003d @StartInterval\n\tAND [BedLog].[bedId] \u003d ?)\n\t\n\tORDER BY [BedLog].[eventStart]\"\"\"\n\t\n\tresult \u003d system.db.runPrepQuery(queryOccupiedInfo,[startDate,endDate, bedId],\u0027RITIOps\u0027)\n\tself.view.custom.occupiedInfo \u003d result\n\t\n\t\n\tauxList \u003d []\n\tfor item in system.dataset.toPyDataSet(result):\n\t\tauxDict \u003d {}\n\t\ttry:\n#\t\t\tUTCOffset \u003d self.session.props.device.timezone.utcOffset\n#\t\t\teventStart \u003d system.date.addMinutes(item[\u0027eventStart\u0027],int(UTCOffset*60))\n#\t\t\tauxDict[\u0027startDate\u0027] \u003d system.date.format(eventStart)\n\t\t\tauxDict[\u0027startDate\u0027] \u003d system.date.format(item[\u0027eventStart\u0027])\n\t\texcept:\n\t\t\tauxDict[\u0027startDate\u0027] \u003d None\n\t\t\t\n\t\ttry:\n#\t\t\tUTCOffset \u003d self.session.props.device.timezone.utcOffset\n#\t\t\tendDate \u003d system.date.addMinutes(item[\u0027eventEnd\u0027],int(UTCOffset*60))\n#\t\t\tauxDict[\u0027endDate\u0027] \u003d system.date.format(endDate)\n\t\t\tauxDict[\u0027endDate\u0027] \u003d system.date.format(item[\u0027eventEnd\u0027])\n\t\texcept:\n\t\t\tauxDict[\u0027endDate\u0027] \u003d None\t\t\t\t\n\n\t\tauxDict[\u0027participantName\u0027] \u003d item[\u0027participantName\u0027]\n\t\tauxDict[\u0027instanceStyle\u0027] \u003d {} \n\t\tauxDict[\u0027instanceStyle\u0027][\u0027classes\u0027] \u003d \u0027\u0027\n\t\tauxDict[\u0027instancePosition\u0027] \u003d {} \n\t\tauxList.append(auxDict)\n\n\tflrOccupied \u003d self.getChild(\"Occupied_FlexRepeater\")\n\tflrOccupied.props.instances \u003d auxList"
+        },
+        {
+          "name": "getBedAsDict",
+          "params": [
+            "bedId"
+          ],
+          "script": "\tquery \u003d \"\"\"\n\tSELECT [Room].[facilityId], [Room].[id] AS roomId\n\tFROM [lodging].[Bed]\n\tINNER JOIN [lodging].[Room] ON [Bed].[roomId] \u003d [Room].[id]\n\tWHERE [Bed].[id] \u003d ?\n\t\"\"\"\n\t\n\tresult \u003d system.db.runPrepQuery(query,[bedId], \"RITIOps\")\n\tbedDict \u003d {\n\t\t\"bedId\":bedId, \n\t\t\"facilityId\": result.getValueAt(0,\u0027facilityId\u0027), \n\t\t\"roomId\": result.getValueAt(0,\u0027roomId\u0027)\n\t}\n\t\n\treturn bedDict \n\t\n\t"
+        }
+      ],
+      "extensionFunctions": null,
+      "messageHandlers": []
+    },
+    "type": "ia.container.flex"
+  }
+}

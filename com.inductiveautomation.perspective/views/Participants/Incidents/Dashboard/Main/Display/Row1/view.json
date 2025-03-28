@@ -1,0 +1,507 @@
+{
+  "custom": {
+    "suspensionData": -1,
+    "suspensionDuration": "",
+    "suspensionDurationName": "",
+    "suspensionTimeBegin": "",
+    "suspensionTimeEnd": "",
+    "suspensionType": ""
+  },
+  "params": {
+    "incident_date": {
+      "$": [
+        "ts",
+        201,
+        1592902180067
+      ],
+      "$ts": 1592902180067
+    },
+    "participant_name": "",
+    "physical_injury": 0,
+    "property_damage": 0,
+    "row_id": -1,
+    "suspension": 0,
+    "suspension_duration": 1,
+    "suspension_time_begin": "Oct 18 2022",
+    "suspension_time_end": "Oct 18 2022",
+    "suspension_type": -1
+  },
+  "propConfig": {
+    "custom.suspensionData": {
+      "binding": {
+        "config": {
+          "path": "view.params.row_id"
+        },
+        "transforms": [
+          {
+            "code": "\timport traceback\n\ttry:\n\t\tproject \u003d \u0027RITI\u0027\n\t\t#Set to blank values as default\n\t\tself.custom.suspensionType \u003d \u0027\u0027\n\t\tself.custom.suspensionDuration \u003d \u0027\u0027\n\t\tself.custom.suspensionTimeBegin \u003d \u0027\u0027\n\t\tself.custom.suspensionTimeEnd \u003d \u0027\u0027\n\t\t\n\t\tif self.params.suspension \u003d\u003d 1 and self.params.row_id \u003e -1:\n\t\t\t#system.perspective.print(self.params.suspension)\n\t\t\trowId \u003d self.params.row_id\n\t\t\tsystem.perspective.print(rowId)\n\t\t\tpath \u003d \"Participants/Incidents/SuspensionDetailSelect\"\n\t\t\tparameters \u003d {\"incident_log_id\":rowId}\n\t\t\tsuspension \u003d system.db.runNamedQuery(project\u003dproject,path\u003dpath,parameters\u003dparameters, getKey\u003dTrue)\n\t\t\tsystem.perspective.print(suspension.getRowCount())\n\t\t\tif suspension.getRowCount():\n\t\t\t\t#Map query results into correct attributes\n\t\t\t\tself.custom.suspensionType \u003d suspension.getValueAt(0, \"suspension_type_name\")\n\t\t\t\tself.custom.suspensionDuration \u003d suspension.getValueAt(0, \"suspension_duration\")\n\t\t\t\tself.custom.suspensionTimeBegin \u003d system.date.toMillis(suspension.getValueAt(0, \"suspension_time_begin\"))\n\t\t\t\tself.custom.suspensionTimeEnd \u003d system.date.toMillis(suspension.getValueAt(0, \"suspension_time_end\"))\n\t\t\t\t\n\t\t\t\tif int(self.custom.suspensionDuration):\n\t\t\t\t\tduration \u003d int(self.custom.suspensionDuration)\n\t\t\t\telse:\n\t\t\t\t\tduration \u003d 0\n\t\t\t\tif duration \u003d\u003d 1:\n\t\t\t\t\tduration_name \u003d \"1 Day\"\n\t\t\t\telif duration \u003d\u003d 7:\n\t\t\t\t\tduration_name \u003d \"1 Week\"\n\t\t\t\telif duration \u003d\u003d 14:\n\t\t\t\t\tduration_name \u003d \"2 Weeks\"\n\t\t\t\telif duration \u003d\u003d 30:\n\t\t\t\t\tduration_name \u003d \"30 Days\"\n\t\t\t\telif duration \u003d\u003d 60:\n\t\t\t\t\tduration_name \u003d \"60 Days\"\n\t\t\t\telif duration \u003d\u003d 90:\n\t\t\t\t\tduration_name \u003d \"90 Days\"\n\t\t\t\telif duration \u003d\u003d 365:\n\t\t\t\t\tduration_name \u003d \"1 Year\"\n\t\t\t\telif duration \u003d\u003d 3650:\n\t\t\t\t\tduration_name \u003d \"Indefinite\"\n\t\t\t\telse:\n\t\t\t\t\tduration_name \u003d \"Other\"\n\t\t\t\tself.custom.suspensionDurationName \u003d duration_name\n\n\t\treturn value\n\texcept:\t\t\n\t\tlogger \u003d system.util.getLogger(\"Participants Incidents Dashboard Suspension Query\")\n\t\tmsg \u003d traceback.format_exc()\n\t\tlogger.error(msg)\n\t\t",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      },
+      "persistent": true
+    },
+    "custom.suspensionDuration": {
+      "persistent": true
+    },
+    "custom.suspensionDurationName": {
+      "persistent": true
+    },
+    "custom.suspensionTimeBegin": {
+      "persistent": true
+    },
+    "custom.suspensionTimeEnd": {
+      "persistent": true
+    },
+    "custom.suspensionType": {
+      "persistent": true
+    },
+    "params.incident_date": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.participant_name": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.physical_injury": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.property_damage": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.row_id": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.suspension": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.suspension_duration": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.suspension_time_begin": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.suspension_time_end": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.suspension_type": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 60,
+      "width": 1605
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "Embed_Participant"
+        },
+        "position": {
+          "basis": "220px"
+        },
+        "propConfig": {
+          "props.params.text": {
+            "binding": {
+              "config": {
+                "path": "view.params.participant_name"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "label": "Participant"
+          },
+          "path": "Participants/Templates/60px/top/ReadOnly_Text",
+          "style": {
+            "classes": "InputCards/InputCard"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Embed_Incident_Date"
+        },
+        "position": {
+          "basis": "220px"
+        },
+        "propConfig": {
+          "props.params.text": {
+            "binding": {
+              "config": {
+                "path": "view.params.incident_date"
+              },
+              "transforms": [
+                {
+                  "formatType": "datetime",
+                  "formatValue": {
+                    "date": "medium"
+                  },
+                  "type": "format"
+                },
+                {
+                  "expression": "if({view.params.row_id}\u003d-1,\u0027\u0027,{value})",
+                  "type": "expression"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "label": "Time of Incident"
+          },
+          "path": "Participants/Templates/60px/top/ReadOnly_Text",
+          "style": {
+            "classes": "InputCards/InputCard"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Embed_Physical_Injury"
+        },
+        "position": {
+          "basis": "165px"
+        },
+        "propConfig": {
+          "props.params.text": {
+            "binding": {
+              "config": {
+                "expression": "if({view.params.physical_injury},\u0027YES\u0027,\u0027NO\u0027)"
+              },
+              "transforms": [
+                {
+                  "expression": "if({view.params.row_id}\u003d-1,\u0027\u0027,{value})",
+                  "type": "expression"
+                }
+              ],
+              "type": "expr"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "label": "Physical Injury?"
+          },
+          "path": "Participants/Templates/60px/top/ReadOnly_Text",
+          "style": {
+            "classes": "InputCards/InputCard"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Embed_Property_Damage"
+        },
+        "position": {
+          "basis": "165px"
+        },
+        "propConfig": {
+          "props.params.text": {
+            "binding": {
+              "config": {
+                "expression": "if({view.params.property_damage},\u0027YES\u0027,\u0027NO\u0027)"
+              },
+              "transforms": [
+                {
+                  "expression": "if({view.params.row_id}\u003d-1,\u0027\u0027,{value})",
+                  "type": "expression"
+                }
+              ],
+              "type": "expr"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "label": "Property Damage?"
+          },
+          "path": "Participants/Templates/60px/top/ReadOnly_Text",
+          "style": {
+            "classes": "InputCards/InputCard"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Embed_Suspension"
+        },
+        "position": {
+          "basis": "165px"
+        },
+        "propConfig": {
+          "props.params.text": {
+            "binding": {
+              "config": {
+                "expression": "if({view.params.suspension},\u0027YES\u0027,\u0027NO\u0027)"
+              },
+              "transforms": [
+                {
+                  "expression": "if({view.params.row_id}\u003d-1,\u0027\u0027,{value})",
+                  "type": "expression"
+                }
+              ],
+              "type": "expr"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "label": "Suspension?"
+          },
+          "path": "Participants/Templates/60px/top/ReadOnly_Text",
+          "style": {
+            "classes": "InputCards/InputCard"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Embed_Suspension_Type"
+        },
+        "position": {
+          "basis": "165px"
+        },
+        "propConfig": {
+          "position.display": {
+            "binding": {
+              "config": {
+                "path": "view.params.suspension"
+              },
+              "transforms": [
+                {
+                  "fallback": false,
+                  "inputType": "scalar",
+                  "mappings": [
+                    {
+                      "input": 1,
+                      "output": true
+                    }
+                  ],
+                  "outputType": "scalar",
+                  "type": "map"
+                }
+              ],
+              "type": "property"
+            }
+          },
+          "props.params.text": {
+            "binding": {
+              "config": {
+                "path": "view.params.suspension_type"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "label": "Suspension Type"
+          },
+          "path": "Participants/Templates/60px/top/ReadOnly_Text",
+          "style": {
+            "classes": "InputCards/InputCard"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Embed_Suspension_Duration"
+        },
+        "position": {
+          "basis": "165px"
+        },
+        "propConfig": {
+          "position.display": {
+            "binding": {
+              "config": {
+                "path": "view.params.suspension"
+              },
+              "transforms": [
+                {
+                  "fallback": false,
+                  "inputType": "scalar",
+                  "mappings": [
+                    {
+                      "input": 1,
+                      "output": true
+                    }
+                  ],
+                  "outputType": "scalar",
+                  "type": "map"
+                }
+              ],
+              "type": "property"
+            }
+          },
+          "props.params.text": {
+            "binding": {
+              "config": {
+                "path": "view.params.suspension_duration"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "label": "Suspension Duration"
+          },
+          "path": "Participants/Templates/60px/top/ReadOnly_Text",
+          "style": {
+            "classes": "InputCards/InputCard"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Embed_Suspension_Begin"
+        },
+        "position": {
+          "basis": "165px"
+        },
+        "propConfig": {
+          "position.display": {
+            "binding": {
+              "config": {
+                "path": "view.params.suspension"
+              },
+              "transforms": [
+                {
+                  "fallback": false,
+                  "inputType": "scalar",
+                  "mappings": [
+                    {
+                      "input": 1,
+                      "output": true
+                    }
+                  ],
+                  "outputType": "scalar",
+                  "type": "map"
+                }
+              ],
+              "type": "property"
+            }
+          },
+          "props.params.text": {
+            "binding": {
+              "config": {
+                "path": "view.params.suspension_time_begin"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "label": "Suspension Begin"
+          },
+          "path": "Participants/Templates/60px/top/ReadOnly_Text",
+          "style": {
+            "classes": "InputCards/InputCard"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Embed_Suspension_End"
+        },
+        "position": {
+          "basis": "165px"
+        },
+        "propConfig": {
+          "position.display": {
+            "binding": {
+              "config": {
+                "path": "view.params.suspension"
+              },
+              "transforms": [
+                {
+                  "fallback": false,
+                  "inputType": "scalar",
+                  "mappings": [
+                    {
+                      "input": 1,
+                      "output": true
+                    }
+                  ],
+                  "outputType": "scalar",
+                  "type": "map"
+                }
+              ],
+              "type": "property"
+            }
+          },
+          "props.params.text": {
+            "binding": {
+              "config": {
+                "path": "view.params.suspension_time_end"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "label": "Suspension End"
+          },
+          "path": "Participants/Templates/60px/top/ReadOnly_Text",
+          "style": {
+            "classes": "InputCards/InputCard"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Embed_Placeholder"
+        },
+        "position": {
+          "basis": "1px",
+          "grow": 1
+        },
+        "props": {
+          "path": "Participants/Templates/Placeholder",
+          "style": {
+            "classes": "InputCards/InputCard"
+          }
+        },
+        "type": "ia.display.view"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "style": {
+        "classes": "Background/Default"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

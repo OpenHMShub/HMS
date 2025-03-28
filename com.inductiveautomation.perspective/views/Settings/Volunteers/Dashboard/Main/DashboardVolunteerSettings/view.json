@@ -1,0 +1,133 @@
+{
+  "custom": {
+    "reset": false,
+    "rowData": {
+      "active": -1,
+      "breezeId": -1,
+      "congregationId": -1,
+      "dob": "",
+      "email": "",
+      "firstName": "",
+      "gender": "",
+      "genderId": -1,
+      "humanId": -1,
+      "lastName": "",
+      "middleName": "",
+      "phone": "",
+      "providerId": -1,
+      "providerName": "",
+      "volunteerId": -1
+    },
+    "selectionData": []
+  },
+  "params": {},
+  "propConfig": {
+    "custom.reset": {
+      "onChange": {
+        "enabled": null,
+        "script": "\tif currentValue.value:\n\t\tsystem.perspective.print(\u0027Volunteer Data Reset\u0027)\n\t\tvolunteerData \u003d self.custom.selectionData\n\t\tif len(volunteerData) \u003e 0:\n\t\t\t#Data is selected, set row data to selection data\n\t\t\tif volunteerData[0].active:\n\t\t\t\tactive \u003d 1\n\t\t\telse:\n\t\t\t\tactive \u003d 0\n\t\t\tself.custom.rowData \u003d {\n\t\t\t\t\"volunteerId\":volunteerData[0].volunteerId,\n\t\t\t\t\"humanId\":volunteerData[0].humanId,\n\t\t\t\t\"breezeId\":volunteerData[0].humanBreezeId,\n\t\t\t\t#\"breezeIdV\":volunteerData[0].volunteerBreezeId,\n\t\t\t\t\"providerId\":volunteerData[0].providerId,\n\t\t\t\t#\"providerTypeId\":volunteerData[0].providerTypeId,\n\t\t\t\t\"congregationId\":volunteerData[0].congregationId,\n\t\t\t\t\"genderId\":volunteerData[0].genderId,\n\t\t\t\t\"active\":active,\n\t\t\t\t\"firstName\":volunteerData[0].firstName,\n\t\t\t\t\"middleName\":volunteerData[0].middleName,\n\t\t\t\t\"lastName\":volunteerData[0].lastName,\n\t\t\t\t#\"suffix\":volunteerData[0].suffix,\n\t\t\t\t#\"nickName\":volunteerData[0].nickName,\n\t\t\t\t\"phone\":volunteerData[0].phone,\n\t\t\t\t\"dob\":volunteerData[0].dob,\n\t\t\t\t\"gender\":volunteerData[0].genderName,\n\t\t\t\t\"email\":volunteerData[0].email,\n\t\t\t\t\"providerName\":volunteerData[0].providerName,\n\t\t\t\t#\"providerTypeName\":volunteerData[0].providerTypeName\n\t\t\t\t}\n\t\telse:\n\t\t\t#no Data selected, set to defaults\n\t\t\tself.custom.rowData \u003d {\n\t\t\t\t\"volunteerId\":-1,\n\t\t\t\t\"humanId\":-1,\n\t\t\t\t\"breezeId\":-1,\n\t\t\t\t#\"breezeIdV\":-1,\n\t\t\t\t\"providerId\":-1,\n\t\t\t\t#\"providerTypeId\":-1,\n\t\t\t\t\"congregationId\":-1,\n\t\t\t\t\"genderId\":-1,\n\t\t\t\t\"active\":-1,\n\t\t\t\t\"firstName\":\u0027\u0027,\n\t\t\t\t\"middleName\":\u0027\u0027,\n\t\t\t\t\"lastName\":\u0027\u0027,\n\t\t\t\t#\"suffix\":\u0027\u0027,\n\t\t\t\t#\"nickName\":\u0027\u0027,\n\t\t\t\t\"phone\":\u0027\u0027,\n\t\t\t\t\"dob\":\u0027\u0027,\n\t\t\t\t\"gender\":\u0027\u0027,\n\t\t\t\t\"email\":\u0027\u0027,\n\t\t\t\t\"providerName\":\u0027\u0027,\n\t\t\t\t#\"providerTypeName\":\u0027\u0027\n\t\t\t\t}\n\t\n\tself.custom.reset \u003d False"
+      },
+      "persistent": true
+    },
+    "custom.selectionData": {
+      "binding": {
+        "config": {
+          "path": "/root/Table.props.params.selectionData"
+        },
+        "type": "property"
+      },
+      "onChange": {
+        "enabled": null,
+        "script": "\tself.custom.reset \u003d True"
+      },
+      "persistent": true
+    },
+    "custom.table_data": {
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "width": 1166
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "Edit"
+        },
+        "position": {
+          "basis": "200px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.rowData": {
+            "binding": {
+              "config": {
+                "path": "view.custom.rowData"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "path": "Settings/Volunteers/Dashboard/Main/Edit/VolunteerSettingsEdit",
+          "style": {
+            "classes": "ActivityCards/Card",
+            "marginLeft": "40px",
+            "marginRight": "40px"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Filter"
+        },
+        "position": {
+          "basis": "30px",
+          "shrink": 0
+        },
+        "props": {
+          "path": "Settings/Volunteers/Dashboard/Main/Filter/TableFilter_Volunteers",
+          "style": {
+            "marginLeft": "40px",
+            "marginRight": "40px"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Table"
+        },
+        "position": {
+          "basis": "320px",
+          "grow": 1
+        },
+        "props": {
+          "params": {
+            "selectionData": []
+          },
+          "path": "Settings/Volunteers/Dashboard/Main/Tables/VolunteerSettingsTable",
+          "style": {
+            "marginLeft": "40px",
+            "marginRight": "40px"
+          }
+        },
+        "type": "ia.display.view"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column",
+      "style": {
+        "classes": "Background/Alternative"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

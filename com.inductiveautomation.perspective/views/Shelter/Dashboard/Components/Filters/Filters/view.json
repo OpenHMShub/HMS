@@ -1,0 +1,258 @@
+{
+  "custom": {},
+  "params": {
+    "age_max": [],
+    "age_min": [],
+    "shelters": []
+  },
+  "propConfig": {
+    "params.age_max": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.age_min": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.shelters": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 40,
+      "width": 1812
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "lblFilter"
+        },
+        "position": {
+          "basis": "70px",
+          "shrink": 0
+        },
+        "props": {
+          "style": {
+            "classes": "Filter/Header_Text"
+          },
+          "text": "Filters:"
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "meta": {
+          "name": "Shelter"
+        },
+        "position": {
+          "basis": "200px"
+        },
+        "propConfig": {
+          "props.params.options": {
+            "binding": {
+              "config": {
+                "path": "view.params.shelters"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "clear": false,
+            "column_name": "facilityName",
+            "placeholder": "Shelter",
+            "searchType": "match"
+          },
+          "path": "1_TEMPLATES/Filtering/Filters/DatasetFilter_SingleDropDown",
+          "style": {
+            "classes": "Filter/Filter_Container"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "MinAge"
+        },
+        "position": {
+          "basis": "150px"
+        },
+        "propConfig": {
+          "props.params.options": {
+            "binding": {
+              "config": {
+                "path": "view.params.age_min"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "clear": false,
+            "column_name": "age",
+            "placeholder": "Min Age",
+            "searchType": "minBound"
+          },
+          "path": "1_TEMPLATES/Filtering/Filters/DatasetFilter_SingleDropDown",
+          "style": {
+            "classes": "Filter/Filter_Container"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "MaxAge"
+        },
+        "position": {
+          "basis": "150px"
+        },
+        "propConfig": {
+          "props.params.options": {
+            "binding": {
+              "config": {
+                "path": "view.params.age_max"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "clear": false,
+            "column_name": "age",
+            "placeholder": "Max Age",
+            "searchType": "maxBound"
+          },
+          "path": "1_TEMPLATES/Filtering/Filters/DatasetFilter_SingleDropDown",
+          "style": {
+            "classes": "Filter/Filter_Container"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "WaitList"
+        },
+        "position": {
+          "basis": "250px"
+        },
+        "propConfig": {
+          "props.params.options": {
+            "binding": {
+              "config": {
+                "parameters": {
+                  "facilityId": "-1"
+                },
+                "queryPath": "Shelter/Reservations/SelectWaitingListsForReservation",
+                "returnFormat": "json"
+              },
+              "transforms": [
+                {
+                  "code": "\t# need to append All to the list only if list has any elements\n\timport json\n\tif len(value) \u003d\u003d 0:\n\t\treturn value\n\telse:\n\t\tvalueDict \u003d system.util.jsonDecode(str(value)) # get the string to dict\n\t\tallValue \u003d {}\n\t\tallValue[\u0027value\u0027] \u003d \u0027All\u0027\n\t\tallValue[\u0027label\u0027] \u003d \u0027All Waiting Lists\u0027\n\t\tvalueDict.append(allValue) # add \u0027All\u0027 object\n\t\tquickReferralValue \u003d {}\n\t\tquickReferralValue[\u0027value\u0027] \u003d \u0027Quick Referral\u0027\n\t\tquickReferralValue[\u0027label\u0027] \u003d \u0027Quick Referral\u0027\n\t\tvalueDict.append(quickReferralValue) # add \u0027All\u0027 object\n\t\tnewValue \u003d system.util.jsonEncode(valueDict)\n\t\treturn json.loads(newValue) # convert the json string to json Object ",
+                  "type": "script"
+                }
+              ],
+              "type": "query"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "clear": false,
+            "column_name": "waitListName",
+            "placeholder": "Waiting List / Quick Referral",
+            "searchType": "multi",
+            "selection": ""
+          },
+          "path": "1_TEMPLATES/Filtering/Filters/DatasetFilter_MultiDropDown",
+          "style": {
+            "classes": "Filter/Filter_Container"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Placeholder"
+        },
+        "position": {
+          "basis": "1px",
+          "grow": 1
+        },
+        "props": {
+          "path": "1_TEMPLATES/Filtering/Filter_Placeholder"
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "lblSearch"
+        },
+        "position": {
+          "basis": "50px",
+          "shrink": 0
+        },
+        "props": {
+          "style": {
+            "classes": "Table/Filter_Header",
+            "textAlign": "end"
+          },
+          "text": "Search:"
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "meta": {
+          "name": "Search"
+        },
+        "position": {
+          "basis": "220px",
+          "shrink": 0
+        },
+        "props": {
+          "params": {
+            "clear": false,
+            "column_name": "",
+            "placeholder": "Search",
+            "searchType": "full_text"
+          },
+          "path": "1_TEMPLATES/Filtering/Filters/DatasetFilter_Text",
+          "style": {
+            "classes": "Table/Search_Bar"
+          },
+          "useDefaultViewWidth": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "ClearFilters"
+        },
+        "position": {
+          "basis": "40px",
+          "shrink": 0
+        },
+        "props": {
+          "path": "1_TEMPLATES/Filtering/Filters/ClearFilters"
+        },
+        "type": "ia.display.view"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "style": {
+        "classes": "Filter/Header_Text"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

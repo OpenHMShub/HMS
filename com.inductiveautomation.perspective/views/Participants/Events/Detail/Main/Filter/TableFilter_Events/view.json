@@ -1,0 +1,422 @@
+{
+  "custom": {},
+  "events": {
+    "system": {
+      "onStartup": {
+        "config": {
+          "script": "\ttry:\n\t\troot \u003d self.getChild(\"root\")\n\t\troot.setPropsDropdowns()\n\t\t#emvSearch \u003d root.getChild(\"emvSearch\")\n\t\t#emvSearch.props.params.keyUpPulse \u003d False\n\texcept:\n\t\timport traceback\n\t\tlogger \u003d system.util.getLogger(\"Participants_Events\")\n\t\tmsg \u003d self.name + \u0027:\\n\u0027\n\t\tmsg +\u003d traceback.format_exc()\n\t\tlogger.error(msg)\t\t\t"
+        },
+        "scope": "G",
+        "type": "script"
+      }
+    }
+  },
+  "params": {
+    "category": null,
+    "dateRangeFrom": "06/01/2022 00:00:00",
+    "dateRangeTo": "06/01/2023 23:59:59",
+    "eventName": null,
+    "searchText": ""
+  },
+  "propConfig": {
+    "params.category": {
+      "binding": {
+        "config": {
+          "path": "/root/emvCalendar.props.params.selection"
+        },
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.dateRangeFrom": {
+      "binding": {
+        "config": {
+          "path": "session.custom.dateRangeFromDate"
+        },
+        "transforms": [
+          {
+            "code": "\tdate \u003d str(value) + \u0027 00:00:00\u0027\n\treturn date",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.dateRangeTo": {
+      "binding": {
+        "config": {
+          "path": "session.custom.dateRangeToDate"
+        },
+        "transforms": [
+          {
+            "code": "\tdate \u003d str(value) + \u0027 23:59:59\u0027\n\treturn date",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.eventName": {
+      "binding": {
+        "config": {
+          "path": "/root/emvEventName.props.params.selection"
+        },
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.searchText": {
+      "binding": {
+        "config": {
+          "path": "/root/emvSearch.props.params.searchText"
+        },
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 30,
+      "width": 1200
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "Placeholder"
+        },
+        "position": {
+          "basis": "200px",
+          "display": false,
+          "grow": 1
+        },
+        "props": {
+          "path": "1_TEMPLATES/Filtering/Filter_Placeholder"
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "emvDateRange"
+        },
+        "position": {
+          "basis": "180px",
+          "shrink": 0
+        },
+        "props": {
+          "params": {
+            "selectedDateRange": " 06/01/2022 to 06/01/2023"
+          },
+          "path": "Shelter/Templates/DateRange/DateInput",
+          "style": {
+            "classes": "Filter/Filter_Container",
+            "marginLeft": "40px"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "emvCalendar"
+        },
+        "position": {
+          "basis": "150px",
+          "shrink": 0
+        },
+        "props": {
+          "params": {
+            "actionPerformedPulse": false,
+            "clear": false,
+            "multiSelect": false,
+            "options": [
+              {
+                "label": "A\u0026D",
+                "value": 39
+              },
+              {
+                "label": "ClassesTest",
+                "value": 1
+              },
+              {
+                "label": "first",
+                "value": 34
+              },
+              {
+                "label": "new12",
+                "value": 32
+              }
+            ],
+            "placeholder": "Category",
+            "selection": null
+          },
+          "path": "Providers/Dashboard/Components/Filters/Conditional_DropDown",
+          "style": {
+            "classes": "Filter/Filter_Text_TeelBlue Filter/Filter_Container",
+            "marginLeft": "4px"
+          }
+        },
+        "scripts": {
+          "customMethods": [
+            {
+              "name": "setOptions",
+              "params": [],
+              "script": "\t\n\tquery \u003d \"\"\"\nSELECT [id]\n  ,[name]\nFROM [participant].[EventCategories]\nORDER BY [name]\n\t\"\"\"\n\t\n\tresult \u003d system.db.runPrepQuery(query,[],\u0027RITIOps\u0027)\n\t\n\t# Version 1 set options as list of dictionaries\n\tself.props.params.options \u003d [ dict(value \u003d x[0],label \u003d x[1]) for x in result]\n\t\n"
+            }
+          ],
+          "extensionFunctions": null,
+          "messageHandlers": []
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "emvEventName"
+        },
+        "position": {
+          "basis": "160px",
+          "shrink": 0
+        },
+        "props": {
+          "params": {
+            "actionPerformedPulse": false,
+            "clear": false,
+            "multiSelect": false,
+            "options": [
+              {
+                "label": "Art Station",
+                "value": "Art Station"
+              },
+              {
+                "label": "Event in 2022",
+                "value": "Event in 2022"
+              },
+              {
+                "label": "Event Sep 2022",
+                "value": "Event Sep 2022"
+              },
+              {
+                "label": "Fine Food Feast",
+                "value": "Fine Food Feast"
+              },
+              {
+                "label": "HopeU Event",
+                "value": "HopeU Event"
+              },
+              {
+                "label": "Jan Event 2020",
+                "value": "Jan Event 2020"
+              },
+              {
+                "label": "January2022",
+                "value": "January2022"
+              },
+              {
+                "label": "Jigsaw Puzzle",
+                "value": "Jigsaw Puzzle"
+              },
+              {
+                "label": "June Weekends",
+                "value": "June Weekends"
+              },
+              {
+                "label": "Marvel Movie PT1",
+                "value": "Marvel Movie PT1"
+              },
+              {
+                "label": "Museum Visits",
+                "value": "Museum Visits"
+              }
+            ],
+            "placeholder": "Event Name",
+            "selection": null
+          },
+          "path": "Providers/Dashboard/Components/Filters/Conditional_DropDown",
+          "style": {
+            "classes": "Filter/Filter_Text_TeelBlue Filter/Filter_Container",
+            "marginLeft": "4px"
+          }
+        },
+        "scripts": {
+          "customMethods": [
+            {
+              "name": "setOptions",
+              "params": [],
+              "script": "\t\n\tquery \u003d \"\"\"\n\tSELECT \n\t\t [name] AS [value]\n\t\t,[name] AS [label]\n\tFROM participant.Events\n\tGROUP BY [name]\n\tORDER BY [name] \n\t\"\"\"\n\t\t\n\tresult \u003d system.db.runPrepQuery(query,[],\u0027RITIOps\u0027)\n\t\t\n\t# Version 1 set options as list of dictionaries\n\tself.props.params.options \u003d [ dict(value \u003d x[0],label \u003d x[1]) for x in result]\n\t\n"
+            }
+          ],
+          "extensionFunctions": null,
+          "messageHandlers": []
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "toExcel"
+        },
+        "position": {
+          "basis": "30px",
+          "shrink": 0
+        },
+        "props": {
+          "params": {
+            "defaultFilePrefix": "Shelter"
+          },
+          "path": "1_TEMPLATES/Tables/TableToExcel"
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "toPDF"
+        },
+        "position": {
+          "basis": "30px",
+          "shrink": 0
+        },
+        "props": {
+          "params": {
+            "defaultFilePrefix": "Shelter"
+          },
+          "path": "1_TEMPLATES/Tables/TableToPDF"
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "FlexContainer"
+        },
+        "position": {
+          "basis": "50px",
+          "grow": 1
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "meta": {
+          "name": "lblSearch"
+        },
+        "position": {
+          "basis": "50px"
+        },
+        "props": {
+          "style": {
+            "classes": "Table/Filter_Header",
+            "textAlign": "end"
+          },
+          "text": "Search:"
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "meta": {
+          "name": "emvSearch"
+        },
+        "position": {
+          "basis": "220px",
+          "shrink": 0
+        },
+        "props": {
+          "params": {
+            "clear": false,
+            "keyUpPulse": false,
+            "searchText": ""
+          },
+          "path": "Providers/Dashboard/Components/Filters/Search_Bar",
+          "style": {
+            "classes": "Table/Search_Bar"
+          },
+          "useDefaultViewWidth": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "events": {
+          "component": {
+            "onActionPerformed": {
+              "config": {
+                "script": "\troot \u003d self.parent\n\n\temvCalendar \u003d self.getSibling(\"emvCalendar\")\n\temvEventName \u003d self.getSibling(\"emvEventName\")\n\temvSearch \u003d self.getSibling(\"emvSearch\")\n\t\n\temvCalendar.props.params.clear \u003d True\n\temvEventName.props.params.clear \u003d True\n\temvSearch.props.params.clear \u003d True\n\tself.session.custom.dateRangeFromDate \u003d system.date.format(system.date.addYears(system.date.now(),-1), \"MM/dd/yyyy\")\n\tself.session.custom.dateRangeToDate \u003d system.date.format(system.date.now(), \"MM/dd/yyyy\")\n\t\n"
+              },
+              "scope": "G",
+              "type": "script"
+            }
+          }
+        },
+        "meta": {
+          "name": "clearConditions"
+        },
+        "position": {
+          "basis": "30px",
+          "shrink": 0
+        },
+        "props": {
+          "image": {
+            "height": 16,
+            "icon": {
+              "color": "#0C4E8B",
+              "path": "material/close"
+            },
+            "position": "center",
+            "width": 16
+          },
+          "style": {
+            "classes": "Filter/Filter_Border_Default Filter/Filter_Container",
+            "marginRight": "40px"
+          },
+          "text": "",
+          "textStyle": {
+            "classes": "GreyColor"
+          }
+        },
+        "type": "ia.input.button"
+      }
+    ],
+    "custom": {
+      "_devClean": false,
+      "_devPulse": false,
+      "_isDev": false
+    },
+    "meta": {
+      "name": "root"
+    },
+    "propConfig": {
+      "custom._devClean": {
+        "onChange": {
+          "enabled": null,
+          "script": "\t\n\temvProviderType \u003d self.getChild(\"emvProviderType\")\n\temvActivityRange \u003d self.getChild(\"emvActivityRange\")\n\temvSearch \u003d self.getChild(\"emvSearch\")\n\t\n\temvProviderType.props.params.clear \u003d True\n\temvActivityRange.props.params.clear \u003d True\n\temvSearch.props.params.clear \u003d True\n\t\n\n\t\n\tif self.custom._devClean:\n\t\tself.custom._devClean \u003d False"
+        }
+      },
+      "custom._devPulse": {
+        "onChange": {
+          "enabled": null,
+          "script": "\t\n\temvProviderType \u003d self.getChild(\"emvProviderType\")\n\temvActivityRange \u003d self.getChild(\"emvActivityRange\")\n\temvSearch \u003d self.getChild(\"emvSearch\")\n\t\n\t\n\tif self.custom._isDev:\n\t\tif currentValue.value is True:\n\t\t\tself.setPropsDropdowns()\n\t\telse:\n\t\t\temvProviderType.props.params.options \u003d []\n\t\t\temvActivityRange.props.params.options \u003d []\n\t\n\temvProviderType.props.params.actionPerformedPulse \u003d False\n\temvActivityRange.props.params.actionPerformedPulse \u003d False\n\temvSearch.props.params.keyUpPulse \u003d False"
+        }
+      }
+    },
+    "props": {
+      "style": {
+        "classes": "Filter/Header_Text"
+      }
+    },
+    "scripts": {
+      "customMethods": [
+        {
+          "name": "setPropsDropdowns",
+          "params": [],
+          "script": "\temvCalendar \u003d self.getChild(\"emvCalendar\")\n\temvEventName \u003d self.getChild(\"emvEventName\")\n\t\t\n\temvCalendar.setOptions()\n\temvEventName.setOptions()\n"
+        }
+      ],
+      "extensionFunctions": null,
+      "messageHandlers": []
+    },
+    "type": "ia.container.flex"
+  }
+}

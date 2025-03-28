@@ -1,0 +1,219 @@
+{
+  "custom": {},
+  "params": {
+    "tabId": 0
+  },
+  "propConfig": {
+    "params.tabId": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "width": 1013
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "children": [
+          {
+            "custom": {
+              "key": "value"
+            },
+            "meta": {
+              "name": "Tabstrip"
+            },
+            "position": {
+              "basis": "320px",
+              "grow": 1
+            },
+            "propConfig": {
+              "props.params.selectedTab": {
+                "binding": {
+                  "config": {
+                    "path": "view.params.tabId"
+                  },
+                  "transforms": [
+                    {
+                      "fallback": "Overview",
+                      "inputType": "scalar",
+                      "mappings": [
+                        {
+                          "input": "0",
+                          "output": "Overview"
+                        },
+                        {
+                          "input": "1",
+                          "output": "Facilitators"
+                        },
+                        {
+                          "input": "2",
+                          "output": "Groups"
+                        },
+                        {
+                          "input": "3",
+                          "output": "Notes"
+                        }
+                      ],
+                      "outputType": "scalar",
+                      "type": "map"
+                    }
+                  ],
+                  "type": "property"
+                }
+              }
+            },
+            "props": {
+              "path": "Volunteers/Dashboard/Components/TabStrip/TabStrip"
+            },
+            "type": "ia.display.view"
+          },
+          {
+            "children": [
+              {
+                "meta": {
+                  "name": "FlexContainer"
+                },
+                "position": {
+                  "basis": "320px"
+                },
+                "type": "ia.container.flex"
+              },
+              {
+                "meta": {
+                  "name": "EmbeddedView_2"
+                },
+                "position": {
+                  "basis": "320px"
+                },
+                "propConfig": {
+                  "position.display": {
+                    "binding": {
+                      "config": {
+                        "expression": "{.../Tabstrip.props.params.selectedTab}!\u003d\"Notes\""
+                      },
+                      "type": "expr"
+                    }
+                  },
+                  "props.params.Text": {
+                    "binding": {
+                      "config": {
+                        "expression": "if({.../Tabstrip.props.params.selectedTab} \u003d \"Overview\", \"NEW VOLUNTEER\",\n\"NEW \" + upper(substring({.../Tabstrip.props.params.selectedTab},0,len({.../Tabstrip.props.params.selectedTab})-1)))"
+                      },
+                      "type": "expr"
+                    }
+                  },
+                  "props.params.dock": {
+                    "binding": {
+                      "config": {
+                        "expression": "if({.../Tabstrip.props.params.selectedTab} \u003d \"Overview\", \"RegisterVolunteer\",\r\n\"Register\" + substring({.../Tabstrip.props.params.selectedTab},0,len({.../Tabstrip.props.params.selectedTab})-1))"
+                      },
+                      "type": "expr"
+                    }
+                  }
+                },
+                "props": {
+                  "path": "Volunteers/Dashboard/Components/Buttons/New_Volunteer",
+                  "style": {
+                    "paddingLeft": 4
+                  },
+                  "useDefaultViewHeight": true
+                },
+                "type": "ia.display.view"
+              }
+            ],
+            "meta": {
+              "name": "Controls"
+            },
+            "position": {
+              "basis": "300px"
+            },
+            "props": {
+              "style": {
+                "classes": "Background/Default",
+                "marginRight": "40px"
+              }
+            },
+            "type": "ia.container.flex"
+          }
+        ],
+        "meta": {
+          "name": "Tabs_Header"
+        },
+        "position": {
+          "basis": "55px",
+          "display": false,
+          "shrink": 0
+        },
+        "props": {
+          "justify": "space-between",
+          "style": {
+            "classes": "Background/Default",
+            "overflow": "hidden"
+          },
+          "wrap": "wrap"
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "meta": {
+          "name": "Content"
+        },
+        "position": {
+          "basis": "320px",
+          "grow": 1
+        },
+        "propConfig": {
+          "props.path": {
+            "binding": {
+              "config": {
+                "path": "../Tabs_Header/Tabstrip.props.params.selectedTab"
+              },
+              "transforms": [
+                {
+                  "fallback": null,
+                  "inputType": "scalar",
+                  "mappings": [
+                    {
+                      "input": "Overview",
+                      "output": "Volunteers/Dashboard/Components/Tabs/Dashboard_Volunteers"
+                    },
+                    {
+                      "input": "Assignments",
+                      "output": "Volunteers/Assignments/Components/Tabs/Dashboard_Assignments"
+                    },
+                    {
+                      "input": "Facilitators",
+                      "output": "Volunteers/Facilitators/Components/Tabs/Dashboard_Facilitator"
+                    },
+                    {
+                      "input": "Groups",
+                      "output": "Volunteers/Groups/Components/Tabs/Dashboard_Volunteers"
+                    },
+                    {
+                      "input": "Notes",
+                      "output": "Volunteers/Notes/Components/Tabs/Dashboard_Volunteers"
+                    }
+                  ],
+                  "outputType": "scalar",
+                  "type": "map"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "type": "ia.display.view"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column"
+    },
+    "type": "ia.container.flex"
+  }
+}

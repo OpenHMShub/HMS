@@ -1,0 +1,136 @@
+{
+  "custom": {
+    "differenceAttendance": -1,
+    "eventID": 2318
+  },
+  "params": {
+    "instanceID": 30
+  },
+  "propConfig": {
+    "custom.differenceAttendance": {
+      "binding": {
+        "config": {
+          "expression": "{view.custom.eventID}"
+        },
+        "transforms": [
+          {
+            "code": "\t\n\tdataset \u003d system.db.runNamedQuery(\"Calendar/EventInstance/GetEventInstances\",{\u0027eventID\u0027 : value})\n\t\n\tattendanceDifference \u003d 0\n\t\n\tfor x in range(dataset.getRowCount()) :\n\t\t## find current instance\n\t\tif dataset.getValueAt(x,\"instanceID\") \u003d\u003d self.params.instanceID :\n\t\t\t\n\t\t\tif x \u003e 0 :\n\t\t\t\t# previous attendance\n\t\t\t\tpreviousInstanceID \u003d dataset.getValueAt(x-1,\"instanceID\")\n\t\t\t\tprevFacil \u003d system.db.runNamedQuery(\"Calendar/Event Instance People/GetInstanceFacilitators\", {\u0027instanceID\u0027 :previousInstanceID})\n\t\t\t\tprevStaff \u003d system.db.runNamedQuery(\"Calendar/Event Instance People/GetInstanceStaff\", {\u0027instanceID\u0027 :previousInstanceID})\n\t\t\t\tprevVol \u003d system.db.runNamedQuery(\"Calendar/Event Instance People/GetInstanceVolunteers\", {\u0027eventInstanceID\u0027 :previousInstanceID})\n\t\n\t\t\t\tprevSum \u003d prevFacil.getRowCount() + prevStaff.getRowCount() + prevVol.getRowCount()\n\t\t\t\t#current attendance \n\t\t\t\tFacil \u003d system.db.runNamedQuery(\"Calendar/Event Instance People/GetInstanceFacilitators\", {\u0027instanceID\u0027 :self.params.instanceID})\n\t\t\t\tStaff \u003d system.db.runNamedQuery(\"Calendar/Event Instance People/GetInstanceStaff\", {\u0027instanceID\u0027 :self.params.instanceID})\n\t\t\t\tVol \u003d system.db.runNamedQuery(\"Calendar/Event Instance People/GetInstanceVolunteers\", {\u0027eventInstanceID\u0027 :self.params.instanceID})\n\t\t\t\tcurSum \u003d Facil.getRowCount() + Staff.getRowCount() + Vol.getRowCount()\n\t\t\t\tattendanceDifference \u003d curSum - prevSum\n\t\t\t\tbreak\n\t\t\telse :\n\t\t\t\tbreak\n\t\n\treturn attendanceDifference",
+            "type": "script"
+          }
+        ],
+        "type": "expr"
+      },
+      "persistent": true
+    },
+    "custom.eventID": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "instanceID": "{view.params.instanceID}"
+          },
+          "queryPath": "Calendar/EventInstance/GetEventInstanceByID"
+        },
+        "transforms": [
+          {
+            "code": "\treturn value.getValueAt(0,\"parentEventID\")",
+            "type": "script"
+          }
+        ],
+        "type": "query"
+      },
+      "persistent": true
+    },
+    "params.instanceID": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 97
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "Arrow"
+        },
+        "position": {
+          "basis": "54px"
+        },
+        "propConfig": {
+          "props.path": {
+            "binding": {
+              "config": {
+                "expression": "if({view.custom.differenceAttendance} \u003e 0, \"material/north\", if({view.custom.differenceAttendance} \u003c 0, \"material/south\",\"\"))"
+              },
+              "type": "expr"
+            }
+          }
+        },
+        "type": "ia.display.icon"
+      },
+      {
+        "meta": {
+          "name": "Change"
+        },
+        "position": {
+          "basis": "50px"
+        },
+        "propConfig": {
+          "props.text": {
+            "binding": {
+              "config": {
+                "expression": "if({view.custom.differenceAttendance} \u003c0, {view.custom.differenceAttendance} *-1,{view.custom.differenceAttendance})"
+              },
+              "type": "expr"
+            }
+          }
+        },
+        "props": {
+          "style": {
+            "fontSize": 35,
+            "textAlign": "center"
+          }
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "meta": {
+          "name": "Label"
+        },
+        "props": {
+          "style": {
+            "marginTop": 12
+          },
+          "text": "since last event"
+        },
+        "type": "ia.display.label"
+      }
+    ],
+    "custom": {
+      "numberChange": 1
+    },
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "alignItems": "center"
+    },
+    "scripts": {
+      "customMethods": [],
+      "extensionFunctions": null,
+      "messageHandlers": [
+        {
+          "messageType": "refreshPeople",
+          "pageScope": false,
+          "script": "\t# implement your handler here\n\tself.view.refreshBinding(\"custom.eventID\")",
+          "sessionScope": true,
+          "viewScope": false
+        }
+      ]
+    },
+    "type": "ia.container.flex"
+  }
+}

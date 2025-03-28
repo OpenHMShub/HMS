@@ -1,0 +1,117 @@
+{
+  "custom": {},
+  "params": {
+    "age_max": [],
+    "age_min": [],
+    "first_names": [],
+    "shelters": [
+      {
+        "label": "value",
+        "value": "value"
+      }
+    ]
+  },
+  "propConfig": {
+    "params.age_max": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.age_min": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.first_names": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.shelters": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 30,
+      "width": 1545
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "EmbeddedView"
+        },
+        "position": {
+          "basis": "320px"
+        },
+        "props": {
+          "path": "1_TEMPLATES/Filtering/Filters/DatasetFilter_Text"
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Shelter"
+        },
+        "position": {
+          "basis": "450px"
+        },
+        "propConfig": {
+          "props.params.options": {
+            "binding": {
+              "config": {
+                "path": "view.params.shelters"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "clear": false,
+            "column_name": "Shelter",
+            "placeholder": "Shelter"
+          },
+          "path": "1_TEMPLATES/Filtering/Filters/DatasetFilter_SingleDropDown",
+          "style": {
+            "classes": "Filter/Filter_Container"
+          }
+        },
+        "type": "ia.display.view"
+      }
+    ],
+    "events": {
+      "system": {
+        "onStartup": {
+          "config": {
+            "script": "\timport traceback\n\ttry:\n\t\ttoday \u003d system.date.now()\n\t\tdob_min \u003d -1 * int(self.view.params.max_age)\n\t\tdob_max \u003d -1 * int(self.view.params.min_age )\n\t\tself.view.params.dob_start \u003d system.date.addYears(today,dob_min)\n\t\tself.view.params.dob_end \u003d system.date.addYears(today,dob_max)\n\n\texcept:\n\t\tlogger \u003d system.util.getLogger(\"Participants_Filter ParticipantDashboardAgeRange onStartup\")\n\t\tmsg \u003d traceback.format_exc()\n\t\tlogger.error(msg)"
+          },
+          "scope": "G",
+          "type": "script"
+        }
+      }
+    },
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "style": {
+        "classes": "Filter/Header_Text"
+      }
+    },
+    "scripts": {
+      "customMethods": [],
+      "extensionFunctions": null,
+      "messageHandlers": [
+        {
+          "messageType": "ParticipantDashboardAgeRange",
+          "pageScope": true,
+          "script": "\timport traceback\n\ttry:\n\t\t#Get the min and max age from the message payload\n\t\tself.view.params.min_age \u003d payload[\u0027min\u0027]\n\t\tself.view.params.max_age \u003d payload[\u0027max\u0027]\n\t\t#Calculate the date of birth range\n\t\ttoday \u003d system.date.now()\n\t\tdob_min \u003d -1 * int(self.view.params.max_age)\n\t\tdob_max \u003d -1 * int(self.view.params.min_age )\n\t\tself.view.params.dob_start \u003d system.date.addYears(today,dob_min)\n\t\tself.view.params.dob_end \u003d system.date.addYears(today,dob_max)\n\texcept:\n\t\tlogger \u003d system.util.getLogger(\"Participants_Filter ParticipantDashboardAgeRange Message\")\n\t\tmsg \u003d traceback.format_exc()\n\t\tlogger.error(msg)",
+          "sessionScope": true,
+          "viewScope": true
+        }
+      ]
+    },
+    "type": "ia.container.flex"
+  }
+}

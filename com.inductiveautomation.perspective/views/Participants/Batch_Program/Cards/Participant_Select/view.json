@@ -1,0 +1,718 @@
+{
+  "custom": {
+    "edit_data": {
+      "employee_id": null,
+      "enrollment_id": null
+    },
+    "participantIDs": [],
+    "participantList": []
+  },
+  "params": {
+    "employee_id": "",
+    "enrollment_id": "",
+    "func_delete_participant": -1,
+    "selectedId": 2,
+    "selected_participants": {}
+  },
+  "propConfig": {
+    "custom.edit_data": {
+      "persistent": true
+    },
+    "custom.participantIDs": {
+      "persistent": true
+    },
+    "custom.participantList": {
+      "binding": {
+        "config": {
+          "path": "view.custom.participantIDs"
+        },
+        "transforms": [
+          {
+            "code": "\ttableData \u003d []\n\tfor participantID in value:\n\t\tquery \u003d \u0027Participants/Services/BatchServicesSelectedParticipants\u0027\n\t\tparameters \u003d {\n\t\t\t\u0027participantID\u0027: participantID\n\t\t}\n\t\tsearchResults \u003d system.db.runNamedQuery(query,parameters)\n\t\tfor row in range(searchResults.getRowCount()):\n\t\t\trowStruct \u003d {}\n\t\t\trowData \u003d {}\n\t\t\tstyle \u003d {}\t\n\t\t\t\n\t\t\trowData[\u0027humanId\u0027] \u003d searchResults.getValueAt(row, \"humanId\")\n\t\t\trowData[\u0027participantId\u0027] \u003d searchResults.getValueAt(row, \"participantId\")\n\t\t\t\n\t\t\trowData[\u0027firstName\u0027] \u003d searchResults.getValueAt(row, \"firstName\")\n\t\t\trowData[\u0027middleName\u0027] \u003d searchResults.getValueAt(row, \"middleName\")\n\t\t\trowData[\u0027lastName\u0027] \u003d searchResults.getValueAt(row, \"lastName\")\n\t\t\trowData[\u0027dob\u0027] \u003d searchResults.getValueAt(row, \"dob\")\n\t\t\trowData[\u0027enrollments\u0027] \u003d searchResults.getValueAt(row, \"enrollments\")\n\t\t\trowData[\u0027suspended\u0027] \u003d searchResults.getValueAt(row, \"suspended\")\n\t\t\t\n\t\t\tstyle[\u0027classes\u0027] \u003d \"Table/Cell_Detail\"\n\t\t\trowStruct[\u0027value\u0027] \u003d rowData\n#\t\t\trowStruct[\u0027style\u0027] \u003d style\n\t\t\t\n\t\t\ttableData.append(rowStruct)\n\n\n\treturn tableData",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      },
+      "persistent": true
+    },
+    "params.func_delete_participant": {
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.selected_participants": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "width": 600
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "EmbeddedView_Header"
+        },
+        "position": {
+          "basis": "25px",
+          "shrink": 0
+        },
+        "props": {
+          "path": "Participants/Services/Batch/Cards/SelectHeader",
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "EmbeddedView_Selections"
+        },
+        "position": {
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.participantList": {
+            "binding": {
+              "config": {
+                "path": "view.custom.participantList"
+              },
+              "type": "property"
+            }
+          },
+          "props.params.row_data.employee_id": {
+            "binding": {
+              "config": {
+                "path": "session.custom.loggedInStaffEmployeeID"
+              },
+              "type": "property"
+            }
+          },
+          "props.params.row_data.time_created": {
+            "binding": {
+              "config": {
+                "expression": "now(0)"
+              },
+              "type": "expr"
+            }
+          },
+          "props.params.selectedId": {
+            "binding": {
+              "config": {
+                "path": "view.params.selectedId"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "row_data": {
+              "employee_name": "",
+              "enrollment_id": -1,
+              "enrollment_name": "",
+              "participant_id": "",
+              "row_id": -1
+            }
+          },
+          "path": "Participants/Batch_Program/Cards/Edit/ProgramsDetailEdit"
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Label_0"
+        },
+        "position": {
+          "basis": "32px",
+          "display": false
+        },
+        "propConfig": {
+          "props.text": {
+            "binding": {
+              "config": {
+                "path": "view.custom.participantIDs"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "textStyle": {
+            "color": "#555555"
+          }
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "events": {
+          "component": {
+            "onRowClick": {
+              "config": {
+                "script": "\tselectedColumn \u003d self.props.selection.selectedColumn\n\tsystem.perspective.sendMessage(\"clearRowParticipant\", payload \u003d {}, scope \u003d \u0027session\u0027)\n\tif selectedColumn \u003d\u003d \"participantId\": \n\t\tselectedData \u003d self.props.selection.data\n\t\tselectedID \u003d selectedData[0][\u0027participantId\u0027]\n\t\tcurrentParticipantIDs \u003d self.view.custom.participantIDs\n\t\t\n\t\tret \u003d []\n\t\tfor id in currentParticipantIDs:\n\t\t\tif selectedID\u003d\u003did:\n\t\t\t\tpass\n\t\t\telse:\n\t\t\t\tret.append(id)\n\t\t\t\t\n\t\tself.view.custom.participantIDs \u003d ret\n\t\t\n\telse:\n\t\tpass"
+              },
+              "scope": "G",
+              "type": "script"
+            }
+          }
+        },
+        "meta": {
+          "name": "Table"
+        },
+        "position": {
+          "basis": "594px",
+          "grow": 1
+        },
+        "propConfig": {
+          "custom.sql_data": {
+            "binding": {
+              "config": {
+                "parameters": {
+                  "firstName": "{../FlexContainer/FName.props.params.text}",
+                  "lastName": "{../FlexContainer/LName.props.params.text}",
+                  "middleName": "{../FlexContainer/MName.props.params.text}"
+                },
+                "queryPath": "Participants/Storage Bins/FindMatches"
+              },
+              "transforms": [
+                {
+                  "code": "\tsearchResults \u003d value\n\ttableData \u003d []\n\tfor row in range(searchResults.getRowCount()):\n\t\trowStruct \u003d {}\n\t\trowData \u003d {}\n\t\tstyle \u003d {}\t\n\t\t\n\t\trowData[\u0027humanId\u0027] \u003d searchResults.getValueAt(row, \"humanId\")\n\t\trowData[\u0027participantId\u0027] \u003d searchResults.getValueAt(row, \"participantId\")\n\t\t\n\t\trowData[\u0027firstName\u0027] \u003d searchResults.getValueAt(row, \"firstName\")\n\t\trowData[\u0027middleName\u0027] \u003d searchResults.getValueAt(row, \"middleName\")\n\t\trowData[\u0027lastName\u0027] \u003d searchResults.getValueAt(row, \"lastName\")\n\t\trowData[\u0027dob\u0027] \u003d searchResults.getValueAt(row, \"dob\")\n\t\t\n\t\tstyle[\u0027classes\u0027] \u003d \"Table/Cell_Detail\"\n\t\trowStruct[\u0027value\u0027] \u003d rowData\n\t\trowStruct[\u0027style\u0027] \u003d style\n\t\t\n\t\ttableData.append(rowStruct)\n\t\t\t\t\n\treturn tableData",
+                  "type": "script"
+                }
+              ],
+              "type": "query"
+            }
+          },
+          "props.data": {
+            "binding": {
+              "config": {
+                "path": "view.custom.participantList"
+              },
+              "type": "property"
+            }
+          },
+          "props.selection.style.backgroundColor": {
+            "binding": {
+              "config": {
+                "path": "this.props.selection.selectedRow"
+              },
+              "transforms": [
+                {
+                  "code": "\tif value is None or value \u003d\u003d -1:\n\t\treturn \u0027#FFFFFF00\u0027\n\telse:\n\t\treturn \u0027#9af4eb4d\u0027",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "cells": {
+            "style": {
+              "classes": "Table/Cell_Detail_NoBG"
+            }
+          },
+          "columns": [
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "participantId",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header_Detail Background/Default"
+                },
+                "title": " "
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": false,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal_Detail"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "Participants/Templates/Table/TableRemove",
+              "visible": true,
+              "width": 30
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "firstName",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header_Detail Background/Default"
+                },
+                "title": "First Name"
+              },
+              "justify": "auto",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": false,
+              "style": {
+                "classes": "Table/Column_Normal_Detail"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": ""
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "middleName",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header_Detail Background/Default"
+                },
+                "title": "Middle Name"
+              },
+              "justify": "auto",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": false,
+              "style": {
+                "classes": "Table/Column_Normal_Detail"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": ""
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "lastName",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header_Detail Background/Default"
+                },
+                "title": "Last Name"
+              },
+              "justify": "auto",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": false,
+              "style": {
+                "classes": "Table/Column_Normal_Detail"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": ""
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "dob",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header_Detail Background/Default"
+                },
+                "title": "Date of birth"
+              },
+              "justify": "auto",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": false,
+              "style": {
+                "classes": "Table/Column_Normal_Detail"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": ""
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "humanId",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header_Detail Background/Default"
+                },
+                "title": ""
+              },
+              "justify": "auto",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": false,
+              "style": {
+                "classes": "Table/Column_Normal_Detail"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": false,
+              "width": ""
+            }
+          ],
+          "rows": {
+            "highlight": {
+              "color": "#ccffff"
+            },
+            "striped": {
+              "color": {
+                "even": "#000000",
+                "odd": "#F9F9F9"
+              },
+              "enabled": false
+            },
+            "style": {
+              "cursor": "pointer",
+              "marginLeft": "7px"
+            }
+          },
+          "style": {
+            "classes": "Background/Default"
+          }
+        },
+        "type": "ia.display.table"
+      },
+      {
+        "meta": {
+          "name": "Label"
+        },
+        "position": {
+          "display": false
+        },
+        "props": {
+          "style": {
+            "color": "#555555"
+          },
+          "text": "Label"
+        },
+        "type": "ia.display.label"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column",
+      "style": {
+        "classes": "Background/Default",
+        "overflow": "hidden"
+      }
+    },
+    "scripts": {
+      "customMethods": [],
+      "extensionFunctions": null,
+      "messageHandlers": [
+        {
+          "messageType": "addParticipant",
+          "pageScope": true,
+          "script": "\t# implement your handler here\n\t#message received from onClick event of add button on the \"Participant_Send\" view\n\tif payload[\u0027participantID\u0027]  not in self.view.custom.participantIDs:\n\t\tself.view.custom.participantIDs.append(payload[\u0027participantID\u0027])",
+          "sessionScope": false,
+          "viewScope": false
+        },
+        {
+          "messageType": "removeParticipant",
+          "pageScope": true,
+          "script": "\t# implement your handler here\n\tselectedData \u003d self.getChild(\"Table\").props.selection.data\n\tselectedID \u003d selectedData[0][\u0027participantId\u0027]\n\tcurrentParticipantIDs \u003d self.view.custom.participantIDs\n\t\n\tret \u003d []\n\tfor id in currentParticipantIDs:\n\t\tif selectedID\u003d\u003did:\n\t\t\tpass\n\t\telse:\n\t\t\tret.append(id)\n\t\t\t\n\tself.view.custom.participantIDs \u003d ret",
+          "sessionScope": false,
+          "viewScope": false
+        },
+        {
+          "messageType": "updateServices",
+          "pageScope": true,
+          "script": "\t# implement your handler here\n\tself.getChild(\"Label\").props.text \u003d payload",
+          "sessionScope": false,
+          "viewScope": false
+        },
+        {
+          "messageType": "clearParticipants",
+          "pageScope": true,
+          "script": "\t# implement your handler here\n\tself.view.custom.participantIDs \u003d []\n\tself.getChild(\"Table\").props.selection.selectedRow \u003d -1",
+          "sessionScope": true,
+          "viewScope": false
+        },
+        {
+          "messageType": "clearRow",
+          "pageScope": true,
+          "script": "\t# implement your handler here\n\tself.getChild(\"Table\").props.selection.selectedRow \u003d -1",
+          "sessionScope": true,
+          "viewScope": false
+        }
+      ]
+    },
+    "type": "ia.container.flex"
+  }
+}

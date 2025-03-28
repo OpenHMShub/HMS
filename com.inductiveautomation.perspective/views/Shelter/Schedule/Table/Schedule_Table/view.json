@@ -1,0 +1,2599 @@
+{
+  "custom": {},
+  "params": {
+    "base": {
+      "conditions": [
+        null,
+        null,
+        "[Facility].[id] in (?)"
+      ]
+    },
+    "expo": null,
+    "query": {
+      "orderby": "[Facility].[facilityName], [Room].[roomName],[Bed].[bedName]",
+      "queryCore": "DECLARE @StartInterval  date \u003d ? DECLARE @EndInterval date \u003d ?      DECLARE @tbl TABLE (iterday DATE);  ;WITH seq(n) AS  (   SELECT 0 UNION ALL SELECT n + 1 FROM seq   WHERE n \u003c DATEDIFF(DAY, @StartInterval, @EndInterval) ), d(d) AS  (   SELECT DATEADD(DAY, n, @StartInterval) FROM seq ) INSERT INTO @tbl SELECT d OneDay  FROM d ORDER BY d OPTION (MAXRECURSION 0);  WITH r as \t( SELECT  [Reservation].[id] \t\t,[Reservation].[bedId] \t\t,CAST(reservationStart -0.5  AS date) startMinus12H \t\t,CAST(reservationEnd - 0.5  AS date) endMinus12H \tFROM [RitiOps].[lodging].[Reservation] \tWHERE [Reservation].[timeRetired] IS NULL  \t\tAND [Reservation].[timeCreated] \u003c GETDATE()  \t\tAND [Reservation].[reservationStart] \u003c @EndInterval ) SELECT \tr.[id] \t\t,r.[bedId] \t\t,YEAR(t.iterday) * 10000 + MONTH(t.iterday) * 100 + DAY(t.iterday) iterday \tFROM r\t   \t\tINNER JOIN @tbl t ON iterday\u003e\u003d startMinus12H AND iterday \u003c\u003d endMinus12H \t\tINNER JOIN [RitiOps].[lodging].[Bed] ON r.[bedId] \u003d [Bed].[id] \t\tINNER JOIN [RitiOps].[lodging].[Room] ON [Bed].[roomId] \u003d [Room].[id] \t\tINNER JOIN [RitiOps].[lodging].[Facility] ON [Room].[facilityId] \u003d [Facility].[id] \tWHERE (1\u003d1)"
+    },
+    "useCndIn": true,
+    "wherePlusIn": [
+      {
+        "arg": "2021-01-13 00:00:00",
+        "type": "datetime"
+      },
+      {
+        "arg": "2021-02-12 00:00:00",
+        "type": "datetime"
+      },
+      {
+        "arg": -1
+      }
+    ]
+  },
+  "propConfig": {
+    "params.base": {
+      "access": "PUBLIC",
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.base.conditions": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.base.conditions[0]": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.base.conditions[1]": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.base.conditions[2]": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.expo": {
+      "access": "PUBLIC",
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.query": {
+      "access": "PUBLIC",
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.query.orderby": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.query.queryCore": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.useCndIn": {
+      "access": "PUBLIC",
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.wherePlusIn": {
+      "access": "PUBLIC",
+      "onChange": {
+        "enabled": null,
+        "script": "\troot \u003d self.getChild(\"root\")\n\ttbl \u003d root.getChild(\"Table\")\n\t\n\tself.params.wherePlusOut \u003d None\n\ttbl.props.data \u003d []\n\n"
+      },
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.wherePlusIn[0]": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.wherePlusIn[1]": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.wherePlusIn[1].arg": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.wherePlusIn[2].arg[0]": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.wherePlusIn[2].arg[1]": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.wherePlusOut": {
+      "access": "PUBLIC",
+      "paramDirection": "output",
+      "persistent": false
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 620,
+      "width": 873
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "events": {
+          "component": {
+            "onRowClick": {
+              "config": {
+                "script": "\tselectedColumn \u003d self.props.selection.selectedColumn\n\t\n\tif selectedColumn \u003d\u003d \"Options\":\n\t\tbedId \u003d event.value.get(\"bedId\")\n\t\tstartDate \u003d self.view.params.wherePlusIn[0].arg\n\t\tendDate \u003d self.view.params.wherePlusIn[1].arg\n\t\t\n\t\tparams \u003d {\"bedId\": bedId, \"startDate\": startDate, \"endDate\": endDate}\n\t\tsystem.perspective.openDock(id\u003d\"PreviewScheduleBed\" ,params\u003dparams)\n\t\t\n\telse:\n\t\ttry:\n\t\t\tsystem.perspective.closeDock(id\u003d\"PreviewScheduleBed\")\n\t\texcept:\n\t\t\tpass\t\t\n\t"
+              },
+              "scope": "G",
+              "type": "script"
+            }
+          }
+        },
+        "meta": {
+          "name": "Table"
+        },
+        "position": {
+          "basis": "100%",
+          "grow": 1
+        },
+        "propConfig": {
+          "props.data": {
+            "persistent": false
+          }
+        },
+        "props": {
+          "cells": {
+            "allowEditOn": "single-click"
+          },
+          "columns": [
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "bedId",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header_Detail_Small"
+                },
+                "title": " "
+              },
+              "justify": "left",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "view",
+              "resizable": true,
+              "sort": "none",
+              "sortable": false,
+              "strictWidth": true,
+              "style": {},
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "Shelter/Schedule/Components/TableOptions",
+              "visible": true,
+              "width": 50
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "facilityName",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header_Detail_Small"
+                },
+                "title": "Facility"
+              },
+              "justify": "left",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": false,
+              "strictWidth": true,
+              "style": {},
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 180
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "roomName",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header_Detail_Small"
+                },
+                "title": "Room"
+              },
+              "justify": "left",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": false,
+              "strictWidth": true,
+              "style": {},
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 140
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "bedName",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header_Detail_Small"
+                },
+                "title": "Bed"
+              },
+              "justify": "left",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": false,
+              "strictWidth": true,
+              "style": {},
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 100
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "x20210113",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "center",
+                "style": {
+                  "classes": "Table/Column_Header_Detail_Small"
+                },
+                "title": "13"
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": false,
+              "strictWidth": true,
+              "style": {},
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 25
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "x20210114",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "center",
+                "style": {
+                  "classes": "Table/Column_Header_Detail_Small"
+                },
+                "title": "14"
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": false,
+              "strictWidth": true,
+              "style": {},
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 25
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "x20210115",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "center",
+                "style": {
+                  "classes": "Table/Column_Header_Detail_Small"
+                },
+                "title": "15"
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": false,
+              "strictWidth": true,
+              "style": {},
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 25
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "x20210116",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "center",
+                "style": {
+                  "classes": "Table/Column_Header_Detail_Small"
+                },
+                "title": "16"
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": false,
+              "strictWidth": true,
+              "style": {},
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 25
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "x20210117",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "center",
+                "style": {
+                  "classes": "Table/Column_Header_Detail_Small"
+                },
+                "title": "17"
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": false,
+              "strictWidth": true,
+              "style": {},
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 25
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "x20210118",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "center",
+                "style": {
+                  "classes": "Table/Column_Header_Detail_Small"
+                },
+                "title": "18"
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": false,
+              "strictWidth": true,
+              "style": {},
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 25
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "x20210119",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "center",
+                "style": {
+                  "classes": "Table/Column_Header_Detail_Small"
+                },
+                "title": "19"
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": false,
+              "strictWidth": true,
+              "style": {},
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 25
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "x20210120",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "center",
+                "style": {
+                  "classes": "Table/Column_Header_Detail_Small"
+                },
+                "title": "20"
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": false,
+              "strictWidth": true,
+              "style": {},
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 25
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "x20210121",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "center",
+                "style": {
+                  "classes": "Table/Column_Header_Detail_Small"
+                },
+                "title": "21"
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": false,
+              "strictWidth": true,
+              "style": {},
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 25
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "x20210122",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "center",
+                "style": {
+                  "classes": "Table/Column_Header_Detail_Small"
+                },
+                "title": "22"
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": false,
+              "strictWidth": true,
+              "style": {},
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 50
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "x20210123",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "center",
+                "style": {
+                  "classes": "Table/Column_Header_Detail_Small"
+                },
+                "title": "23"
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": false,
+              "strictWidth": true,
+              "style": {},
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 25
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "x20210124",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "center",
+                "style": {
+                  "classes": "Table/Column_Header_Detail_Small"
+                },
+                "title": "24"
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": false,
+              "strictWidth": true,
+              "style": {},
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 25
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "x20210125",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "center",
+                "style": {
+                  "classes": "Table/Column_Header_Detail_Small"
+                },
+                "title": "25"
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": false,
+              "strictWidth": true,
+              "style": {},
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 25
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "x20210126",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "center",
+                "style": {
+                  "classes": "Table/Column_Header_Detail_Small"
+                },
+                "title": "26"
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": false,
+              "strictWidth": true,
+              "style": {},
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 25
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "x20210127",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "center",
+                "style": {
+                  "classes": "Table/Column_Header_Detail_Small"
+                },
+                "title": "27"
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": false,
+              "strictWidth": true,
+              "style": {},
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 25
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "x20210128",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "center",
+                "style": {
+                  "classes": "Table/Column_Header_Detail_Small"
+                },
+                "title": "28"
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": false,
+              "strictWidth": true,
+              "style": {},
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 25
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "x20210129",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "center",
+                "style": {
+                  "classes": "Table/Column_Header_Detail_Small"
+                },
+                "title": "29"
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": false,
+              "strictWidth": true,
+              "style": {},
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 25
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "x20210130",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "center",
+                "style": {
+                  "classes": "Table/Column_Header_Detail_Small"
+                },
+                "title": "30"
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": false,
+              "strictWidth": true,
+              "style": {},
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 25
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "x20210131",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "center",
+                "style": {
+                  "classes": "Table/Column_Header_Detail_Small"
+                },
+                "title": "31"
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": false,
+              "strictWidth": true,
+              "style": {},
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 25
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "x20210201",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "center",
+                "style": {
+                  "classes": "Table/Column_Header_Detail_Small"
+                },
+                "title": "01"
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": false,
+              "strictWidth": true,
+              "style": {},
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 25
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "x20210202",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "center",
+                "style": {
+                  "classes": "Table/Column_Header_Detail_Small"
+                },
+                "title": "02"
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": false,
+              "strictWidth": true,
+              "style": {},
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 25
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "x20210203",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "center",
+                "style": {
+                  "classes": "Table/Column_Header_Detail_Small"
+                },
+                "title": "03"
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": false,
+              "strictWidth": true,
+              "style": {},
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 25
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "x20210204",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "center",
+                "style": {
+                  "classes": "Table/Column_Header_Detail_Small"
+                },
+                "title": "04"
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": false,
+              "strictWidth": true,
+              "style": {},
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 25
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "x20210205",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "center",
+                "style": {
+                  "classes": "Table/Column_Header_Detail_Small"
+                },
+                "title": "05"
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": false,
+              "strictWidth": true,
+              "style": {},
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 25
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "x20210206",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "center",
+                "style": {
+                  "classes": "Table/Column_Header_Detail_Small"
+                },
+                "title": "06"
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": false,
+              "strictWidth": true,
+              "style": {},
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 25
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "x20210207",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "center",
+                "style": {
+                  "classes": "Table/Column_Header_Detail_Small"
+                },
+                "title": "07"
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": false,
+              "strictWidth": true,
+              "style": {},
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 25
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "x20210208",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "center",
+                "style": {
+                  "classes": "Table/Column_Header_Detail_Small"
+                },
+                "title": "08"
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": false,
+              "strictWidth": true,
+              "style": {},
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 25
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "x20210209",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "center",
+                "style": {
+                  "classes": "Table/Column_Header_Detail_Small"
+                },
+                "title": "09"
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": false,
+              "strictWidth": true,
+              "style": {},
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 25
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "x20210210",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "center",
+                "style": {
+                  "classes": "Table/Column_Header_Detail_Small"
+                },
+                "title": "10"
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": false,
+              "strictWidth": true,
+              "style": {},
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 25
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "x20210211",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "center",
+                "style": {
+                  "classes": "Table/Column_Header_Detail_Small"
+                },
+                "title": "11"
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": false,
+              "strictWidth": true,
+              "style": {},
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 25
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "x20210212",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "center",
+                "style": {
+                  "classes": "Table/Column_Header_Detail_Small"
+                },
+                "title": "12"
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": false,
+              "strictWidth": true,
+              "style": {},
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 25
+            }
+          ],
+          "enableHeaderGroups": true,
+          "headerGroups": [
+            [
+              {
+                "align": "center",
+                "justify": "center",
+                "span": 4,
+                "style": {
+                  "classes": "Table/Column_Header_Detail_Small"
+                },
+                "title": ""
+              },
+              {
+                "align": "center",
+                "justify": "center",
+                "span": 19,
+                "style": {
+                  "classes": "Table/Column_Header_Detail_Small"
+                },
+                "title": "JAN 2021"
+              },
+              {
+                "align": "center",
+                "justify": "center",
+                "span": 12,
+                "style": {
+                  "classes": "Table/Column_Header_Detail_Small"
+                },
+                "title": "FEB 2021"
+              }
+            ]
+          ],
+          "pager": {
+            "initialOption": 50
+          },
+          "rows": {
+            "highlight": {
+              "color": "#CCFFFF",
+              "enabled": false
+            },
+            "striped": {
+              "enabled": false
+            }
+          },
+          "selection": {
+            "enableColumnSelection": true,
+            "mode": "single interval"
+          },
+          "style": {
+            "classes": "Background/Default"
+          },
+          "value": -1
+        },
+        "type": "ia.display.table"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column",
+      "style": {
+        "classes": "Background/Default"
+      }
+    },
+    "scripts": {
+      "customMethods": [
+        {
+          "name": "setByWherePlusIn",
+          "params": [
+            "wherePlusIn"
+          ],
+          "script": "\timport extend.query\n\t\n\ttbl \u003d self.getChild(\"Table\")\n\t\n\tif not(wherePlusIn):\n\t\ttbl.props.data \u003d []\n\t\n\t## Because this is special case (special table), only wherePlusIn props is taken from props\n\t#wherePlusIn_0 \u003d self.view.params.wherePlusIn\n\t\n\t#system.perspective.print((\u0027old self.view.params.wherePlusIn:\u0027, self.view.params.wherePlusIn))\n\t\n\twherePlusIn_0 \u003d wherePlusIn\n\n\t\n\t###Facility - Room -Bed #########################################################################################\n\ttry:\n\t\tfacilityObj \u003d {\u0027arg\u0027:wherePlusIn_0[2][\u0027arg\u0027]}\n\t\tif wherePlusIn_0[2].get(\u0027type\u0027):\n\t\t\tfacilityObj[\u0027type\u0027] \u003d wherePlusIn_0[2].get(\u0027type\u0027)\n\t\tfacilityObj[\u0027cnd\u0027] \u003d \"-1 \u003d ?\" if facilityObj[\u0027arg\u0027] \u003d\u003d -1 else \"[Facility].[id] in (?)\"\n\t\twherePlusBed \u003d [facilityObj]\n\texcept:\n\t\twherePlusBed \u003d None\n\t\t\t\t\n\tif not(wherePlusBed):\n\t\ttbl.props.data \u003d []\n\t\treturn\t\n\t\t\n\tqueryCoreBed \u003d \"\"\"SELECT [Facility].[id] AS facilityId, [Room].[id] AS roomId, [Bed].[id] AS bedId, \n\t\t\t[Facility].[facilityName], [Room].[roomName], [Bed].[bedName]\n\tFROM [lodging].[Bed]\n\t\tINNER JOIN [lodging].[Room] ON [Bed].[roomId] \u003d [Room].[id]\n\t\tINNER JOIN [lodging].[Facility] ON [Room].[facilityId] \u003d [Facility].[id]\n\tWHERE ([Facility].[timeRetired] is NULL \n\t\tAND [Room].[timeRetired] is NULL\n\t\tAND [Bed].[timeRetired] is NULL) \"\"\"\n\n\torderbyBed \u003d \"\"\"[Facility].[facilityName], [Room].[roomName], [Bed].[bedName]\"\"\"\n\n\tqueryBed, argsBed \u003d extend.query.getPrepQueryArgs(queryCoreBed, wherePlusBed, orderbyBed)\n\t\n\tresultBed \u003d system.db.runPrepQuery(queryBed,argsBed,\u0027RITIOps\u0027) \n\t\n\tif resultBed.rowCount \u003d\u003d 0:\n\t\ttbl.props.data \u003d []\n\t\treturn\t\t\t\n\t\n\tlstBedFr \u003d [[x[\u0027bedId\u0027],x[\u0027facilityName\u0027],x[\u0027roomName\u0027],x[\u0027bedName\u0027]] for x in system.dataset.toPyDataSet(resultBed)]\n\t\n\targsBedId \u003d [x[\u0027bedId\u0027] for x in system.dataset.toPyDataSet(resultBed)]\n\t\n\t###Bed - Reserved Days#########################################################################################\n\t# Query to get reservations. If interval reservationStart or reservationEnd is out of @StartInterval and @EndInterval\n\t# these dates are changed with @StartInterval and @EndInterval.\n\tqueryReservedBedCore \u003d \"\"\"\n\tDECLARE @StartInterval date \u003d ?   \n\tDECLARE @EndInterval date \u003d ? \n\t\n\tSELECT [Reservation].[id] ,[Reservation].[bedId] ,    \n\tCASE WHEN reservationStart \u003c @StartInterval THEN @StartInterval \n\t\t\tELSE CAST(reservationStart AS date) END AS reservationStart ,   \n\tCASE WHEN ISNULL([Reservation].[reservationEnd],@EndInterval) \u003e @EndInterval THEN @EndInterval \n\t\t\tELSE CAST(ISNULL([Reservation].[reservationEnd],@EndInterval) AS date) END AS reservationEnd   \n\tFROM [lodging].[Reservation]  \n\tWHERE ([Reservation].[timeRetired] IS NULL\n\tAND [Reservation].[reservationStart] IS NOT NULL    \n\tAND CAST([Reservation].[reservationStart] AS date) \u003c\u003d @EndInterval\n\tAND CAST(ISNULL([Reservation].[reservationEnd],@EndInterval) AS date) \u003e\u003d @StartInterval)\n\t\"\"\"\n\t# Note: use list of bedIds  (argsBedId) as arg value in 3rd item\n\twherePlusIn \u003d [\t{\u0027arg\u0027: wherePlusIn_0[0][\u0027arg\u0027], type: \u0027datetime\u0027, \u0027cnd\u0027: None}\n\t,{\u0027arg\u0027: wherePlusIn_0[1][\u0027arg\u0027], type: \u0027datetime\u0027, \u0027cnd\u0027: None}\n\t,{\u0027arg\u0027: argsBedId, \u0027cnd\u0027: \u0027[Reservation].[bedId] in (?)\u0027}\n\t]\n\t\n\tqueryReservedBed, args \u003d extend.query.getPrepQueryArgs(queryReservedBedCore, wherePlus\u003dwherePlusIn, orderby\u003dNone, useCnd \u003d True)\n\n\tresultReservedBed \u003d system.db.runPrepQuery(queryReservedBed, args, \u0027RITIOps\u0027) \t\n\t\n\t# For example lstReservedBed \u003d [...]\n\t# This is list of lists where one item contains reservation: id, bedid, dayStart, dayEnd\n\tlstReservedBed \u003d[list(x) for x in system.dataset.toPyDataSet(resultReservedBed)]\n\n\n\t###Bed - Occupied Days#########################################################################################\n\t# Query to get occupation. If interval eventStart or eventEnd is out of @StartInterval and @EndInterval\n\t# these dates are changed with @StartInterval and @EndInterval.\n\tqueryOccupiedBedCore \u003d \"\"\"\n\tDECLARE @StartInterval date \u003d ?   \n\tDECLARE @EndInterval date \u003d ? \n\t\n\tSELECT [BedLog].[id] ,[BedLog].[bedId] ,    \n\tCASE WHEN eventStart \u003c @StartInterval THEN @StartInterval \n\t\t\tELSE CAST(eventStart AS date) END AS eventStart ,   \n\tCASE WHEN ISNULL([BedLog].[eventEnd],@EndInterval) \u003e @EndInterval THEN @EndInterval \n\t\t\tELSE CAST(ISNULL([BedLog].[eventEnd],@EndInterval) AS date) END AS eventEnd   \n\tFROM [lodging].[BedLog]  \n\tWHERE ([BedLog].[eventStart] IS NOT NULL    \n\tAND CAST([BedLog].[eventStart] AS date) \u003c\u003d @EndInterval\n\tAND CAST(ISNULL([BedLog].[eventEnd],@EndInterval) AS date) \u003e\u003d @StartInterval)\n\t\"\"\"\n\t\n\t# Change cnd in 3rd node\n\twherePlusIn[2][\u0027cnd\u0027] \u003d \"[BedLog].[bedId] in (?)\"\n\t\n\tqueryOccupiedBed, args \u003d extend.query.getPrepQueryArgs(queryOccupiedBedCore, wherePlus\u003dwherePlusIn, orderby\u003dNone, useCnd \u003d True)\n\t\t\n\tresultOccupiedBed \u003d system.db.runPrepQuery(queryOccupiedBed, args, \u0027RITIOps\u0027) \n\t\n\t# This is list of lists where one item contains occupation: id, bedid, dayStart, dayEnd\t\n\tlstOccupiedBed \u003d[list(x) for x in system.dataset.toPyDataSet(resultOccupiedBed)]\t\n\n\n\t###Start and End Date #########################################################################################\n\t#t1, t2 \u003d args[0], args[1]\n\tt1 \u003d system.date.parse(wherePlusIn[0][\u0027arg\u0027]) \n\tt2 \u003d system.date.parse(wherePlusIn[1][\u0027arg\u0027])\n\t#ystem.perspective.print((\u0027t12\u0027, t1, t2, type(t1), tm1, tm2, type(tm1)))\n\tlstDates \u003d self.getDaysBetween(t1, t2)\n\t#lst4Y2M2D \u003d [system.date.getYear(t)*10000 + (system.date.getMonth(t) + 1)*100 + system.date.getDayOfMonth(t) for t in lstDates]\n\tlst4Y2M2D \u003d [int(system.date.format(x,\u0027yyyyMMdd\u0027)) for x in lstDates]\n\t\n\t###Check if current day todayClient is inside requested interval, and find index inside lst4Y2M2D\n\ttimeClientOffset \u003d self.session.props.device.timezone.utcOffset - system.date.getTimezoneOffset()\n\ttodayClient \u003d system.date.addMinutes(system.date.now(),int(timeClientOffset*60))\n\ttodayClient4Y2M2D \u003d int(system.date.format(todayClient,\u0027yyyyMMdd\u0027))\n\ttodayIndex \u003d lst4Y2M2D.index(todayClient4Y2M2D) if todayClient4Y2M2D in lst4Y2M2D else None\n\ttodayIndex \u003d todayIndex + 5 if todayIndex is not None else None\n\t\n\t###Header grouping year month##################################################################################\n\tlstHeaderGroups \u003d self.getHeaderGroups(lstDates)\n\ttbl.props.enableHeaderGroups \u003d True\n\ttbl.props.headerGroups \u003d lstHeaderGroups\n\n\t\n\t###Fix props columns##################################################################################\n\tfields \u003d [\u0027Options\u0027,\u0027bedId\u0027,\u0027facilityName\u0027,\u0027roomName\u0027,\u0027bedName\u0027] + [\u0027x\u0027+str(x) for x in lst4Y2M2D]\n\twidths \u003d [50,50,180,140,100]+len(lst4Y2M2D)*[25] \n\tjustify \u003d [\u0027left\u0027,\u0027left\u0027,\u0027left\u0027,\u0027left\u0027,\u0027left\u0027] + len(lst4Y2M2D)*[\u0027center\u0027]\n\t#headerTitles \u003d [\u0027bedId\u0027,\u0027Facility\u0027,\u0027Room\u0027,\u0027Bed\u0027]+[str(x)[-2:] for x in lst4Y2M2D]\t\n\theaderTitles \u003d [\u0027 \u0027,\u0027bedId\u0027,\u0027Facility\u0027,\u0027Room\u0027,\u0027Bed\u0027]+[str(x)[-2:] for x in lst4Y2M2D]\t\n\t\n\ttbl.props.columns \u003d self.getColumnsProps(fields \u003d fields, widths \u003d widths, headerTitles \u003d headerTitles,justify \u003d justify, todayIndex \u003d todayIndex)\n\t\n\t###Fix data and appereance##################################################################################\n\t\n\t#ystem.perspective.print((\u0027b1\u0027, lstReservedBed,lstBedFr, lst4Y2M2D))\n\n\tmatrix \u003d self.getMatrix(lstReservedBed,lstOccupiedBed, lstBedFr, lst4Y2M2D)\n\n\tmatrix \u003d self.getMakeUp(matrix, fields, todayIndex)\n\t\n\ttbl.props.data \u003d matrix\n\t\n\n\n\n"
+        },
+        {
+          "name": "getDaysBetween",
+          "params": [
+            "t1",
+            "t2"
+          ],
+          "script": "\tdateList \u003d []\n\t\n\tif system.date.isBefore(t1, t2):\n\t\tk \u003d 1\n\telse:\n\t\tt1, t2 \u003d t2, t1\n\t\tk \u003d -1\n\t\n\tt \u003d t1\n\t\n\t# use t2_day_after to include also t2\n\tt2_day_after \u003d system.date.addDays(t2, 1)\n\twhile system.date.isBefore(t, t2_day_after):\n\t\tdateList.append(t)\n\t\tt \u003d system.date.addDays(t,1)\n\t\tif t \u003d\u003d t2_day_after:\n\t\t\tbreak\n\n\treturn dateList[::k]"
+        },
+        {
+          "name": "getColumnsProps",
+          "params": [
+            "fields",
+            "widths",
+            "headerTitles",
+            "justify",
+            "todayIndex"
+          ],
+          "script": "\tjsonAtom \u003d \"\"\"{\n\t  \"visible\": true,\n\t  \"resizable\": true,\n\t  \"dateFormat\": \"MM/DD/YYYY\",\n\t  \"footer\": {\n\t    \"justify\": \"left\",\n\t    \"style\": { \"classes\": \"\" },\n\t    \"title\": \"\",\n\t    \"align\": \"center\"\n\t  },\n\t  \"editable\": true,\n\t  \"sortable\": true,\n\t  \"sort\": \"none\",\n\t  \"align\": \"center\",\n\t  \"viewPath\": \"\",\n\t  \"number\": \"value\",\n\t  \"boolean\": \"checkbox\",\n\t  \"strictWidth\": false,\n\t  \"field\": \"bedId\",\n\t  \"numberFormat\": \"0,0.##\",\n\t  \"justify\": \"auto\",\n\t  \"progressBar\": {\n\t    \"bar\": { \"color\": \"\", \"style\": { \"classes\": \"\" } },\n\t    \"min\": 0,\n\t    \"max\": 100,\n\t    \"track\": { \"color\": \"\", \"style\": { \"classes\": \"\" } },\n\t    \"value\": {\n\t      \"justify\": \"center\",\n\t      \"format\": \"0,0.##\",\n\t      \"style\": { \"classes\": \"\" },\n\t      \"enabled\": true\n\t    }\n\t  },\n\t  \"width\": \"\",\n\t  \"header\": {\n\t    \"justify\": \"left\",\n\t    \"style\": { \"classes\": \"\" },\n\t    \"title\": \"\",\n\t    \"align\": \"center\"\n\t  },\n\t  \"toggleSwitch\": { \"color\": { \"unselected\": \"\", \"selected\": \"\" } },\n\t  \"style\": {},\n\t  \"viewParams\": {},\n\t  \"render\": \"auto\"\n\t}\"\"\"\n\t\n\tpyList \u003d []\n\tlstCol \u003d []\n\tfor i in range(len(fields)):\n\t\tpyAtom \u003d system.util.jsonDecode(jsonAtom)\n\t\tpyAtom[\u0027field\u0027] \u003d fields[i]\n\t\tpyAtom[\u0027sortable\u0027] \u003d False\n\t\tpyAtom[\u0027editable\u0027] \u003d False\n\t\tpyAtom[\u0027strictWidth\u0027] \u003d True\n\t\tpyAtom[\u0027width\u0027] \u003d widths[i]\n\t\tpyAtom[\u0027justify\u0027] \u003d justify[i]\n\t\tpyAtom[\u0027header\u0027][\u0027title\u0027] \u003d headerTitles[i]\n\t\tpyAtom[\u0027header\u0027][\u0027justify\u0027] \u003d justify[i]\n\t\tpyAtom[\u0027header\u0027][\u0027style\u0027]\u003d {\u0027classes\u0027:\u0027Table/Column_Header_Detail_Small\u0027}\n\t\t\n\t\tif fields[i] \u003d\u003d \u0027Options\u0027:\n\t\t\tpyAtom[\u0027render\u0027] \u003d \u0027view\u0027\n\t\t\tpyAtom[\u0027viewPath\u0027] \u003d \u0027Shelter/Schedule/Components/TableOptions\u0027\n\t\t\n\t\tif fields[i] \u003d\u003d \u0027bedId\u0027:\n\t\t\tpyAtom[\"visible\"] \u003d False\n\t\t\n\t\tpyList.append(pyAtom)\n\t\n\treturn pyList\n\t\n\t"
+        },
+        {
+          "name": "getHeaderGroups",
+          "params": [
+            "lstDates"
+          ],
+          "script": "\tlst_4Y_4Y2M \u003d [[system.date.getYear(t),system.date.getYear(t)*100 + (system.date.getMonth(t) + 1)] for t in lstDates]\n\t#ystem.perspective.print((lst_4Y2M_monthName))\n\t\n\tlst4Y, lst4Y2M \u003d [], [] \n\tfor x in lst_4Y_4Y2M:\n\t\tlst4Y.append(x[0])\n\t\tlst4Y2M.append(x[1])\n\t\n\t\n\t\n\tfrom itertools import groupby\n\tcount4Y2M \u003d [len(list(group)) for key, group in groupby(lst4Y2M)]\n\tunique4Y2M \u003d sorted(list(set(lst4Y2M)))\n\t\n\tdictMonths \u003d {}\n\tfor i in range(12):\n\t\tdictMonths[i+1] \u003d system.date.format(system.date.getDate(1973,i,1),\u0027MMMM\u0027).upper()\n\n\tcount4Y \u003d [len(list(group)) for key, group in groupby(lst4Y)]\n\tunique4Y \u003d sorted(list(set(lst4Y)))\n\t\n\t# If props is same for all grouped header, value could be set in jAtom\n\tjAtom \u003d \"\"\"{\n\t  \"title\": \"\",\n\t  \"span\": 2,\n\t  \"justify\": \"center\",\n\t  \"align\": \"center\",\n\t  \"style\": {\n\t    \"classes\": \"Table/Column_Header_Detail_Small\"\n\t  }\n\t}\"\"\"\n\t\n\t# \"Table/Column_Header_Detail\"\n\t\n\tlstHeaderGroup \u003d []\n\tpyAtom \u003d system.util.jsonDecode(jAtom)\n\tpyAtom[\u0027title\u0027] \u003d \u0027\u0027\n\tpyAtom[\u0027span\u0027] \u003d 4\n\tlstY \u003d [pyAtom]\n\t\n\tpyAtom \u003d system.util.jsonDecode(jAtom)\n\tpyAtom[\u0027title\u0027] \u003d \u0027\u0027\n\tpyAtom[\u0027span\u0027] \u003d 4\n\tlstYM \u003d [pyAtom]\n\tfor i in range(len(unique4Y2M)):\n\t\tpyAtom \u003d system.util.jsonDecode(jAtom)\n\t\tmonthInt \u003d unique4Y2M[i] % 100 \n\t\tpyAtom[\u0027title\u0027] \u003d dictMonths[monthInt][:3] + \u0027 \u0027 +  unicode(int(unique4Y2M[i] / 100)) if count4Y2M[i] \u003e 3 else dictMonths[monthInt][:3] \n\t\tpyAtom[\u0027span\u0027] \u003d count4Y2M[i]\n\t\t#pyAtom[\u0027style\u0027][\u0027classes\u0027] \u003d \u0027Table/Column_Header_Detail_Small\u0027 \n\t\tlstYM.append(pyAtom)\n\tlstHeaderGroup.append(lstYM)\t\t\n\t\n\treturn lstHeaderGroup\n\n\t"
+        },
+        {
+          "name": "getMatrix",
+          "params": [
+            "lstReservedBed",
+            "lstOccupiedBed",
+            "lstBedFr",
+            "lst4Y2M2D"
+          ],
+          "script": "\t# Final list of list (matrix)\n\tpyList \u003d []\n\t# First step: First 4 columns are bedId, facility name, room name, bed name (lstBedFr)  and others are day columns (lst4Y2M2D:\n\t# Fill table (matrix) with 0. \n\tfor bed in lstBedFr:\n\t\tpyList.append([bed[0],bed[1],bed[2],bed[3]]+len(lst4Y2M2D)*[0])\n\t\n\tlstBed \u003d [x[0] for x in lstBedFr]\n\t\n\t# Example: lstReservedBed -\u003e [[22, 101, 2020-08-13 00:00:00.0, 2020-08-14 00:00:00.0], [27, 42, 2020-08-13 00:00:00.0, 2020-08-27 00:00:00.0]]\n\t# dates are in format java.util.date\n\n\t# Fill cells according reservation. 1 mean bed is reserved for that day\n\tfor item in lstReservedBed:\n\t\tr \u003d lstBed.index(item[1]) # item[1] is bed id and it is unique number in lstBed (list of Bed ids) \n\t\tauxDays \u003d self.getDaysBetween(item[2], item[3]) # item[2], item[3] are dates reservationStart and reservationEnd inside requested interval\n\t\tdays \u003d  [int(system.date.format(x,\u0027yyyyMMdd\u0027)) for x in auxDays]\n\t\tfor day in days:\n\t\t\tc \u003d lst4Y2M2D.index(day) # item[1] is day as yyyyMMdd and it is unique number in lst4Y2M2D (list of days in format yyyyMMdd) \n\t\t\tpyList[r][c+4] \u003d 1 \n\t\t\t\n\t# Fill cellsbed-occupation. 2 mean bed is occupied for that day\n\tfor item in lstOccupiedBed:\n\t\tr \u003d lstBed.index(item[1]) # item[1] is bed id and it is unique number in lstBed (list of Bed ids) \n\t\tauxDays \u003d self.getDaysBetween(item[2], item[3]) # item[2], item[3] are dates eventStart and eventEnd inside requested interval\n\t\tdays \u003d  [int(system.date.format(x,\u0027yyyyMMdd\u0027)) for x in auxDays]\n\t\tfor day in days:\n\t\t\tc \u003d lst4Y2M2D.index(day) \n\t\t\tpyList[r][c+4] \u003d 2\t\n\t\n\t\n\t#ystem.perspective.print((\u0027pyList\u0027, pyList))\t\n\treturn pyList"
+        },
+        {
+          "name": "getMakeUp",
+          "params": [
+            "matrix",
+            "fields",
+            "todayIndex"
+          ],
+          "script": "\t_dataPropExample \u003d \"\"\"\n    {\n\t  \"country\": {\n\t    \"value\": \"Serbia\",\n\t    \"editable\": true,\n\t    \"style\": {\n\t      \"backgroundColor\": \"#F7901D\",\n\t      \"classes\": \"some-class\"\n\t    },\n\t    \"align\": \"center\",\n\t    \"justify\": \"left\"\n\t  },\n\t  \"city\": {\n\t    \"value\": \"Belgrade\",\n\t    \"editable\": true,\n\t    \"style\": {\n\t      \"backgroundColor\": \"#F7901D\",\n\t      \"classes\": \"some-class\"\n\t    },\n\t    \"align\": \"center\",\n\t    \"justify\": \"left\"\n\t  },\n\t  \"population\": {\n\t    \"value\": 2000000,\n\t    \"editable\": true,\n\t    \"style\": {\n\t      \"backgroundColor\": \"#F7901D\",\n\t      \"classes\": \"some-class\"\n\t    },\n\t    \"align\": \"center\",\n\t    \"justify\": \"left\"\n\t  }\n\t},\n\t\"\"\"\n\n\tfor item in matrix:\n\t\titem.insert(0,0)\n\tauxList \u003d []\n\t\n\tfor row in matrix:\n\t\tauxDict \u003d {} \n\n\t\tfor j, col in enumerate(fields):\n\t\t\tauxDict[col] \u003d {} \n\t\t\tauxDict[col][\u0027value\u0027] \u003d row[j]\n\t\t\t\n\t\t\tif j \u003c 5:\n\t\t\t\tauxDict[col][\u0027style\u0027] \u003d dict(classes \u003d \u0027Table/Cell_Dashboard_Small\u0027)\n\t\t\telse:\n\t\t\t\tif row[j] \u003d\u003d 0:\n\t\t\t\t\tauxDict[col][\u0027style\u0027] \u003d dict(classes \u003d \u0027Table/Cell_0_Blank\u0027)\n\t\t\t\telif row[j] \u003d\u003d 1:\n\t\t\t\t\tauxDict[col][\u0027style\u0027] \u003d dict(classes \u003d \u0027Table/Cell_1_Fill\u0027)  \n\t\t\t\telif row[j] \u003d\u003d 2:\n\t\t\t\t\tauxDict[col][\u0027style\u0027] \u003d dict(classes \u003d \u0027Table/Cell_2_Fill\u0027)  \n\t\t\t\t\n\t\t\tif todayIndex and j \u003d\u003d todayIndex: \n\t\t\t\t_color \u003d \"#EFEFEF\"\n\t\t\t\tauxDict[col][\u0027style\u0027][\"borderLeftColor\"] \u003d _color\n\t\t\t\tauxDict[col][\u0027style\u0027][\"borderLeftStyle\"] \u003d \"solid\"\n\t\t\t\tauxDict[col][\u0027style\u0027][\"borderLeftWidth\"] \u003d \"3px\"\n\t\t\t\tauxDict[col][\u0027style\u0027][\"borderRightColor\"] \u003d _color\n\t\t\t\tauxDict[col][\u0027style\u0027][\"borderRightStyle\"] \u003d \"solid\"\n\t\t\t\tauxDict[col][\u0027style\u0027][\"borderRightWidth\"] \u003d \"2px\"\n\t\t\t\n\t\tauxList.append(auxDict)\n\t\n\treturn auxList"
+        }
+      ],
+      "extensionFunctions": null,
+      "messageHandlers": [
+        {
+          "messageType": "mhSetScheduleData",
+          "pageScope": true,
+          "script": "\t\n\twherePlusIn \u003d payload.get(\u0027wherePlusIn\u0027)\n\tself.setByWherePlusIn(wherePlusIn)",
+          "sessionScope": false,
+          "viewScope": false
+        },
+        {
+          "messageType": "mhSetScheduleData_0",
+          "pageScope": true,
+          "script": "\tself.setByWherePlusIn()",
+          "sessionScope": false,
+          "viewScope": false
+        }
+      ]
+    },
+    "type": "ia.container.flex"
+  }
+}

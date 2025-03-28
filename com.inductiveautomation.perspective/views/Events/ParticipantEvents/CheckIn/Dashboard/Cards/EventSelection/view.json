@@ -1,0 +1,373 @@
+{
+  "custom": {
+    "data": [],
+    "day": "7",
+    "function": 1,
+    "month": "8",
+    "selectedDate": {
+      "$": [
+        "ts",
+        192,
+        1691387364017
+      ],
+      "$ts": 1691387364017
+    },
+    "year": "2,023"
+  },
+  "events": {
+    "system": {
+      "onStartup": {
+        "config": {
+          "script": "\tself.custom.selectedDate \u003d system.date.now()\n\t"
+        },
+        "scope": "G",
+        "type": "script"
+      }
+    }
+  },
+  "params": {},
+  "propConfig": {
+    "custom.data": {
+      "persistent": true
+    },
+    "custom.day": {
+      "binding": {
+        "config": {
+          "expression": "{view.custom.selectedDate}"
+        },
+        "transforms": [
+          {
+            "formatType": "datetime",
+            "formatValue": "dd",
+            "type": "format"
+          },
+          {
+            "formatType": "numeric",
+            "formatValue": "integer",
+            "type": "format"
+          }
+        ],
+        "type": "expr"
+      },
+      "persistent": true
+    },
+    "custom.function": {
+      "persistent": true
+    },
+    "custom.month": {
+      "binding": {
+        "config": {
+          "expression": "{view.custom.selectedDate}"
+        },
+        "transforms": [
+          {
+            "formatType": "datetime",
+            "formatValue": "MM",
+            "type": "format"
+          },
+          {
+            "formatType": "numeric",
+            "formatValue": "integer",
+            "type": "format"
+          }
+        ],
+        "type": "expr"
+      },
+      "persistent": true
+    },
+    "custom.selectedDate": {
+      "persistent": true
+    },
+    "custom.year": {
+      "binding": {
+        "config": {
+          "expression": "{view.custom.selectedDate}"
+        },
+        "transforms": [
+          {
+            "formatType": "datetime",
+            "formatValue": "yyyy",
+            "type": "format"
+          },
+          {
+            "formatType": "numeric",
+            "formatValue": "integer",
+            "type": "format"
+          }
+        ],
+        "type": "expr"
+      },
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 600,
+      "width": 500
+    },
+    "loading": {
+      "mode": "blocking"
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "EmbeddedView Header"
+        },
+        "position": {
+          "basis": "25px",
+          "shrink": 0
+        },
+        "props": {
+          "params": {
+            "Text": "Event Selection"
+          },
+          "path": "1_globalTEMPLATES/Header/Header",
+          "style": {
+            "borderTopLeftRadius": "8px",
+            "borderTopRightRadius": "8px"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "meta": {
+                  "name": "selectedDate"
+                },
+                "position": {
+                  "basis": "30px"
+                },
+                "propConfig": {
+                  "props.text": {
+                    "binding": {
+                      "config": {
+                        "expression": "dateFormat({view.custom.selectedDate},\u0027EEEEE MM/dd/YY\u0027)"
+                      },
+                      "type": "expr"
+                    }
+                  }
+                },
+                "props": {
+                  "textStyle": {
+                    "classes": "Table/Column_Medium",
+                    "textIndent": 20
+                  }
+                },
+                "type": "ia.display.label"
+              },
+              {
+                "meta": {
+                  "name": "checkedInTotal"
+                },
+                "position": {
+                  "basis": "30px"
+                },
+                "propConfig": {
+                  "props.text": {
+                    "binding": {
+                      "config": {
+                        "parameters": {
+                          "day": "{view.custom.day}",
+                          "month": "{view.custom.month}",
+                          "year": "{view.custom.year}"
+                        },
+                        "queryPath": "Event/ParticipantEvents/CheckIn/GetCheckedInDetailsForADay"
+                      },
+                      "type": "query"
+                    }
+                  }
+                },
+                "props": {
+                  "textStyle": {
+                    "classes": "Table/Column_Medium",
+                    "textIndent": 20
+                  }
+                },
+                "type": "ia.display.label"
+              }
+            ],
+            "meta": {
+              "name": "LeftColLabels"
+            },
+            "position": {
+              "basis": "200px"
+            },
+            "props": {
+              "direction": "column"
+            },
+            "type": "ia.container.flex"
+          },
+          {
+            "children": [
+              {
+                "events": {
+                  "dom": {
+                    "onClick": {
+                      "config": {
+                        "script": "\timport time\n\tif system.date.midnight(self.view.custom.selectedDate) !\u003d system.date.midnight(system.date.now()):\n\t\terrorMessage \u003d \"You can add Event for Current night only.\"\n\t\tself.parent.parent.parent.getChild(\"Error\").props.text \u003d errorMessage\n\t\tself.parent.parent.parent.getChild(\"Error\").position.display \u003d True\n\t\ttime.sleep(2)\n\t\tself.parent.parent.parent.getChild(\"Error\").props.text \u003d \"\"\n\t\tself.parent.parent.parent.getChild(\"Error\").position.display \u003d False\n\telse:\n\t\tsystem.perspective.openDock(\u0027AddEventToSchedule\u0027)"
+                      },
+                      "scope": "G",
+                      "type": "script"
+                    }
+                  }
+                },
+                "meta": {
+                  "name": "AddEvent"
+                },
+                "position": {
+                  "basis": "200px"
+                },
+                "propConfig": {
+                  "position.display": {
+                    "binding": {
+                      "config": {
+                        "expression": "({session.custom.isAdministrator} || {session.custom.isWSManager} || {session.custom.isWSSupportCoordinator})"
+                      },
+                      "enabled": false,
+                      "type": "expr"
+                    }
+                  }
+                },
+                "props": {
+                  "style": {
+                    "classes": "Buttons/Secondary",
+                    "margin": 10
+                  },
+                  "text": "Add Event"
+                },
+                "type": "ia.input.button"
+              }
+            ],
+            "meta": {
+              "name": "RightColButton"
+            },
+            "position": {
+              "basis": "200px",
+              "grow": 1
+            },
+            "props": {
+              "justify": "flex-end"
+            },
+            "type": "ia.container.flex"
+          }
+        ],
+        "meta": {
+          "name": "Labels"
+        },
+        "position": {
+          "basis": "60px"
+        },
+        "props": {
+          "style": {
+            "classes": "Background/Default",
+            "overflow": "hidden"
+          }
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "meta": {
+          "name": "Error"
+        },
+        "position": {
+          "basis": "25px",
+          "display": false
+        },
+        "props": {
+          "style": {
+            "classes": "Text/Error_Message"
+          }
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "meta": {
+          "name": "Event_Table"
+        },
+        "position": {
+          "basis": "320px",
+          "grow": 1
+        },
+        "propConfig": {
+          "props.params.day": {
+            "binding": {
+              "config": {
+                "path": "view.custom.day"
+              },
+              "type": "property"
+            }
+          },
+          "props.params.month": {
+            "binding": {
+              "config": {
+                "path": "view.custom.month"
+              },
+              "type": "property"
+            }
+          },
+          "props.params.year": {
+            "binding": {
+              "config": {
+                "path": "view.custom.year"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "path": "Events/ParticipantEvents/CheckIn/Dashboard/Table/Event_Table"
+        },
+        "type": "ia.display.view"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column",
+      "style": {
+        "classes": "Background/Alternative"
+      }
+    },
+    "scripts": {
+      "customMethods": [],
+      "extensionFunctions": null,
+      "messageHandlers": [
+        {
+          "messageType": "ServeDateSelected",
+          "pageScope": true,
+          "script": "\t# implement your handler here\n\tselectedDate \u003d payload[\u0027selectedDate\u0027]\n\tif selectedDate !\u003d None:\n\t\tself.view.custom.selectedDate \u003d selectedDate\n\t\t",
+          "sessionScope": false,
+          "viewScope": false
+        },
+        {
+          "messageType": "participantCheckedIn",
+          "pageScope": true,
+          "script": "\t# implement your handler here\n\tself.getChild(\"Labels\").getChild(\"LeftColLabels\").getChild(\"checkedInTotal\").refreshBinding(\"props.text\")",
+          "sessionScope": true,
+          "viewScope": false
+        },
+        {
+          "messageType": "refreshEvents",
+          "pageScope": true,
+          "script": "\t# implement your handler here\n\tself.getChild(\"Labels\").getChild(\"LeftColLabels\").getChild(\"checkedInTotal\").refreshBinding(\"props.text\")",
+          "sessionScope": true,
+          "viewScope": false
+        },
+        {
+          "messageType": "errorAddingEvent",
+          "pageScope": true,
+          "script": "\t# implement your handler here\n\timport time\n\tself.getChild(\"Error\").props.text \u003d payload[\u0027message\u0027]\n\tself.getChild(\"Error\").position.display \u003d True\n\ttime.sleep(2)\n\tself.getChild(\"Error\").props.text \u003d \"\"\n\tself.getChild(\"Error\").position.display \u003d False",
+          "sessionScope": true,
+          "viewScope": false
+        }
+      ]
+    },
+    "type": "ia.container.flex"
+  }
+}

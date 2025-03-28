@@ -1,0 +1,227 @@
+{
+  "custom": {
+    "filteredData": {
+      "$": [
+        "ds",
+        192,
+        1615899333198
+      ],
+      "$columns": [
+        {
+          "data": [
+            2,
+            4,
+            5
+          ],
+          "name": "id",
+          "type": "Integer"
+        },
+        {
+          "data": [
+            2,
+            4,
+            5
+          ],
+          "name": "staffID",
+          "type": "Integer"
+        },
+        {
+          "data": [
+            "Kelly Muldoon",
+            "Melanie Barnett",
+            "Rachel Hester"
+          ],
+          "name": "name",
+          "type": "String"
+        }
+      ]
+    },
+    "filters": [],
+    "query": {
+      "$": [
+        "ds",
+        192,
+        1615898500084
+      ],
+      "$columns": [
+        {
+          "data": [
+            2,
+            4,
+            5
+          ],
+          "name": "id",
+          "type": "Integer"
+        },
+        {
+          "data": [
+            2,
+            4,
+            5
+          ],
+          "name": "staffID",
+          "type": "Integer"
+        },
+        {
+          "data": [
+            "Kelly Muldoon",
+            "Melanie Barnett",
+            "Rachel Hester"
+          ],
+          "name": "name",
+          "type": "String"
+        }
+      ]
+    },
+    "staffData": [
+      {
+        "StaffID": 2,
+        "StaffName": "Kelly Muldoon"
+      },
+      {
+        "StaffID": 4,
+        "StaffName": "Melanie Barnett"
+      },
+      {
+        "StaffID": 5,
+        "StaffName": "Rachel Hester"
+      }
+    ]
+  },
+  "params": {
+    "eventID": 24
+  },
+  "propConfig": {
+    "custom.filteredData": {
+      "binding": {
+        "config": {
+          "struct": {
+            "filters": "{this.custom.filters}",
+            "source": "hasChanged({this.custom.query})"
+          },
+          "waitOnAll": true
+        },
+        "transforms": [
+          {
+            "code": "\t\n\treturn filters.applyFiltersOnDataset(self.custom.query, self.custom.filters)",
+            "type": "script"
+          }
+        ],
+        "type": "expr-struct"
+      },
+      "persistent": true
+    },
+    "custom.filters": {
+      "binding": {
+        "config": {
+          "path": "session.custom.filters"
+        },
+        "transforms": [
+          {
+            "code": "\tfilter \u003d filters.retrievePageFilters(value, self.page.props.pageId)\n\titems \u003d []\n\tfor x in filter:\n\t\tif x.key \u003d\u003d \"People\":\n\t\t\titems.append(x)\n\treturn items",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      },
+      "persistent": true
+    },
+    "custom.query": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "instanceID": "{view.params.eventID}"
+          },
+          "queryPath": "Calendar/Event Instance People/GetInstanceStaff"
+        },
+        "type": "query"
+      },
+      "persistent": true
+    },
+    "custom.staffData": {
+      "binding": {
+        "config": {
+          "path": "view.custom.filteredData"
+        },
+        "transforms": [
+          {
+            "code": "\tinstances \u003d []\n\t\n\tfor val in range(value.getRowCount()) :\n\t\t\tinstances.append({\u0027StaffID\u0027 : value.getValueAt(val, \"id\"), \u0027StaffName\u0027 : value.getValueAt(val,\"name\")})\n\n\t\n\treturn instances",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      },
+      "persistent": true
+    },
+    "params.eventID": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 132,
+      "width": 152
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "Label"
+        },
+        "props": {
+          "style": {
+            "classes": "Event/Event_DateText"
+          },
+          "text": "Staff"
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "meta": {
+          "name": "FlexRepeater"
+        },
+        "position": {
+          "basis": "50px",
+          "grow": 1
+        },
+        "propConfig": {
+          "props.instances": {
+            "binding": {
+              "config": {
+                "path": "view.custom.staffData"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "path": "Events/Dashboard/Components/SelectedEvent/StaffPicture"
+        },
+        "type": "ia.display.flex-repeater"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "alignItems": "flex-start",
+      "direction": "column"
+    },
+    "scripts": {
+      "customMethods": [],
+      "extensionFunctions": null,
+      "messageHandlers": [
+        {
+          "messageType": "refreshPeople",
+          "pageScope": true,
+          "script": "\t# implement your handler here\n\tself.view.refreshBinding(\"custom.query\")\n\tself.getChild(\"FlexRepeater\").refreshBinding(\"props.instances\")",
+          "sessionScope": true,
+          "viewScope": false
+        }
+      ]
+    },
+    "type": "ia.container.flex"
+  }
+}

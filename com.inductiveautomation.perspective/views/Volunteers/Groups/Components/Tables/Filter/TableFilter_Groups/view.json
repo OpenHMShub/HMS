@@ -1,0 +1,381 @@
+{
+  "custom": {},
+  "events": {
+    "system": {
+      "onStartup": {
+        "config": {
+          "script": "\tself.getChild(\"root\").getChild(\"hours\").props.params.selectedValues \u003d -1\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t"
+        },
+        "scope": "G",
+        "type": "script"
+      }
+    }
+  },
+  "params": {
+    "hours": -1,
+    "lastServiceDateEnd": "",
+    "lastServiceDateStart": "",
+    "memberCount": -1,
+    "nextServiceDateEnd": "",
+    "nextServiceDateStart": "",
+    "searchText": ""
+  },
+  "propConfig": {
+    "params.hours": {
+      "binding": {
+        "config": {
+          "path": "/root/hours.props.params.selectedValues"
+        },
+        "transforms": [
+          {
+            "code": "\t#\tvalue \u003d value[1:(len(value) - 1)]\n#\tvalue \u003d value.lstrip(\u0027[\"\u0027)\n#\tvalue \u003d value.rstrip(\u0027\"]\u0027)\n#\tvalue \u003d value.replace(\u0027\\\"\u0027,\"\")\n#\t#value \u003d value.replace(\u0027\\\u0027\u0027,\u0027\\\"\u0027)\n#\tnewValue \u003d \u0027 \u0027.join(\"\u0027{}\u0027,\".format(word.strip()) for word in value.split(\u0027,\u0027))\n#\tnewValue \u003d \"(\" + newValue[0:(len(newValue) - 1)] + \")\"\n#\t#print (\"Output binding\")\n#\t#print newValue\n#\treturn newValue\n\treturn value",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      },
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.lastServiceDateEnd": {
+      "binding": {
+        "config": {
+          "path": "/root/lastServiceDate.props.params.max"
+        },
+        "type": "property"
+      },
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.lastServiceDateStart": {
+      "binding": {
+        "config": {
+          "path": "/root/lastServiceDate.props.params.min"
+        },
+        "type": "property"
+      },
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.memberCount": {
+      "binding": {
+        "config": {
+          "path": "/root/memberCount.props.params.selectedValues"
+        },
+        "type": "property"
+      },
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.nextServiceDateEnd": {
+      "binding": {
+        "config": {
+          "path": "/root/nextServiceDate.props.params.min"
+        },
+        "type": "property"
+      },
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.nextServiceDateStart": {
+      "binding": {
+        "config": {
+          "path": "/root/nextServiceDate.props.params.min"
+        },
+        "type": "property"
+      },
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.searchText": {
+      "binding": {
+        "config": {
+          "path": "/root/searchBar.props.params.searchText"
+        },
+        "type": "property"
+      },
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 52
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "Label"
+        },
+        "position": {
+          "basis": "7%",
+          "shrink": 0
+        },
+        "props": {
+          "style": {
+            "classes": "Table/Filter_Header_Detail",
+            "paddingLeft": "40px"
+          },
+          "text": "Filter by:"
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "meta": {
+          "name": "memberCount"
+        },
+        "position": {
+          "basis": "20%"
+        },
+        "props": {
+          "params": {
+            "filterData": [
+              {
+                "label": "\u003c5",
+                "value": "\u003c5"
+              },
+              {
+                "label": "5-10",
+                "value": "5-10"
+              },
+              {
+                "label": "11-15",
+                "value": "11-15"
+              },
+              {
+                "label": "16-20",
+                "value": "16-20"
+              },
+              {
+                "label": "\u003e20",
+                "value": "\u003e20"
+              }
+            ],
+            "filterName": "Member Count",
+            "selectedValues": -1
+          },
+          "path": "Shelter/Templates/MultiselectFilter",
+          "style": {
+            "marginBottom": 8,
+            "marginLeft": 5,
+            "marginRight": 5,
+            "marginTop": 8
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "nextServiceDate"
+        },
+        "position": {
+          "basis": "20%"
+        },
+        "props": {
+          "params": {
+            "header": "Next Service Date:",
+            "max": "",
+            "min": "",
+            "return_message": "next-service-date-filter"
+          },
+          "path": "Volunteers/Templates/Filter/DateRange",
+          "style": {
+            "marginBottom": 8,
+            "marginLeft": 5,
+            "marginRight": 5,
+            "marginTop": 8
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "lastServiceDate"
+        },
+        "position": {
+          "basis": "20%"
+        },
+        "props": {
+          "params": {
+            "header": "Last Service Date:",
+            "max": "",
+            "min": "",
+            "return_message": "last-service-date-filter"
+          },
+          "path": "Volunteers/Templates/Filter/DateRange",
+          "style": {
+            "marginBottom": 8,
+            "marginLeft": 5,
+            "marginRight": 5,
+            "marginTop": 8
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "hours"
+        },
+        "position": {
+          "basis": "20%"
+        },
+        "props": {
+          "params": {
+            "filterData": [
+              {
+                "label": "\u003c5",
+                "value": "\u003c5"
+              },
+              {
+                "label": "5-10",
+                "value": "5-10"
+              },
+              {
+                "label": "11-15",
+                "value": "11-15"
+              },
+              {
+                "label": "16-20",
+                "value": "16-20"
+              },
+              {
+                "label": "\u003e20",
+                "value": "\u003e20"
+              }
+            ],
+            "filterName": "Hours Past 6 Months",
+            "selectedValues": -1
+          },
+          "path": "Shelter/Templates/MultiselectFilter",
+          "style": {
+            "marginBottom": 8,
+            "marginLeft": 5,
+            "marginRight": 5,
+            "marginTop": 8
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "events": {
+          "dom": {
+            "onClick": {
+              "config": {
+                "script": "\tself.getSibling(\"hours\").props.params.selectedValues \u003d -1\t\t\t\n\tself.getSibling(\"memberCount\").props.params.selectedValues \u003d -1\n\t\n\t\n\t#Set the isClearFilter flag to True\n\tself.getSibling(\"nextServiceDate\").props.params.max \u003d \"\"\n\tself.getSibling(\"nextServiceDate\").props.params.min \u003d \"\"\n\t\n\tself.getSibling(\"lastServiceDate\").props.params.max \u003d \"\"\n\tself.getSibling(\"lastServiceDate\").props.params.min \u003d \"\""
+              },
+              "scope": "G",
+              "type": "script"
+            }
+          }
+        },
+        "meta": {
+          "name": "clearFilters"
+        },
+        "position": {
+          "basis": "2%"
+        },
+        "props": {
+          "image": {
+            "icon": {
+              "path": "material/close"
+            },
+            "style": {
+              "backgroundColor": "#181818"
+            }
+          },
+          "style": {
+            "backgroundColor": "#0C4E8B",
+            "borderBottomLeftRadius": 5,
+            "borderBottomRightRadius": 5,
+            "borderColor": "#4D4D4D",
+            "borderStyle": "solid",
+            "borderTopLeftRadius": 5,
+            "borderTopRightRadius": 5,
+            "borderWidth": 1,
+            "margin": 8
+          },
+          "text": "",
+          "textStyle": {
+            "classes": "GreyColor"
+          }
+        },
+        "type": "ia.input.button"
+      },
+      {
+        "meta": {
+          "name": "filler"
+        },
+        "position": {
+          "basis": "11%"
+        },
+        "props": {
+          "style": {
+            "classes": "Table/Filter_Header_Detail",
+            "paddingLeft": "40px"
+          }
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "meta": {
+          "name": "searchBar"
+        },
+        "position": {
+          "basis": "20%"
+        },
+        "propConfig": {
+          "props.params.searchText": {
+            "binding": {
+              "config": {
+                "bidirectional": true,
+                "path": "session.custom.filters.P_1_TEMPLATES_Filtering_Filters_Search_Bar[0].value"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "path": "1_TEMPLATES/Filtering/Filters/Search_Bar",
+          "style": {
+            "marginBottom": 8,
+            "marginLeft": 5,
+            "marginRight": 5,
+            "marginTop": 8
+          }
+        },
+        "type": "ia.display.view"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "style": {
+        "classes": "Table/Filter_Header"
+      }
+    },
+    "scripts": {
+      "customMethods": [],
+      "extensionFunctions": null,
+      "messageHandlers": [
+        {
+          "messageType": "last-service-date-filter",
+          "pageScope": true,
+          "script": "\tmin \u003d payload[\"min\"]\n\tmax \u003d payload[\"max\"]\n\tself.getChild(\"lastServiceDate\").props.params.max \u003d max\n\tself.getChild(\"lastServiceDate\").props.params.min \u003d min",
+          "sessionScope": false,
+          "viewScope": false
+        },
+        {
+          "messageType": "next-service-date-filter",
+          "pageScope": true,
+          "script": "\tmin \u003d payload[\"min\"]\n\tmax \u003d payload[\"max\"]\n\tself.getChild(\"nextServiceDate\").props.params.max \u003d max\n\tself.getChild(\"nextServiceDate\").props.params.min \u003d min",
+          "sessionScope": false,
+          "viewScope": false
+        }
+      ]
+    },
+    "type": "ia.container.flex"
+  }
+}

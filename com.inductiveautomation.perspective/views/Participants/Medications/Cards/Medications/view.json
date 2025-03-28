@@ -1,0 +1,2957 @@
+{
+  "custom": {
+    "availableBinsForLocation": {
+      "$": [
+        "ds",
+        192,
+        1726203510995
+      ],
+      "$columns": [
+        {
+          "data": [],
+          "name": "Label",
+          "type": "Integer"
+        },
+        {
+          "data": [],
+          "name": "Value",
+          "type": "Integer"
+        }
+      ]
+    },
+    "defaultDates": {},
+    "inShelter": false,
+    "participantFullName": null,
+    "resetDates": null,
+    "selectedBin": null,
+    "selectedCheckOut": null,
+    "selectedMedications": "Advil",
+    "shelterId": null,
+    "shelterName": ""
+  },
+  "params": {
+    "Selected_Id": -1,
+    "Selected_Participant_Id": -1
+  },
+  "propConfig": {
+    "custom.availableBinsForLocation": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "location": "{/root/Medications Lookup Flex/BinSelectFlex/Location.custom.SelectedColumn}"
+          },
+          "queryPath": "Participants/Medications/GetAvailableBinsForLocation"
+        },
+        "type": "query"
+      },
+      "persistent": true
+    },
+    "custom.defaultDates": {
+      "persistent": true
+    },
+    "custom.defaultDates.expiry": {
+      "binding": {
+        "config": {
+          "expression": "setTime(addDays(now(), 30), 0,0,0)"
+        },
+        "type": "expr"
+      }
+    },
+    "custom.defaultDates.start": {
+      "binding": {
+        "config": {
+          "expression": "now(0)"
+        },
+        "type": "expr"
+      }
+    },
+    "custom.inShelter": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "Participant_Id": "{view.params.Selected_Participant_Id}"
+          },
+          "queryPath": "Participants/Medications/GetShelterStatus"
+        },
+        "transforms": [
+          {
+            "code": "\tif value is not None and value \u003e 0 :\n\t\treturn True\n\telse:\n\t\treturn False",
+            "type": "script"
+          }
+        ],
+        "type": "query"
+      },
+      "persistent": true
+    },
+    "custom.participantFullName": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "participantId": "{view.params.Selected_Participant_Id}"
+          },
+          "queryPath": "Participants/Storage Bins/GetParticipantName"
+        },
+        "transforms": [
+          {
+            "expression": "{value}[0, \u0027full_name\u0027]",
+            "type": "expression"
+          }
+        ],
+        "type": "query"
+      },
+      "persistent": true
+    },
+    "custom.resetDates": {
+      "binding": {
+        "config": {
+          "expression": "{view.params.Selected_Id} + {view.custom.participantFullName}"
+        },
+        "type": "expr"
+      },
+      "onChange": {
+        "enabled": null,
+        "script": "\t# reset the dates to defaults when a participant is picked from the participant table\t\n\tif self.params.Selected_Id is None:\n\t\tself.getChild(\"root\").getChild(\"Bin Lookup Flex\").getChild(\"BinSelectFlex\").getChild(\"StartDate\").getChild(\"DateTimeInput\").props.value \u003d self.custom.defaultDates.start\n\t\tself.getChild(\"root\").getChild(\"Bin Lookup Flex\").getChild(\"BinSelectFlex\").getChild(\"ExpireDate\").getChild(\"DateTimeInput\").props.value \u003d self.custom.defaultDates.expiry"
+      },
+      "persistent": true
+    },
+    "custom.selectedBin": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "id": "{view.params.Selected_Id}"
+          },
+          "queryPath": "Participants/Medications/GetSpecificBinIdStatus",
+          "returnFormat": "json"
+        },
+        "transforms": [
+          {
+            "code": "\t\n\tif len(value):\n\t\t#return {value}[0]\n\t\treturn value[0]\n\telse:\n\t\treturn None\n\t",
+            "type": "script"
+          }
+        ],
+        "type": "query"
+      },
+      "onChange": {
+        "enabled": null,
+        "script": "\tself.getChild(\"root\").getChild(\"Medications Lookup Flex\").getChild(\"BinSelectFlex\").getChild(\"Bin\").getChild(\"Dropdown\").refreshBinding(\"props.options\")"
+      },
+      "persistent": true
+    },
+    "custom.selectedCheckOut": {
+      "persistent": true
+    },
+    "custom.selectedMedications": {
+      "persistent": true
+    },
+    "custom.shelterId": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "Participant_Id": "{view.params.Selected_Participant_Id}"
+          },
+          "queryPath": "Participants/Medications/GetShelterStatus",
+          "returnFormat": "scalar"
+        },
+        "type": "query"
+      },
+      "persistent": true
+    },
+    "custom.shelterName": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "facilityId": "{view.custom.shelterId}"
+          },
+          "queryPath": "Shelter/Settings/GetShelterDetail"
+        },
+        "transforms": [
+          {
+            "code": "\tfacilityName \u003d \"\"\n\tif value is not None and value.getRowCount() \u003e 0:\n\t\tfacilityName \u003d value.getValueAt(0,\u0027facilityName\u0027)\n\t\tif facilityName is None:\n\t\t\tfacilityName \u003d \"\"\n\t\telse:\n\t\t\tfacilityName \u003d facilityName.strip()\n\treturn facilityName",
+            "type": "script"
+          }
+        ],
+        "type": "query"
+      },
+      "onChange": {
+        "enabled": null,
+        "script": "\tself.getChild(\"root\").getChild(\"Medications Lookup Flex\").getChild(\"BinSelectFlex\").getChild(\"Location\").getChild(\"Dropdown\").refreshBinding(\"props.options\")"
+      },
+      "persistent": true
+    },
+    "params.Selected_First_Name": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.Selected_Id": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.Selected_Last_Name": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.Selected_Middle_Name": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.Selected_Participant": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.Selected_Participant_Id": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "width": 769
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "custom": {
+                      "grabAttention": 0
+                    },
+                    "meta": {
+                      "name": "Label"
+                    },
+                    "position": {
+                      "basis": "35px",
+                      "shrink": 0
+                    },
+                    "props": {
+                      "style": {
+                        "classes": "Labels/Label_Text_Res",
+                        "fontSize": "15px"
+                      },
+                      "text": "Location"
+                    },
+                    "type": "ia.display.label"
+                  },
+                  {
+                    "custom": {
+                      "allOptions": [
+                        {
+                          "label": "Activity Centre",
+                          "value": "Activity Centre"
+                        },
+                        {
+                          "label": "Black Box",
+                          "value": "Black Box"
+                        },
+                        {
+                          "label": "Guest House Bin",
+                          "value": "Guest House Bin"
+                        },
+                        {
+                          "label": "Guest House Fridge",
+                          "value": "Guest House Fridge"
+                        }
+                      ],
+                      "availOptions": "value"
+                    },
+                    "meta": {
+                      "name": "Dropdown"
+                    },
+                    "position": {
+                      "basis": "34px",
+                      "shrink": 0
+                    },
+                    "propConfig": {
+                      "props.enabled": {
+                        "binding": {
+                          "config": {
+                            "path": "view.custom.selectedBin"
+                          },
+                          "transforms": [
+                            {
+                              "code": "\tif value is None:\n\t\treturn True\n\telse:\n\t\treturn False",
+                              "type": "script"
+                            }
+                          ],
+                          "type": "property"
+                        }
+                      },
+                      "props.options": {
+                        "binding": {
+                          "config": {
+                            "path": "view.custom.inShelter"
+                          },
+                          "transforms": [
+                            {
+                              "code": "\tinShelter \u003d self.view.custom.inShelter\n\toptions \u003d []\n\tname \u003d \u0027Activity Center\u0027\n\toptions.append({\u0027label\u0027: name, \u0027value\u0027: name})\n\t\n\t\n\t\n\tif inShelter:\n\t\tif \u0027Apartments\u0027 in self.view.custom.shelterName:\n\t\t\toptions \u003d []\n\t\t\tname \u003d \u0027532 Apartments\u0027\n\t\t\toptions.append({\u0027label\u0027: name, \u0027value\u0027: name})\n\t\t\n\t\t\tname \u003d \u0027705 Apartments\u0027\n\t\t\toptions.append({\u0027label\u0027: name, \u0027value\u0027: name})\n\t\telse:\n\t\t\tname \u003d \u0027Guest House Bin\u0027\n\t\t\toptions.append({\u0027label\u0027: name, \u0027value\u0027: name})\n\t\t\t\n\t\t\tname \u003d \u0027Guest House Fridge\u0027\n\t\t\toptions.append({\u0027label\u0027: name, \u0027value\u0027: name})\n\t\t\t\n\t\t\tname \u003d \u0027Black Box\u0027\n\t\t\toptions.append({\u0027label\u0027: name, \u0027value\u0027: name})\n\t\t\t\n\t\t\t\n\t\t\n\t\t\n\treturn options",
+                              "type": "script"
+                            }
+                          ],
+                          "type": "property"
+                        }
+                      },
+                      "props.style.cursor": {
+                        "binding": {
+                          "config": {
+                            "path": "this.props.enabled"
+                          },
+                          "transforms": [
+                            {
+                              "code": "\tif value \u003d\u003d True:\n\t\treturn \u0027auto\u0027\n\telse:\n\t\treturn \u0027not-allowed\u0027",
+                              "type": "script"
+                            }
+                          ],
+                          "type": "property"
+                        }
+                      },
+                      "props.value": {
+                        "onChange": {
+                          "enabled": null,
+                          "script": "\tself.parent.parent.getChild(\"Bin\").getChild(\"Dropdown\").refreshBinding(\"props.options\")\n\tif currentValue.value \u003d\u003d \u0027Activity Center\u0027 or currentValue.value \u003d\u003d \u0027Guest House Fridge\u0027 or currentValue.value \u003d\u003d \u0027Black Box\u0027:\n\t\tself.parent.parent.getChild(\"Bin\").getChild(\"Dropdown\").props.value \u003d -1"
+                        }
+                      }
+                    },
+                    "props": {
+                      "dropdownOptionStyle": {
+                        "backgroundColor": "#FFFFFF",
+                        "classes": "Dropdowns/DD_DefaultNoBorder"
+                      },
+                      "search": {
+                        "enabled": false
+                      },
+                      "style": {
+                        "classes": "Dropdowns/DD_Default"
+                      },
+                      "value": "Black Box"
+                    },
+                    "type": "ia.input.dropdown"
+                  }
+                ],
+                "meta": {
+                  "name": "Location"
+                },
+                "position": {
+                  "basis": "160px",
+                  "shrink": 0
+                },
+                "propConfig": {
+                  "custom.SelectedColumn": {
+                    "binding": {
+                      "config": {
+                        "bidirectional": true,
+                        "path": "./Dropdown.props.value"
+                      },
+                      "type": "property"
+                    }
+                  }
+                },
+                "props": {
+                  "direction": "column",
+                  "style": {
+                    "overflow": "visible"
+                  }
+                },
+                "type": "ia.container.flex"
+              },
+              {
+                "children": [
+                  {
+                    "meta": {
+                      "name": "Label"
+                    },
+                    "position": {
+                      "basis": "35px",
+                      "shrink": 0
+                    },
+                    "props": {
+                      "style": {
+                        "classes": "Labels/Label_Text_Res",
+                        "fontSize": "15px"
+                      },
+                      "text": "Bin"
+                    },
+                    "type": "ia.display.label"
+                  },
+                  {
+                    "custom": {
+                      "allOptions": [
+                        {
+                          "label": 1,
+                          "value": 1
+                        },
+                        {
+                          "label": 2,
+                          "value": 2
+                        },
+                        {
+                          "label": 3,
+                          "value": 3
+                        },
+                        {
+                          "label": 4,
+                          "value": 4
+                        },
+                        {
+                          "label": 5,
+                          "value": 5
+                        }
+                      ],
+                      "availOptions": "value"
+                    },
+                    "meta": {
+                      "name": "Dropdown"
+                    },
+                    "position": {
+                      "basis": "34px",
+                      "shrink": 0
+                    },
+                    "propConfig": {
+                      "props.enabled": {
+                        "binding": {
+                          "config": {
+                            "path": "view.custom.selectedBin"
+                          },
+                          "enabled": false,
+                          "transforms": [
+                            {
+                              "code": "\tif value is None:\n\t\treturn True\n\telse:\n\t\treturn False",
+                              "type": "script"
+                            }
+                          ],
+                          "type": "property"
+                        }
+                      },
+                      "props.options": {
+                        "binding": {
+                          "config": {
+                            "queryPath": "Participants/Medications/GetAvailableBins",
+                            "returnFormat": "dataset"
+                          },
+                          "transforms": [
+                            {
+                              "code": "\tnewDataset \u003d value\n\tselectedLocation \u003d self.parent.parent.getChild(\"Location\").custom.SelectedColumn\n\tif selectedLocation \u003d\u003d \u0027705 Apartments\u0027 or selectedLocation \u003d\u003d \u0027532 Apartments\u0027:\n\t\tnewDataset \u003d self.view.custom.availableBinsForLocation\n\tif self.view.custom.selectedBin is not None and self.view.custom.selectedBin.bin !\u003d -1:\n\t\tnewRow \u003d [self.view.custom.selectedBin.bin,self.view.custom.selectedBin.bin]\n\t\tnewDataset \u003d system.dataset.addRow(newDataset,newRow)\n\treturn newDataset",
+                              "type": "script"
+                            }
+                          ],
+                          "type": "query"
+                        }
+                      },
+                      "props.style.cursor": {
+                        "binding": {
+                          "config": {
+                            "path": "this.props.enabled"
+                          },
+                          "transforms": [
+                            {
+                              "code": "\tif value \u003d\u003d True:\n\t\treturn \u0027auto\u0027\n\telse:\n\t\treturn \u0027not-allowed\u0027",
+                              "type": "script"
+                            }
+                          ],
+                          "type": "property"
+                        }
+                      }
+                    },
+                    "props": {
+                      "dropdownOptionStyle": {
+                        "backgroundColor": "#FFFFFF",
+                        "classes": "Dropdowns/DD_DefaultNoBorder"
+                      },
+                      "style": {
+                        "classes": "Dropdowns/DD_Default"
+                      },
+                      "value": -1
+                    },
+                    "type": "ia.input.dropdown"
+                  }
+                ],
+                "meta": {
+                  "name": "Bin"
+                },
+                "position": {
+                  "basis": "130px",
+                  "shrink": 0
+                },
+                "propConfig": {
+                  "custom.SelectedBin": {
+                    "binding": {
+                      "config": {
+                        "path": "./Dropdown.props.value"
+                      },
+                      "transforms": [
+                        {
+                          "code": "\tif value is None:\n\t\treturn -1\n\telse:\n\t\treturn value",
+                          "type": "script"
+                        }
+                      ],
+                      "type": "property"
+                    }
+                  },
+                  "meta.visible": {
+                    "binding": {
+                      "config": {
+                        "expression": "{../Location.custom.SelectedColumn} \u003d \u0027Guest House Bin\u0027 || {../Location.custom.SelectedColumn} \u003d \u0027705 Apartments\u0027 || {../Location.custom.SelectedColumn} \u003d \u0027532 Apartments\u0027 "
+                      },
+                      "type": "expr"
+                    }
+                  }
+                },
+                "props": {
+                  "direction": "column",
+                  "style": {
+                    "marginLeft": "18.5px",
+                    "overflow": "visible"
+                  }
+                },
+                "type": "ia.container.flex"
+              },
+              {
+                "children": [
+                  {
+                    "meta": {
+                      "name": "Label"
+                    },
+                    "position": {
+                      "basis": "35px",
+                      "shrink": 0
+                    },
+                    "props": {
+                      "style": {
+                        "classes": "Labels/Label_Text_Res",
+                        "fontSize": "15px"
+                      },
+                      "text": "Start Date"
+                    },
+                    "type": "ia.display.label"
+                  },
+                  {
+                    "meta": {
+                      "name": "DateTimeInput"
+                    },
+                    "position": {
+                      "basis": "34px",
+                      "shrink": 0
+                    },
+                    "propConfig": {
+                      "props.value": {
+                        "binding": {
+                          "config": {
+                            "expression": "now(0)"
+                          },
+                          "type": "expr"
+                        }
+                      }
+                    },
+                    "props": {
+                      "format": "MM/DD/YYYY",
+                      "formattedValue": "09/12/2024",
+                      "modalStyle": {
+                        "classes": "DateTime/Add_Date"
+                      },
+                      "pickerType": "date",
+                      "style": {
+                        "classes": "DateTime/Date_Purple",
+                        "cursor": "pointer",
+                        "overflow": "hidden"
+                      }
+                    },
+                    "type": "ia.input.date-time-input"
+                  }
+                ],
+                "meta": {
+                  "name": "StartDate"
+                },
+                "position": {
+                  "basis": "130px",
+                  "shrink": 0
+                },
+                "propConfig": {
+                  "custom.ExpDate": {
+                    "binding": {
+                      "config": {
+                        "bidirectional": true,
+                        "path": "./DateTimeInput.props.value"
+                      },
+                      "type": "property"
+                    }
+                  }
+                },
+                "props": {
+                  "direction": "column",
+                  "style": {
+                    "marginLeft": "18.5px",
+                    "overflow": "visible"
+                  }
+                },
+                "type": "ia.container.flex"
+              },
+              {
+                "children": [
+                  {
+                    "meta": {
+                      "name": "Label"
+                    },
+                    "position": {
+                      "basis": "34px",
+                      "shrink": 0
+                    },
+                    "propConfig": {
+                      "props.style.backgroundColor": {
+                        "binding": {
+                          "config": {
+                            "path": "parent.custom.Status"
+                          },
+                          "transforms": [
+                            {
+                              "fallback": "#FFFFFF",
+                              "inputType": "scalar",
+                              "mappings": [
+                                {
+                                  "input": "Available",
+                                  "output": "#3EC3D9"
+                                },
+                                {
+                                  "input": "Expired",
+                                  "output": "#FF2800"
+                                },
+                                {
+                                  "input": "In-Use",
+                                  "output": "#0C4E8B"
+                                }
+                              ],
+                              "outputType": "color",
+                              "type": "map"
+                            }
+                          ],
+                          "type": "property"
+                        }
+                      },
+                      "props.text": {
+                        "binding": {
+                          "config": {
+                            "path": "parent.custom.Status"
+                          },
+                          "type": "property"
+                        }
+                      }
+                    },
+                    "props": {
+                      "style": {
+                        "color": "#FFFFFF",
+                        "marginTop": "35px",
+                        "textAlign": "center"
+                      }
+                    },
+                    "type": "ia.display.label"
+                  }
+                ],
+                "meta": {
+                  "name": "Status"
+                },
+                "position": {
+                  "basis": "130px",
+                  "shrink": 0
+                },
+                "propConfig": {
+                  "custom.Status": {
+                    "binding": {
+                      "config": {
+                        "expression": "if(hasChanged({../Location.custom.SelectedColumn}),1,\r\nif(hasChanged({../Bin.custom.SelectedBin}),1,\r\n0))"
+                      },
+                      "transforms": [
+                        {
+                          "code": "\tparams \u003d {\n\t\t\u0027location\u0027: self.getSibling(\"Location\").custom.SelectedColumn,\n\t\t\u0027bin\u0027: self.getSibling(\"Bin\").custom.SelectedBin\n\t}\n\tres \u003d system.db.runNamedQuery(\u0027Participants/Medications/GetSpecificBinStatus\u0027, params)\n\tres \u003d system.dataset.toPyDataSet(res)\n\t\n\tif len(res) \u003d\u003d 0:\n\t\treturn \u0027Available\u0027\n\t\n\texitAction \u003d res[0][\u0027exitAction\u0027]\n\t\n\t\n\tif exitAction is None:\n\t\tif self.view.custom.selectedCheckOut is not None and self.view.custom.selectedCheckOut !\u003d \u0027\u0027:\n\t\t\treturn \u0027Expired\u0027\n\t\telse:\n\t\t\treturn \u0027In-Use\u0027\n\telse:\n\t\treturn \u0027Available\u0027",
+                          "type": "script"
+                        }
+                      ],
+                      "type": "expr"
+                    }
+                  }
+                },
+                "props": {
+                  "direction": "column",
+                  "justify": "space-around",
+                  "style": {
+                    "marginLeft": "18.5px",
+                    "overflow": "visible",
+                    "textAlign": "center"
+                  }
+                },
+                "type": "ia.container.flex"
+              }
+            ],
+            "meta": {
+              "name": "BinSelectFlex"
+            },
+            "position": {
+              "basis": "75px",
+              "shrink": 0
+            },
+            "props": {
+              "style": {
+                "classes": "Background/Default",
+                "paddingBottom": "5px",
+                "paddingLeft": "18.5px"
+              }
+            },
+            "type": "ia.container.flex"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "meta": {
+                          "name": "Label"
+                        },
+                        "position": {
+                          "shrink": 0
+                        },
+                        "props": {
+                          "style": {
+                            "classes": "ActivityCards/Card_TextDark",
+                            "marginLeft": "15px"
+                          },
+                          "text": "Search Medications"
+                        },
+                        "type": "ia.display.label"
+                      },
+                      {
+                        "meta": {
+                          "name": "Conditional_Text"
+                        },
+                        "position": {
+                          "basis": "200px",
+                          "shrink": 0
+                        },
+                        "propConfig": {
+                          "custom.textProcessed": {
+                            "binding": {
+                              "config": {
+                                "expression": "\u0027%\u0027 + {this.props.params.text} + \u0027%\u0027"
+                              },
+                              "type": "expr"
+                            }
+                          }
+                        },
+                        "props": {
+                          "params": {
+                            "placeholder": "search",
+                            "text": ""
+                          },
+                          "path": "1_TEMPLATES/Filtering/Conditionals/Conditional_Text",
+                          "style": {
+                            "margin": "3px"
+                          }
+                        },
+                        "type": "ia.display.view"
+                      }
+                    ],
+                    "meta": {
+                      "name": "FlexContainer"
+                    },
+                    "position": {
+                      "basis": "45px",
+                      "shrink": 0
+                    },
+                    "props": {
+                      "justify": "space-between",
+                      "style": {
+                        "borderBottomWidth": "3px",
+                        "classes": "Table/Column_Header_Line"
+                      }
+                    },
+                    "type": "ia.container.flex"
+                  },
+                  {
+                    "meta": {
+                      "name": "Table"
+                    },
+                    "position": {
+                      "basis": "400px",
+                      "grow": 1
+                    },
+                    "propConfig": {
+                      "custom.meds_raw": {
+                        "binding": {
+                          "config": {
+                            "parameters": {
+                              "excludeCSV": "{.../Selected/Table.custom.medications_csv}",
+                              "filter": "{../FlexContainer/Conditional_Text.custom.textProcessed}"
+                            },
+                            "queryPath": "Participants/Medications/FindMedications",
+                            "returnFormat": "json"
+                          },
+                          "type": "query"
+                        }
+                      },
+                      "position.display": {
+                        "binding": {
+                          "config": {
+                            "expression": "len({this.props.data}) \u003e 0"
+                          },
+                          "type": "expr"
+                        }
+                      },
+                      "props.data": {
+                        "binding": {
+                          "config": {
+                            "struct": {
+                              "data": "{this.custom.meds_raw}",
+                              "selection": "{this.props.selection}"
+                            },
+                            "waitOnAll": true
+                          },
+                          "transforms": [
+                            {
+                              "code": "\tdata \u003d value.data\n#\tselection \u003d value.selection\n\t\n\toptions \u003d []\n#\tselected \u003d \u0027\u0027\n#\ttry:\n#\t\tselected \u003d selection.data[0].name\n#\texcept:\n#\t\tpass\n#\t\n\tfor med in data:\n\t\toptions.append({\u0027style\u0027: {\n\t\t\t\t\t\t\t\t  \"classes\": \"Table/Cell_Detail\",\n\t\t\t\t\t\t\t\t  \"paddingLeft\": \"10px\"\n\t\t\t\t\t\t\t\t},\n\t\t\t\t\t\t\u0027value\u0027: {\u0027label\u0027: med[\u0027Name\u0027]},\n\t\t\t\t\t\t\u0027name\u0027: med[\u0027Name\u0027],\n\t\t\t\t\t\t\"id\": med[\u0027Id\u0027],\n\t\t\t\t\t\t#\u0027selected\u0027: med[\u0027Name\u0027] \u003d\u003d selected\n\t\t\t\t\t\t})\n\treturn options",
+                              "type": "script"
+                            }
+                          ],
+                          "type": "expr-struct"
+                        }
+                      },
+                      "props.selection": {
+                        "onChange": {
+                          "enabled": null,
+                          "script": "\tsystem.perspective.sendMessage(messageType\u003d\u0027table-update-selected\u0027,\n\t\t\t\t\t\t\t\t   payload\u003d{\u0027selection\u0027: self.props.selection.data},\n\t\t\t\t\t\t\t\t   scope\u003d\u0027page\u0027\n\t\t\t\t\t\t\t\t  )\n#\tsystem.perspective.print(\u0027msg\u0027)"
+                        }
+                      }
+                    },
+                    "props": {
+                      "columns": [
+                        {
+                          "align": "center",
+                          "boolean": "checkbox",
+                          "dateFormat": "MM/DD/YYYY",
+                          "editable": false,
+                          "field": "label",
+                          "footer": {
+                            "align": "center",
+                            "justify": "left",
+                            "style": {
+                              "classes": ""
+                            },
+                            "title": ""
+                          },
+                          "header": {
+                            "align": "center",
+                            "justify": "left",
+                            "style": {
+                              "classes": ""
+                            },
+                            "title": ""
+                          },
+                          "justify": "auto",
+                          "number": "value",
+                          "numberFormat": "0,0.##",
+                          "progressBar": {
+                            "bar": {
+                              "color": "",
+                              "style": {
+                                "classes": ""
+                              }
+                            },
+                            "max": 100,
+                            "min": 0,
+                            "track": {
+                              "color": "",
+                              "style": {
+                                "classes": ""
+                              }
+                            },
+                            "value": {
+                              "enabled": true,
+                              "format": "0,0.##",
+                              "justify": "center",
+                              "style": {
+                                "classes": ""
+                              }
+                            }
+                          },
+                          "render": "view",
+                          "resizable": true,
+                          "sort": "none",
+                          "sortable": true,
+                          "strictWidth": false,
+                          "style": {
+                            "classes": ""
+                          },
+                          "toggleSwitch": {
+                            "color": {
+                              "selected": "",
+                              "unselected": ""
+                            }
+                          },
+                          "viewParams": {},
+                          "viewPath": "Participants/Medications/Cards/Templates/SearchTableRow",
+                          "visible": true,
+                          "width": ""
+                        }
+                      ],
+                      "enableHeader": false,
+                      "pager": {
+                        "bottom": false
+                      },
+                      "selection": {
+                        "style": {
+                          "backgroundColor": "#9af4eb4d"
+                        }
+                      }
+                    },
+                    "scripts": {
+                      "customMethods": [],
+                      "extensionFunctions": null,
+                      "messageHandlers": [
+                        {
+                          "messageType": "table-refresh",
+                          "pageScope": true,
+                          "script": "\tself.refreshBinding(\"custom.meds_raw\")",
+                          "sessionScope": false,
+                          "viewScope": false
+                        }
+                      ]
+                    },
+                    "type": "ia.display.table"
+                  },
+                  {
+                    "meta": {
+                      "name": "Label"
+                    },
+                    "position": {
+                      "shrink": 0
+                    },
+                    "propConfig": {
+                      "position.display": {
+                        "binding": {
+                          "config": {
+                            "expression": "!{../Table.position.display}"
+                          },
+                          "type": "expr"
+                        }
+                      },
+                      "props.text": {
+                        "binding": {
+                          "config": {
+                            "expression": "if({../FlexContainer/Conditional_Text.props.params.text} \u003d \u0027\u0027\r\n\t,\u0027Enter something into the search field to show results\u0027\r\n\t,\u0027No results found or matching medications already selected.\u0027\r\n)"
+                          },
+                          "type": "expr"
+                        }
+                      }
+                    },
+                    "props": {
+                      "style": {
+                        "classes": "Labels/Label_Text_Res  "
+                      }
+                    },
+                    "type": "ia.display.label"
+                  },
+                  {
+                    "events": {
+                      "component": {
+                        "onActionPerformed": {
+                          "config": {
+                            "script": "\tname \u003d self.parent.getChild(\"FlexContainer\").getChild(\"Conditional_Text\").props.params.text\n\tactor \u003d self.session.props.auth.user.userName\n\t\n#\tsystem.perspective.print(name + \u0027 \u0027 + actor)\n\t\n\tsystem.db.runNamedQuery(path\u003d\u0027Participants/Medications/AddMedication\u0027,\n\t\t\t\t\t\t\tparameters\u003d{\u0027name\u0027: name, \u0027actor\u0027: actor}\n\t\t\t\t\t\t\t)\n\tself.getSibling(\"Table\").refreshBinding(\u0027custom.meds_raw\u0027)\n\tself.refreshBinding(\u0027custom.exactMatch\u0027)"
+                          },
+                          "scope": "G",
+                          "type": "script"
+                        }
+                      }
+                    },
+                    "meta": {
+                      "name": "Add Medication"
+                    },
+                    "position": {
+                      "basis": "40px",
+                      "shrink": 0
+                    },
+                    "propConfig": {
+                      "custom.exactMatch": {
+                        "binding": {
+                          "config": {
+                            "parameters": {
+                              "name": "{../FlexContainer/Conditional_Text.props.params.text}"
+                            },
+                            "queryPath": "Participants/Medications/FindMedicationExact",
+                            "returnFormat": "json"
+                          },
+                          "type": "query"
+                        }
+                      },
+                      "position.display": {
+                        "binding": {
+                          "config": {
+                            "expression": "len({../FlexContainer/Conditional_Text.props.params.text}) \u003e 0\r\n\u0026\u0026 len({this.custom.exactMatch}) \u003d 0"
+                          },
+                          "type": "expr"
+                        }
+                      },
+                      "props.text": {
+                        "binding": {
+                          "config": {
+                            "expression": "\"ADD \u0027\" + {../FlexContainer/Conditional_Text.props.params.text} + \"\u0027\""
+                          },
+                          "type": "expr"
+                        }
+                      }
+                    },
+                    "props": {
+                      "style": {
+                        "classes": "Buttons/Main  ",
+                        "margin": 2,
+                        "marginTop": "auto",
+                        "textTransform": "unset"
+                      }
+                    },
+                    "scripts": {
+                      "customMethods": [],
+                      "extensionFunctions": null,
+                      "messageHandlers": [
+                        {
+                          "messageType": "table-refresh",
+                          "pageScope": true,
+                          "script": "\tself.refreshBinding(\u0027custom.exactMatch\u0027)",
+                          "sessionScope": false,
+                          "viewScope": false
+                        }
+                      ]
+                    },
+                    "type": "ia.input.button"
+                  }
+                ],
+                "meta": {
+                  "name": "Available"
+                },
+                "position": {
+                  "basis": "200px",
+                  "grow": 1
+                },
+                "props": {
+                  "direction": "column",
+                  "style": {
+                    "borderColor": "#062746",
+                    "borderStyle": "solid",
+                    "borderWidth": "1px"
+                  }
+                },
+                "type": "ia.container.flex"
+              },
+              {
+                "children": [
+                  {
+                    "events": {
+                      "component": {
+                        "onActionPerformed": {
+                          "config": {
+                            "script": "\tself.parent.parent.getChild(\"Selected\").getChild(\"Table\").custom.medications.append(self.parent.parent.getChild(\"Available\").getChild(\"Table\").props.selection.data[0].label)\n\tself.view.getChild(\"root\").custom.currentAddedMedications.append(self.parent.parent.getChild(\"Available\").getChild(\"Table\").props.selection.data[0].label)"
+                          },
+                          "scope": "G",
+                          "type": "script"
+                        }
+                      }
+                    },
+                    "meta": {
+                      "name": "Button"
+                    },
+                    "position": {
+                      "basis": "30px"
+                    },
+                    "props": {
+                      "style": {
+                        "classes": "Buttons/Main",
+                        "padding": "10px"
+                      },
+                      "text": "\u003e\u003e\u003e"
+                    },
+                    "type": "ia.input.button"
+                  }
+                ],
+                "meta": {
+                  "name": "Buttons"
+                },
+                "position": {
+                  "basis": "80px"
+                },
+                "props": {
+                  "alignItems": "center",
+                  "direction": "column",
+                  "justify": "center"
+                },
+                "type": "ia.container.flex"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "meta": {
+                          "name": "Label"
+                        },
+                        "position": {
+                          "shrink": 0
+                        },
+                        "props": {
+                          "style": {
+                            "classes": "ActivityCards/Card_TextDark",
+                            "marginLeft": "15px"
+                          },
+                          "text": "Selected Medications"
+                        },
+                        "type": "ia.display.label"
+                      }
+                    ],
+                    "meta": {
+                      "name": "FlexContainer"
+                    },
+                    "position": {
+                      "basis": "45px",
+                      "shrink": 0
+                    },
+                    "props": {
+                      "justify": "space-between",
+                      "style": {
+                        "borderBottomWidth": "3px",
+                        "classes": "Table/Column_Header_Line"
+                      }
+                    },
+                    "type": "ia.container.flex"
+                  },
+                  {
+                    "custom": {
+                      "medications": [
+                        "Advil"
+                      ]
+                    },
+                    "meta": {
+                      "name": "Table"
+                    },
+                    "position": {
+                      "basis": "400px"
+                    },
+                    "propConfig": {
+                      "custom.medications_csv": {
+                        "binding": {
+                          "config": {
+                            "path": "this.custom.medications"
+                          },
+                          "transforms": [
+                            {
+                              "code": "\treturn \"\u0027\" + \"\u0027,\u0027\".join(value) + \"\u0027\"",
+                              "type": "script"
+                            }
+                          ],
+                          "type": "property"
+                        }
+                      },
+                      "props.data": {
+                        "binding": {
+                          "config": {
+                            "path": "this.custom.medications"
+                          },
+                          "transforms": [
+                            {
+                              "code": "\titems \u003d []\n\tfor medication in value:\n\t\titems.append(\n\t\t\t{\n\t\t\t  \"style\": {\n\t\t\t\t\"classes\": \"Table/Cell_Detail\",\n\t\t\t\t\"paddingLeft\": \"10px\"\n\t\t\t  },\n\t\t\t  \"value\": {\n\t\t\t\t\"label\": medication\n\t\t\t  },\n\t\t\t  \u0027name\u0027: medication\n\t\t\t}\n\t\t)\n\treturn items",
+                              "type": "script"
+                            }
+                          ],
+                          "type": "property"
+                        }
+                      },
+                      "props.selection": {
+                        "onChange": {
+                          "enabled": null,
+                          "script": "\tsystem.perspective.sendMessage(messageType\u003d\u0027selected-table-selection\u0027,\n\t\t\t\t\t\t\t\t   payload\u003d{\u0027selection\u0027: self.props.selection.data},\n\t\t\t\t\t\t\t\t   scope\u003d\u0027page\u0027\n\t\t\t\t\t\t\t\t  )"
+                        }
+                      }
+                    },
+                    "props": {
+                      "columns": [
+                        {
+                          "align": "center",
+                          "boolean": "checkbox",
+                          "dateFormat": "MM/DD/YYYY",
+                          "editable": false,
+                          "field": "label",
+                          "footer": {
+                            "align": "center",
+                            "justify": "left",
+                            "style": {
+                              "classes": ""
+                            },
+                            "title": ""
+                          },
+                          "header": {
+                            "align": "center",
+                            "justify": "left",
+                            "style": {
+                              "classes": ""
+                            },
+                            "title": ""
+                          },
+                          "justify": "auto",
+                          "number": "value",
+                          "numberFormat": "0,0.##",
+                          "progressBar": {
+                            "bar": {
+                              "color": "",
+                              "style": {
+                                "classes": ""
+                              }
+                            },
+                            "max": 100,
+                            "min": 0,
+                            "track": {
+                              "color": "",
+                              "style": {
+                                "classes": ""
+                              }
+                            },
+                            "value": {
+                              "enabled": true,
+                              "format": "0,0.##",
+                              "justify": "center",
+                              "style": {
+                                "classes": ""
+                              }
+                            }
+                          },
+                          "render": "view",
+                          "resizable": true,
+                          "sort": "none",
+                          "sortable": true,
+                          "strictWidth": false,
+                          "style": {
+                            "classes": ""
+                          },
+                          "toggleSwitch": {
+                            "color": {
+                              "selected": "",
+                              "unselected": ""
+                            }
+                          },
+                          "viewParams": {},
+                          "viewPath": "Participants/Medications/Cards/Templates/SelectedTableRow",
+                          "visible": true,
+                          "width": ""
+                        }
+                      ],
+                      "enableHeader": false,
+                      "pager": {
+                        "bottom": false
+                      },
+                      "selection": {
+                        "mode": "multiple interval",
+                        "style": {
+                          "backgroundColor": "#D8F5F399"
+                        }
+                      }
+                    },
+                    "scripts": {
+                      "customMethods": [],
+                      "extensionFunctions": null,
+                      "messageHandlers": [
+                        {
+                          "messageType": "selected-table-remove",
+                          "pageScope": true,
+                          "script": "\tname \u003d payload[\u0027medication\u0027]\n\tif self.session.custom.isCareCoordinator \u003d\u003d False or ( self.session.custom.isCareCoordinator and name in self.view.getChild(\"root\").custom.currentAddedMedications):\n\t\tfor i, item in enumerate(self.custom.medications):\n\t\t\tif item \u003d\u003d name:\n\t\t\t\tdel self.custom.medications[i]\n\t\t\t\tbreak\n\telse:\n\t\tself.parent.parent.parent.getChild(\"BinActionsFlex\").getChild(\"Label\").showMessage(\"Not allowed to delete existing medication\")",
+                          "sessionScope": false,
+                          "viewScope": false
+                        }
+                      ]
+                    },
+                    "type": "ia.display.table"
+                  }
+                ],
+                "meta": {
+                  "name": "Selected"
+                },
+                "position": {
+                  "basis": "200px",
+                  "grow": 1
+                },
+                "props": {
+                  "direction": "column",
+                  "style": {
+                    "borderColor": "#062746",
+                    "borderStyle": "solid",
+                    "borderWidth": "1px"
+                  }
+                },
+                "type": "ia.container.flex"
+              }
+            ],
+            "custom": {
+              "sql_raw": [
+                {
+                  "label": "Advil"
+                },
+                {
+                  "style": {
+                    "classes": "Table/Cell_Detail",
+                    "paddingLeft": "10px"
+                  },
+                  "value": {
+                    "label": "Tylenol 500mg"
+                  }
+                },
+                {
+                  "style": {
+                    "classes": "Table/Cell_Detail",
+                    "paddingLeft": "10px"
+                  },
+                  "value": {
+                    "label": "Tylenol 200mg"
+                  }
+                },
+                {
+                  "style": {
+                    "classes": "Table/Cell_Detail",
+                    "paddingLeft": "10px"
+                  },
+                  "value": {
+                    "label": "Advil"
+                  }
+                }
+              ]
+            },
+            "meta": {
+              "name": "Medication Selection"
+            },
+            "position": {
+              "basis": "150px",
+              "grow": 1,
+              "shrink": 0
+            },
+            "props": {
+              "style": {
+                "borderBottomColor": "#9db8d1",
+                "borderBottomStyle": "solid",
+                "borderBottomWidth": "1px",
+                "classes": "Background/Default",
+                "gap": "5px",
+                "paddingBottom": "5px",
+                "paddingLeft": "18.5px"
+              }
+            },
+            "scripts": {
+              "customMethods": [
+                {
+                  "name": "addSelectedMed",
+                  "params": [],
+                  "script": "\tselectedMed \u003d self.getChild(\"Available\").getChild(\"Table\").props.selection.data"
+                },
+                {
+                  "name": "removeSelectedMed",
+                  "params": [],
+                  "script": "\t# implement your method here"
+                },
+                {
+                  "name": "clearAllSelectedMeds",
+                  "params": [],
+                  "script": "\t# implement your method here"
+                }
+              ],
+              "extensionFunctions": null,
+              "messageHandlers": []
+            },
+            "type": "ia.container.flex"
+          },
+          {
+            "children": [
+              {
+                "meta": {
+                  "name": "home_24px"
+                },
+                "position": {
+                  "basis": 24,
+                  "shrink": 0
+                },
+                "propConfig": {
+                  "custom.inShelter": {
+                    "binding": {
+                      "config": {
+                        "path": "view.custom.inShelter"
+                      },
+                      "type": "property"
+                    }
+                  },
+                  "props.elements[1].type": {
+                    "binding": {
+                      "config": {
+                        "path": "this.custom.inShelter"
+                      },
+                      "transforms": [
+                        {
+                          "fallback": "path",
+                          "inputType": "scalar",
+                          "mappings": [
+                            {
+                              "input": true,
+                              "output": "group"
+                            }
+                          ],
+                          "outputType": "scalar",
+                          "type": "map"
+                        }
+                      ],
+                      "type": "property"
+                    }
+                  }
+                },
+                "props": {
+                  "elements": [
+                    {
+                      "d": "m9.9138 18.313v-6.2086h4.1725v6.2086m-2.0862-12.517 6.6862 4.6523v7.8651h-13.372v-7.8651z",
+                      "fill": {
+                        "paint": "none"
+                      },
+                      "name": "home",
+                      "stroke": {
+                        "paint": "#000"
+                      },
+                      "style": {
+                        "classes": "",
+                        "strokeWidth": "1",
+                        "vector-effect": "non-scaling-stroke"
+                      },
+                      "type": "path"
+                    },
+                    {
+                      "d": "m4.4116 4.4116 15.177 15.177m3.1432-7.5884a10.732 10.732 0 0 1-10.732 10.732 10.732 10.732 0 0 1-10.732-10.732 10.732 10.732 0 0 1 10.732-10.732 10.732 10.732 0 0 1 10.732 10.732z",
+                      "fill": {
+                        "paint": "none"
+                      },
+                      "name": "cancel",
+                      "stroke": {
+                        "paint": "#f00",
+                        "width": "1px"
+                      }
+                    }
+                  ],
+                  "viewBox": "0 0 24 24"
+                },
+                "type": "ia.shapes.svg"
+              },
+              {
+                "meta": {
+                  "name": "Participant"
+                },
+                "position": {
+                  "basis": "200px"
+                },
+                "propConfig": {
+                  "props.text": {
+                    "binding": {
+                      "config": {
+                        "path": "view.custom.participantFullName"
+                      },
+                      "type": "property"
+                    }
+                  }
+                },
+                "props": {
+                  "style": {
+                    "classes": "Text/Personal_Header"
+                  }
+                },
+                "type": "ia.display.label"
+              },
+              {
+                "meta": {
+                  "name": "CheckoutDate"
+                },
+                "position": {
+                  "grow": 1
+                },
+                "propConfig": {
+                  "props.text": {
+                    "binding": {
+                      "config": {
+                        "path": "view.custom.selectedCheckOut"
+                      },
+                      "transforms": [
+                        {
+                          "code": "\tif value is not None and value !\u003d \u0027\u0027:\n\t\treturn \u0027Checked out \u0027 + system.date.format(system.date.fromMillis(value),\u0027MM/dd/YYYY\u0027)\n\telse:\n\t\treturn \u0027\u0027",
+                          "type": "script"
+                        }
+                      ],
+                      "type": "property"
+                    }
+                  }
+                },
+                "props": {
+                  "style": {
+                    "classes": "Text/Error_Message"
+                  }
+                },
+                "type": "ia.display.label"
+              }
+            ],
+            "meta": {
+              "name": "FlexContainer"
+            },
+            "position": {
+              "basis": "35px",
+              "shrink": 0
+            },
+            "props": {
+              "style": {
+                "gap": "5px",
+                "marginBottom": "20px",
+                "paddingLeft": "18.5px"
+              }
+            },
+            "type": "ia.container.flex"
+          },
+          {
+            "meta": {
+              "name": "TESTING"
+            },
+            "position": {
+              "basis": "20px",
+              "display": false,
+              "shrink": 0
+            },
+            "propConfig": {
+              "props.text": {
+                "binding": {
+                  "config": {
+                    "expression": "\u0027id:\u0027 + if({view.params.Selected_Id} \u003d None, \u0027None\u0027, {view.params.Selected_Id}) + \u0027 pid:\u0027 + if({view.params.Selected_Participant_Id} \u003d None, \u0027None\u0027, {view.params.Selected_Participant_Id}) + \u0027 (FOR TESTING ONLY)\u0027"
+                  },
+                  "type": "expr"
+                }
+              }
+            },
+            "props": {
+              "style": {
+                "classes": "Text/Detail_Action",
+                "paddingLeft": "18.5px",
+                "textAlign": "left"
+              }
+            },
+            "type": "ia.display.label"
+          },
+          {
+            "children": [
+              {
+                "events": {
+                  "component": {
+                    "onActionPerformed": {
+                      "config": {
+                        "script": "\tself.parent.parent.getChild(\"BinSelectFlex\").getChild(\"Location\").getChild(\"Dropdown\").props.value \u003d \u0027\u0027\n\tself.parent.parent.getChild(\"BinSelectFlex\").getChild(\"Bin\").getChild(\"Dropdown\").props.value \u003d \u0027\u0027\n\tself.parent.parent.getChild(\"BinSelectFlex\").getChild(\"StartDate\").getChild(\"DateTimeInput\").props.value \u003d self.view.custom.defaultDates.start\n\tself.view.params.Selected_Participant_Id \u003d -1\n\tself.view.params.Selected_Id \u003d None\n\tself.parent.parent.getChild(\"Medication Selection\").getChild(\"Selected\").getChild(\"Table\").custom.medications \u003d []\n\tself.parent.parent.getChild(\"Medication Selection\").getChild(\"Available\").getChild(\"FlexContainer\").getChild(\"Conditional_Text\").props.params.text \u003d \u0027\u0027\n\tself.parent.parent.getChild(\"FlexContainer\").getChild(\"CheckoutDate\").props.text \u003d \u0027\u0027"
+                      },
+                      "scope": "G",
+                      "type": "script"
+                    }
+                  }
+                },
+                "meta": {
+                  "name": "BtnNew"
+                },
+                "position": {
+                  "basis": "120px"
+                },
+                "propConfig": {
+                  "position.display": {
+                    "binding": {
+                      "config": {
+                        "expression": "{session.custom.isCareCoordinator} || {session.custom.isWSManager} || {session.custom.isManager} || {session.custom.isAdministrator} || {session.custom.isSupportCoordinator} || {session.custom.isWSSupportCoordinator}"
+                      },
+                      "type": "expr"
+                    }
+                  }
+                },
+                "props": {
+                  "style": {
+                    "classes": "Buttons/Main"
+                  },
+                  "text": "New"
+                },
+                "type": "ia.input.button"
+              },
+              {
+                "events": {
+                  "component": {
+                    "onActionPerformed": {
+                      "config": {
+                        "script": "\timport traceback\n\ttry:\n\t\tproject \u003d \u0027RITI\u0027\n\t\terrorMessage \u003d \"\"\n\t\tallData \u003d 1\n\t\tshelterId \u003d self.view.custom.shelterId\n\t\tid \u003d self.view.params.Selected_Id\n\t\tnow \u003d system.date.now()\n\t\tlocation \u003d self.parent.parent.getChild(\"BinSelectFlex\").getChild(\"Location\").getChild(\"Dropdown\").props.value\n\t\tif location is None or location \u003d\u003d -1:\n\t\t\terrorMessage \u003d \"NO LOCATION SELECTED\"\n\t\t\tallData \u003d 0\n\t\t\n\t\tbin \u003d self.parent.parent.getChild(\"BinSelectFlex\").getChild(\"Bin\").getChild(\"Dropdown\").props.value\n\t\tif bin is None:\n\t\t\tbin \u003d -1\n\t\t\n\t\tif bin \u003d\u003d -1 and ( location \u003d\u003d \u0027Guest House Bin\u0027 or location \u003d\u003d \u0027705 Apartments\u0027 or location \u003d\u003d \u0027532 Apartments\u0027):\n\t\t\tallData \u003d 0\n\t\t\terrorMessage \u003d \"NO BIN SELECTED\"\n\t\telif bin !\u003d -1 and ( location \u003d\u003d \u0027Guest House Bin\u0027 or location \u003d\u003d \u0027705 Apartments\u0027 or location \u003d\u003d \u0027532 Apartments\u0027) and ( self.view.custom.selectedBin is None or bin !\u003d self.view.custom.selectedBin.bin ) and self.parent.parent.getChild(\"BinSelectFlex\").getChild(\"Status\").custom.Status !\u003d \u0027Available\u0027:\n\t\t\t## allow when original and new bin are same and status is in-use , this is for update cases\n\t\t\tallData \u003d 0\n\t\t\terrorMessage \u003d \"SELECTED BIN IS NOT AVAILABLE\"\n\t\t\n\t\tstartDate \u003d self.parent.parent.getChild(\"BinSelectFlex\").getChild(\"StartDate\").getChild(\"DateTimeInput\").props.value\n\t\tif not startDate:\n\t\t\tallData \u003d 0\n\t\t\terrorMessage \u003d \"NO START DATE SELECTED\"\n\t\t\n\t\t\n\t\t\n\t\tparticipantId \u003d self.view.params.Selected_Participant_Id\n\t\tif participantId is None or participantId \u003d\u003d -1 or participantId \u003d\u003d 0:\n\t\t\tallData \u003d 0\n\t\t\terrorMessage \u003d \"NO PARTICIPANT SELECTED\"\n\t\t\t\n\t\tselectedMedications \u003d self.parent.parent.getChild(\"Medication Selection\").getChild(\"Selected\").getChild(\"Table\").custom.medications_csv\n#\t\tsystem.perspective.print(\"selectedMedications\")\n#\t\tsystem.perspective.print(selectedMedications)\n#\t\tsystem.perspective.print(\"location\")\n#\t\tsystem.perspective.print(location)\n\t\tif ( location \u003d\u003d \u0027Guest House Bin\u0027 or location \u003d\u003d \"Black Box\") and ( selectedMedications \u003d\u003d None or selectedMedications \u003d\u003d \"\" or selectedMedications \u003d\u003d \"\u0027\u0027\" or len(selectedMedications) \u003d\u003d 0):\n\t\t\tallData \u003d 0\n\t\t\terrorMessage \u003d \"NO MEDICINES SELECTED\"\n\t\t\n\t\tif allData \u003d\u003d 0:\n\t\t\tself.getSibling(\"Label\").showMessage(errorMessage)\n\t\t\treturn\n\t\t\n\t\t\n\t\tselectedMedications \u003d selectedMedications.replace(\"\u0027\",\"\")\n\t\tif id is None or id \u003d\u003d -1: # add a new bin entry\n\t\t\tparticipantAllowedToStore \u003d True\n\t\t\t## check if location is guest house bin and participant has already checked into a bin\n\t\t\t\n\t\t\tsqlQuery \u003d \"\"\"\n\t\t\tSELECT * FROM participant.MedicationBinsLog\n\t\t\twhere participantId \u003d ? AND location \u003d ? and exitAction is NULL \n\t\t\t\"\"\"\n\t\t\t\t\n\t\t\treturnData \u003d system.db.runPrepQuery(sqlQuery, [participantId, location])\n\t\t\tif returnData is not None and returnData.getRowCount() \u003e 0:\n\t\t\t\tparticipantAllowedToStore \u003d False\n\t\t\t\n\t\t\tif participantAllowedToStore \u003d\u003d True:\n\t\t\t\tparams \u003d {\u0027participantId\u0027: participantId,\n\t\t\t\t\t\t  \u0027location\u0027     : location,\n\t\t\t\t\t\t  \u0027bin\u0027          : bin,\n\t\t\t\t\t\t  \u0027startOn\u0027      : startDate,\n\t\t\t\t\t\t  \u0027shelterId\u0027     : shelterId,\n\t\t\t\t\t\t  \u0027selectedMedications\u0027: selectedMedications}\n\t\t\t\t\n#\t\t\t\tsystem.perspective.print(\"\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003dMedicationBin Assign Bin params\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\")\n#\t\t\t\tsystem.perspective.print(params)\t\n\t\t\t\tsystem.db.runNamedQuery(project\u003dproject, path\u003d\u0027Participants/Medications/AssignBin\u0027, parameters \u003dparams)\n\t\t\telse:\n\t\t\t\tself.getSibling(\"Label\").showMessage(\"PARTICIPANT IS ALREADY USING SAME LOCATION OR OTHER BIN\")\n\t\t\t\treturn\n\t\telse: # update an existing new bin entry\n\t\t\tparams \u003d {\u0027location\u0027 : location,\n\t\t\t\t\t  \u0027bin\u0027      : bin,\n\t\t\t\t\t  \u0027startOn\u0027  : startDate,\n\t\t\t\t\t  \u0027id\u0027       : id,\n\t\t\t\t\t  \u0027selectedMedications\u0027: selectedMedications}\n\t\t\t\n#\t\t\tsystem.perspective.print(\"\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003dStorageBin Update Bin params\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\")\n#\t\t\tsystem.perspective.print(params)\n\t\t\t\n\t\t\tsystem.db.runNamedQuery(project\u003dproject, path\u003d\u0027Participants/Medications/UpdateBin\u0027, parameters \u003dparams)\n\t\tself.getSibling(\"Label\").showMessage(\"Medication bin created successfully\")\n\t\tsystem.perspective.sendMessage(\u0027storage_bin_refresh\u0027, payload \u003d {})\n\t\tself.parent.parent.getChild(\"BinSelectFlex\").getChild(\"Status\").refreshBinding(\"custom.Status\")\n\t\t\n\t\t## also clear the form\n\t\tself.parent.parent.getChild(\"BinSelectFlex\").getChild(\"Location\").getChild(\"Dropdown\").props.value \u003d \u0027\u0027\n\t\tself.parent.parent.getChild(\"BinSelectFlex\").getChild(\"Bin\").getChild(\"Dropdown\").props.value \u003d \u0027\u0027\n\t\tself.parent.parent.getChild(\"BinSelectFlex\").getChild(\"StartDate\").getChild(\"DateTimeInput\").props.value \u003d self.view.custom.defaultDates.start\n\t\tself.view.params.Selected_Participant_Id \u003d -1\n\t\tself.view.params.Selected_Id \u003d None\n\t\tself.parent.parent.getChild(\"Medication Selection\").getChild(\"Selected\").getChild(\"Table\").custom.medications \u003d []\n\t\tself.view.getChild(\"root\").custom.currentAddedMedications \u003d []\n\t\tself.parent.parent.getChild(\"Medication Selection\").getChild(\"Available\").getChild(\"FlexContainer\").getChild(\"Conditional_Text\").props.params.text \u003d \u0027\u0027\n\t\n\texcept:\n\t\tsystem.perspective.print(\u0027ERROR OCCURED WHILE TRYING TO SAVE. Details below.\u0027)\n\t\tsystem.perspective.print(traceback.format_exc())"
+                      },
+                      "scope": "G",
+                      "type": "script"
+                    }
+                  }
+                },
+                "meta": {
+                  "name": "BtnUpd"
+                },
+                "position": {
+                  "basis": "120px"
+                },
+                "propConfig": {
+                  "position.display": {
+                    "binding": {
+                      "config": {
+                        "expression": "{view.params.Selected_Id} !\u003d None \u0026\u0026 {view.params.Selected_Id} !\u003d -1 "
+                      },
+                      "transforms": [
+                        {
+                          "code": "\tif value \u003d\u003d True:\n\t\tif (self.session.custom.isManager or self.session.custom.isWSManager or self.session.custom.isAdministrator or self.session.custom.isSupportCoordinator or self.session.custom.isWSSupportCoordinator or self.session.custom.isCareCoordinator):\n\t\t\treturn True \n\t\telse:\n\t\t\treturn False ## update case , so block view from volunteer is anyways blocked\n\telse:\n\t\tif (self.session.custom.isCareCoordinator or self.session.custom.isManager or self.session.custom.isWSManager or self.session.custom.isAdministrator or self.session.custom.isSupportCoordinator or self.session.custom.isWSSupportCoordinator):\n\t\t\treturn True\n\t\telse:\n\t\t\treturn False",
+                          "type": "script"
+                        }
+                      ],
+                      "type": "expr"
+                    }
+                  },
+                  "props.enabled": {
+                    "binding": {
+                      "config": {
+                        "expression": "{view.params.Selected_Participant_Id} !\u003d None \u0026\u0026 {view.params.Selected_Participant_Id} !\u003d 0 \u0026\u0026 {view.params.Selected_Participant_Id} !\u003d -1 \u0026\u0026 {.../BinSelectFlex/Location/Dropdown.props.value} !\u003d -1 \u0026\u0026 {.../Medication Selection/Selected/Table.custom.medications_csv} !\u003d None \u0026\u0026 {.../Medication Selection/Selected/Table.custom.medications_csv} !\u003d \"\" \u0026\u0026 {.../Medication Selection/Selected/Table.custom.medications_csv} !\u003d \"\u0027\u0027\" \u0026\u0026 len({.../Medication Selection/Selected/Table.custom.medications_csv}) !\u003d 0"
+                      },
+                      "type": "expr"
+                    }
+                  },
+                  "props.style.classes": {
+                    "binding": {
+                      "config": {
+                        "expression": "if({this.props.enabled}, \"Buttons/Main\",\"Buttons/Btn_Unselected\")"
+                      },
+                      "type": "expr"
+                    }
+                  }
+                },
+                "props": {
+                  "style": {},
+                  "text": "Save"
+                },
+                "type": "ia.input.button"
+              },
+              {
+                "custom": {
+                  "ActionId": 1
+                },
+                "events": {
+                  "component": {
+                    "onActionPerformed": {
+                      "config": {
+                        "script": "\tparams \u003d {\u0027ExitAction\u0027: self.custom.ActionId, \n\t\t\t  \u0027StorageBinLogId\u0027: self.view.params.Selected_Id,\n\t\t\t  \u0027location\u0027: self.parent.parent.getChild(\"BinSelectFlex\").getChild(\"Location\").getChild(\"Dropdown\").props.value,\n\t\t\t  \u0027Bin\u0027: self.parent.parent.getChild(\"BinSelectFlex\").getChild(\"Bin\").getChild(\"Dropdown\").props.value\n\t\t\t  }\n\tdockId \u003d \u0027MedicationBinModify\u0027\n\t\n\tsystem.perspective.openDock(id \u003d dockId,\n\t\t\t\t\t\t\t\tparams \u003d params)"
+                      },
+                      "scope": "G",
+                      "type": "script"
+                    }
+                  }
+                },
+                "meta": {
+                  "name": "BtnExit"
+                },
+                "position": {
+                  "basis": "120px"
+                },
+                "propConfig": {
+                  "position.display": {
+                    "binding": {
+                      "config": {
+                        "path": "view.custom.selectedBin"
+                      },
+                      "transforms": [
+                        {
+                          "code": "\tif value is not None:\n\t\tif value[\u0027exitAction\u0027] is None and (self.session.custom.isManager or self.session.custom.isWSManager or self.session.custom.isAdministrator or (self.view.custom.selectedBin !\u003d None and self.view.custom.selectedBin.location !\u003d \u0027Black Box\u0027 and (self.session.custom.isSupportCoordinator or self.session.custom.isWSSupportCoordinator))):\n\t\t\treturn True\n\t\telse:\n\t\t\treturn False\n\telse:\n\t\treturn False",
+                          "type": "script"
+                        }
+                      ],
+                      "type": "property"
+                    }
+                  }
+                },
+                "props": {
+                  "style": {
+                    "classes": "Buttons/Delete"
+                  },
+                  "text": "Exit BIN"
+                },
+                "type": "ia.input.button"
+              },
+              {
+                "custom": {
+                  "ActionId": 2
+                },
+                "events": {
+                  "component": {
+                    "onActionPerformed": {
+                      "config": {
+                        "script": "\tparams \u003d {\u0027ExitAction\u0027: self.custom.ActionId, \n\t\t\t  \u0027StorageBinLogId\u0027: self.view.params.Selected_Id,\n\t\t\t  \u0027location\u0027: self.parent.parent.getChild(\"BinSelectFlex\").getChild(\"Location\").getChild(\"Dropdown\").props.value,\n\t\t\t  \u0027Bin\u0027: self.parent.parent.getChild(\"BinSelectFlex\").getChild(\"Bin\").getChild(\"Dropdown\").props.value\n\t\t\t  }\n\tdockId \u003d \u0027MedicationBinModify\u0027\n\t\n\tsystem.perspective.openDock(id \u003d dockId,\n\t\t\t\t\t\t\t\tparams \u003d params)"
+                      },
+                      "scope": "G",
+                      "type": "script"
+                    }
+                  }
+                },
+                "meta": {
+                  "name": "BtnEvict"
+                },
+                "position": {
+                  "basis": "120px"
+                },
+                "propConfig": {
+                  "position.display": {
+                    "binding": {
+                      "config": {
+                        "path": "view.custom.selectedBin"
+                      },
+                      "transforms": [
+                        {
+                          "code": "\tif value is not None:\n\t\tif value[\u0027exitAction\u0027] is None and (self.session.custom.isManager or self.session.custom.isWSManager or self.session.custom.isAdministrator or (self.view.custom.selectedBin !\u003d None and self.view.custom.selectedBin.location !\u003d \u0027Black Box\u0027 and (self.session.custom.isSupportCoordinator or self.session.custom.isWSSupportCoordinator))):\n\t\t\treturn True\n\t\telse:\n\t\t\treturn False\n\telse:\n\t\treturn False",
+                          "type": "script"
+                        }
+                      ],
+                      "type": "property"
+                    }
+                  }
+                },
+                "props": {
+                  "style": {
+                    "classes": "Buttons/Delete"
+                  },
+                  "text": "Dispose"
+                },
+                "type": "ia.input.button"
+              },
+              {
+                "meta": {
+                  "name": "Label",
+                  "visible": false
+                },
+                "position": {
+                  "basis": "50px",
+                  "grow": 1
+                },
+                "props": {
+                  "style": {
+                    "classes": "Text/Error_Message"
+                  },
+                  "text": "Please fill in all the fields correctly before saving."
+                },
+                "scripts": {
+                  "customMethods": [
+                    {
+                      "name": "showMessage",
+                      "params": [
+                        "message"
+                      ],
+                      "script": "\timport time\n\tself.props.text \u003d message\n\tself.meta.visible \u003d True\n\ttime.sleep(5)\n\tself.meta.visible \u003d False\n\t"
+                    }
+                  ],
+                  "extensionFunctions": null,
+                  "messageHandlers": []
+                },
+                "type": "ia.display.label"
+              }
+            ],
+            "meta": {
+              "name": "BinActionsFlex"
+            },
+            "position": {
+              "basis": "50px",
+              "shrink": 0
+            },
+            "props": {
+              "style": {
+                "classes": "Background/Default",
+                "gap": "20px",
+                "padding": "5px",
+                "paddingLeft": "20px"
+              }
+            },
+            "type": "ia.container.flex"
+          }
+        ],
+        "meta": {
+          "name": "Medications Lookup Flex"
+        },
+        "position": {
+          "grow": 1,
+          "shrink": 0
+        },
+        "props": {
+          "direction": "column",
+          "style": {
+            "marginBottom": "25px"
+          }
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "children": [
+          {
+            "meta": {
+              "name": "BinStatus"
+            },
+            "position": {
+              "basis": "150px"
+            },
+            "propConfig": {
+              "props.params.selection": {
+                "onChange": {
+                  "enabled": null,
+                  "script": "\tsystem.perspective.sendMessage(\u0027storage_bin_refresh\u0027)"
+                }
+              }
+            },
+            "props": {
+              "params": {
+                "options": {
+                  "$": [
+                    "ds",
+                    192,
+                    1643803471597
+                  ],
+                  "$columns": [
+                    {
+                      "data": [
+                        0,
+                        1,
+                        2
+                      ],
+                      "name": "id",
+                      "type": "Integer"
+                    },
+                    {
+                      "data": [
+                        "Active",
+                        "Inactive",
+                        "Active \u0026 Inactive"
+                      ],
+                      "name": "name",
+                      "type": "String"
+                    }
+                  ]
+                },
+                "placeholder": "Bin Status",
+                "selection": 0
+              },
+              "path": "1_TEMPLATES/Filtering/Conditionals/Conditional_SingleDropDown_NoClear_TealBlue",
+              "style": {
+                "classes": "Filter/Filter_Container"
+              }
+            },
+            "type": "ia.display.view"
+          },
+          {
+            "meta": {
+              "name": "DateRange"
+            },
+            "position": {
+              "basis": "150px"
+            },
+            "props": {
+              "params": {
+                "placeholder": "Expires In",
+                "selection": 365,
+                "selection_in": 365
+              },
+              "path": "1_TEMPLATES/Filtering/Conditionals/Conditional_SingleDropDown_NoClear_ActivityRange",
+              "style": {
+                "classes": "Filter/Filter_Container"
+              }
+            },
+            "type": "ia.display.view"
+          },
+          {
+            "meta": {
+              "name": "Location"
+            },
+            "position": {
+              "basis": "150px"
+            },
+            "props": {
+              "params": {
+                "options": {
+                  "$": [
+                    "ds",
+                    192,
+                    1666327337259
+                  ],
+                  "$columns": [
+                    {
+                      "data": [
+                        "Activity Center",
+                        "Guest House Bin",
+                        "Guest House Fridge",
+                        "Black Box"
+                      ],
+                      "name": "id",
+                      "type": "String"
+                    },
+                    {
+                      "data": [
+                        "Activity Center",
+                        "Guest House Bin",
+                        "Guest House Fridge",
+                        "Black Box"
+                      ],
+                      "name": "name",
+                      "type": "String"
+                    }
+                  ]
+                },
+                "placeholder": "Location",
+                "selection": -1
+              },
+              "path": "1_TEMPLATES/Filtering/Conditionals/Conditional_SingleDropDown",
+              "style": {
+                "classes": "Filter/Filter_Container"
+              }
+            },
+            "type": "ia.display.view"
+          },
+          {
+            "meta": {
+              "name": "Shelter"
+            },
+            "position": {
+              "basis": "150px"
+            },
+            "props": {
+              "params": {
+                "options": {
+                  "$": [
+                    "ds",
+                    192,
+                    1669969876172
+                  ],
+                  "$columns": [
+                    {
+                      "data": [
+                        2,
+                        1
+                      ],
+                      "name": "id",
+                      "type": "Integer"
+                    },
+                    {
+                      "data": [
+                        "In Shelter",
+                        "Not in Shelter"
+                      ],
+                      "name": "name",
+                      "type": "String"
+                    }
+                  ]
+                },
+                "placeholder": "Shelter",
+                "selection": null
+              },
+              "path": "1_TEMPLATES/Filtering/Conditionals/Conditional_SingleDropDown",
+              "style": {
+                "classes": "Filter/Filter_Container"
+              }
+            },
+            "type": "ia.display.view"
+          },
+          {
+            "meta": {
+              "name": "EmbeddedView"
+            },
+            "position": {
+              "basis": "150px"
+            },
+            "props": {
+              "params": {
+                "column_name": "",
+                "filter": "",
+                "key": "",
+                "placeholder": "Search",
+                "searchText": "",
+                "searchType": "like"
+              },
+              "path": "1_TEMPLATES/Filtering/Filters/Search_Bar",
+              "style": {
+                "classes": "Table/Search_Bar"
+              }
+            },
+            "type": "ia.display.view"
+          }
+        ],
+        "meta": {
+          "name": "Filters"
+        },
+        "position": {
+          "basis": "40px"
+        },
+        "props": {
+          "style": {
+            "marginLeft": "18.5px"
+          }
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "events": {
+          "component": {
+            "onRowClick": {
+              "config": {
+                "script": "\timport traceback\n\ttry:\n\t\tself.view.params.Selected_Id \u003d event.value[\u0027id\u0027]\n\t\t\n\t\tself.parent.getChild(\"Medications Lookup Flex\").getChild(\"BinSelectFlex\").getChild(\"Location\").getChild(\"Dropdown\").props.value \u003d event.value[\u0027location\u0027]\n\t\tself.parent.getChild(\"Medications Lookup Flex\").getChild(\"BinSelectFlex\").getChild(\"Bin\").getChild(\"Dropdown\").refreshBinding(\"props.options\")\n\t\tself.parent.getChild(\"Medications Lookup Flex\").getChild(\"BinSelectFlex\").getChild(\"Bin\").getChild(\"Dropdown\").props.value \u003d event.value[\u0027bin\u0027]\n\t\tself.parent.getChild(\"Medications Lookup Flex\").getChild(\"BinSelectFlex\").getChild(\"StartDate\").getChild(\"DateTimeInput\").props.value \u003d event.value[\u0027startOn\u0027]\n\t\tself.view.params.Selected_Participant_Id \u003d event.value[\u0027participantId\u0027]\n\t\tself.view.custom.selectedMedications \u003d event.value[\u0027selectedMedications\u0027]\n\t\tself.parent.getChild(\"Medications Lookup Flex\").getChild(\"Medication Selection\").getChild(\"Selected\").getChild(\"Table\").custom.medications \u003d []\n\t\tif self.view.custom.selectedMedications !\u003d None and self.view.custom.selectedMedications !\u003d \u0027\u0027:\n\t\t\tif \",\" in self.view.custom.selectedMedications:\n\t\t\t\tself.parent.getChild(\"Medications Lookup Flex\").getChild(\"Medication Selection\").getChild(\"Selected\").getChild(\"Table\").custom.medications \u003d str(self.view.custom.selectedMedications).split(\",\")\n\t\t\telse:\n\t\t\t\tself.parent.getChild(\"Medications Lookup Flex\").getChild(\"Medication Selection\").getChild(\"Selected\").getChild(\"Table\").custom.medications.append(self.view.custom.selectedMedications)\n\t\tself.view.custom.selectedCheckOut \u003d event.value[\u0027checkOutDate\u0027]\n\texcept:\n\t\tsystem.perspective.print(traceback.format_exc())"
+              },
+              "scope": "G",
+              "type": "script"
+            }
+          }
+        },
+        "meta": {
+          "name": "Table_0"
+        },
+        "position": {
+          "basis": "300px",
+          "grow": 1
+        },
+        "propConfig": {
+          "custom.sql_data": {
+            "binding": {
+              "config": {
+                "parameters": {
+                  "activityStatus": "{../Filters/BinStatus.props.params.selection}",
+                  "daysAgoFilter": "{../Filters/DateRange.props.params.selection}",
+                  "location": "if({../Filters/Location.props.params.selection} \u003d -1, None, {../Filters/Location.props.params.selection})",
+                  "searchFilter": "\u0027%\u0027 + \r {../Filters/EmbeddedView.props.params.searchText}\r + \u0027%\u0027\r ",
+                  "shelterStatus": "{../Filters/Shelter.props.params.selection}"
+                },
+                "queryPath": "Participants/Medications/GetMedicationsBinStatus",
+                "returnFormat": "json"
+              },
+              "transforms": [
+                {
+                  "code": "\t# val has: id action actionDate col bin participantId pfname pmname plname employeeId efname emname elname\n\t# res has: [id] pname column bin start exp exit evict sname\n\tresult \u003d []\n\tif value is not None:\n\t\tfor row in value:\n\t\t\trowStruct \u003d {}\n\t\t\t\n\t\t\t\n\t\t\trowValue \u003d {}\n\t\t\trowValue[\u0027id\u0027] \u003d row[\u0027id\u0027]\n\t\t\trowValue[\u0027location\u0027] \u003d row[\u0027location\u0027]\n\t\t\tif row[\u0027bin\u0027] \u003d\u003d -1:\n\t\t\t\trowValue[\u0027bin\u0027] \u003d None\n\t\t\telse:\n\t\t\t\trowValue[\u0027bin\u0027] \u003d row[\u0027bin\u0027]\n\t\t\trowValue[\u0027participantId\u0027] \u003d row[\u0027participantId\u0027]\n\t\t\trowValue[\u0027participantName\u0027] \u003d row[\u0027participantName\u0027]\n\t\t\trowValue[\u0027startOn\u0027] \u003d row[\u0027startOn\u0027]\n\t\t\trowValue[\u0027shelterName\u0027] \u003d row[\u0027shelterName\u0027]\n\t\t\trowValue[\u0027selectedMedications\u0027] \u003d row[\u0027selectedMedications\u0027]\n\t\t\t\n\t\t\texitAction \u003d row[\u0027exitAction\u0027]\n\t\t\texitedOn \u003d row[\u0027exitedOn\u0027]\n\t\t\texitedBy \u003d row[\u0027exitedBy\u0027]\n\t\t\tdisposedBy \u003d row[\u0027disposedBy\u0027]\n\t\t\tdisposedOn \u003d row[\u0027disposedOn\u0027]\n\t\t\tif exitAction \u003d\u003d 1: # participant bin was exited\n\t\t\t\trowValue[\u0027exitedOn\u0027] \u003d exitedOn\n\t\t\t\trowValue[\u0027exitActionBy\u0027] \u003d exitedBy\n\t\t\t\trowValue[\u0027disposedOn\u0027] \u003d None\n\t\t\telif exitAction \u003d\u003d 2: # participant bin was disposed\n\t\t\t\trowValue[\u0027exitedOn\u0027] \u003d None\n\t\t\t\trowValue[\u0027exitActionBy\u0027] \u003d disposedBy\n\t\t\t\trowValue[\u0027disposedOn\u0027] \u003d disposedOn\n\t\t\telse:\n\t\t\t\trowValue[\u0027exitedOn\u0027] \u003d None\n\t\t\t\trowValue[\u0027exitActionBy\u0027] \u003d None\n\t\t\t\trowValue[\u0027disposedOn\u0027] \u003d None\n\t\t\t\n\t\t\t\n\t\t\trowValue[\u0027checkOutDate\u0027] \u003d row[\u0027checkOutDate\u0027]\t\n\t\t\t\n\t\t\tif row[\u0027checkOutDate\u0027]\tis not None and row[\u0027exitAction\u0027] is None and row[\u0027shelterId\u0027] is not None:\n\t\t\t\trowStruct[\u0027style\u0027] \u003d {\u0027classes\u0027: \u0027Table/Cell_Detail_Red\u0027}\n\t\t\telse:\n\t\t\t\trowStruct[\u0027style\u0027] \u003d {\u0027classes\u0027: \u0027Table/Cell_Detail\u0027}\n\t\t\t\t\n\t\t\trowStruct[\u0027value\u0027] \u003d rowValue\n\t\t\tresult.append(rowStruct)\n\t\n\treturn result",
+                  "type": "script"
+                }
+              ],
+              "type": "query"
+            }
+          },
+          "props.data": {
+            "binding": {
+              "config": {
+                "path": "this.custom.sql_data"
+              },
+              "type": "property"
+            }
+          },
+          "props.selection.style.backgroundColor": {
+            "binding": {
+              "config": {
+                "path": "this.props.selection.selectedRow"
+              },
+              "transforms": [
+                {
+                  "code": "\treturn \"#FFFFFF00\" if value is None or value \u003d\u003d -1 else \"#9AF4EB4D\"",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "columns": [
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "id",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header_Line"
+                },
+                "title": ""
+              },
+              "justify": "auto",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": false,
+              "style": {
+                "classes": "Table/Column_Normal_Detail"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": false,
+              "width": ""
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "participantId",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header_Line"
+                },
+                "title": " "
+              },
+              "justify": "auto",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": false,
+              "style": {
+                "classes": "Table/Column_Normal_Detail"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": false,
+              "width": ""
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "participantName",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header_Line"
+                },
+                "title": "Participant"
+              },
+              "justify": "auto",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": false,
+              "style": {
+                "classes": ""
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 140
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "shelterName",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header_Line"
+                },
+                "title": "Shelter"
+              },
+              "justify": "auto",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": false,
+              "style": {
+                "classes": "Table/Column_Normal_Detail"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 120
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "location",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header_Line"
+                },
+                "title": "Location"
+              },
+              "justify": "left",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": false,
+              "style": {
+                "classes": "Table/Column_Normal_Detail"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 120
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "bin",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header_Line"
+                },
+                "title": "Bin"
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": false,
+              "style": {
+                "classes": "Table/Column_Normal_Detail"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 60
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "startOn",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header_Line"
+                },
+                "title": "Start"
+              },
+              "justify": "auto",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "date",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": false,
+              "style": {
+                "classes": "Table/Column_Normal_Detail"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 85
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "exitedOn",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header_Line"
+                },
+                "title": "Exit"
+              },
+              "justify": "auto",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "date",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": false,
+              "style": {
+                "classes": "Table/Column_Normal_Detail"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 85
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "disposedOn",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header_Line"
+                },
+                "title": "Disposal"
+              },
+              "justify": "auto",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "date",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": false,
+              "style": {
+                "classes": "Table/Column_Normal_Detail"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 85
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "checkOutDate",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header_Line"
+                },
+                "title": "checkOutDate"
+              },
+              "justify": "auto",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "date",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": false,
+              "style": {
+                "classes": "Table/Column_Normal_Detail"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": false,
+              "width": 85
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "exitActionBy",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header_Line"
+                },
+                "title": "Staff"
+              },
+              "justify": "auto",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": false,
+              "style": {
+                "classes": "Table/Column_Normal_Detail"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": ""
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "selectedMedications",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header_Line"
+                },
+                "title": "Medications"
+              },
+              "justify": "auto",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": false,
+              "style": {
+                "classes": "Table/Column_Normal_Detail"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": false,
+              "width": ""
+            }
+          ],
+          "filter": {
+            "results": {
+              "enabled": true
+            }
+          },
+          "rows": {
+            "highlight": {
+              "color": "#ccffff"
+            },
+            "striped": {
+              "enabled": false
+            },
+            "style": {
+              "cursor": "pointer"
+            }
+          },
+          "selection": {
+            "selectedRow": -1
+          },
+          "style": {
+            "classes": "Background/Default Table/Column_Normal_Detail",
+            "paddingLeft": "20px"
+          }
+        },
+        "scripts": {
+          "customMethods": [],
+          "extensionFunctions": null,
+          "messageHandlers": [
+            {
+              "messageType": "storage_bin_refresh",
+              "pageScope": true,
+              "script": "\tself.refreshBinding(\u0027custom.sql_data\u0027)",
+              "sessionScope": false,
+              "viewScope": false
+            }
+          ]
+        },
+        "type": "ia.display.table"
+      }
+    ],
+    "custom": {
+      "currentAddedMedications": []
+    },
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column",
+      "style": {
+        "classes": "Background/Default"
+      }
+    },
+    "scripts": {
+      "customMethods": [],
+      "extensionFunctions": null,
+      "messageHandlers": [
+        {
+          "messageType": "meds_selected_participant",
+          "pageScope": true,
+          "script": "\tself.view.params.Selected_Participant_Id \u003d payload[\u0027participantId\u0027]\n\tself.getChild(\"Medications Lookup Flex\").getChild(\"BinSelectFlex\").getChild(\"Location\").getChild(\"Dropdown\").props.value \u003d None\n\tself.getChild(\"Medications Lookup Flex\").getChild(\"BinSelectFlex\").getChild(\"Bin\").getChild(\"Dropdown\").props.value \u003d None\n\tself.getChild(\"Medications Lookup Flex\").getChild(\"BinSelectFlex\").getChild(\"StartDate\").getChild(\"DateTimeInput\").props.value \u003d self.view.custom.defaultDates.start \n\tself.view.params.Selected_Id \u003d None\n\tself.getChild(\"Medications Lookup Flex\").getChild(\"Medication Selection\").getChild(\"Selected\").getChild(\"Table\").custom.medications \u003d []\n\tself.getChild(\"Medications Lookup Flex\").getChild(\"Medication Selection\").getChild(\"Available\").getChild(\"FlexContainer\").getChild(\"Conditional_Text\").props.params.text \u003d \u0027\u0027\n\tself.getChild(\"Medications Lookup Flex\").getChild(\"FlexContainer\").getChild(\"CheckoutDate\").props.text \u003d \u0027\u0027\n\tself.getChild(\"Table_0\").props.selection.selectedRow \u003d -1\n\t",
+          "sessionScope": false,
+          "viewScope": false
+        },
+        {
+          "messageType": "error-editing-medication",
+          "pageScope": true,
+          "script": "\t# implement your handler here\n\tself.getChild(\"Medications Lookup Flex\").getChild(\"BinActionsFlex\").getChild(\"Label\").showMessage(\"Error editing medication name, please try again.\")",
+          "sessionScope": false,
+          "viewScope": false
+        },
+        {
+          "messageType": "error-deleting-medication",
+          "pageScope": true,
+          "script": "\t# implement your handler here\n\tself.getChild(\"Medications Lookup Flex\").getChild(\"BinActionsFlex\").getChild(\"Label\").showMessage(\"Error deleting medication name, please try again.\")",
+          "sessionScope": false,
+          "viewScope": false
+        }
+      ]
+    },
+    "type": "ia.container.flex"
+  }
+}

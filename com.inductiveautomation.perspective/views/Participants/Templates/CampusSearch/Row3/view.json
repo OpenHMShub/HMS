@@ -1,0 +1,287 @@
+{
+  "custom": {},
+  "params": {
+    "dob_day": null,
+    "dob_month": null,
+    "dob_year": null,
+    "race_id": null,
+    "ssn": ""
+  },
+  "propConfig": {
+    "params.dob_day": {
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.dob_month": {
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.dob_year": {
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.race_id": {
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.ssn": {
+      "paramDirection": "inout",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 80,
+      "width": 830
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "children": [
+          {
+            "meta": {
+              "name": "Embed_Year"
+            },
+            "position": {
+              "basis": "115px",
+              "grow": 1,
+              "shrink": 0
+            },
+            "propConfig": {
+              "props.params.options": {
+                "binding": {
+                  "config": {
+                    "expression": "toInt(getYear(now(0)))"
+                  },
+                  "transforms": [
+                    {
+                      "code": "\tyear \u003d value\n\t# Generate the Rows\n\trows \u003d []\n\tfor x in range(120):\n\t\toneRow \u003d [str(year), year]\n\t\trows.append(oneRow)\n\t\tyear -\u003d 1\n\t# Generate the DataSet\n\theaders \u003d [\"1\", \"2\"]\n\tdata \u003d system.dataset.toDataSet(headers, rows)\n\treturn data",
+                      "type": "script"
+                    }
+                  ],
+                  "type": "expr"
+                }
+              },
+              "props.params.selection": {
+                "binding": {
+                  "config": {
+                    "bidirectional": true,
+                    "path": "view.params.dob_year"
+                  },
+                  "type": "property"
+                }
+              }
+            },
+            "props": {
+              "params": {
+                "placeholder": "Year"
+              },
+              "path": "1_TEMPLATES/Filtering/Conditionals/Conditional_SingleDropDown",
+              "style": {
+                "marginBottom": "2px",
+                "marginTop": "2px"
+              }
+            },
+            "type": "ia.display.view"
+          },
+          {
+            "meta": {
+              "name": "Embed_Month"
+            },
+            "position": {
+              "basis": "145px",
+              "grow": 1,
+              "shrink": 0
+            },
+            "propConfig": {
+              "props.params.options": {
+                "binding": {
+                  "config": {
+                    "expression": "toInt(getYear(now(0)))"
+                  },
+                  "transforms": [
+                    {
+                      "code": "\timport calendar\n\tmonth \u003d 1\n\t# Generate the Rows\n\trows \u003d []\n\tfor x in range(12):\n\t\toneRow \u003d [str(format(month,\u002702d\u0027)), calendar.month_name[x+1]]\n\t\trows.append(oneRow)\n\t\tmonth +\u003d 1\n\t# Generate the DataSet\n\theaders \u003d [\"1\", \"2\"]\n\tdata \u003d system.dataset.toDataSet(headers, rows)\n\treturn data",
+                      "type": "script"
+                    }
+                  ],
+                  "type": "expr"
+                }
+              },
+              "props.params.selection": {
+                "binding": {
+                  "config": {
+                    "bidirectional": true,
+                    "path": "view.params.dob_month"
+                  },
+                  "type": "property"
+                }
+              }
+            },
+            "props": {
+              "params": {
+                "placeholder": "Month"
+              },
+              "path": "1_TEMPLATES/Filtering/Conditionals/Conditional_SingleDropDown",
+              "style": {
+                "marginBottom": "2px",
+                "marginLeft": "5px",
+                "marginTop": "2px"
+              }
+            },
+            "type": "ia.display.view"
+          },
+          {
+            "meta": {
+              "name": "Embed_Day"
+            },
+            "position": {
+              "basis": "115px",
+              "grow": 1,
+              "shrink": 0
+            },
+            "propConfig": {
+              "props.params.options": {
+                "binding": {
+                  "config": {
+                    "expression": "if(hasChanged({view.params.dob_year}),true,\r\nif(hasChanged({view.params.dob_month}),true,\r\nfalse))"
+                  },
+                  "transforms": [
+                    {
+                      "code": "\timport calendar\n\t#Get the year from the dropdown\n\tif self.view.params.dob_year !\u003d None:\n\t\tselected_year \u003d self.view.params.dob_year\n\telse:\n\t\tselected_year \u003d int(system.date.getYear(system.date.now()))\n\tyear \u003d int(selected_year)\t\t\n\t#Get the month from the drop down\t\n\tif self.view.params.dob_month !\u003d None:\n\t\tif str(self.view.params.dob_month[1])\u003d\u003d \u00270\u0027:\n\t\t\tselected_month \u003d int(str(self.view.params.dob_month[1]))\n\t\telse:\n\t\t\tselected_month \u003d int(str(self.view.params.dob_month))\n\telse:\n\t\tselected_month \u003d 12\n\tmonth \u003d int(selected_month)\n\t#Get the number of days in the month\n\tdays_in_month \u003d calendar.monthrange(year,month)[1]\n\t#system.perspective.print(str(year) + \u0027,\u0027 + str(month) + \u0027,\u0027 + str(days_in_month))\n\t# Generate the Rows\n\trows \u003d []\n\tfor x in range(days_in_month):\n\t\toneRow \u003d [str(format(x+1,\u002702d\u0027)), x+1]\n\t\trows.append(oneRow)\n\t# Generate the DataSet\n\theaders \u003d [\"1\", \"2\"]\n\tdata \u003d system.dataset.toDataSet(headers, rows)\n\treturn data",
+                      "type": "script"
+                    }
+                  ],
+                  "type": "expr"
+                }
+              },
+              "props.params.selection": {
+                "binding": {
+                  "config": {
+                    "bidirectional": true,
+                    "path": "view.params.dob_day"
+                  },
+                  "type": "property"
+                }
+              }
+            },
+            "props": {
+              "params": {
+                "placeholder": "Day"
+              },
+              "path": "1_TEMPLATES/Filtering/Conditionals/Conditional_SingleDropDown",
+              "style": {
+                "marginBottom": "2px",
+                "marginLeft": "5px",
+                "marginTop": "2px"
+              }
+            },
+            "type": "ia.display.view"
+          }
+        ],
+        "meta": {
+          "name": "TopRow"
+        },
+        "position": {
+          "basis": "200px",
+          "grow": 1
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "children": [
+          {
+            "meta": {
+              "name": "Embed_SSN"
+            },
+            "position": {
+              "basis": "260px",
+              "grow": 1
+            },
+            "propConfig": {
+              "props.params.text": {
+                "binding": {
+                  "config": {
+                    "bidirectional": true,
+                    "path": "view.params.ssn"
+                  },
+                  "type": "property"
+                }
+              }
+            },
+            "props": {
+              "params": {
+                "placeholder": "SSN"
+              },
+              "path": "1_TEMPLATES/Filtering/Conditionals/Conditional_Text",
+              "style": {
+                "marginBottom": "2px",
+                "marginTop": "2px"
+              }
+            },
+            "type": "ia.display.view"
+          },
+          {
+            "meta": {
+              "name": "Embed_Race"
+            },
+            "position": {
+              "basis": "260px",
+              "grow": 1
+            },
+            "propConfig": {
+              "props.params.options": {
+                "binding": {
+                  "config": {
+                    "queryPath": "Participants/Registration/GetRaces"
+                  },
+                  "type": "query"
+                }
+              },
+              "props.params.selection": {
+                "binding": {
+                  "config": {
+                    "bidirectional": true,
+                    "path": "view.params.race_id"
+                  },
+                  "type": "property"
+                }
+              }
+            },
+            "props": {
+              "params": {
+                "placeholder": "Race"
+              },
+              "path": "1_TEMPLATES/Filtering/Conditionals/Conditional_SingleDropDown",
+              "style": {
+                "marginBottom": "2px",
+                "marginLeft": "5px",
+                "marginTop": "2px"
+              }
+            },
+            "type": "ia.display.view"
+          }
+        ],
+        "meta": {
+          "name": "BottomRow"
+        },
+        "position": {
+          "basis": "200px",
+          "grow": 1
+        },
+        "type": "ia.container.flex"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column",
+      "style": {
+        "overflow": "hidden"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

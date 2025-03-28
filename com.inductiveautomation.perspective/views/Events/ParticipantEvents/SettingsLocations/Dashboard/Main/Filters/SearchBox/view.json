@@ -1,0 +1,164 @@
+{
+  "custom": {},
+  "params": {
+    "text": ""
+  },
+  "propConfig": {
+    "params.column_name": {
+      "access": "PUBLIC"
+    },
+    "params.filter": {
+      "access": "PUBLIC"
+    },
+    "params.placeholder": {
+      "access": "PUBLIC"
+    },
+    "params.searchType": {
+      "access": "PUBLIC"
+    },
+    "params.text": {
+      "access": "PUBLIC",
+      "binding": {
+        "config": {
+          "path": "/root/TextField.props.text"
+        },
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 30,
+      "width": 218
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "TextField"
+        },
+        "position": {
+          "basis": "200px",
+          "grow": 1
+        },
+        "propConfig": {
+          "props.style.classes": {
+            "binding": {
+              "config": {
+                "path": "this.props.text"
+              },
+              "transforms": [
+                {
+                  "code": "\ttext \u003d \"Filter/Filter_Text_Default\"\n\tif value !\u003d \u0027\u0027 and value !\u003d None:\n\t\ttext \u003d \"Filter/Filter_Text_TeelBlue\"\n\treturn text",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          },
+          "props.text": {
+            "persistent": false
+          }
+        },
+        "props": {
+          "deferUpdates": false,
+          "placeholder": "Search",
+          "rejectUpdatesWhileFocused": false,
+          "style": {
+            "marginLeft": "5px",
+            "marginTop": "-1px",
+            "textAlign": "left"
+          }
+        },
+        "type": "ia.input.text-field"
+      },
+      {
+        "events": {
+          "dom": {
+            "onClick": {
+              "config": {
+                "script": "\tself.getSibling(\"TextField\").props.text \u003d \"\""
+              },
+              "scope": "G",
+              "type": "script"
+            }
+          }
+        },
+        "meta": {
+          "name": "Icon"
+        },
+        "position": {
+          "basis": "16px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "position.display": {
+            "binding": {
+              "config": {
+                "path": "../TextField.props.text"
+              },
+              "transforms": [
+                {
+                  "code": "\tif value !\u003d None and value !\u003d \u0027\u0027:\n\t\treturn True\n\telse:\n\t\treturn False",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "color": "#0C4E8B",
+          "path": "material/clear",
+          "style": {
+            "classes": "Table/Filter_Clear_Icon",
+            "marginTop": "5px"
+          }
+        },
+        "type": "ia.display.icon"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "propConfig": {
+      "props.style.classes": {
+        "binding": {
+          "config": {
+            "path": "./TextField.props.text"
+          },
+          "transforms": [
+            {
+              "code": "\tif value \u003d\u003d \u0027\u0027 or value \u003d\u003d None:\n\t\treturn \"Filter/Filter_Border_Default\"\n\telse:\n\t\treturn \"Filter/Filter_Border_TeelBlue\"",
+              "type": "script"
+            }
+          ],
+          "type": "property"
+        }
+      }
+    },
+    "props": {
+      "alignItems": "flex-start",
+      "style": {
+        "overflow": "hidden"
+      }
+    },
+    "scripts": {
+      "customMethods": [],
+      "extensionFunctions": null,
+      "messageHandlers": [
+        {
+          "messageType": "clearFilter",
+          "pageScope": true,
+          "script": "\tself.getChild(\"TextField\").props.text \u003d \"\"",
+          "sessionScope": false,
+          "viewScope": true
+        }
+      ]
+    },
+    "type": "ia.container.flex"
+  }
+}

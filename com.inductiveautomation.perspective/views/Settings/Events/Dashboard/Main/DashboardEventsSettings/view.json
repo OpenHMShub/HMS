@@ -1,0 +1,299 @@
+{
+  "custom": {
+    "whereTable1": "1\u003d1",
+    "whereTable2": "1\u003d1"
+  },
+  "params": {},
+  "propConfig": {
+    "custom.whereTable1": {
+      "binding": {
+        "config": {
+          "struct": {
+            "endDate": "{session.custom.filters.EventSettings.endDate.value}",
+            "startDate": "{session.custom.filters.EventSettings.startDate.value}"
+          },
+          "waitOnAll": true
+        },
+        "transforms": [
+          {
+            "code": "\tstartDate \u003d value[\u0027startDate\u0027]\n\tendDate \u003d value[\u0027endDate\u0027]\n\tif startDate \u003d\u003d \u0027\u0027 or endDate\u003d\u003d\u0027\u0027 or startDate \u003d\u003d None or endDate \u003d\u003d None:\n\t\twhere \u003d \u00271\u003d1\u0027\n\telse:\n\t\tstartDate \u003d str(system.date.format(startDate, \"yyyy-MM-dd\")).split(\u0027,\u0027)[0]\n\t\tendDate \u003d str(system.date.format(endDate, \"yyyy-MM-dd 23:59:59\")).split(\u0027,\u0027)[0]\n\t\twhere \u003d \" ce.startDate \u003e\u003d \u0027\"+ startDate + \"\u0027 AND ce.EndDate \u003c\u003d \u0027\" + endDate +\"\u0027\"\n\t\t#\u0027 startDate BETWEEN \u0027 +startDate +\u0027 AND \u0027+endDate+\u0027 AND EndDate BETWEEN \u0027+startDate+\u0027 AND \u0027+endDate\n\t\t#startDate BETWEEN :startDate AND :endDate AND EndDate BETWEEN :startDate AND :endDate\n\treturn where",
+            "type": "script"
+          }
+        ],
+        "type": "expr-struct"
+      },
+      "persistent": true
+    },
+    "custom.whereTable2": {
+      "binding": {
+        "config": {
+          "struct": {
+            "endDate": "{session.custom.filters.EventSettings.endDate.value}",
+            "startDate": "{session.custom.filters.EventSettings.startDate.value}"
+          },
+          "waitOnAll": true
+        },
+        "transforms": [
+          {
+            "code": "\tstartDate \u003d value[\u0027startDate\u0027]\n\tendDate \u003d value[\u0027endDate\u0027]\n\tif startDate \u003d\u003d \u0027\u0027 or endDate\u003d\u003d\u0027\u0027 or startDate \u003d\u003d None or endDate \u003d\u003d None:\n\t\twhere \u003d \u00271\u003d1\u0027\n\telse:\n\t\tstartDate \u003d str(system.date.format(startDate, \"yyyy-MM-dd\")).split(\u0027,\u0027)[0]\n\t\tendDate \u003d str(system.date.format(endDate, \"yyyy-MM-dd 23:59:59\")).split(\u0027,\u0027)[0]\n\t\twhere \u003d \" startDate \u003e\u003d \u0027\"+ startDate + \"\u0027 AND EndDate \u003c\u003d \u0027\" + endDate +\"\u0027\"\n\t\t#\u0027 startDate BETWEEN \u0027 +startDate +\u0027 AND \u0027+endDate+\u0027 AND EndDate BETWEEN \u0027+startDate+\u0027 AND \u0027+endDate\n\t\t#startDate BETWEEN :startDate AND :endDate AND EndDate BETWEEN :startDate AND :endDate\n\treturn where",
+            "type": "script"
+          }
+        ],
+        "type": "expr-struct"
+      },
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 1000,
+      "width": 829
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "Label"
+        },
+        "position": {
+          "basis": "50px",
+          "display": false
+        },
+        "props": {
+          "alignVertical": "bottom",
+          "style": {
+            "classes": "Text/Summary_Title",
+            "textAlign": "left"
+          },
+          "text": "Settings:Events (Under Construction)"
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "meta": {
+          "name": "Header"
+        },
+        "position": {
+          "basis": "70px",
+          "shrink": 0
+        },
+        "props": {
+          "path": "Settings/Events/Dashboard/Main/EventSettings_Header"
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Filler4"
+        },
+        "position": {
+          "basis": "55px",
+          "shrink": 0
+        },
+        "props": {
+          "style": {
+            "backgroundColor": "#FFFFFF"
+          }
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "meta": {
+          "name": "Filter"
+        },
+        "position": {
+          "basis": "51px"
+        },
+        "props": {
+          "params": {
+            "beginDate": {
+              "$": [
+                "ts",
+                192,
+                1662798958114
+              ],
+              "$ts": 1612787968787
+            },
+            "endDate": {
+              "$": [
+                "ts",
+                192,
+                1662798958114
+              ],
+              "$ts": 1612786131705
+            },
+            "selectedBeginDate": "09/10/2022 03:32",
+            "selectedEndDate": "09/10/2022 03:32"
+          },
+          "path": "Settings/Events/Dashboard/Main/Filter/DateRange",
+          "style": {
+            "marginLeft": 30,
+            "marginTop": 10
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Filler3"
+        },
+        "position": {
+          "basis": "0px"
+        },
+        "props": {
+          "style": {
+            "backgroundColor": "#FFFFFF",
+            "marginBottom": 10,
+            "marginLeft": 35,
+            "marginTop": 10
+          }
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "meta": {
+          "name": "Table1"
+        },
+        "position": {
+          "basis": "424px"
+        },
+        "propConfig": {
+          "props.params.where": {
+            "binding": {
+              "config": {
+                "path": "view.custom.whereTable1"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "path": "Settings/Events/Dashboard/Main/Table1/EventTable1"
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Filler1"
+        },
+        "position": {
+          "basis": "0px"
+        },
+        "props": {
+          "style": {
+            "backgroundColor": "#FFFFFF",
+            "marginBottom": 10,
+            "marginLeft": 35,
+            "marginTop": 10
+          }
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "children": [
+          {
+            "meta": {
+              "name": "Filter"
+            },
+            "position": {
+              "basis": "41px",
+              "display": false
+            },
+            "props": {
+              "params": {
+                "beginDate": {
+                  "$": [
+                    "ts",
+                    192,
+                    1662798958114
+                  ],
+                  "$ts": 1612787968787
+                },
+                "endDate": {
+                  "$": [
+                    "ts",
+                    192,
+                    1662798958114
+                  ],
+                  "$ts": 1612786131705
+                },
+                "selectedBeginDate": "09/10/2022 03:32",
+                "selectedEndDate": "09/10/2022 03:32"
+              },
+              "path": "Settings/Events/Dashboard/Main/Filter/DateRange",
+              "style": {
+                "marginLeft": 1
+              }
+            },
+            "type": "ia.display.view"
+          },
+          {
+            "meta": {
+              "name": "Filler1"
+            },
+            "position": {
+              "basis": "10px",
+              "display": false
+            },
+            "props": {
+              "style": {
+                "backgroundColor": "#FFFFFF",
+                "marginBottom": 10,
+                "marginTop": 10
+              }
+            },
+            "type": "ia.container.flex"
+          },
+          {
+            "meta": {
+              "name": "Table2"
+            },
+            "position": {
+              "basis": "538px"
+            },
+            "propConfig": {
+              "props.params.where": {
+                "binding": {
+                  "config": {
+                    "path": "view.custom.whereTable2"
+                  },
+                  "type": "property"
+                }
+              }
+            },
+            "props": {
+              "path": "Settings/Events/Dashboard/Main/Table2/EventTable2"
+            },
+            "type": "ia.display.view"
+          }
+        ],
+        "meta": {
+          "name": "Filler2"
+        },
+        "position": {
+          "basis": "630.8px"
+        },
+        "props": {
+          "direction": "column",
+          "style": {
+            "marginBottom": 10,
+            "marginLeft": 35,
+            "marginTop": 10
+          }
+        },
+        "type": "ia.container.flex"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column",
+      "style": {
+        "classes": "Background/Alternative"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

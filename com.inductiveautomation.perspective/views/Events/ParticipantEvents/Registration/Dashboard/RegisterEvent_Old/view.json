@@ -1,0 +1,2037 @@
+{
+  "custom": {
+    "Duration": 26580,
+    "EndsOn": {
+      "$": [
+        "ts",
+        192,
+        1686819495703
+      ],
+      "$ts": 1782507494114
+    },
+    "EventData": {
+      "IsEventRepeat": null,
+      "ParticipantActive": 1,
+      "allDayEvent": null,
+      "category": null,
+      "categoryId": null,
+      "dateSelectionDays": null,
+      "dateSelectionPattern": null,
+      "description": "",
+      "duration_hours": 1,
+      "endsOn": {
+        "$": [
+          "ts",
+          192,
+          1686819494114
+        ],
+        "$ts": 1686905894114
+      },
+      "facilitatorEmployeeId": null,
+      "id": null,
+      "locationId": null,
+      "name": null,
+      "points": 0,
+      "repeatDateUntil": null,
+      "repeateFrequencyTypeId": null,
+      "scheduledWeekdays": null,
+      "startsOn": {
+        "$": [
+          "ts",
+          192,
+          1686819494114
+        ],
+        "$ts": 1686819494114
+      },
+      "timeCreated": null,
+      "timeRetired": null
+    },
+    "Locations": null,
+    "NewHostDays": [
+      182,
+      183,
+      166
+    ],
+    "PrevSchedule": [],
+    "RepeatFrequencyTypeId": 3,
+    "RepeatStartDate": {
+      "$": [
+        "ts",
+        192,
+        1686819494116
+      ],
+      "$ts": 1686905894114
+    },
+    "calendarFiller": null,
+    "endDateCalender": {
+      "$": [
+        "ts",
+        192,
+        1686819495704
+      ],
+      "$ts": 1782507494114
+    },
+    "schedule": [
+      182,
+      183,
+      166
+    ]
+  },
+  "params": {
+    "IsUpdate": false,
+    "event_id": -1,
+    "event_name": "",
+    "func_new_data": false,
+    "nights": 0,
+    "schedule": null
+  },
+  "propConfig": {
+    "custom.Duration": {
+      "binding": {
+        "config": {
+          "path": "/root/FlexContainer/EndsOn_Flex/Ends_On.props.params.date"
+        },
+        "transforms": [
+          {
+            "code": "\tstartsOn \u003d self.getChild(\"root\").getChild(\"FlexContainer\").getChild(\"StartsOn_Flex\").getChild(\"Starts_On\").props.params.date\n\tEndsOn \u003d self.getChild(\"root\").getChild(\"FlexContainer\").getChild(\"EndsOn_Flex\").getChild(\"Ends_On\").props.params.date\n\treturn system.date.hoursBetween(startsOn,EndsOn)",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      },
+      "onChange": {
+        "enabled": null,
+        "script": "\tduration_old \u003d self.getChild(\"root\").getChild(\"FlexContainer\").getChild(\"Duration_Flex\").getChild(\"Duration\").props.params.value\n\tif duration_old !\u003d currentValue.value:\n\t\tself.getChild(\"root\").getChild(\"FlexContainer\").getChild(\"Duration_Flex\").getChild(\"Duration\").props.params.value \u003d currentValue.value"
+      },
+      "persistent": true
+    },
+    "custom.EndsOn": {
+      "binding": {
+        "config": {
+          "path": "/root/FlexContainer/Duration_Flex/Duration.props.params.value"
+        },
+        "transforms": [
+          {
+            "code": "\tstartsOn \u003d self.getChild(\"root\").getChild(\"FlexContainer\").getChild(\"StartsOn_Flex\").getChild(\"Starts_On\").props.params.date\n\tduration \u003d value\n\treturn system.date.addHours(startsOn, duration)",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      },
+      "onChange": {
+        "enabled": null,
+        "script": "\tendsOn_old \u003d self.getChild(\"root\").getChild(\"FlexContainer\").getChild(\"EndsOn_Flex\").getChild(\"Ends_On\").props.params.date\n\tif endsOn_old !\u003d currentValue.value:\n\t\tself.getChild(\"root\").getChild(\"FlexContainer\").getChild(\"EndsOn_Flex\").getChild(\"Ends_On\").props.params.date \u003d currentValue.value"
+      },
+      "persistent": true
+    },
+    "custom.EventData": {
+      "binding": {
+        "config": {
+          "path": "view.params.event_name"
+        },
+        "transforms": [
+          {
+            "code": "\tIsUpdate \u003d self.params.IsUpdate\n\tif IsUpdate \u003d\u003d True:\n\t\teventId \u003d self.params.event_id\n\t\tparameter \u003d {\u0027eventId\u0027:eventId}\n\t\tresult \u003d system.db.runNamedQuery(\u0027Event/ParticipantEvents/Detail/Get_Events_ByEventID\u0027,parameter)\n\t\tif result.getValueAt(0,\u0027dateSelectionDays\u0027) !\u003d None and result.getValueAt(0,\u0027dateSelectionDays\u0027) !\u003d \u0027\u0027 and result.getValueAt(0,\u0027dateSelectionDays\u0027) !\u003d \u0027None\u0027:\n\t\t\tdateSelectionDays \u003d (result.getValueAt(0,\u0027dateSelectionDays\u0027)).replace(\u0027[\u0027,\u0027\u0027)\n\t\t\tdateSelectionDays \u003d dateSelectionDays.replace(\u0027]\u0027,\u0027\u0027)\n\t\t\tlist \u003d dateSelectionDays.split(\u0027,\u0027)\n\t\telse:\n\t\t\tlist \u003d []\n\t\tdateSelectionDays \u003d []\n\t\tif len(list)\u003e0:\n\t\t\tfor k in range(0,len(list)):\n\t\t\t\tday \u003d list[k]\n\t\t\t\tif day !\u003d None and day !\u003d \u0027\u0027:\n\t\t\t\t\tdateSelectionDays.append(int(day))\n\t\tif result.getRowCount() \u003e 0:\n\t\t\tif result.getValueAt(0,\u0027timeRetired\u0027) !\u003d None:\n\t\t\t\tParticipantActive \u003d 0\n\t\t\telse:\n\t\t\t\tParticipantActive \u003d 1\n\t\t\tEventInfo \u003d{\n\t\t\t\t\t\t\u0027id\u0027:result.getValueAt(0,\u0027id\u0027),\n\t\t\t\t\t\t\u0027categoryId\u0027:result.getValueAt(0,\u0027categoryId\u0027),\n\t\t\t\t\t\t\u0027category\u0027:result.getValueAt(0,\u0027category\u0027),\n\t\t\t\t\t\t\u0027name\u0027:result.getValueAt(0,\u0027name\u0027),\n\t\t\t\t\t\t\u0027startsOn\u0027:result.getValueAt(0,\u0027startsOn\u0027),\n\t\t\t\t\t\t\u0027endsOn\u0027:result.getValueAt(0,\u0027endsOn\u0027),\n\t\t\t\t\t\t\u0027allDayEvent\u0027:result.getValueAt(0,\u0027allDayEvent\u0027),\n\t\t\t\t\t\t\u0027description\u0027:result.getValueAt(0,\u0027description\u0027),\n\t\t\t\t\t\t\u0027repeatFrequencyTypeId\u0027:result.getValueAt(0,\u0027repeatFrequencyTypeId\u0027),\n\t\t\t\t\t\t\u0027dateSelectionPattern\u0027:result.getValueAt(0,\u0027dateSelectionPattern\u0027),\n\t\t\t\t\t\t\u0027dateSelectionDays\u0027:dateSelectionDays,\n\t\t\t\t\t\t\u0027timeCreated\u0027:result.getValueAt(0,\u0027timeCreated\u0027),\n\t\t\t\t\t\t\u0027timeRetired\u0027:result.getValueAt(0,\u0027timeRetired\u0027),\n\t\t\t\t\t\t\u0027points\u0027:result.getValueAt(0,\u0027points\u0027),\n\t\t\t\t\t\t\u0027facilitatorEmployeeId\u0027:result.getValueAt(0,\u0027facilitatorEmployeeId\u0027),\n\t\t\t\t\t\t\u0027IsEventRepeat\u0027:result.getValueAt(0,\u0027IsEventRepeat\u0027),\n\t\t\t\t\t\t\u0027repeatDateUntil\u0027:result.getValueAt(0,\u0027repeatDateUntil\u0027)\n\t\t\t\t\t\t,\u0027scheduledWeekdays\u0027:result.getValueAt(0,\u0027scheduledWeekdays\u0027)\n\t\t\t\t\t\t,\u0027duration_hours\u0027:result.getValueAt(0,\u0027duration_hours\u0027)\n\t\t\t\t\t\t,\u0027locationId\u0027:result.getValueAt(0,\u0027locationId\u0027)\n\t\t\t\t\t\t,\u0027ParticipantActive\u0027:ParticipantActive\n\t\t\t\t\t\t}\n#\t\t\t# set week days \n#\t\t\tself.custom.weekdays \u003d dateSelectionDays\n\t\t\t# add locations\n#\t\t\tdataset \u003d system.db.runNamedQuery(\"Event/ParticipantEvents/Detail/Get_SelectedLocations_ForEvent\",{\u0027EventId\u0027:self.params.event_id})\n#\t\t\tlocations \u003d []\n#\t\t\tif dataset.getRowCount() \u003e 0:\n#\t\t\t\tfor i in range(0,dataset.getRowCount()):\n#\t\t\t\t\tlocation \u003d dataset.getValueAt(i,\u0027locationId\u0027)\n#\t\t\t\t\tlocations.append(location)\n#\t\t\tself.custom.Locations \u003d locations\n\t\telse:\n\t\t\tEventInfo \u003d{\n\t\t\t\t\t\t\u0027id\u0027:None,\n\t\t\t\t\t\t\u0027categoryId\u0027:None,\n\t\t\t\t\t\t\u0027category\u0027:None,\n\t\t\t\t\t\t\u0027name\u0027:None,\n\t\t\t\t\t\t\u0027startsOn\u0027:system.date.now(),\n\t\t\t\t\t\t\u0027endsOn\u0027: system.date.addDays(system.date.now(), 1),\n\t\t\t\t\t\t\u0027allDayEvent\u0027:None,\n\t\t\t\t\t\t\u0027description\u0027:\u0027\u0027,\n\t\t\t\t\t\t\u0027repeateFrequencyTypeId\u0027:None,\n\t\t\t\t\t\t\u0027dateSelectionPattern\u0027:None,\n\t\t\t\t\t\t\u0027dateSelectionDays\u0027:None,\n\t\t\t\t\t\t\u0027timeCreated\u0027:None,\n\t\t\t\t\t\t\u0027timeRetired\u0027:None,\n\t\t\t\t\t\t\u0027points\u0027:None,\n\t\t\t\t\t\t\u0027facilitatorEmployeeId\u0027:None,\n\t\t\t\t\t\t\u0027IsEventRepeat\u0027:None,\n\t\t\t\t\t\t\u0027repeatDateUntil\u0027:None\n\t\t\t\t\t\t,\u0027scheduledWeekdays\u0027:None\n\t\t\t\t\t\t,\u0027duration_hours\u0027:1\n\t\t\t\t\t\t,\u0027locationId\u0027:None\n\t\t\t\t\t\t,\u0027ParticipantActive\u0027:None\n\t\t\t\t\t\t}\n#\t\t\tself.custom.Locations \u003d []\n#\t\t\t# set week days \n#\t\t\tself.custom.weekdays \u003d []\n\telse:\n\t\tEventInfo \u003d{\n\t\t\t\t\t\u0027id\u0027:None,\n\t\t\t\t\t\u0027categoryId\u0027:None,\n\t\t\t\t\t\u0027category\u0027:None,\n\t\t\t\t\t\u0027name\u0027:None,\n\t\t\t\t\t\u0027startsOn\u0027:system.date.now(),\n\t\t\t\t\t\u0027endsOn\u0027: system.date.addDays(system.date.now(), 1),\n\t\t\t\t\t\u0027allDayEvent\u0027:None,\n\t\t\t\t\t\u0027description\u0027:\u0027\u0027,\n\t\t\t\t\t\u0027repeateFrequencyTypeId\u0027:None,\n\t\t\t\t\t\u0027dateSelectionPattern\u0027:None,\n\t\t\t\t\t\u0027dateSelectionDays\u0027:None,\n\t\t\t\t\t\u0027timeCreated\u0027:None,\n\t\t\t\t\t\u0027timeRetired\u0027:None,\n\t\t\t\t\t\u0027points\u0027:None,\n\t\t\t\t\t\u0027facilitatorEmployeeId\u0027:None,\n\t\t\t\t\t\u0027IsEventRepeat\u0027:None,\n\t\t\t\t\t\u0027repeatDateUntil\u0027:None\n\t\t\t\t\t,\u0027scheduledWeekdays\u0027:None\n\t\t\t\t\t,\u0027duration_hours\u0027:1\n\t\t\t\t\t,\u0027locationId\u0027:None\n\t\t\t\t\t,\u0027ParticipantActive\u0027:1\n\t\t\t\t\t}\n#\t\tself.custom.Locations \u003d []\n#\t\t# set week days \n#\t\tself.custom.weekdays \u003d []\n\treturn EventInfo",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      },
+      "persistent": true
+    },
+    "custom.EventData.dateSelectionDays": {
+      "onChange": {
+        "enabled": null,
+        "script": "\tself.refreshBinding(\u0027custom.weekdays\u0027)"
+      }
+    },
+    "custom.EventData.duration_hours": {
+      "onChange": {
+        "enabled": null,
+        "script": "\tduration_old \u003d self.getChild(\"root\").getChild(\"FlexContainer\").getChild(\"Duration_Flex\").getChild(\"Duration\").props.params.value\n\tif duration_old !\u003d currentValue.value:\n\t\tself.getChild(\"root\").getChild(\"FlexContainer\").getChild(\"Duration_Flex\").getChild(\"Duration\").props.params.value \u003d currentValue.value"
+      }
+    },
+    "custom.EventData.endsOn": {
+      "onChange": {
+        "enabled": null,
+        "script": "\tendsOn_old \u003d self.getChild(\"root\").getChild(\"FlexContainer\").getChild(\"EndsOn_Flex\").getChild(\"Ends_On\").props.params.date\n\tif endsOn_old !\u003d currentValue.value:\n\t\tself.getChild(\"root\").getChild(\"FlexContainer\").getChild(\"EndsOn_Flex\").getChild(\"Ends_On\").props.params.date \u003d currentValue.value"
+      }
+    },
+    "custom.NewHostDays": {
+      "binding": {
+        "config": {
+          "path": "view.custom.schedule"
+        },
+        "transforms": [
+          {
+            "code": "\treturn value\n#\tschedule \u003d value\n#\tprevSchedule \u003d self.custom.PrevSchedule\n#\tNewHostDays \u003d []\n#\tfor day in schedule:\n#\t\tif day not in prevSchedule:\n#\t\t\tNewHostDays.append(day)\n#\treturn NewHostDays",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      },
+      "persistent": true
+    },
+    "custom.PrevSchedule": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "eventId": "{view.params.event_id}"
+          },
+          "queryPath": "Event/ParticipantEvents/Registration/Get_ScheduledEvents"
+        },
+        "transforms": [
+          {
+            "code": "\tdataset \u003d value\n\tschedule \u003d []\n\tduration \u003d 0\n\tif dataset.getRowCount() \u003e 0:\n\t\tfor i in range(0,dataset.getRowCount()):\n\t\t\tstartDate \u003d dataset.getValueAt(i,\u0027startsOn\u0027)\n\t\t\tendDate \u003d dataset.getValueAt(i,\u0027endsOn\u0027)\n\t\t\t###\n\t\t\tdayOfYear \u003d system.date.getDayOfYear(startDate)\n\t\t\tif dayOfYear not in schedule:\n\t\t\t\tschedule.append(dayOfYear)\n\t\t\t###\n\t\t\tduration \u003d system.date.daysBetween(startDate, endDate)\n#\t\t\twhile startDate \u003c endDate:\n#\t\t\t\tdayOfYear \u003d system.date.getDayOfYear(startDate)\n#\t\t\t\tif dayOfYear not in schedule:\n#\t\t\t\t\tschedule.append(dayOfYear)\n#\t\t\t\tstartDate \u003d system.date.addDays(startDate, 1)\n\tself.getChild(\"root\").getChild(\"FlexContainer\").getChild(\"Schedule_Flex\").getChild(\"Calendar\").getChild(\"Table\").props.params.duration \u003d duration\n\treturn schedule",
+            "type": "script"
+          }
+        ],
+        "type": "query"
+      },
+      "persistent": true
+    },
+    "custom.RepeatFrequencyTypeId": {
+      "binding": {
+        "config": {
+          "path": "view.custom.pattern"
+        },
+        "transforms": [
+          {
+            "code": "\tif value is not None:\n\t\tif value \u003d\u003d 1: ## weekly\n\t\t\treturn 0 \n\t\telif value \u003d\u003d 2: ## bi weekly\n\t\t\treturn 1\n\t\telif value in [3,4,5,6,7]: ## monthly\n\t\t\treturn 2\n\t\telse:\n\t\t\treturn 3 ## specific dates\n\telse:\n\t\treturn 3\t# specific dates",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      },
+      "persistent": true
+    },
+    "custom.RepeatStartDate": {
+      "binding": {
+        "config": {
+          "path": "/root/FlexContainer/StartsOn_Flex/Starts_On.props.params.date"
+        },
+        "transforms": [
+          {
+            "code": "\treturn system.date.addDays(value, 1)",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      },
+      "persistent": true
+    },
+    "custom.calendarFiller": {
+      "binding": {
+        "config": {
+          "struct": {
+            "seasonEnd": "{/root/FlexContainer/Schedule_Flex/EndDate/Ends_On.props.params.date}",
+            "seasonStart": "{view.custom.RepeatStartDate}",
+            "weekdays": "{view.custom.weekdays}"
+          },
+          "waitOnAll": false
+        },
+        "transforms": [
+          {
+            "code": "\t#Returns the next date that is that weekday\n\t#date: the datetime to start from\n\t#weekday: the weekday as a number\n\tdef nextDayOfWeek(date, weekday):\n\t\tdayOfWeek \u003d system.date.getDayOfWeek(date)\n\t\tdaysApart \u003d weekday - dayOfWeek\n\t\tif daysApart \u003c 0: daysApart \u003d 7 + daysApart\n\t\treturn system.date.addDays(date, daysApart)\n\t\n\t\n\tschedule \u003d self.custom.schedule\n\tseasonStart \u003d value[\u0027seasonStart\u0027]\n\tstartDayOfWeek \u003d system.date.getDayOfWeek(seasonStart)\n\tseasonEnd \u003d value[\u0027seasonEnd\u0027]\n\tif system.date.isBefore(seasonEnd, seasonStart): return \u0027ERROR: Season End before Start!!!\u0027\n\t#Pattern Key: 1 \u003d Every, 2 \u003d Every Other, 3 \u003d Every 1st ...7 \u003d Every 5th\n\tpattern \u003d self.custom.pattern\n\t#Weekdays Key: 1 \u003d Sunday ... 7 \u003d Saturday\n\tweekdays \u003d value[\u0027weekdays\u0027]\n\tdates \u003d []\n\tcurrentDate \u003d system.date.format(system.date.now(),\u0027MM-dd-yyyy\u0027)\n\t#Every\n\tif pattern \u003d\u003d 1:\n\t\tfor weekday in weekdays:\n\t\t\tschedDay \u003d nextDayOfWeek(seasonStart,weekday)\n\t\t\twhile system.date.isBefore(schedDay, seasonEnd):\n\t\t\t\tdates.append(schedDay)\n\t\t\t\tschedDay \u003d system.date.addDays(schedDay, 7)\n\tif pattern \u003d\u003d 2:\n\t\tfor weekday in weekdays:\n\t\t\tschedDay \u003d nextDayOfWeek(seasonStart,weekday)\n\t\t\twhile system.date.isBefore(schedDay, seasonEnd):\n\t\t\t\tdates.append(schedDay)\n\t\t\t\tschedDay \u003d system.date.addDays(schedDay, 14)\n\tif pattern \u003e 2:\n\t\tfor weekday in weekdays:\n\t\t\tmonthStart \u003d system.date.getDate(system.date.getYear(seasonStart), system.date.getMonth(seasonStart), 1)\n\t\t\tdayOfWeek \u003d nextDayOfWeek(monthStart, weekday)\n\t\t\tdayOfWeek \u003d system.date.addDays(dayOfWeek, ((pattern-3)*7))\n\t\t\twhile system.date.isBefore(dayOfWeek, seasonEnd):\n\t\t\t\tif system.date.isAfter(dayOfWeek, seasonStart) and system.date.getMonth(dayOfWeek)\u003d\u003dsystem.date.getMonth(monthStart):\n\t\t\t\t\tdates.append(dayOfWeek)\n\t\t\t\tmonthStart \u003d system.date.addMonths(monthStart,1)\n\t\t\t\tdayOfWeek \u003d nextDayOfWeek(monthStart, weekday)\n\t\t\t\tdayOfWeek \u003d system.date.addDays(dayOfWeek, ((pattern-3)*7))\n\t\t\t\n\tfor date in dates:\n\t\tif system.date.format(date,\u0027MM-dd-yyyy\u0027) \u003e\u003d currentDate:\n\t\t\tday \u003d system.date.getDayOfYear(date)\n\t\t\tif day not in schedule: schedule.append(day)\n\t\t\n\t# append scheduled dates from database\n\tresult \u003d system.db.runNamedQuery(\u0027Event/ParticipantEvents/Registration/Get_ScheduledEvents\u0027,{\u0027eventId\u0027:self.params.event_id})\t\n\tif result.getRowCount() \u003e 0:\n\t\tfor i in range(0,result.getRowCount()):\n\t\t\tstartsOn \u003d result.getValueAt(i,\u0027startsOn\u0027)\n\t\t\tif startsOn not in dates:\n\t\t\t\tdates.append(startsOn)\n\treturn dates",
+            "type": "script"
+          }
+        ],
+        "type": "expr-struct"
+      },
+      "onChange": {
+        "enabled": null,
+        "script": "\tstartsOn \u003d self.getChild(\"root\").getChild(\"FlexContainer\").getChild(\"StartsOn_Flex\").getChild(\"Starts_On\").props.params.date\n\tstartsOn_dayOfYear \u003d system.date.getDayOfYear(startsOn)\n\tif not currentValue.getValue():\n\t\tselectedWeekDays \u003d []\n\t\tfor i in range(len(previousValue.getValue())):\n\t\t\tcanceledDate \u003d previousValue.getValue()[i].value\n\t\t\tDayOfYear \u003d system.date.getDayOfYear(canceledDate)\n\t\t\tselectedWeekDays.append(DayOfYear)\n\t\t\t\n\t\tschedule \u003d self.custom.schedule\n\t\tprevSchedule \u003d self.custom.PrevSchedule\n\t\tfor j in range(len(schedule)):\n\t\t\tvalueFromSchedule \u003d schedule[j]\n\t\t\tif valueFromSchedule not in selectedWeekDays:\n\t\t\t\tsystem.perspective.print(\"valueFromSchedule: \"+str(valueFromSchedule))\n\t\t\telif (valueFromSchedule in selectedWeekDays) and (valueFromSchedule not in prevSchedule) and (valueFromSchedule !\u003d startsOn_dayOfYear):\n\t\t\t\t(self.custom.schedule).remove(valueFromSchedule)\n\telse:\n\t\tpass\n#\t\tself.custom.schedule \u003d currentValue.getValue()\n\t\tselectedWeekDays \u003d []\n\t\tfor i in range(len(currentValue.getValue())):\n\t\t\tcanceledDate \u003d currentValue.getValue()[i].value\n\t\t\tDayOfYear \u003d system.date.getDayOfYear(canceledDate)\n\t\t\tselectedWeekDays.append(DayOfYear)\n\t\t\t\n\t\tschedule \u003d self.custom.schedule\n\t\tprevSchedule \u003d self.custom.PrevSchedule\n\t\tfor j in range(len(schedule)):\n\t\t\tvalueFromSchedule \u003d schedule[j]\n\t\t\tif (valueFromSchedule not in selectedWeekDays) and (valueFromSchedule !\u003d startsOn_dayOfYear):\n\t\t\t\t(self.custom.schedule).remove(valueFromSchedule)\n\t\t\telif (valueFromSchedule in selectedWeekDays) and (valueFromSchedule not in prevSchedule):\n\t\t\t\tsystem.perspective.print(\"valueFromSchedule: \"+str(valueFromSchedule))\n\t\t"
+      },
+      "persistent": true
+    },
+    "custom.endDateCalender": {
+      "binding": {
+        "config": {
+          "path": "/root/FlexContainer/Schedule_Flex/EndDate/Ends_On.props.params.date"
+        },
+        "transforms": [
+          {
+            "code": "\tif value !\u003d None and value !\u003d \u0027\u0027:\n\t\treturn value\n\telse:\n\t\treturn self.getChild(\"root\").getChild(\"FlexContainer\").getChild(\"EndsOn_Flex\").getChild(\"Ends_On\").props.params.date",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      },
+      "persistent": true
+    },
+    "custom.pattern": {
+      "binding": {
+        "config": {
+          "bidirectional": true,
+          "path": "view.custom.EventData.dateSelectionPattern"
+        },
+        "type": "property"
+      }
+    },
+    "custom.schedule": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "eventId": "{view.params.event_id}"
+          },
+          "queryPath": "Event/ParticipantEvents/Registration/Get_ScheduledEvents"
+        },
+        "transforms": [
+          {
+            "code": "\tdataset \u003d value\n\tschedule \u003d []\n\tduration \u003d 0\n\tif dataset.getRowCount() \u003e 0:\n\t\tfor i in range(0,dataset.getRowCount()):\n\t\t\tstartDate \u003d dataset.getValueAt(i,\u0027startsOn\u0027)\n\t\t\tendDate \u003d dataset.getValueAt(i,\u0027endsOn\u0027)\n\t\t\t###\n\t\t\tdayOfYear \u003d system.date.getDayOfYear(startDate)\n\t\t\tif dayOfYear not in schedule:\n\t\t\t\tschedule.append(dayOfYear)\n\t\t\t###\n\t\t\tduration \u003d system.date.daysBetween(startDate, endDate)\n#\t\t\twhile startDate \u003c endDate:\n#\t\t\t\tdayOfYear \u003d system.date.getDayOfYear(startDate)\n#\t\t\t\tif dayOfYear not in schedule:\n#\t\t\t\t\tschedule.append(dayOfYear)\n#\t\t\t\tstartDate \u003d system.date.addDays(startDate, 1)\n\tself.getChild(\"root\").getChild(\"FlexContainer\").getChild(\"Schedule_Flex\").getChild(\"Calendar\").getChild(\"Table\").props.params.duration \u003d duration\n\treturn schedule",
+            "type": "script"
+          }
+        ],
+        "type": "query"
+      },
+      "persistent": true
+    },
+    "custom.weekdays": {
+      "binding": {
+        "config": {
+          "path": "view.custom.EventData.dateSelectionDays"
+        },
+        "type": "property"
+      }
+    },
+    "params.IsUpdate": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.event_id": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.event_name": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 1080,
+      "width": 600
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "EmbeddedView"
+        },
+        "position": {
+          "shrink": 0
+        },
+        "props": {
+          "params": {
+            "Dock_To_Close": "RegisterEvent",
+            "text": "New Event"
+          },
+          "path": "Events/ParticipantEvents/Registration/Dashboard/Cards/RegistrationHeader",
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "meta": {
+                  "name": "EventName"
+                },
+                "position": {
+                  "basis": "60%"
+                },
+                "propConfig": {
+                  "props.params.inputText": {
+                    "binding": {
+                      "config": {
+                        "bidirectional": true,
+                        "path": "view.params.event_name"
+                      },
+                      "type": "property"
+                    }
+                  }
+                },
+                "props": {
+                  "params": {
+                    "text": "Event Name"
+                  },
+                  "path": "Events/ParticipantEvents/Registration/Dashboard/Cards/TextInput",
+                  "style": {
+                    "marginTop": "5px"
+                  },
+                  "useDefaultViewHeight": true
+                },
+                "type": "ia.display.view"
+              }
+            ],
+            "meta": {
+              "name": "EventName_Flex"
+            },
+            "position": {
+              "basis": "60px"
+            },
+            "props": {
+              "style": {
+                "marginLeft": "20px",
+                "marginRight": "20px"
+              }
+            },
+            "type": "ia.container.flex"
+          },
+          {
+            "children": [
+              {
+                "meta": {
+                  "name": "Starts_On"
+                },
+                "position": {
+                  "basis": "60%",
+                  "shrink": 0
+                },
+                "propConfig": {
+                  "props.params.date": {
+                    "binding": {
+                      "config": {
+                        "bidirectional": true,
+                        "path": "view.custom.EventData.startsOn"
+                      },
+                      "type": "property"
+                    },
+                    "onChange": {
+                      "enabled": null,
+                      "script": "\tself.parent.parent.getChild(\"Schedule_Flex\").getChild(\"Calendar\").getChild(\"Table\").props.params.startDate \u003d currentValue.value\n#\tsystem.perspective.print(previousValue.value)\n#\tsystem.perspective.print(currentValue.value)\n\tif self.view.params.IsUpdate \u003d\u003d False:\n\t\tif system.date.getDayOfYear(previousValue.value) in (self.view.custom.schedule):\n\t\t\t(self.view.custom.schedule).remove(system.date.getDayOfYear(previousValue.value))\n\t\tif system.date.getDayOfYear(currentValue.value) not in (self.view.custom.schedule):\n\t\t\t(self.view.custom.schedule).append(system.date.getDayOfYear(currentValue.value))\n\tduration \u003d self.parent.parent.getChild(\"Duration_Flex\").getChild(\"Duration\").props.params.value\n\tendsOn \u003d system.date.addHours(currentValue.value, duration)\n\tself.parent.parent.getChild(\"EndsOn_Flex\").getChild(\"Ends_On\").props.params.date \u003d endsOn"
+                    }
+                  }
+                },
+                "props": {
+                  "params": {
+                    "text": "Starts On"
+                  },
+                  "path": "Events/ParticipantEvents/Registration/Dashboard/Cards/DateTimeInput",
+                  "style": {
+                    "marginRight": "20px",
+                    "marginTop": "5px"
+                  },
+                  "useDefaultViewHeight": true
+                },
+                "type": "ia.display.view"
+              }
+            ],
+            "meta": {
+              "name": "StartsOn_Flex"
+            },
+            "position": {
+              "basis": "60px"
+            },
+            "props": {
+              "style": {
+                "marginLeft": "20px",
+                "marginRight": "20px"
+              }
+            },
+            "type": "ia.container.flex"
+          },
+          {
+            "children": [
+              {
+                "meta": {
+                  "name": "Duration"
+                },
+                "position": {
+                  "basis": "60%"
+                },
+                "propConfig": {
+                  "props.params.value": {
+                    "binding": {
+                      "config": {
+                        "path": "view.custom.EventData.duration_hours"
+                      },
+                      "enabled": false,
+                      "type": "property"
+                    },
+                    "onChange": {
+                      "enabled": false,
+                      "script": "\tpass\n#\tstartsOn \u003d self.parent.parent.getChild(\"StartsOn_Flex\").getChild(\"Starts_On\").props.params.date\n#\tendsOn \u003d self.parent.parent.getChild(\"EndsOn_Flex\").getChild(\"Ends_On\").props.params.date\n#\tnewDate \u003d system.date.addHours(startsOn, currentValue.value)\n#\tif endsOn !\u003d newDate:\n#\t\tself.parent.parent.getChild(\"EndsOn_Flex\").getChild(\"Ends_On\").props.params.date \u003d newDate"
+                    }
+                  }
+                },
+                "props": {
+                  "params": {
+                    "label": "Duration (Hours)",
+                    "placeholder": "",
+                    "value": 26580
+                  },
+                  "path": "Events/ParticipantEvents/Registration/Dashboard/Cards/Input_Value",
+                  "style": {
+                    "marginTop": "5px"
+                  },
+                  "useDefaultViewHeight": true
+                },
+                "type": "ia.display.view"
+              }
+            ],
+            "meta": {
+              "name": "Duration_Flex"
+            },
+            "position": {
+              "basis": "80px"
+            },
+            "props": {
+              "style": {
+                "marginLeft": "20px",
+                "marginRight": "20px"
+              }
+            },
+            "type": "ia.container.flex"
+          },
+          {
+            "children": [
+              {
+                "meta": {
+                  "name": "Ends_On"
+                },
+                "position": {
+                  "basis": "60%",
+                  "shrink": 0
+                },
+                "propConfig": {
+                  "props.params.date": {
+                    "binding": {
+                      "config": {
+                        "path": "view.custom.EventData.endsOn"
+                      },
+                      "enabled": false,
+                      "type": "property"
+                    },
+                    "onChange": {
+                      "enabled": null,
+                      "script": "\tif self.parent.parent.getChild(\"Schedule_Flex\").getChild(\"EndDate\").getChild(\"Ends_On\").props.params.date \u003d\u003d None:\n\t\tself.view.custom.endDateCalender \u003d currentValue.value\n#\tStartsOn \u003d self.parent.parent.getChild(\"StartsOn_Flex\").getChild(\"Starts_On\").props.params.date\n#\tEndsOn \u003d currentValue.value\n#\tduration_old \u003d self.parent.parent.getChild(\"Duration_Flex\").getChild(\"Duration\").props.params.value\n#\tduration \u003d system.date.hoursBetween(StartsOn,EndsOn)\n#\tif duration_old !\u003d duration:\n#\t\tself.parent.parent.getChild(\"Duration_Flex\").getChild(\"Duration\").props.params.value \u003d duration\n"
+                    }
+                  }
+                },
+                "props": {
+                  "params": {
+                    "date": {
+                      "$": [
+                        "ts",
+                        192,
+                        1686819495704
+                      ],
+                      "$ts": 1782507494114
+                    },
+                    "text": "Ends On"
+                  },
+                  "path": "Events/ParticipantEvents/Registration/Dashboard/Cards/DateTimeInput",
+                  "style": {
+                    "marginTop": "5px"
+                  },
+                  "useDefaultViewHeight": true
+                },
+                "type": "ia.display.view"
+              }
+            ],
+            "meta": {
+              "name": "EndsOn_Flex"
+            },
+            "position": {
+              "basis": "60px"
+            },
+            "props": {
+              "style": {
+                "marginLeft": "20px",
+                "marginRight": "20px"
+              }
+            },
+            "type": "ia.container.flex"
+          },
+          {
+            "children": [
+              {
+                "meta": {
+                  "name": "AllDay_checkbox"
+                },
+                "position": {
+                  "basis": "60%"
+                },
+                "propConfig": {
+                  "props.params.checked": {
+                    "binding": {
+                      "config": {
+                        "bidirectional": true,
+                        "path": "view.custom.EventData.allDayEvent"
+                      },
+                      "type": "property"
+                    }
+                  }
+                },
+                "props": {
+                  "params": {
+                    "text": "All Day"
+                  },
+                  "path": "1_TEMPLATES/60px/top/Input_Checkbox",
+                  "style": {
+                    "marginTop": "5px"
+                  },
+                  "useDefaultViewHeight": true
+                },
+                "type": "ia.display.view"
+              }
+            ],
+            "meta": {
+              "name": "AllDay_Flex"
+            },
+            "position": {
+              "basis": "40px"
+            },
+            "props": {
+              "style": {
+                "marginLeft": "20px",
+                "marginRight": "20px"
+              }
+            },
+            "type": "ia.container.flex"
+          },
+          {
+            "children": [
+              {
+                "meta": {
+                  "name": "EventRepeats_checkbox"
+                },
+                "position": {
+                  "basis": "60%"
+                },
+                "propConfig": {
+                  "props.params.checked": {
+                    "binding": {
+                      "config": {
+                        "path": "view.custom.EventData.IsEventRepeat"
+                      },
+                      "transforms": [
+                        {
+                          "code": "\tif value !\u003d None:\n\t\treturn value\n\telse:\n\t\treturn False",
+                          "type": "script"
+                        }
+                      ],
+                      "type": "property"
+                    },
+                    "onChange": {
+                      "enabled": null,
+                      "script": "\tif currentValue.value \u003d\u003d True:\n\t\tendDate \u003d self.parent.parent.getChild(\"EndsOn_Flex\").getChild(\"Ends_On\").props.params.date\n\t\tif self.view.params.IsUpdate \u003d\u003d False:\n\t\t\tself.parent.parent.getChild(\"Schedule_Flex\").getChild(\"EndDate\").getChild(\"Ends_On\").props.params.date \u003d endDate"
+                    }
+                  }
+                },
+                "props": {
+                  "params": {
+                    "text": "Event Repeats"
+                  },
+                  "path": "1_TEMPLATES/60px/top/Input_Checkbox",
+                  "style": {
+                    "marginTop": "5px"
+                  },
+                  "useDefaultViewHeight": true
+                },
+                "type": "ia.display.view"
+              }
+            ],
+            "meta": {
+              "name": "EventRepeats_Flex"
+            },
+            "position": {
+              "basis": "40px"
+            },
+            "props": {
+              "style": {
+                "marginLeft": "20px",
+                "marginRight": "20px"
+              }
+            },
+            "type": "ia.container.flex"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "meta": {
+                      "name": "Label"
+                    },
+                    "position": {
+                      "basis": "97px",
+                      "shrink": 0
+                    },
+                    "props": {
+                      "style": {
+                        "color": "#9db8d1",
+                        "fontFamily": "Proxima NovaC Medium",
+                        "fontSize": "15px"
+                      },
+                      "text": "Date Selection"
+                    },
+                    "type": "ia.display.label"
+                  },
+                  {
+                    "meta": {
+                      "name": "Label_0"
+                    },
+                    "position": {
+                      "basis": "50px",
+                      "display": false
+                    },
+                    "props": {
+                      "style": {
+                        "color": "#D80000"
+                      },
+                      "text": "*"
+                    },
+                    "type": "ia.display.label"
+                  }
+                ],
+                "meta": {
+                  "name": "Date Selection"
+                },
+                "position": {
+                  "basis": "25px",
+                  "shrink": 0
+                },
+                "props": {
+                  "style": {
+                    "marginBottom": "10px",
+                    "marginTop": "10px"
+                  }
+                },
+                "type": "ia.container.flex"
+              },
+              {
+                "children": [
+                  {
+                    "meta": {
+                      "name": "SelectionInput"
+                    },
+                    "position": {
+                      "basis": "167px",
+                      "shrink": 0
+                    },
+                    "propConfig": {
+                      "props.params.SelectedValue": {
+                        "binding": {
+                          "config": {
+                            "bidirectional": true,
+                            "path": "view.custom.pattern"
+                          },
+                          "type": "property"
+                        },
+                        "onChange": {
+                          "enabled": null,
+                          "script": "\tself.view.custom.weekdays \u003d []"
+                        }
+                      }
+                    },
+                    "props": {
+                      "params": {
+                        "Options": [
+                          {
+                            "label": "Every...",
+                            "value": 1
+                          },
+                          {
+                            "label": "Every other...",
+                            "value": 2
+                          },
+                          {
+                            "label": "Every 1st...",
+                            "value": 3
+                          },
+                          {
+                            "label": "Every 2nd...",
+                            "value": 4
+                          },
+                          {
+                            "label": "Every 3rd...",
+                            "value": 5
+                          },
+                          {
+                            "label": "Every 4th...",
+                            "value": 6
+                          },
+                          {
+                            "label": "Every 5th...",
+                            "value": 7
+                          }
+                        ],
+                        "Text": "Date Select",
+                        "hasHeader": false,
+                        "placeholder": "Every..."
+                      },
+                      "path": "WinterShelterGlobal/Registration/Cards/SelectionInput",
+                      "style": {
+                        "marginRight": "20px"
+                      }
+                    },
+                    "type": "ia.display.view"
+                  },
+                  {
+                    "events": {
+                      "component": {
+                        "onActionPerformed": {
+                          "config": {
+                            "script": "\tself.view.params.schedule \u003d []\n\tself.view.custom.weekdays \u003d []\n\tself.view.custom.pattern \u003d None"
+                          },
+                          "scope": "G",
+                          "type": "script"
+                        }
+                      }
+                    },
+                    "meta": {
+                      "name": "Button"
+                    },
+                    "position": {
+                      "basis": "80px"
+                    },
+                    "props": {
+                      "primary": false,
+                      "style": {
+                        "classes": "Buttons/Secondary"
+                      },
+                      "text": "Reset"
+                    },
+                    "type": "ia.input.button"
+                  }
+                ],
+                "meta": {
+                  "name": "DateSelect"
+                },
+                "position": {
+                  "basis": "25px",
+                  "shrink": 0
+                },
+                "props": {
+                  "style": {
+                    "marginLeft": "20px",
+                    "overflow": "visible"
+                  }
+                },
+                "type": "ia.container.flex"
+              },
+              {
+                "children": [
+                  {
+                    "custom": {
+                      "value": 1
+                    },
+                    "meta": {
+                      "name": "Sun"
+                    },
+                    "position": {
+                      "shrink": 0
+                    },
+                    "propConfig": {
+                      "props.selected": {
+                        "binding": {
+                          "config": {
+                            "expression": "indexOf({view.custom.weekdays},{this.custom.value})\u003e-1"
+                          },
+                          "type": "expr"
+                        },
+                        "onChange": {
+                          "enabled": null,
+                          "script": "\tif currentValue.value:\n\t\tif self.custom.value not in self.view.custom.weekdays:\n\t\t\tself.view.custom.weekdays.append(self.custom.value)\n\t\t\tsystem.perspective.print(\"Selected\")\n\telse:\n\t\tif self.custom.value in self.view.custom.weekdays:\n\t\t\tself.view.custom.weekdays.remove(self.custom.value)\n\t\t\tsystem.perspective.print(\"Not Selected\")"
+                        }
+                      }
+                    },
+                    "props": {
+                      "checkedIcon": {
+                        "color": {
+                          "enabled": "#0066FF"
+                        },
+                        "path": "material/radio_button_checked"
+                      },
+                      "indeterminateIcon": {
+                        "path": "material/radio_button_checked"
+                      },
+                      "style": {
+                        "paddingRight": "20px"
+                      },
+                      "text": "Sun",
+                      "uncheckedIcon": {
+                        "color": {
+                          "enabled": "#9db8d1"
+                        },
+                        "path": "material/radio_button_unchecked"
+                      }
+                    },
+                    "type": "ia.input.checkbox"
+                  },
+                  {
+                    "custom": {
+                      "value": 2
+                    },
+                    "meta": {
+                      "name": "Mon"
+                    },
+                    "position": {
+                      "shrink": 0
+                    },
+                    "propConfig": {
+                      "props.selected": {
+                        "binding": {
+                          "config": {
+                            "expression": "indexOf({view.custom.weekdays},{this.custom.value})\u003e-1"
+                          },
+                          "type": "expr"
+                        },
+                        "onChange": {
+                          "enabled": null,
+                          "script": "\tif currentValue.value:\n\t\tif self.custom.value not in self.view.custom.weekdays:\n\t\t\tself.view.custom.weekdays.append(self.custom.value)\n\telse:\n\t\tif self.custom.value in self.view.custom.weekdays:\n\t\t\tself.view.custom.weekdays.remove(self.custom.value)"
+                        }
+                      }
+                    },
+                    "props": {
+                      "checkedIcon": {
+                        "color": {
+                          "enabled": "#0066FF"
+                        },
+                        "path": "material/radio_button_checked"
+                      },
+                      "indeterminateIcon": {
+                        "path": "material/radio_button_checked"
+                      },
+                      "style": {
+                        "paddingRight": "20px"
+                      },
+                      "text": "Mon",
+                      "uncheckedIcon": {
+                        "color": {
+                          "enabled": "#9db8d1"
+                        },
+                        "path": "material/radio_button_unchecked"
+                      }
+                    },
+                    "type": "ia.input.checkbox"
+                  },
+                  {
+                    "custom": {
+                      "value": 3
+                    },
+                    "meta": {
+                      "name": "Tue"
+                    },
+                    "position": {
+                      "shrink": 0
+                    },
+                    "propConfig": {
+                      "props.selected": {
+                        "binding": {
+                          "config": {
+                            "expression": "indexOf({view.custom.weekdays},{this.custom.value})\u003e-1"
+                          },
+                          "type": "expr"
+                        },
+                        "onChange": {
+                          "enabled": null,
+                          "script": "\tif currentValue.value:\n\t\tif self.custom.value not in self.view.custom.weekdays:\n\t\t\tself.view.custom.weekdays.append(self.custom.value)\n\telse:\n\t\tif self.custom.value in self.view.custom.weekdays:\n\t\t\tself.view.custom.weekdays.remove(self.custom.value)"
+                        }
+                      }
+                    },
+                    "props": {
+                      "checkedIcon": {
+                        "color": {
+                          "enabled": "#0066FF"
+                        },
+                        "path": "material/radio_button_checked"
+                      },
+                      "indeterminateIcon": {
+                        "path": "material/radio_button_checked"
+                      },
+                      "style": {
+                        "paddingRight": "20px"
+                      },
+                      "text": "Tue",
+                      "uncheckedIcon": {
+                        "color": {
+                          "enabled": "#9db8d1"
+                        },
+                        "path": "material/radio_button_unchecked"
+                      }
+                    },
+                    "type": "ia.input.checkbox"
+                  },
+                  {
+                    "custom": {
+                      "value": 4
+                    },
+                    "meta": {
+                      "name": "Wed"
+                    },
+                    "position": {
+                      "shrink": 0
+                    },
+                    "propConfig": {
+                      "props.selected": {
+                        "binding": {
+                          "config": {
+                            "expression": "indexOf({view.custom.weekdays},{this.custom.value})\u003e-1"
+                          },
+                          "type": "expr"
+                        },
+                        "onChange": {
+                          "enabled": null,
+                          "script": "\tif currentValue.value:\n\t\tif self.custom.value not in self.view.custom.weekdays:\n\t\t\tself.view.custom.weekdays.append(self.custom.value)\n\telse:\n\t\tif self.custom.value in self.view.custom.weekdays:\n\t\t\tself.view.custom.weekdays.remove(self.custom.value)"
+                        }
+                      }
+                    },
+                    "props": {
+                      "checkedIcon": {
+                        "color": {
+                          "enabled": "#0066FF"
+                        },
+                        "path": "material/radio_button_checked"
+                      },
+                      "indeterminateIcon": {
+                        "path": "material/radio_button_checked"
+                      },
+                      "style": {
+                        "paddingRight": "20px"
+                      },
+                      "text": "Wed",
+                      "uncheckedIcon": {
+                        "color": {
+                          "enabled": "#9db8d1"
+                        },
+                        "path": "material/radio_button_unchecked"
+                      }
+                    },
+                    "type": "ia.input.checkbox"
+                  },
+                  {
+                    "custom": {
+                      "value": 5
+                    },
+                    "meta": {
+                      "name": "Thur"
+                    },
+                    "position": {
+                      "shrink": 0
+                    },
+                    "propConfig": {
+                      "props.selected": {
+                        "binding": {
+                          "config": {
+                            "expression": "indexOf({view.custom.weekdays},{this.custom.value})\u003e-1"
+                          },
+                          "type": "expr"
+                        },
+                        "onChange": {
+                          "enabled": null,
+                          "script": "\tif currentValue.value:\n\t\tif self.custom.value not in self.view.custom.weekdays:\n\t\t\tself.view.custom.weekdays.append(self.custom.value)\n\telse:\n\t\tif self.custom.value in self.view.custom.weekdays:\n\t\t\tself.view.custom.weekdays.remove(self.custom.value)"
+                        }
+                      }
+                    },
+                    "props": {
+                      "checkedIcon": {
+                        "color": {
+                          "enabled": "#0066FF"
+                        },
+                        "path": "material/radio_button_checked"
+                      },
+                      "indeterminateIcon": {
+                        "path": "material/radio_button_checked"
+                      },
+                      "style": {
+                        "paddingRight": "20px"
+                      },
+                      "text": "Thur",
+                      "uncheckedIcon": {
+                        "color": {
+                          "enabled": "#9db8d1"
+                        },
+                        "path": "material/radio_button_unchecked"
+                      }
+                    },
+                    "type": "ia.input.checkbox"
+                  },
+                  {
+                    "custom": {
+                      "value": 6
+                    },
+                    "meta": {
+                      "name": "Fri"
+                    },
+                    "position": {
+                      "shrink": 0
+                    },
+                    "propConfig": {
+                      "props.selected": {
+                        "binding": {
+                          "config": {
+                            "expression": "indexOf({view.custom.weekdays},{this.custom.value})\u003e-1"
+                          },
+                          "type": "expr"
+                        },
+                        "onChange": {
+                          "enabled": null,
+                          "script": "\tif currentValue.value:\n\t\tif self.custom.value not in self.view.custom.weekdays:\n\t\t\tself.view.custom.weekdays.append(self.custom.value)\n\telse:\n\t\tif self.custom.value in self.view.custom.weekdays:\n\t\t\tself.view.custom.weekdays.remove(self.custom.value)"
+                        }
+                      }
+                    },
+                    "props": {
+                      "checkedIcon": {
+                        "color": {
+                          "enabled": "#0066FF"
+                        },
+                        "path": "material/radio_button_checked"
+                      },
+                      "indeterminateIcon": {
+                        "path": "material/radio_button_checked"
+                      },
+                      "style": {
+                        "paddingRight": "20px"
+                      },
+                      "text": "Fri",
+                      "uncheckedIcon": {
+                        "color": {
+                          "enabled": "#9db8d1"
+                        },
+                        "path": "material/radio_button_unchecked"
+                      }
+                    },
+                    "type": "ia.input.checkbox"
+                  },
+                  {
+                    "custom": {
+                      "value": 7
+                    },
+                    "meta": {
+                      "name": "Sat"
+                    },
+                    "position": {
+                      "shrink": 0
+                    },
+                    "propConfig": {
+                      "props.selected": {
+                        "binding": {
+                          "config": {
+                            "expression": "indexOf({view.custom.weekdays},{this.custom.value})\u003e-1"
+                          },
+                          "type": "expr"
+                        },
+                        "onChange": {
+                          "enabled": null,
+                          "script": "\tif currentValue.value:\n\t\tif self.custom.value not in self.view.custom.weekdays:\n\t\t\tself.view.custom.weekdays.append(self.custom.value)\n\telse:\n\t\tif self.custom.value in self.view.custom.weekdays:\n\t\t\tself.view.custom.weekdays.remove(self.custom.value)"
+                        }
+                      }
+                    },
+                    "props": {
+                      "checkedIcon": {
+                        "color": {
+                          "enabled": "#0066FF"
+                        },
+                        "path": "material/radio_button_checked"
+                      },
+                      "indeterminateIcon": {
+                        "path": "material/radio_button_checked"
+                      },
+                      "style": {
+                        "paddingRight": "20px"
+                      },
+                      "text": "Sat",
+                      "uncheckedIcon": {
+                        "color": {
+                          "enabled": "#9db8d1"
+                        },
+                        "path": "material/radio_button_unchecked"
+                      }
+                    },
+                    "type": "ia.input.checkbox"
+                  }
+                ],
+                "meta": {
+                  "name": "Weeknights"
+                },
+                "position": {
+                  "basis": "40px",
+                  "shrink": 0
+                },
+                "props": {
+                  "style": {
+                    "classes": "Text/Add_HeaderText",
+                    "marginLeft": "20px",
+                    "overflow": "visible"
+                  }
+                },
+                "type": "ia.container.flex"
+              },
+              {
+                "children": [
+                  {
+                    "meta": {
+                      "name": "Ends_On"
+                    },
+                    "position": {
+                      "basis": "60%",
+                      "shrink": 0
+                    },
+                    "propConfig": {
+                      "props.params.date": {
+                        "binding": {
+                          "config": {
+                            "path": "view.custom.EventData.repeatDateUntil"
+                          },
+                          "type": "property"
+                        },
+                        "onChange": {
+                          "enabled": null,
+                          "script": "\tself.view.custom.endDateCalender \u003d currentValue.value"
+                        }
+                      }
+                    },
+                    "props": {
+                      "params": {
+                        "maxDate": null,
+                        "minDate": null,
+                        "text": "Repeat Until"
+                      },
+                      "path": "Events/ParticipantEvents/Registration/Dashboard/Cards/DateInput",
+                      "style": {
+                        "marginTop": "5px"
+                      },
+                      "useDefaultViewHeight": true
+                    },
+                    "type": "ia.display.view"
+                  }
+                ],
+                "meta": {
+                  "name": "EndDate"
+                },
+                "position": {
+                  "basis": "60px"
+                },
+                "props": {
+                  "style": {
+                    "marginLeft": "20px",
+                    "marginRight": "20px"
+                  }
+                },
+                "type": "ia.container.flex"
+              },
+              {
+                "children": [
+                  {
+                    "meta": {
+                      "name": "Label"
+                    },
+                    "position": {
+                      "shrink": 0
+                    },
+                    "props": {
+                      "style": {
+                        "color": "#9db8d1",
+                        "fontFamily": "Proxima NovaC Medium",
+                        "fontSize": "15px"
+                      },
+                      "text": "Serve Calendar"
+                    },
+                    "type": "ia.display.label"
+                  },
+                  {
+                    "meta": {
+                      "name": "Label_0"
+                    },
+                    "position": {
+                      "basis": "50px",
+                      "display": false
+                    },
+                    "props": {
+                      "style": {
+                        "color": "#D80000"
+                      },
+                      "text": "*"
+                    },
+                    "type": "ia.display.label"
+                  }
+                ],
+                "meta": {
+                  "name": "Serve Calendar"
+                },
+                "position": {
+                  "basis": "25px",
+                  "shrink": 0
+                },
+                "props": {
+                  "style": {
+                    "marginLeft": "20px",
+                    "marginTop": "10px"
+                  }
+                },
+                "type": "ia.container.flex"
+              },
+              {
+                "meta": {
+                  "name": "Click Once Label_0"
+                },
+                "position": {
+                  "basis": "25px",
+                  "shrink": 0
+                },
+                "props": {
+                  "style": {
+                    "borderBottomWidth": "1px",
+                    "classes": "Text/Add_HeaderText",
+                    "paddingLeft": "20px"
+                  },
+                  "text": "Modify your selection by choosing additional days or removing days.",
+                  "textStyle": {
+                    "fontSize": 15
+                  }
+                },
+                "type": "ia.display.label"
+              },
+              {
+                "children": [
+                  {
+                    "meta": {
+                      "name": "Table"
+                    },
+                    "position": {
+                      "basis": "300px",
+                      "grow": 1
+                    },
+                    "propConfig": {
+                      "props.params.daysHosting": {
+                        "binding": {
+                          "config": {
+                            "bidirectional": true,
+                            "path": "view.custom.schedule"
+                          },
+                          "type": "property"
+                        }
+                      },
+                      "props.params.endDate": {
+                        "binding": {
+                          "config": {
+                            "path": "view.custom.endDateCalender"
+                          },
+                          "type": "property"
+                        }
+                      },
+                      "props.params.nights": {
+                        "binding": {
+                          "config": {
+                            "path": "view.custom.EventData.scheduledWeekdays"
+                          },
+                          "type": "property"
+                        }
+                      },
+                      "props.params.startDate": {
+                        "binding": {
+                          "config": {
+                            "path": "..../StartsOn_Flex/Starts_On.props.params.date"
+                          },
+                          "type": "property"
+                        }
+                      }
+                    },
+                    "props": {
+                      "params": {
+                        "EndYear": 2026,
+                        "StartYear": 2023,
+                        "duration": 0,
+                        "enabled": true
+                      },
+                      "path": "Events/ParticipantEvents/Registration/Dashboard/Cards/Calendar/Table_Events"
+                    },
+                    "type": "ia.display.view"
+                  },
+                  {
+                    "children": [
+                      {
+                        "meta": {
+                          "name": "hosting"
+                        },
+                        "position": {
+                          "basis": "30px",
+                          "display": false,
+                          "shrink": 0
+                        },
+                        "props": {
+                          "checkedIcon": {
+                            "path": "material/circle"
+                          },
+                          "enabled": false,
+                          "style": {
+                            "classes": "Text/Add_HeaderText"
+                          },
+                          "text": "hosting",
+                          "uncheckedIcon": {
+                            "color": {
+                              "disabled": "#0066FF",
+                              "enabled": "#0066FF"
+                            },
+                            "path": "material/fiber_manual_record",
+                            "style": {
+                              "fontSize": "16px"
+                            }
+                          }
+                        },
+                        "type": "ia.input.checkbox"
+                      },
+                      {
+                        "meta": {
+                          "name": "Checkbox_2"
+                        },
+                        "position": {
+                          "basis": "30px",
+                          "display": false,
+                          "shrink": 0
+                        },
+                        "props": {
+                          "checkedIcon": {
+                            "path": "material/circle"
+                          },
+                          "enabled": false,
+                          "style": {
+                            "classes": "Text/Add_HeaderText"
+                          },
+                          "text": "most needed",
+                          "uncheckedIcon": {
+                            "color": {
+                              "disabled": "#00FF66",
+                              "enabled": "#00FF66"
+                            },
+                            "path": "material/radio_button_unchecked",
+                            "style": {
+                              "fontSize": "16px"
+                            }
+                          }
+                        },
+                        "type": "ia.input.checkbox"
+                      },
+                      {
+                        "meta": {
+                          "name": "Checkbox"
+                        },
+                        "position": {
+                          "basis": "30px",
+                          "display": false,
+                          "shrink": 0
+                        },
+                        "props": {
+                          "checkedIcon": {
+                            "path": "material/circle_filled"
+                          },
+                          "enabled": false,
+                          "style": {
+                            "classes": "Text/Add_HeaderText",
+                            "overflow": "visible"
+                          },
+                          "text": "not in season",
+                          "uncheckedIcon": {
+                            "color": {
+                              "disabled": "#dddddd",
+                              "enabled": "#dddddd"
+                            },
+                            "path": "material/fiber_manual_record",
+                            "style": {
+                              "fontSize": "16px"
+                            }
+                          }
+                        },
+                        "type": "ia.input.checkbox"
+                      },
+                      {
+                        "meta": {
+                          "name": "cancelled"
+                        },
+                        "position": {
+                          "basis": "30px",
+                          "display": false,
+                          "shrink": 0
+                        },
+                        "props": {
+                          "checkedIcon": {
+                            "path": "material/circle"
+                          },
+                          "enabled": false,
+                          "style": {
+                            "classes": "Text/Add_HeaderText"
+                          },
+                          "text": "cancelled",
+                          "uncheckedIcon": {
+                            "color": {
+                              "disabled": "#FF0000",
+                              "enabled": "#FF0000"
+                            },
+                            "path": "material/radio_button_unchecked",
+                            "style": {
+                              "fontSize": "16px"
+                            }
+                          }
+                        },
+                        "type": "ia.input.checkbox"
+                      }
+                    ],
+                    "meta": {
+                      "name": "FlexContainer"
+                    },
+                    "position": {
+                      "basis": "100px",
+                      "grow": 1
+                    },
+                    "props": {
+                      "direction": "column",
+                      "justify": "center"
+                    },
+                    "type": "ia.container.flex"
+                  }
+                ],
+                "meta": {
+                  "name": "Calendar"
+                },
+                "position": {
+                  "basis": "220px",
+                  "grow": 1,
+                  "shrink": 0
+                },
+                "props": {
+                  "style": {
+                    "marginLeft": "20px"
+                  }
+                },
+                "type": "ia.container.flex"
+              }
+            ],
+            "meta": {
+              "name": "Schedule_Flex"
+            },
+            "position": {
+              "basis": "480px"
+            },
+            "propConfig": {
+              "position.display": {
+                "binding": {
+                  "config": {
+                    "expression": "{../EventRepeats_Flex/EventRepeats_checkbox.props.params.checked}"
+                  },
+                  "type": "expr"
+                }
+              }
+            },
+            "props": {
+              "direction": "column",
+              "style": {
+                "borderBottomColor": "#D5D5D5",
+                "borderBottomStyle": "solid",
+                "borderBottomWidth": "1px",
+                "borderTopColor": "#D5D5D5",
+                "borderTopStyle": "solid",
+                "borderTopWidth": "1px",
+                "marginLeft": "20px",
+                "marginRight": "20px"
+              }
+            },
+            "type": "ia.container.flex"
+          },
+          {
+            "children": [
+              {
+                "meta": {
+                  "name": "EventActive"
+                },
+                "position": {
+                  "basis": "61%",
+                  "shrink": 0
+                },
+                "propConfig": {
+                  "props.params.SelectedValue": {
+                    "binding": {
+                      "config": {
+                        "bidirectional": true,
+                        "path": "view.custom.EventData.ParticipantActive"
+                      },
+                      "type": "property"
+                    }
+                  }
+                },
+                "props": {
+                  "params": {
+                    "Options": {
+                      "$": [
+                        "ds",
+                        192,
+                        1685421932652
+                      ],
+                      "$columns": [
+                        {
+                          "data": [
+                            1,
+                            0
+                          ],
+                          "name": "id",
+                          "type": "Integer"
+                        },
+                        {
+                          "data": [
+                            "Yes",
+                            "No"
+                          ],
+                          "name": "name",
+                          "type": "String"
+                        }
+                      ]
+                    },
+                    "Text": "Active Event"
+                  },
+                  "path": "Events/ParticipantEvents/Registration/Dashboard/Cards/SelectionInput",
+                  "style": {
+                    "marginTop": "5px"
+                  },
+                  "useDefaultViewHeight": true
+                },
+                "type": "ia.display.view"
+              }
+            ],
+            "meta": {
+              "name": "EventActive_Flex"
+            },
+            "position": {
+              "basis": "60px"
+            },
+            "props": {
+              "style": {
+                "marginLeft": "20px",
+                "marginRight": "20px"
+              }
+            },
+            "type": "ia.container.flex"
+          },
+          {
+            "children": [
+              {
+                "meta": {
+                  "name": "Category"
+                },
+                "position": {
+                  "basis": "61%",
+                  "shrink": 0
+                },
+                "propConfig": {
+                  "props.params.Options": {
+                    "binding": {
+                      "config": {
+                        "queryPath": "Event/ParticipantEvents/Registration/Get_Categories"
+                      },
+                      "type": "query"
+                    }
+                  },
+                  "props.params.SelectedValue": {
+                    "binding": {
+                      "config": {
+                        "bidirectional": true,
+                        "path": "view.custom.EventData.categoryId"
+                      },
+                      "type": "property"
+                    }
+                  }
+                },
+                "props": {
+                  "params": {
+                    "Text": "Category"
+                  },
+                  "path": "Events/ParticipantEvents/Registration/Dashboard/Cards/SelectionInput",
+                  "style": {
+                    "marginTop": "5px"
+                  },
+                  "useDefaultViewHeight": true
+                },
+                "type": "ia.display.view"
+              }
+            ],
+            "meta": {
+              "name": "Category_Flex"
+            },
+            "position": {
+              "basis": "60px"
+            },
+            "props": {
+              "style": {
+                "marginLeft": "20px",
+                "marginRight": "20px"
+              }
+            },
+            "type": "ia.container.flex"
+          },
+          {
+            "children": [
+              {
+                "meta": {
+                  "name": "Location"
+                },
+                "position": {
+                  "basis": "61.3%",
+                  "shrink": 0
+                },
+                "propConfig": {
+                  "props.params.Options": {
+                    "binding": {
+                      "config": {
+                        "queryPath": "Event/ParticipantEvents/Registration/Get_Locations"
+                      },
+                      "type": "query"
+                    }
+                  },
+                  "props.params.SelectedValue": {
+                    "binding": {
+                      "config": {
+                        "bidirectional": true,
+                        "path": "view.custom.EventData.locationId"
+                      },
+                      "type": "property"
+                    }
+                  }
+                },
+                "props": {
+                  "params": {
+                    "Text": "Location"
+                  },
+                  "path": "Events/ParticipantEvents/Registration/Dashboard/Cards/SelectionInput",
+                  "style": {
+                    "marginTop": "5px"
+                  },
+                  "useDefaultViewHeight": true
+                },
+                "type": "ia.display.view"
+              }
+            ],
+            "meta": {
+              "name": "Location_Flex"
+            },
+            "position": {
+              "basis": "60px"
+            },
+            "props": {
+              "style": {
+                "marginLeft": "20px",
+                "marginRight": "20px"
+              }
+            },
+            "type": "ia.container.flex"
+          },
+          {
+            "children": [
+              {
+                "meta": {
+                  "name": "facilitator"
+                },
+                "position": {
+                  "basis": "61%",
+                  "shrink": 0
+                },
+                "propConfig": {
+                  "props.params.Options": {
+                    "binding": {
+                      "config": {
+                        "queryPath": "Event/ParticipantEvents/Registration/Get_Facilitator"
+                      },
+                      "type": "query"
+                    }
+                  },
+                  "props.params.SelectedValue": {
+                    "binding": {
+                      "config": {
+                        "bidirectional": true,
+                        "path": "view.custom.EventData.facilitatorEmployeeId"
+                      },
+                      "type": "property"
+                    }
+                  }
+                },
+                "props": {
+                  "params": {
+                    "Text": "Facilitator"
+                  },
+                  "path": "Events/ParticipantEvents/Registration/Dashboard/Cards/SelectionInput",
+                  "style": {
+                    "marginTop": "5px"
+                  },
+                  "useDefaultViewHeight": true
+                },
+                "type": "ia.display.view"
+              }
+            ],
+            "meta": {
+              "name": "Facilitator_Flex"
+            },
+            "position": {
+              "basis": "60px"
+            },
+            "props": {
+              "style": {
+                "marginLeft": "20px",
+                "marginRight": "20px"
+              }
+            },
+            "type": "ia.container.flex"
+          },
+          {
+            "children": [
+              {
+                "meta": {
+                  "name": "Points"
+                },
+                "position": {
+                  "basis": "60%"
+                },
+                "propConfig": {
+                  "props.params.value": {
+                    "binding": {
+                      "config": {
+                        "bidirectional": true,
+                        "path": "view.custom.EventData.points"
+                      },
+                      "type": "property"
+                    }
+                  }
+                },
+                "props": {
+                  "params": {
+                    "label": "Points",
+                    "placeholder": ""
+                  },
+                  "path": "Events/ParticipantEvents/Registration/Dashboard/Cards/Input_Value",
+                  "style": {
+                    "marginTop": "5px"
+                  },
+                  "useDefaultViewHeight": true
+                },
+                "type": "ia.display.view"
+              }
+            ],
+            "meta": {
+              "name": "Points_Flex"
+            },
+            "position": {
+              "basis": "80px"
+            },
+            "props": {
+              "style": {
+                "marginLeft": "20px",
+                "marginRight": "20px"
+              }
+            },
+            "type": "ia.container.flex"
+          },
+          {
+            "children": [
+              {
+                "meta": {
+                  "name": "description"
+                },
+                "position": {
+                  "basis": "100%",
+                  "grow": 1,
+                  "shrink": 0
+                },
+                "propConfig": {
+                  "props.params.inputText": {
+                    "binding": {
+                      "config": {
+                        "bidirectional": true,
+                        "path": "view.custom.EventData.description"
+                      },
+                      "type": "property"
+                    }
+                  }
+                },
+                "props": {
+                  "params": {
+                    "text": "Description"
+                  },
+                  "path": "Events/ParticipantEvents/Registration/Dashboard/Cards/MultiLine_TextInput",
+                  "style": {
+                    "marginTop": "5px"
+                  }
+                },
+                "type": "ia.display.view"
+              }
+            ],
+            "meta": {
+              "name": "Description_Flex"
+            },
+            "position": {
+              "basis": "120px",
+              "grow": 1
+            },
+            "props": {
+              "style": {
+                "marginLeft": "20px",
+                "marginRight": "20px"
+              }
+            },
+            "type": "ia.container.flex"
+          }
+        ],
+        "meta": {
+          "name": "FlexContainer"
+        },
+        "position": {
+          "shrink": 0
+        },
+        "props": {
+          "direction": "column",
+          "style": {
+            "borderBottomColor": "#e6e6e6",
+            "borderBottomStyle": "solid",
+            "borderBottomWidth": 1,
+            "paddingBottom": "20px",
+            "paddingTop": "5px"
+          }
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "children": [
+          {
+            "events": {
+              "component": {
+                "onActionPerformed": {
+                  "config": {
+                    "script": "\timport traceback\n\timport datetime\n\ttry:\n\t\t#Get input values\n\t\teventName \u003d self.parent.parent.getChild(\"FlexContainer\").getChild(\"EventName_Flex\").getChild(\"EventName\").props.params.inputText\n\t\tstartsOn \u003d self.parent.parent.getChild(\"FlexContainer\").getChild(\"StartsOn_Flex\").getChild(\"Starts_On\").props.params.date\n\t\tdurationHours \u003d self.parent.parent.getChild(\"FlexContainer\").getChild(\"Duration_Flex\").getChild(\"Duration\").props.params.value\n\t\tendsOn \u003d self.parent.parent.getChild(\"FlexContainer\").getChild(\"EndsOn_Flex\").getChild(\"Ends_On\").props.params.date\n\t\tcategoryId \u003d self.parent.parent.getChild(\"FlexContainer\").getChild(\"Category_Flex\").getChild(\"Category\").props.params.SelectedValue\n\t\tlocationId \u003d self.parent.parent.getChild(\"FlexContainer\").getChild(\"Location_Flex\").getChild(\"Location\").props.params.SelectedValue\n\t\tscheduledWeekdays \u003d self.parent.parent.getChild(\"FlexContainer\").getChild(\"Schedule_Flex\").getChild(\"Calendar\").getChild(\"Table\").props.params.nights\n#\t\tlocations \u003d self.parent.parent.getChild(\"FlexContainer\").getChild(\"Row5\").getChild(\"Location\").props.params.selection\n\t\tpoints \u003d self.parent.parent.getChild(\"FlexContainer\").getChild(\"Points_Flex\").getChild(\"Points\").props.params.value\n\t\tdescription \u003d self.parent.parent.getChild(\"FlexContainer\").getChild(\"Description_Flex\").getChild(\"description\").props.params.inputText\n\t\tall_day \u003d self.parent.parent.getChild(\"FlexContainer\").getChild(\"AllDay_Flex\").getChild(\"AllDay_checkbox\").props.params.checked\n\t\ttimeCreated \u003d system.date.format(system.date.now(),\u0027yyyy-MM-dd hh:mm:ss\u0027)\t\n\t\tparticipantActive \u003d self.parent.parent.getChild(\"FlexContainer\").getChild(\"EventActive_Flex\").getChild(\"EventActive\").props.params.SelectedValue\n\t\tif participantActive \u003d\u003d 0:\n\t\t\ttimeRetired \u003d system.date.format(system.date.now(),\u0027yyyy-MM-dd hh:mm:ss\u0027)\n\t\telse:\n\t\t\ttimeRetired \u003d None\n\t\tIs_Update \u003d self.view.params.IsUpdate\n\t\trepeatFrequencyTypeId \u003d self.view.custom.RepeatFrequencyTypeId\n\t\tdateSelectionPattern \u003d self.view.custom.pattern\n\t\tdateSelectionDays \u003d self.view.custom.weekdays\n\t\tif dateSelectionDays !\u003d None and len(dateSelectionDays) \u003e 0:\n\t\t\tdateSelectionDays_Str \u003d \u0027[\u0027 + \u0027,\u0027.join([str(elem) for elem in dateSelectionDays]) + \u0027]\u0027\n\t\telse:\n\t\t\tdateSelectionDays_Str \u003d None\n\t\tfacilitatorEmployeeId \u003d self.parent.parent.getChild(\"FlexContainer\").getChild(\"Facilitator_Flex\").getChild(\"facilitator\").props.params.SelectedValue\n\t\tIsEventRepeat \u003d self.parent.parent.getChild(\"FlexContainer\").getChild(\"EventRepeats_Flex\").getChild(\"EventRepeats_checkbox\").props.params.checked\n\t\trepeatDateUntil \u003d self.parent.parent.getChild(\"FlexContainer\").getChild(\"Schedule_Flex\").getChild(\"EndDate\").getChild(\"Ends_On\").props.params.date\n#\t\tstartYear \u003d system.date.getYear(startsOn)\n#\t\tendYear \u003d system.date.getYear(endsOn)\n\t\tif repeatDateUntil!\u003dNone and repeatDateUntil!\u003d\u0027\u0027:\n#\t\t\tendYear \u003d system.date.getYear(repeatDateUntil)\n\t\t\trepeatDateUntil \u003d str(system.date.format(repeatDateUntil,\u0027yyyy-MM-dd\u0027)) + \u0027 00:00:00\u0027\n#\t\tsystem.perspective.print(str(startYear)+\u0027 \u0027+ str(endYear))\n#\t\tsystem.perspective.print(str(startsOn)+\u0027 \u0027+ str(endsOn))\n\t\tNewHostDays \u003d self.view.custom.NewHostDays\n\t\t#CanceledHostDays \u003d self.parent.parent.getChild(\"FlexContainer\").getChild(\"Schedule_Flex\").getChild(\"Calendar\").getChild(\"Table\").props.params.CanceledSchedule\n\t\tstartYear \u003d self.parent.parent.getChild(\"FlexContainer\").getChild(\"Schedule_Flex\").getChild(\"Calendar\").getChild(\"Table\").props.params.StartYear\n\t\tendYear \u003d self.parent.parent.getChild(\"FlexContainer\").getChild(\"Schedule_Flex\").getChild(\"Calendar\").getChild(\"Table\").props.params.EndYear\n\t\t\n\t\t# Check if compulsory fields are not None\n\t\tif eventName \u003d\u003d None or eventName \u003d\u003d \u0027\u0027:\n\t\t\tvalid \u003d False\n\t\t\terror_message \u003d \"Please fill in the Event Name before saving.\"\n\t\telif startsOn \u003d\u003d None or startsOn \u003d\u003d \u0027\u0027:\n\t\t\tvalid \u003d False\n\t\t\terror_message \u003d \"Please select Stars-On Date before saving.\"\n\t\telif endsOn \u003d\u003d None or endsOn \u003d\u003d \u0027\u0027:\n\t\t\tvalid \u003d False\n\t\t\terror_message \u003d \"Please select Ends-On Date before saving.\"\n\t\telif categoryId \u003d\u003d None or categoryId \u003d\u003d \u0027\u0027 or categoryId \u003c 0:\n\t\t\tvalid \u003d False\n\t\t\terror_message \u003d \"Please select Category before saving.\"\n\t\telif locationId \u003d\u003d None or locationId \u003d\u003d \u0027\u0027 or locationId \u003c 0:\n\t\t\tvalid \u003d False\n\t\t\terror_message \u003d \"Please select Loacation before saving.\"\n#\t\telif locations \u003d\u003d None or locations \u003d\u003d \u0027\u0027 or len(locations)\u003c1:\n#\t\t\tvalid \u003d False\n#\t\t\terror_message \u003d \"Please select Loacation before saving.\"\n\t\telse:\n\t\t\tvalid \u003d True\n\t\t\t\n\t\t### Check if data is valid otherwise show error message.\n\t\tif valid:\n\t\t\tif all_day \u003d\u003d True:\n\t\t\t\tall_day \u003d 1\n\t\t\t\tduration \u003d  system.date.daysBetween(startsOn,endsOn) # diff between startsOn and EndsOn\n\t\t\t\tstartsOn_Old \u003d startsOn\n\t\t\t\tendsOn_Old \u003d endsOn\n\t\t\t\tstartsOn_time \u003d \u002700:00:00\u0027\n\t\t\t\tendsOn_time \u003d \u002723:59:59\u0027\n\t\t\t\tstartsOn \u003d str(system.date.format(startsOn,\u0027yyyy-MM-dd\u0027)) + \u0027 00:00:00\u0027\n\t\t\t\tendsOn \u003d str(system.date.format(endsOn,\u0027yyyy-MM-dd\u0027)) + \u0027 23:59:59\u0027\n\t\t\telse:\n\t\t\t\tall_day \u003d 0\n\t\t\t\tduration \u003d system.date.daysBetween(startsOn,endsOn) # diff between startsOn and EndsOn\n\t\t\t\tstartsOn_Old \u003d startsOn\n\t\t\t\tendsOn_Old \u003d endsOn\n\t\t\t\tstartsOn_time \u003d system.date.format(startsOn,\u0027HH:mm:ss\u0027)\n\t\t\t\tendsOn_time \u003d system.date.format(endsOn,\u0027HH:mm:ss\u0027)\n\t\t\t\tstartsOn \u003d system.date.format(startsOn,\u0027yyyy-MM-dd HH:mm:ss\u0027)\n\t\t\t\tendsOn \u003d system.date.format(endsOn,\u0027yyyy-MM-dd HH:mm:ss\u0027)\n\t\t\t### Create transaction\n\t\t\ttransactionFailed \u003d False\n\t\t\tsuccess \u003d False\n\t\t\thuman_id \u003d None\n\t\t\ttxId \u003d system.db.beginTransaction(timeout\u003d5000)\n\t\t\ttry:\n\t\t\t\tif Is_Update \u003d\u003d False:\n\t\t\t\t\t# insert new event in participant.Event table\n\t\t\t\t\tparameter \u003d {\n\t\t\t\t\t\t\t\t\u0027categoryId\u0027:categoryId,\n\t\t\t\t\t\t\t\t\u0027eventName\u0027:eventName,\n\t\t\t\t\t\t\t\t\u0027startsOn\u0027:startsOn,\n\t\t\t\t\t\t\t\t\u0027endsOn\u0027:endsOn,\n\t\t\t\t\t\t\t\t\u0027all_day\u0027:all_day,\n\t\t\t\t\t\t\t\t\u0027description\u0027:description,\n\t\t\t\t\t\t\t\t\u0027points\u0027:points,\n\t\t\t\t\t\t\t\t\u0027timeCreated\u0027: timeCreated,\n\t\t\t\t\t\t\t\t\u0027repeatFrequencyTypeId\u0027:repeatFrequencyTypeId,\n\t\t\t\t\t\t\t\t\u0027dateSelectionPattern\u0027 : dateSelectionPattern,\n\t\t\t\t\t\t\t\t\u0027dateSelectionDays\u0027 : str(dateSelectionDays_Str),\n\t\t\t\t\t\t\t\t\u0027facilitatorEmployeeId\u0027 : facilitatorEmployeeId,\n\t\t\t\t\t\t\t\t\u0027IsEventRepeat\u0027 : IsEventRepeat,\n\t\t\t\t\t\t\t\t\u0027repeatDateUntil\u0027 : repeatDateUntil,\n\t\t\t\t\t\t\t\t\u0027scheduledWeekdays\u0027: scheduledWeekdays,\n\t\t\t\t\t\t\t\t\u0027duration_hours\u0027: durationHours,\n\t\t\t\t\t\t\t\t\u0027locationId\u0027: locationId,\n\t\t\t\t\t\t\t\t\u0027timeRetired\u0027:timeRetired\n\t\t\t\t\t\t\t\t}\n\t\t\t\t\tsystem.db.runNamedQuery(\u0027Event/ParticipantEvents/Registration/Insert_NewEvent\u0027,parameter)\n\t\t\t\t\t# get eventId of last added event\n\t\t\t\t\tquery \u003d \"select max(id) from [participant].[Events]\"\n\t\t\t\t\tresult \u003d system.db.runPrepQuery(query)\n\t\t\t\t\teventId \u003d result.getValueAt(0,0)\n\t\t\t\telse:\n\t\t\t\t\teventId \u003d self.view.params.event_id\n\t\t\t\t\t# update schedule event in participant.EventSchedule table\n\t\t\t\t\tresult \u003d system.db.runPrepQuery(\"SELECT startsOn,endsOn FROM participant.Events where id \u003d \"+str(eventId))\n\t\t\t\t\tevent_startDate \u003d result.getValueAt(0,0)\n\t\t\t\t\tevent_endDate \u003d result.getValueAt(0,1)\n\t\t\t\t\tif event_startDate !\u003d startsOn or event_endDate !\u003d endsOn:\n\t\t\t\t\t\tquery \u003d \"select startsOn,endsOn from [participant].[EventSchedule] where timeRetired IS NULL and eventId \u003d\" + str(eventId)\n\t\t\t\t\t\tresult \u003d system.db.runPrepQuery(query)\n#\t\t\t\t\t\tstartsOn_New \u003d system.date.getDate(system.date.getYear(startsOn), system.date.getMonth(startsOn), system.date.getDayOfMonth(startsOn))\n#\t\t\t\t\t\tendsOn_New \u003d system.date.getDate(system.date.getYear(endsOn), system.date.getMonth(endsOn), system.date.getDayOfMonth(endsOn))\n\t\t\t\t\t\tfor k in range(0,result.getRowCount()):\n\t\t\t\t\t\t\tstartDate_sql \u003d result.getValueAt(k,0)\n\t\t\t\t\t\t\tendDate_sql \u003d result.getValueAt(k,1)\n\t\t\t\t\t\t\tif startDate_sql \u003d\u003d event_startDate and endDate_sql \u003d\u003d event_endDate:\n\t\t\t\t\t\t\t\tparameter \u003d {\n\t\t\t\t\t\t\t\t\t\u0027eventId\u0027:eventId,\n\t\t\t\t\t\t\t\t\t\u0027startsOn\u0027:startDate_sql,\n\t\t\t\t\t\t\t\t\t\u0027endsOn\u0027:endDate_sql,\n\t\t\t\t\t\t\t\t\t\u0027startsOn_New\u0027:startsOn,\n\t\t\t\t\t\t\t\t\t\u0027endsOn_New\u0027:endsOn,\n\t\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t\tsystem.db.runNamedQuery(\u0027Event/ParticipantEvents/Registration/Update_ScheduledEventDates\u0027,parameter)\n\t\t\t\t\t\t\t\n\t\t\t\t\t\t\telif (startDate_sql \u003c startsOn_Old or endDate_sql \u003c startsOn_Old) and (startDate_sql !\u003d event_startDate and endDate_sql !\u003d event_endDate):\n\t\t\t\t\t\t\t\tparameter \u003d {\n\t\t\t\t\t\t\t\t\t\t\t\u0027eventId\u0027:eventId,\n\t\t\t\t\t\t\t\t\t\t\t\u0027startsOn\u0027:startDate_sql,\n\t\t\t\t\t\t\t\t\t\t\t\u0027endsOn\u0027:endDate_sql\n\t\t\t\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t\tsystem.db.runNamedQuery(\u0027Event/ParticipantEvents/Registration/Delete_ScheduledEvent\u0027,parameter)\n\t\t\t\t\t\t\t\tsystem.perspective.print(\u0027delete1\u0027)\n\t\t\t\t\t\t\telse:\n\t\t\t\t\t\t\t\tdate \u003d startDate_sql\n\t\t\t\t\t\t\t\tstart_date \u003d str(system.date.format(date,\u0027yyyy-MM-dd \u0027)) + str(startsOn_time)\n\t\t\t\t\t\t\t\tend_date \u003d  str(system.date.format(system.date.addDays(date, duration),\u0027yyyy-MM-dd \u0027)) + str(endsOn_time)\n\t\t\t\t\t\t\t\tparameter \u003d {\n\t\t\t\t\t\t\t\t\t\u0027eventId\u0027:eventId,\n\t\t\t\t\t\t\t\t\t\u0027startsOn\u0027:startDate_sql,\n\t\t\t\t\t\t\t\t\t\u0027endsOn\u0027:endDate_sql,\n\t\t\t\t\t\t\t\t\t\u0027startsOn_New\u0027:start_date,\n\t\t\t\t\t\t\t\t\t\u0027endsOn_New\u0027:end_date,\n\t\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t\tsystem.db.runNamedQuery(\u0027Event/ParticipantEvents/Registration/Update_ScheduledEventDates\u0027,parameter)\t\t\t\t\t\t\t\n\t\t\t\t\t# update event in participant.Event table\n#\t\t\t\t\tsystem.perspective.print(\u0027dateSelectionDays: \u0027+str(dateSelectionDays_Str))\n\t\t\t\t\tsystem.perspective.print(\u0027points: \u0027+str(points))\n\t\t\t\t\tsystem.perspective.print(\u0027description: \u0027+str(description))\n\t\t\t\t\tparameter \u003d {\n\t\t\t\t\t\t\t\t\u0027eventId\u0027:eventId,\n\t\t\t\t\t\t\t\t\u0027categoryId\u0027:categoryId,\n\t\t\t\t\t\t\t\t\u0027eventName\u0027:eventName,\n\t\t\t\t\t\t\t\t\u0027startsOn\u0027:startsOn,\n\t\t\t\t\t\t\t\t\u0027endsOn\u0027:endsOn,\n\t\t\t\t\t\t\t\t\u0027all_day\u0027:all_day,\n\t\t\t\t\t\t\t\t\u0027description\u0027:description,\n\t\t\t\t\t\t\t\t\u0027points\u0027:points,\n\t\t\t\t\t\t\t\t\u0027repeatFrequencyTypeId\u0027:repeatFrequencyTypeId,\n\t\t\t\t\t\t\t\t\u0027dateSelectionPattern\u0027 : dateSelectionPattern,\n\t\t\t\t\t\t\t\t\u0027dateSelectionDays\u0027 : str(dateSelectionDays_Str),\n\t\t\t\t\t\t\t\t\u0027facilitatorEmployeeId\u0027 : facilitatorEmployeeId,\n\t\t\t\t\t\t\t\t\u0027IsEventRepeat\u0027 : IsEventRepeat,\n\t\t\t\t\t\t\t\t\u0027repeatDateUntil\u0027 : repeatDateUntil,\n\t\t\t\t\t\t\t\t\u0027scheduledWeekdays\u0027: scheduledWeekdays,\n\t\t\t\t\t\t\t\t\u0027duration_hours\u0027: durationHours,\n\t\t\t\t\t\t\t\t\u0027locationId\u0027: locationId,\n\t\t\t\t\t\t\t\t\u0027timeRetired\u0027: timeRetired\n\t\t\t\t\t\t\t\t}\n\t\t\t\t\tsystem.db.runNamedQuery(\u0027Event/ParticipantEvents/Registration/Update_Event\u0027,parameter)\t\t\t\t\n\t\t\t\t# Schedule\n\t\t\t\t##NewHostDays startYear endYear\n#\t\t\t\tsystem.perspective.print(\u0027Duration: \u0027 + str(duration))\n\t\t\t\thost_days_list \u003d []\n\t\t\t\tfor days in NewHostDays:\n\t\t\t\t\tdays \u003d int(days)\n\t\t\t\t\tif days \u003c 182:\n\t\t\t\t\t\tyear \u003d int(endYear)\n\t\t\t\t\telse:\n\t\t\t\t\t\tyear \u003d int(startYear)\n\t\t\t\t\tdate \u003d datetime.datetime(year, 1, 1) + datetime.timedelta(days - 1)\n\t\t\t\t\tsystem.perspective.print(date)\n\t\t\t\t\tmonth \u003d date.month\n#\t\t\t\t\tsystem.perspective.print(month)\n#\t\t\t\t\tif month \u003d\u003d 1:\n#\t\t\t\t\t\tmonth \u003d 12\n#\t\t\t\t\telse:\n\t\t\t\t\tmonth \u003d month - 1\n\t\t\t\t\tdate \u003d system.date.getDate(year, month, date.day)\n\t\t\t\t\tsystem.perspective.print(date)\n\t\t\t\t\tstart_date \u003d str(system.date.format(date,\u0027yyyy-MM-dd \u0027)) + str(startsOn_time)\n\t\t\t\t\tend_date \u003d  str(system.date.format(system.date.addDays(date, duration),\u0027yyyy-MM-dd \u0027)) + str(endsOn_time)\n\t\t\t\t\tif (start_date,end_date) not in host_days_list:\n\t\t\t\t\t\thost_days_list.append((start_date,end_date))\n\t\t\t\t#if Is_Update \u003d\u003d False:\n\t\t\t\tif (startsOn,endsOn) not in host_days_list:\n\t\t\t\t\thost_days_list.append((startsOn,endsOn))\n\t\t\t\t\t\t\t\t\t\n\t\t\t\tsystem.perspective.print(\u0027host_days_list: \u0027 + str(host_days_list))\n\t\t\t\t#check schedule exist if not then insert\n\t\t\t\tquery \u003d \"select startsOn,endsOn from [participant].[EventSchedule] where timeRetired IS NULL and eventId \u003d\" + str(eventId)\n\t\t\t\tresult \u003d system.db.runPrepQuery(query)\n\t\t\t\t# if  IsEventRepeat \u003d True then insert/remove events for selected evntId, else set timeretired\n\t\t\t\tif IsEventRepeat \u003d\u003d True:\n\t\t\t\t\t#insert new schedule\n\t\t\t\t\tfor i in range(0,len(host_days_list)):\n\t\t\t\t\t\tstartDate \u003d host_days_list[i][0]\n\t\t\t\t\t\tendDate \u003d host_days_list[i][1]\n\t\t\t\t\t\tFound \u003d False\n\t\t\t\t\t\tif result.getRowCount() \u003e 0:\n\t\t\t\t\t\t\tfor j in range(0,result.getRowCount()):\n\t\t\t\t\t\t\t\tstartDate_sql \u003d system.date.format(result.getValueAt(j,0),\u0027yyyy-MM-dd HH:mm:ss\u0027)\n\t\t\t\t\t\t\t\tendDate_sql \u003d  system.date.format(result.getValueAt(j,1),\u0027yyyy-MM-dd HH:mm:ss\u0027)\n\t\t\t\t\t\t\t\tif str(startDate) \u003d\u003d str(startDate_sql) and str(endDate) \u003d\u003d str(endDate_sql):\n\t\t\t\t\t\t\t\t\tFound \u003d True\n\t\t\t\t\t\tif Found \u003d\u003d False:\n\t\t\t\t\t\t\t# insert record for scheduled event in EventScheduled table\n\t\t\t\t\t\t\tparameter \u003d {\n\t\t\t\t\t\t\t\t\t\t\u0027eventId\u0027:eventId,\n\t\t\t\t\t\t\t\t\t\t\u0027startsOn\u0027:startDate,\n\t\t\t\t\t\t\t\t\t\t\u0027endsOn\u0027:endDate,\n\t\t\t\t\t\t\t\t\t\t\u0027notes\u0027:\u0027\u0027,\n\t\t\t\t\t\t\t\t\t\t\u0027timeCreated\u0027:timeCreated,\n\t\t\t\t\t\t\t\t\t\t\u0027duration\u0027:durationHours,\n\t\t\t\t\t\t\t\t\t\t\u0027locationId\u0027:locationId,\n\t\t\t\t\t\t\t\t\t\t\u0027points\u0027:points,\n\t\t\t\t\t\t\t\t\t\t\u0027description\u0027:description\n\t\t\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\tsystem.db.runNamedQuery(\u0027Event/ParticipantEvents/Registration/Insert_ScheduledEvent\u0027,parameter)\t\n\t\t\t\t\t#delete cancelled schedule\t\n\t\t\t\t\tif result.getRowCount() \u003e 0:\n\t\t\t\t\t\tfor j in range(0,result.getRowCount()):\n\t\t\t\t\t\t\tstartDate_sql \u003d system.date.format(result.getValueAt(j,0),\u0027yyyy-MM-dd HH:mm:ss\u0027)\n\t\t\t\t\t\t\tendDate_sql \u003d  system.date.format(result.getValueAt(j,1),\u0027yyyy-MM-dd HH:mm:ss\u0027)\n\t\t\t\t\t\t\tFound \u003d False\n\t\t\t\t\t\t\tfor i in range(0,len(host_days_list)):\n\t\t\t\t\t\t\t\tstartDate \u003d host_days_list[i][0]\n\t\t\t\t\t\t\t\tendDate \u003d host_days_list[i][1]\n\t\t\t\t\t\t\t\tif str(startDate) \u003d\u003d str(startDate_sql) and str(endDate) \u003d\u003d str(endDate_sql):\n\t\t\t\t\t\t\t\t\tFound \u003d True\n\t\t\t\t\t\t\tif Found \u003d\u003d False:\n\t\t\t\t\t\t\t\t# cancel record for scheduled event in EventScheduled table\n\t\t\t\t\t\t\t\tparameter \u003d {\n\t\t\t\t\t\t\t\t\t\t\t\u0027eventId\u0027:eventId,\n\t\t\t\t\t\t\t\t\t\t\t\u0027startsOn\u0027:startDate_sql,\n\t\t\t\t\t\t\t\t\t\t\t\u0027endsOn\u0027:endDate_sql\n\t\t\t\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t\tsystem.db.runNamedQuery(\u0027Event/ParticipantEvents/Registration/Delete_ScheduledEvent\u0027,parameter)\t\n\t\t\t\telse: # if repeate Event checkbox not selected\n\t\t\t\t\t#insert new schedule for startdate\n#\t\t\t\t\tsystem.perspective.print(\u0027host_days_list\u0027)\n#\t\t\t\t\tsystem.perspective.print(host_days_list)\n\t\t\t\t\tfor i in range(0,len(host_days_list)):\n\t\t\t\t\t\tstartDate \u003d host_days_list[i][0]\n\t\t\t\t\t\tendDate \u003d host_days_list[i][1]\n\t\t\t\t\t\tFound \u003d False\n\t\t\t\t\t\tif result.getRowCount() \u003e 0:\n\t\t\t\t\t\t\tfor j in range(0,result.getRowCount()):\n\t\t\t\t\t\t\t\tstartDate_sql \u003d system.date.format(result.getValueAt(j,0),\u0027yyyy-MM-dd HH:mm:ss\u0027)\n\t\t\t\t\t\t\t\tendDate_sql \u003d  system.date.format(result.getValueAt(j,1),\u0027yyyy-MM-dd HH:mm:ss\u0027)\n\t\t\t\t\t\t\t\tif str(startDate) \u003d\u003d str(startDate_sql) and str(endDate) \u003d\u003d str(endDate_sql):\n\t\t\t\t\t\t\t\t\tFound \u003d True\n\t\t\t\t\t\tif Found \u003d\u003d False:\n\t\t\t\t\t\t\t# insert record for scheduled event in EventScheduled table\n\t\t\t\t\t\t\tparameter \u003d {\n\t\t\t\t\t\t\t\t\t\t\u0027eventId\u0027:eventId,\n\t\t\t\t\t\t\t\t\t\t\u0027startsOn\u0027:startDate,\n\t\t\t\t\t\t\t\t\t\t\u0027endsOn\u0027:endDate,\n\t\t\t\t\t\t\t\t\t\t\u0027notes\u0027:\u0027\u0027,\n\t\t\t\t\t\t\t\t\t\t\u0027timeCreated\u0027:timeCreated,\n\t\t\t\t\t\t\t\t\t\t\u0027duration\u0027:durationHours,\n\t\t\t\t\t\t\t\t\t\t\u0027locationId\u0027:locationId,\n\t\t\t\t\t\t\t\t\t\t\u0027points\u0027:points,\n\t\t\t\t\t\t\t\t\t\t\u0027description\u0027:description\n\t\t\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\tsystem.db.runNamedQuery(\u0027Event/ParticipantEvents/Registration/Insert_ScheduledEvent\u0027,parameter)\t\n\t\t\t\t\t\telse:\n\t\t\t\t\t\t\t#update date \n\t\t\t\t\t\t\tparameter \u003d {\n\t\t\t\t\t\t\t\t\u0027eventId\u0027:eventId,\n\t\t\t\t\t\t\t\t\u0027startsOn\u0027:startDate_sql,\n\t\t\t\t\t\t\t\t\u0027endsOn\u0027:endDate_sql,\n\t\t\t\t\t\t\t\t\u0027startsOn_New\u0027:startDate,\n\t\t\t\t\t\t\t\t\u0027endsOn_New\u0027:endDate,\n\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\tsystem.db.runNamedQuery(\u0027Event/ParticipantEvents/Registration/Update_ScheduledEventDates\u0027,parameter)\n\t\t\t\t\t\t\t\n\t\t\t\t\tif result.getRowCount() \u003e 0:\n\t\t\t\t\t\tfor j in range(0,result.getRowCount()):\n\t\t\t\t\t\t\tstartDate_sql \u003d result.getValueAt(j,0)\n\t\t\t\t\t\t\tendDate_sql \u003d  result.getValueAt(j,1)\n\t\t\t\t\t\t\tif startDate_sql !\u003d event_startDate and endDate_sql !\u003d event_endDate:\n\t\t\t\t\t\t\t\t# cancel record for scheduled event in EventScheduled table\n\t\t\t\t\t\t\t\tparameter \u003d {\n\t\t\t\t\t\t\t\t\t\t\t\u0027eventId\u0027:eventId,\n\t\t\t\t\t\t\t\t\t\t\t\u0027startsOn\u0027:startDate_sql,\n\t\t\t\t\t\t\t\t\t\t\t\u0027endsOn\u0027:endDate_sql\n\t\t\t\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t\tsystem.db.runNamedQuery(\u0027Event/ParticipantEvents/Registration/Delete_ScheduledEvent\u0027,parameter) \n\t\t\t\t\t\t\t\tsystem.perspective.print(\u0027delete2\u0027)\n\t\t\t#Transaction failure :(\n\t\t\texcept:\n\t\t\t\ttransactionFailed \u003d True\n\t\t\t\tlogger \u003d system.util.getLogger(\"Events RegisterEvent Button Save\")\n\t\t\t\tmsg \u003d traceback.format_exc()\n\t\t\t\tlogger.error(msg)\n\t\t\t\t\n\t\t\t### Check if an error occured rollback the transaction\n\t\t\tif transactionFailed:\n\t\t\t\tsystem.db.rollbackTransaction(txId)\n\t\t\t\tpayload \u003d {\u0027message\u0027:\"Something went wrong while saving data. Please try again.\"}\n\t\t\t\tsystem.perspective.sendMessage(\"showError\", payload\u003dpayload, scope\u003d\"view\")\n\t\t\t### Otherwise commit \n\t\t\telse:\n\t\t\t\t#Success!!!!\n\t\t\t\tsystem.db.commitTransaction(txId)\n\t\t\t\tpayload \u003d {\u0027message\u0027:\"Event Added Successfully\"}\n\t\t\t\tsystem.perspective.sendMessage(\"showError\", payload\u003dpayload, scope\u003d\"view\")\n\t\t\t\tsuccess \u003d True\n\t\t\t### Always close the transaction\t\n\t\t\tsystem.db.closeTransaction(txId)\n\t\t\t# If successful reset and close the dock\n\t\t\tif success:\n\t\t\t\tself.view.params.func_new_data \u003d False\n\t\t\t\tsystem.perspective.sendMessage(\"ResetSearch\", payload\u003d{}, scope\u003d\"session\")\n\t\t\t\tsystem.perspective.sendMessage(\"ResetRegistration\", payload\u003d{}, scope\u003d\"session\")\n\t\t\t\tsystem.perspective.closeDock(\u0027RegisterEvent\u0027)\n\t\t\t\t# refresh overview table\n\t\t\t\tsystem.perspective.sendMessage(\"refreshEvents\", payload\u003dpayload, scope\u003d\"session\")\n\t\t\t\t#Go to the detail view\n\t\t\t\ttab_id \u003d 2 # registration\n\t\t\t\t#system.perspective.navigate(\"Events/Detail/\" + str(eventId) + \"/\" + str(tab_id))\n\t\t\t\t\n\t\t\n\t\telse:\n\t\t\tpayload \u003d {\u0027message\u0027:error_message}\n\t\t\tsystem.perspective.sendMessage(\"showError\", payload\u003dpayload, scope\u003d\"view\")\n\texcept:\n\t\tlogger \u003d system.util.getLogger(\"Events Register Event Save Button\")\n\t\tmsg \u003d traceback.format_exc()\n\t\tlogger.error(msg)"
+                  },
+                  "scope": "G",
+                  "type": "script"
+                }
+              }
+            },
+            "meta": {
+              "name": "Button Save"
+            },
+            "position": {
+              "basis": "120px",
+              "shrink": 0
+            },
+            "props": {
+              "style": {
+                "classes": "Buttons/Main",
+                "marginBottom": "15px",
+                "marginLeft": "20px",
+                "marginRight": "20px",
+                "marginTop": "15px"
+              },
+              "text": "Save"
+            },
+            "type": "ia.input.button"
+          },
+          {
+            "events": {
+              "component": {
+                "onActionPerformed": [
+                  {
+                    "config": {
+                      "script": "\tself.view.params.func_new_data \u003d False\n\tsystem.perspective.sendMessage(\"ResetSearch\", payload\u003d{}, scope\u003d\"session\")\n\tsystem.perspective.sendMessage(\"ResetRegistration\", payload\u003d{}, scope\u003d\"session\")\n\tsystem.perspective.closeDock(\u0027RegisterEvent\u0027)\n\t"
+                    },
+                    "scope": "G",
+                    "type": "script"
+                  },
+                  {
+                    "config": {
+                      "id": "RegisterParticipant",
+                      "type": "close"
+                    },
+                    "scope": "C",
+                    "type": "dock"
+                  }
+                ]
+              }
+            },
+            "meta": {
+              "name": "Button Cancel"
+            },
+            "position": {
+              "basis": "120px",
+              "shrink": 0
+            },
+            "props": {
+              "style": {
+                "classes": "Buttons/Secondary_Orange",
+                "marginBottom": "15px",
+                "marginTop": "15px"
+              },
+              "text": "Cancel"
+            },
+            "type": "ia.input.button"
+          },
+          {
+            "meta": {
+              "name": "Label"
+            },
+            "position": {
+              "basis": "50px",
+              "display": false,
+              "grow": 1
+            },
+            "props": {
+              "style": {
+                "classes": "Text/Error_Message"
+              },
+              "text": "Event Added Successfully"
+            },
+            "scripts": {
+              "customMethods": [],
+              "extensionFunctions": null,
+              "messageHandlers": [
+                {
+                  "messageType": "showError",
+                  "pageScope": false,
+                  "script": "\timport time\n\tsystem.perspective.print(payload[\u0027message\u0027])\n\tself.props.text \u003d payload[\u0027message\u0027]\n\tself.position.display \u003d True\n\ttime.sleep(5)\n\tself.position.display \u003d False",
+                  "sessionScope": false,
+                  "viewScope": true
+                }
+              ]
+            },
+            "type": "ia.display.label"
+          }
+        ],
+        "meta": {
+          "name": "Buttons"
+        },
+        "position": {
+          "basis": "65px",
+          "shrink": 0
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "meta": {
+          "name": "RegisterEvent"
+        },
+        "position": {
+          "basis": "320px"
+        },
+        "props": {
+          "params": {
+            "IsUpdate": false,
+            "event_id": -1,
+            "event_name": "",
+            "func_new_data": false,
+            "nights": 0,
+            "schedule": null
+          },
+          "path": "Events/ParticipantEvents/Registration/Dashboard/RegisterEvent"
+        },
+        "type": "ia.display.view"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column",
+      "style": {
+        "classes": "Background/Default"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

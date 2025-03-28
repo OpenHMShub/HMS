@@ -1,0 +1,1625 @@
+{
+  "custom": {},
+  "events": {
+    "system": {
+      "onStartup": {
+        "config": {
+          "script": "\ttry:\n\t\troot \u003d self.getChild(\"root\")\n\t\troot.setPropsDropdowns()\n\t\t#emvSearch \u003d root.getChild(\"emvSearch\")\n\t\t#emvSearch.props.params.keyUpPulse \u003d False\n\texcept:\n\t\timport traceback\n\t\tlogger \u003d system.util.getLogger(\"Shelter\")\n\t\tmsg \u003d self.name + \u0027:\\n\u0027\n\t\tmsg +\u003d traceback.format_exc()\n\t\tlogger.error(msg)\t\t\t"
+        },
+        "scope": "G",
+        "type": "script"
+      }
+    }
+  },
+  "params": {
+    "action": null,
+    "dateRangeFrom": "11/25/2024 00:00:00",
+    "dateRangeTo": "11/26/2024 23:59:59",
+    "searchText": "%%",
+    "selectedDisplay": 3,
+    "shelter": null,
+    "staffId": null
+  },
+  "propConfig": {
+    "params.action": {
+      "binding": {
+        "config": {
+          "path": "/root/emvAction.props.params.selection"
+        },
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.dateRangeFrom": {
+      "binding": {
+        "config": {
+          "path": "session.custom.dateRangeFromDate"
+        },
+        "transforms": [
+          {
+            "code": "\tdate \u003d str(value) + \u0027 00:00:00\u0027\n\treturn date",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.dateRangeTo": {
+      "binding": {
+        "config": {
+          "path": "session.custom.dateRangeToDate"
+        },
+        "transforms": [
+          {
+            "code": "\tdate \u003d str(value) + \u0027 23:59:59\u0027\n\treturn date",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.searchText": {
+      "binding": {
+        "config": {
+          "path": "/root/emvSearch.props.params.searchText"
+        },
+        "transforms": [
+          {
+            "code": "\tif value is None or value \u003d\u003d \u0027\u0027 or len(value) \u003d\u003d 0:\n\t\treturn \"%%\"\n\telse:\n\t\treturn \"%\" + str(value) + \"%\"",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.selectedDisplay": {
+      "binding": {
+        "config": {
+          "path": "/root/RegistrationOrShelter.props.params.selection"
+        },
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.shelter": {
+      "binding": {
+        "config": {
+          "path": "/root/emvShelter.props.params.selection"
+        },
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.staffId": {
+      "binding": {
+        "config": {
+          "path": "/root/emvStaff.props.params.selection"
+        },
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 30,
+      "width": 1200
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "custom": {
+          "datasetWithSO": {
+            "$": [
+              "ds",
+              192,
+              1677566043412
+            ],
+            "$columns": [
+              {
+                "data": [
+                  0,
+                  1,
+                  2
+                ],
+                "name": "id",
+                "type": "Integer"
+              },
+              {
+                "data": [
+                  "Chronic Homeless",
+                  "SO Registry",
+                  "Programs"
+                ],
+                "name": "activity_range",
+                "type": "String"
+              }
+            ]
+          },
+          "datasetWithoutSO": {
+            "$": [
+              "ds",
+              192,
+              1677566056004
+            ],
+            "$columns": [
+              {
+                "data": [
+                  0,
+                  2
+                ],
+                "name": "id",
+                "type": "Integer"
+              },
+              {
+                "data": [
+                  "Chronic Homeless",
+                  "Programs"
+                ],
+                "name": "activity_range",
+                "type": "String"
+              }
+            ]
+          }
+        },
+        "meta": {
+          "name": "RegistrationOrShelter"
+        },
+        "position": {
+          "basis": "160px",
+          "shrink": 0
+        },
+        "props": {
+          "params": {
+            "options": {
+              "$": [
+                "ds",
+                192,
+                1732600028100
+              ],
+              "$columns": [
+                {
+                  "data": [
+                    0,
+                    1,
+                    2,
+                    3,
+                    4
+                  ],
+                  "name": "id",
+                  "type": "Integer"
+                },
+                {
+                  "data": [
+                    "Registration",
+                    "Shelter",
+                    "Case Notes",
+                    "Congregations",
+                    "Programs"
+                  ],
+                  "name": "activity_range",
+                  "type": "String"
+                }
+              ]
+            },
+            "placeholder": "",
+            "selection": 3
+          },
+          "path": "1_TEMPLATES/Filtering/Conditionals/Conditional_SingleDropDown_NoClear",
+          "style": {
+            "classes": "Filter/Filter_Container"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "emvDateRange"
+        },
+        "position": {
+          "basis": "180px",
+          "shrink": 0
+        },
+        "props": {
+          "params": {
+            "selectedDateRange": " 11/25/2024 to 11/26/2024"
+          },
+          "path": "Shelter/Templates/DateRange/DateInput",
+          "style": {
+            "classes": "Filter/Filter_Container",
+            "marginLeft": "4px"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "emvStaff"
+        },
+        "position": {
+          "basis": "160px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "position.display": {
+            "binding": {
+              "config": {
+                "expression": "{../RegistrationOrShelter.props.params.selection} !\u003d 4"
+              },
+              "type": "expr"
+            }
+          },
+          "props.params.actionPerformedPulse": {
+            "onChange": {
+              "enabled": null,
+              "script": "\troot \u003d self.parent\n\troot.sendMsgCondition()\t"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "actionPerformedPulse": false,
+            "clear": false,
+            "multiSelect": false,
+            "options": [
+              {
+                "label": "General  Staff",
+                "value": 0
+              },
+              {
+                "label": "Missing  Training User",
+                "value": 1
+              },
+              {
+                "label": "Brett  Okelberry",
+                "value": 2
+              },
+              {
+                "label": "Alex  Munro",
+                "value": 3
+              },
+              {
+                "label": "Irene  Hall",
+                "value": 4
+              },
+              {
+                "label": "Judith  Soffiantino",
+                "value": 5
+              },
+              {
+                "label": "Dan  Eaton",
+                "value": 6
+              },
+              {
+                "label": "Quiana  Jimerson",
+                "value": 7
+              },
+              {
+                "label": "Kamrin  Carver",
+                "value": 8
+              },
+              {
+                "label": "Kamrin  Carver",
+                "value": 9
+              },
+              {
+                "label": "Martina  Condron",
+                "value": 10
+              },
+              {
+                "label": "Rachel  Hester",
+                "value": 11
+              },
+              {
+                "label": "Katherine  Okerlund",
+                "value": 12
+              },
+              {
+                "label": "Ryan  Martin",
+                "value": 13
+              },
+              {
+                "label": "Ashok  Atmakur",
+                "value": 14
+              },
+              {
+                "label": "Stacy  Burda",
+                "value": 15
+              },
+              {
+                "label": "Burke  Rich",
+                "value": 16
+              },
+              {
+                "label": "DSI_01 DSI_0",
+                "value": 17
+              },
+              {
+                "label": "Robert  O\u0027Brien",
+                "value": 18
+              },
+              {
+                "label": "Rachelle  Brown",
+                "value": 19
+              },
+              {
+                "label": "Jon  Mowry",
+                "value": 20
+              },
+              {
+                "label": "Andrew  Graham",
+                "value": 21
+              },
+              {
+                "label": "Kevin  Christensen",
+                "value": 22
+              },
+              {
+                "label": "Kevin  Christensen",
+                "value": 23
+              },
+              {
+                "label": "Jesse  Call",
+                "value": 24
+              },
+              {
+                "label": "Lauren  Angulo",
+                "value": 25
+              },
+              {
+                "label": "Kelly  Muldoon",
+                "value": 26
+              },
+              {
+                "label": "Jeff  Moles",
+                "value": 27
+              },
+              {
+                "label": "Mary  Wilder",
+                "value": 28
+              },
+              {
+                "label": "Alan  Waiss",
+                "value": 29
+              },
+              {
+                "label": "Tyson  Newman",
+                "value": 30
+              },
+              {
+                "label": "Carole  Anderson",
+                "value": 31
+              },
+              {
+                "label": "Greg  Tripp",
+                "value": 32
+              },
+              {
+                "label": "Michael  Kemp",
+                "value": 33
+              },
+              {
+                "label": "Laura  Christenson",
+                "value": 34
+              },
+              {
+                "label": "Kristen  Norris",
+                "value": 35
+              },
+              {
+                "label": "Sarah  Burchett",
+                "value": 36
+              },
+              {
+                "label": "David  Bodenhamer",
+                "value": 37
+              },
+              {
+                "label": "Adam  Strizich",
+                "value": 38
+              },
+              {
+                "label": "Ben Passino",
+                "value": 39
+              },
+              {
+                "label": "Katie  Morris",
+                "value": 40
+              },
+              {
+                "label": "Mary  Sellers Shaw",
+                "value": 41
+              },
+              {
+                "label": "Rachel  Styers",
+                "value": 42
+              },
+              {
+                "label": "Richard  Hillegas",
+                "value": 43
+              },
+              {
+                "label": "Steve  Molnar",
+                "value": 44
+              },
+              {
+                "label": "Amanda  Jones Fernandez",
+                "value": 45
+              },
+              {
+                "label": "Karen Steven",
+                "value": 46
+              },
+              {
+                "label": "Melanie  Barnett Ober",
+                "value": 47
+              },
+              {
+                "label": "Darryl  Carey",
+                "value": 48
+              },
+              {
+                "label": "Gabby  Watson",
+                "value": 49
+              },
+              {
+                "label": "Bill  Clarkson",
+                "value": 50
+              },
+              {
+                "label": "Cathy  Link",
+                "value": 51
+              },
+              {
+                "label": "Charlotte  West",
+                "value": 52
+              },
+              {
+                "label": "Coleman  Breland",
+                "value": 53
+              },
+              {
+                "label": "Gerry  Duran",
+                "value": 54
+              },
+              {
+                "label": "Kelly  McCarthy",
+                "value": 55
+              },
+              {
+                "label": "Nichole  Walker",
+                "value": 56
+              },
+              {
+                "label": "Sheila  DeBerry",
+                "value": 57
+              },
+              {
+                "label": "Shawn  Pruett",
+                "value": 58
+              },
+              {
+                "label": "Taylor  Dove",
+                "value": 59
+              },
+              {
+                "label": "Warren  Cranford",
+                "value": 60
+              },
+              {
+                "label": "Wendy  Smotherman",
+                "value": 61
+              },
+              {
+                "label": "Sara  Lynes",
+                "value": 62
+              },
+              {
+                "label": "Tina  Hayes",
+                "value": 63
+              },
+              {
+                "label": "Sherri  Rakestraw",
+                "value": 64
+              },
+              {
+                "label": "Maggie  Sananikone",
+                "value": 65
+              },
+              {
+                "label": "Harvard  Kinkead",
+                "value": 66
+              },
+              {
+                "label": "Taye  Davis",
+                "value": 67
+              },
+              {
+                "label": "Andre  Floyd",
+                "value": 68
+              },
+              {
+                "label": "George  Terry",
+                "value": 69
+              },
+              {
+                "label": "Support  Desk Volunteer",
+                "value": 70
+              },
+              {
+                "label": "Melvin  Scates",
+                "value": 71
+              },
+              {
+                "label": "Kelvin  Walker",
+                "value": 72
+              },
+              {
+                "label": "Andrew  Case",
+                "value": 73
+              },
+              {
+                "label": "Jay  Hankins",
+                "value": 74
+              },
+              {
+                "label": "Taylor  Wilder",
+                "value": 75
+              },
+              {
+                "label": "Elyse  Croce",
+                "value": 76
+              },
+              {
+                "label": "Abe  Barlow",
+                "value": 77
+              },
+              {
+                "label": "Jim  Sylvester",
+                "value": 78
+              },
+              {
+                "label": "Terrill  Packard",
+                "value": 79
+              },
+              {
+                "label": "Rachelle  Oser",
+                "value": 80
+              },
+              {
+                "label": "Shannon  Hardebeck",
+                "value": 81
+              },
+              {
+                "label": "Hope  University Volunteer",
+                "value": 82
+              },
+              {
+                "label": "Guest  House PRN",
+                "value": 83
+              },
+              {
+                "label": "Miranda  Buell",
+                "value": 84
+              },
+              {
+                "label": "Paul  Spivey",
+                "value": 85
+              },
+              {
+                "label": "Roy  Carter",
+                "value": 86
+              },
+              {
+                "label": "Suzanne  Grissom",
+                "value": 87
+              },
+              {
+                "label": "Melinda  Melendez-Scott",
+                "value": 88
+              },
+              {
+                "label": "John  Vaught",
+                "value": 89
+              },
+              {
+                "label": "Cade  Richards",
+                "value": 90
+              },
+              {
+                "label": "Brian  Barker",
+                "value": 91
+              },
+              {
+                "label": "Katie  Allred",
+                "value": 92
+              },
+              {
+                "label": "Rachel  Shanks",
+                "value": 93
+              },
+              {
+                "label": "Jordan  Murphy",
+                "value": 94
+              },
+              {
+                "label": "Alec  Hartman",
+                "value": 95
+              },
+              {
+                "label": "Adam  Anthony",
+                "value": 96
+              },
+              {
+                "label": "Aaron  Rochelle",
+                "value": 97
+              },
+              {
+                "label": "Wendy  Harrison",
+                "value": 98
+              },
+              {
+                "label": "Helena  Moss",
+                "value": 99
+              },
+              {
+                "label": "Sam  Taylor",
+                "value": 100
+              },
+              {
+                "label": "Stephen  Wilder",
+                "value": 101
+              },
+              {
+                "label": "Kirk  Rose",
+                "value": 102
+              },
+              {
+                "label": "Dustin  Fausett",
+                "value": 103
+              },
+              {
+                "label": "April  Soweidan",
+                "value": 104
+              },
+              {
+                "label": "Caitlyn  Miller",
+                "value": 105
+              },
+              {
+                "label": "Audreyanne  Guthrie",
+                "value": 106
+              },
+              {
+                "label": "Chris  Smith",
+                "value": 107
+              },
+              {
+                "label": "Matt  Grimshaw",
+                "value": 108
+              },
+              {
+                "label": "Megan  Furnish",
+                "value": 109
+              },
+              {
+                "label": "Kevin  Clavin",
+                "value": 110
+              },
+              {
+                "label": "Jodie  Gilgen",
+                "value": 111
+              },
+              {
+                "label": "Alan  Ehlert",
+                "value": 112
+              },
+              {
+                "label": "Tyler  Calder",
+                "value": 113
+              },
+              {
+                "label": "Madeline  Evans",
+                "value": 114
+              },
+              {
+                "label": "Annette  Cullison",
+                "value": 115
+              },
+              {
+                "label": "Courtney  Romans",
+                "value": 116
+              },
+              {
+                "label": "Shayla  McCrory",
+                "value": 117
+              },
+              {
+                "label": "Tom  Maggio",
+                "value": 118
+              },
+              {
+                "label": "Brian  Dial",
+                "value": 119
+              },
+              {
+                "label": "Noel  Patton",
+                "value": 120
+              },
+              {
+                "label": "Parker  Wolcott",
+                "value": 121
+              },
+              {
+                "label": "Jonathan  Mowry",
+                "value": 122
+              },
+              {
+                "label": "Kenzie  Favero",
+                "value": 123
+              },
+              {
+                "label": "Jason Simon Thomas",
+                "value": 124
+              },
+              {
+                "label": "Laura  Crane",
+                "value": 125
+              },
+              {
+                "label": "Greg  Wixom",
+                "value": 126
+              },
+              {
+                "label": "Andrew  Case",
+                "value": 127
+              },
+              {
+                "label": "Beth  Lisle",
+                "value": 128
+              },
+              {
+                "label": "Curt  Perkins",
+                "value": 129
+              },
+              {
+                "label": "Jordan  Goodrich",
+                "value": 130
+              },
+              {
+                "label": "Pat  Jones",
+                "value": 131
+              },
+              {
+                "label": "Ceilidh  Adams",
+                "value": 132
+              },
+              {
+                "label": "Eric  Johansen",
+                "value": 133
+              },
+              {
+                "label": "Rita  Raymer",
+                "value": 134
+              },
+              {
+                "label": "Todd  Watkins",
+                "value": 135
+              },
+              {
+                "label": "Carolina  Smith",
+                "value": 136
+              },
+              {
+                "label": "Mark  Campbell",
+                "value": 137
+              },
+              {
+                "label": "Tim  Klein",
+                "value": 138
+              },
+              {
+                "label": "Sheila  Morales",
+                "value": 139
+              },
+              {
+                "label": "Kristi  Shanks",
+                "value": 140
+              },
+              {
+                "label": "Audrey  Thresher",
+                "value": 141
+              },
+              {
+                "label": "Will  King",
+                "value": 142
+              },
+              {
+                "label": "Layton  Barrus",
+                "value": 143
+              },
+              {
+                "label": "Zach  Crookston",
+                "value": 144
+              },
+              {
+                "label": "Lakreasha  Scharcklet",
+                "value": 145
+              },
+              {
+                "label": "Ashley  Lawter",
+                "value": 146
+              },
+              {
+                "label": "Charles  DeBardelaben",
+                "value": 147
+              },
+              {
+                "label": "Sarah  Williams",
+                "value": 148
+              },
+              {
+                "label": "Dan  Blankenship",
+                "value": 149
+              },
+              {
+                "label": "Antonio  Dixon",
+                "value": 150
+              },
+              {
+                "label": "Anne  Gallo",
+                "value": 151
+              },
+              {
+                "label": "Ilaine  Newby",
+                "value": 152
+              },
+              {
+                "label": "Winter  Shelter Volunteer",
+                "value": 153
+              },
+              {
+                "label": "Chris  McLaughlin",
+                "value": 154
+              },
+              {
+                "label": "Adrian  Wride",
+                "value": 155
+              },
+              {
+                "label": "Alex  Robinson",
+                "value": 156
+              },
+              {
+                "label": "Marie  Cochran",
+                "value": 157
+              },
+              {
+                "label": "Ruthie  Rudnick",
+                "value": 158
+              },
+              {
+                "label": "Annie  McCaskill",
+                "value": 159
+              },
+              {
+                "label": "Kendall  Facer",
+                "value": 160
+              },
+              {
+                "label": "Dave  Myers",
+                "value": 161
+              },
+              {
+                "label": "Cristy  Barber",
+                "value": 162
+              },
+              {
+                "label": "RITI  OT Student",
+                "value": 163
+              },
+              {
+                "label": "Zane  Newsom",
+                "value": 164
+              },
+              {
+                "label": "David  Jackson",
+                "value": 165
+              },
+              {
+                "label": "Joey  Johnson",
+                "value": 166
+              },
+              {
+                "label": "Claire  Landers",
+                "value": 167
+              },
+              {
+                "label": "Carly  Busby",
+                "value": 168
+              },
+              {
+                "label": "Ken  Davidson",
+                "value": 169
+              },
+              {
+                "label": "Beth  O\u0027Malley",
+                "value": 170
+              },
+              {
+                "label": "Jeff  Ginolfi",
+                "value": 171
+              },
+              {
+                "label": "Jacob  Smith",
+                "value": 172
+              },
+              {
+                "label": "RITI  Intern",
+                "value": 173
+              },
+              {
+                "label": "Jamie  Albers",
+                "value": 174
+              },
+              {
+                "label": "Rob  Cross",
+                "value": 175
+              },
+              {
+                "label": "Ray  Rizzo",
+                "value": 176
+              },
+              {
+                "label": "Taylor  Leonard",
+                "value": 177
+              },
+              {
+                "label": "CT Training",
+                "value": 178
+              },
+              {
+                "label": "Chris  Fuqua",
+                "value": 179
+              },
+              {
+                "label": "Grace  Coley",
+                "value": 180
+              },
+              {
+                "label": "Emily  Scott",
+                "value": 181
+              },
+              {
+                "label": "Melanie  Eby",
+                "value": 182
+              },
+              {
+                "label": "Admin User",
+                "value": 183
+              },
+              {
+                "label": "Data Systems",
+                "value": 184
+              },
+              {
+                "label": "David  Shanks",
+                "value": 185
+              },
+              {
+                "label": "Meredith  Hudson",
+                "value": 186
+              },
+              {
+                "label": "Andrea  Parks",
+                "value": 187
+              },
+              {
+                "label": "Amy  Frogge",
+                "value": 188
+              },
+              {
+                "label": "Chelsey  Sutton",
+                "value": 189
+              },
+              {
+                "label": "Dwight  Peppers",
+                "value": 190
+              },
+              {
+                "label": "Mary  Raney",
+                "value": 191
+              },
+              {
+                "label": "Dwight  Peppers",
+                "value": 192
+              },
+              {
+                "label": "Clay  Jones",
+                "value": 193
+              },
+              {
+                "label": "Anna  Frogge",
+                "value": 194
+              },
+              {
+                "label": "Grace  Beckner",
+                "value": 195
+              },
+              {
+                "label": "Zach  Bryant",
+                "value": 196
+              },
+              {
+                "label": "Jen  Cater",
+                "value": 197
+              },
+              {
+                "label": "Nathan  Mankin",
+                "value": 198
+              },
+              {
+                "label": "Joel  Meeks",
+                "value": 199
+              },
+              {
+                "label": "Joel  Meeks",
+                "value": 200
+              },
+              {
+                "label": "Jana  McCullough",
+                "value": 201
+              },
+              {
+                "label": "Dianne  Rodgers",
+                "value": 202
+              },
+              {
+                "label": "Joddie  White",
+                "value": 203
+              },
+              {
+                "label": "Mackenzie  Gimbel",
+                "value": 204
+              },
+              {
+                "label": "Caden  Diffenderfer",
+                "value": 205
+              },
+              {
+                "label": "Kimanie  Evans",
+                "value": 206
+              },
+              {
+                "label": "Volunteer  Login",
+                "value": 207
+              },
+              {
+                "label": "Shelby  Wood",
+                "value": 208
+              },
+              {
+                "label": "Taylor  Mason",
+                "value": 209
+              },
+              {
+                "label": "Leah  Herring",
+                "value": 210
+              },
+              {
+                "label": "Leah  Herring",
+                "value": 211
+              },
+              {
+                "label": "Tonya  Primm",
+                "value": 212
+              },
+              {
+                "label": "Ethan  Salas",
+                "value": 213
+              },
+              {
+                "label": "Ethan  Salas",
+                "value": 214
+              },
+              {
+                "label": "Ethan  Salas",
+                "value": 215
+              },
+              {
+                "label": "Jessica  Hanson",
+                "value": 216
+              },
+              {
+                "label": "Jordan  White",
+                "value": 217
+              },
+              {
+                "label": "Rachel  Goodson",
+                "value": 218
+              },
+              {
+                "label": "Adam  Anspach",
+                "value": 219
+              },
+              {
+                "label": "Charles  Clinard",
+                "value": 220
+              },
+              {
+                "label": "Caleb  Sjodin",
+                "value": 221
+              },
+              {
+                "label": "Ces  Holman",
+                "value": 222
+              },
+              {
+                "label": "David  Bodenhamer",
+                "value": 223
+              },
+              {
+                "label": "Dave  Mankin",
+                "value": 224
+              },
+              {
+                "label": "Raechel  Kiesel",
+                "value": 225
+              },
+              {
+                "label": "Liane  Miller",
+                "value": 226
+              },
+              {
+                "label": "Taye  Davis",
+                "value": 227
+              },
+              {
+                "label": "Andrea  Hittle",
+                "value": 228
+              },
+              {
+                "label": "Anniqua  Steele",
+                "value": 229
+              },
+              {
+                "label": "Ursula  Rammble",
+                "value": 230
+              },
+              {
+                "label": "Hayley  Newton",
+                "value": 231
+              },
+              {
+                "label": "Alexander  Ireland",
+                "value": 232
+              },
+              {
+                "label": "Alexander  Ireland",
+                "value": 233
+              },
+              {
+                "label": "Alexander  Ireland",
+                "value": 234
+              },
+              {
+                "label": "Alexander  Ireland",
+                "value": 235
+              },
+              {
+                "label": "Alexander  Ireland",
+                "value": 236
+              },
+              {
+                "label": "Alexander  Ireland",
+                "value": 237
+              },
+              {
+                "label": "Chris  McLaughlin",
+                "value": 238
+              },
+              {
+                "label": "Annie  Williamson",
+                "value": 239
+              },
+              {
+                "label": "Lauren  Clayton",
+                "value": 240
+              },
+              {
+                "label": "Sam  Williams",
+                "value": 241
+              },
+              {
+                "label": "Heidi  Davis",
+                "value": 242
+              },
+              {
+                "label": "Kelly  Bodenhamer",
+                "value": 243
+              },
+              {
+                "label": "Yogini Test StaffStaff",
+                "value": 244
+              },
+              {
+                "label": "Chris  McLaughlin Vertech",
+                "value": 245
+              },
+              {
+                "label": "Tanvi  K",
+                "value": 246
+              }
+            ],
+            "placeholder": "Staff",
+            "selection": null
+          },
+          "path": "Providers/Dashboard/Components/Filters/Conditional_DropDown",
+          "style": {
+            "classes": "Filter/Filter_Text_TeelBlue Filter/Filter_Container",
+            "marginLeft": "4px"
+          }
+        },
+        "scripts": {
+          "customMethods": [
+            {
+              "name": "setOptions",
+              "params": [],
+              "script": "\t\n\tquery \u003d \"\"\" \n\tSELECT\n\t\t[staff].[Employee].id,\n\t\tCONCAT_WS(\u0027 \u0027,[humans].[Human].firstName, [humans].[Human].middleName, [humans].[Human].lastName) as \u0027employee_name\u0027\n\tFROM\n\t\t[staff].[Employee]\n\t\tINNER JOIN [humans].[Human] on [staff].[Employee].humanId \u003d [humans].[Human].id\n\t\t\"\"\"\n\t\n\tresult \u003d system.db.runPrepQuery(query,[],\u0027RITIOps\u0027)\n\t\n\tself.props.params.options \u003d [ dict(value \u003d x[0],label \u003d x[1]) for x in result]\n\t\n"
+            }
+          ],
+          "extensionFunctions": null,
+          "messageHandlers": []
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "emvAction"
+        },
+        "position": {
+          "basis": "160px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "position.display": {
+            "binding": {
+              "config": {
+                "expression": "{../RegistrationOrShelter.props.params.selection} !\u003d 2"
+              },
+              "type": "expr"
+            }
+          },
+          "props.params.actionPerformedPulse": {
+            "onChange": {
+              "enabled": null,
+              "script": "\troot \u003d self.parent\n\troot.sendMsgCondition()\t"
+            }
+          },
+          "props.params.options": {
+            "binding": {
+              "config": {
+                "path": "../RegistrationOrShelter.props.params.selection"
+              },
+              "transforms": [
+                {
+                  "code": "\toptions \u003d []\n\tif value \u003d\u003d 1: ## Shelter\n\t\toptions \u003d [\n\t\t  {\n\t\t    \"label\": \"Check-in\",\n\t\t    \"value\": \"Check-in\"\n\t\t  },\n\t\t  {\n\t\t    \"label\": \"Check-out\",\n\t\t    \"value\": \"Check-out\"\n\t\t  },\n\t\t  {\n\t\t    \"label\": \"Delete Reservation\",\n\t\t    \"value\": \"Delete Reservation\"\n\t\t  },\n\t\t  {\n\t\t    \"label\": \"Edit Reservation\",\n\t\t    \"value\": \"Edit Reservation\"\n\t\t  },\n\t\t  {\n\t\t    \"label\": \"Moved Bed\",\n\t\t    \"value\": \"Moved Bed\"\n\t\t  },\n\t\t  {\n\t\t    \"label\": \"New Reservation\",\n\t\t    \"value\": \"New Reservation\"\n\t\t  }\n\t\t]\n\telif value \u003d\u003d 0: # registrtaion\n\t\toptions \u003d [\n\t\t\t\t  {\n\t\t\t\t    \"label\": \"New Registration\",\n\t\t\t\t    \"value\": \"New Registration\"\n\t\t\t\t  },\n\t\t\t\t  {\n\t\t\t\t    \"label\": \"Edit Registration\",\n\t\t\t\t    \"value\": \"Edit Registration\"\n\t\t\t\t  },\n\t\t\t\t  {\n\t\t\t\t    \"label\": \"Reactivate Registration\",\n\t\t\t\t    \"value\": \"Reactivate Registration\"\n\t\t\t\t  }\n\t\t\t\t]\n\telif value \u003d\u003d 3: # congregation\n\t\t\toptions \u003d [\n\t\t\t\t\t  {\n\t\t\t\t\t    \"label\": \"New Congregation\",\n\t\t\t\t\t    \"value\": \"New Congregation\"\n\t\t\t\t\t  },\n\t\t\t\t\t  {\n\t\t\t\t\t    \"label\": \"Edit Congregation\",\n\t\t\t\t\t    \"value\": \"Edit Congregation\"\n\t\t\t\t\t  }\n\t\t\t\t\t]\n\telif value \u003d\u003d 4: # programs\n\t\toptions \u003d [\n\t\t\t\t  {\n\t\t\t\t    \"label\": \"Auto Enroll\",\n\t\t\t\t    \"value\": \"Auto Enroll\"\n\t\t\t\t  },\n\t\t\t\t  {\n\t\t\t\t    \"label\": \"Entry\",\n\t\t\t\t    \"value\": \"Entry\"\n\t\t\t\t  },\n\t\t\t\t  {\n\t\t\t\t    \"label\": \"Exit\",\n\t\t\t\t    \"value\": \"Exit\"\n\t\t\t\t  },\n\t\t\t\t  \n\t\t\t\t  {\n\t\t\t\t    \"label\": \"Exit on Checkout\",\n\t\t\t\t    \"value\": \"Exit on Checkout\"\n\t\t\t\t  },\n\t\t\t\t  {\n\t\t\t\t    \"label\": \"Delete History\",\n\t\t\t\t    \"value\": \"Delete History\"\n\t\t\t\t  },\n\t\t\t\t  {\n\t\t\t\t    \"label\": \"Reservation Entry\",\n\t\t\t\t    \"value\": \"Reservation Entry\"\n\t\t\t\t  }\n\t\t\t\t]\n\t\n\t\n\treturn options",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "actionPerformedPulse": false,
+            "clear": false,
+            "multiSelect": false,
+            "placeholder": "Action",
+            "selection": null
+          },
+          "path": "Providers/Dashboard/Components/Filters/Conditional_DropDown",
+          "style": {
+            "classes": "Filter/Filter_Text_TeelBlue Filter/Filter_Container",
+            "marginLeft": "4px"
+          }
+        },
+        "scripts": {
+          "customMethods": [
+            {
+              "name": "setOptions",
+              "params": [],
+              "script": "\t\n\tquery \u003d \"\"\" \n\tSELECT\n\t\tDISTINCT action\n\t\tFROM\n\t\t[lodging].[AuditLog]\n\t\tORDER By action\n\t\t\"\"\"\n\t\n\tresult \u003d system.db.runPrepQuery(query,[],\u0027RITIOps\u0027)\n\t\n\tself.props.params.options \u003d [ dict(value \u003d x[0],label \u003d x[0]) for x in result]\n\t\n"
+            }
+          ],
+          "extensionFunctions": null,
+          "messageHandlers": []
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "emvShelter"
+        },
+        "position": {
+          "basis": "150px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "position.display": {
+            "binding": {
+              "config": {
+                "expression": "{../RegistrationOrShelter.props.params.selection} \u003d 1"
+              },
+              "type": "expr"
+            }
+          },
+          "props.params.actionPerformedPulse": {
+            "onChange": {
+              "enabled": null,
+              "script": "\troot \u003d self.parent\n\troot.sendMsgCondition()\t"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "actionPerformedPulse": false,
+            "clear": false,
+            "multiSelect": false,
+            "options": [
+              {
+                "label": "532 Apartments",
+                "value": "532 Apartments"
+              },
+              {
+                "label": "705 Apartments",
+                "value": "705 Apartments"
+              },
+              {
+                "label": "Hallway",
+                "value": "Hallway"
+              },
+              {
+                "label": "Next Steps Dorm",
+                "value": "Next Steps Dorm"
+              },
+              {
+                "label": "Night Shift Dorm",
+                "value": "Night Shift Dorm"
+              },
+              {
+                "label": "Respite Dorm (Men)",
+                "value": "Respite Dorm (Men)"
+              },
+              {
+                "label": "Respite Dorm (Women)",
+                "value": "Respite Dorm (Women)"
+              },
+              {
+                "label": "Special Dorm",
+                "value": "Special Dorm"
+              },
+              {
+                "label": "Veteran Service Intensive Dorm",
+                "value": "Veteran Service Intensive Dorm"
+              },
+              {
+                "label": "Veteran\u0027s Dorm",
+                "value": "Veteran\u0027s Dorm"
+              },
+              {
+                "label": "Vine Hill",
+                "value": "Vine Hill"
+              },
+              {
+                "label": "Welcome Dorm",
+                "value": "Welcome Dorm"
+              },
+              {
+                "label": "Women\u0027s Welcome Dorm",
+                "value": "Women\u0027s Welcome Dorm"
+              }
+            ],
+            "placeholder": "Shelter",
+            "selection": null
+          },
+          "path": "Providers/Dashboard/Components/Filters/Conditional_DropDown",
+          "style": {
+            "classes": "Filter/Filter_Text_TeelBlue Filter/Filter_Container",
+            "marginLeft": "4px"
+          }
+        },
+        "scripts": {
+          "customMethods": [
+            {
+              "name": "setOptions",
+              "params": [],
+              "script": "\t\n\tquery \u003d \"\"\" \nSELECT facilityName FROM lodging.Facility WHERE facilityName IS NOT NULL AND timeRetired IS NULL ORDER BY facilityName\n\t\"\"\"\n\t\n\tresult \u003d system.db.runPrepQuery(query,[],\u0027RITIOps\u0027)\n\t\n\t# Version 1 set options as list of dictionaries\n\tfacilityNameList \u003d [ dict(value \u003d x[0],label \u003d x[0]) for x in result]\n#\tfacilityNameList.insert(0,{\u0027value\u0027:\u0027All Guest House\u0027,\u0027label\u0027:\u0027All Guest House\u0027})\n\t\n\t\n\tself.props.params.options \u003d facilityNameList\n#\tself.props.params.options \u003d [ dict(value \u003d x[0],label \u003d x[0]) for x in result]\n\t\n"
+            }
+          ],
+          "extensionFunctions": null,
+          "messageHandlers": []
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "toExcel"
+        },
+        "position": {
+          "basis": "30px",
+          "shrink": 0
+        },
+        "props": {
+          "params": {
+            "defaultFilePrefix": "Shelter"
+          },
+          "path": "1_TEMPLATES/Tables/TableToExcel"
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "FlexContainer"
+        },
+        "position": {
+          "basis": "50px",
+          "grow": 1
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "meta": {
+          "name": "lblSearch"
+        },
+        "position": {
+          "basis": "50px"
+        },
+        "props": {
+          "style": {
+            "classes": "Table/Filter_Header",
+            "textAlign": "end"
+          },
+          "text": "Search:"
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "meta": {
+          "name": "emvSearch"
+        },
+        "position": {
+          "basis": "220px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.keyUpPulse": {
+            "onChange": {
+              "enabled": null,
+              "script": "\troot \u003d self.parent\n\troot.sendMsgCondition()\t"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "clear": false,
+            "keyUpPulse": false,
+            "searchText": ""
+          },
+          "path": "Providers/Dashboard/Components/Filters/Search_Bar",
+          "style": {
+            "classes": "Table/Search_Bar"
+          },
+          "useDefaultViewWidth": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "events": {
+          "component": {
+            "onActionPerformed": {
+              "config": {
+                "script": "\troot \u003d self.parent\n\t\n\t\n\temvShelter \u003d self.getSibling(\"emvShelter\")\n\temvStaff \u003d self.getSibling(\"emvStaff\")\n\t\n\temvSearch \u003d self.getSibling(\"emvSearch\")\n\temvAction \u003d self.getSibling(\"emvAction\")\n\t\n\temvShelter.props.params.clear \u003d True \n\temvStaff.props.params.clear \u003d True\n\temvAction.props.params.clear \u003d True\n\temvSearch.props.params.clear \u003d True\n\t\n\tself.session.custom.dateRangeFromDate \u003d system.date.format(system.date.addDays(system.date.now(), -1),\u0027MM/dd/yyyy\u0027)\n\tself.session.custom.dateRangeToDate \u003d system.date.format(system.date.now(),\u0027MM/dd/yyyy\u0027)\n\t\n\t\n"
+              },
+              "scope": "G",
+              "type": "script"
+            }
+          }
+        },
+        "meta": {
+          "name": "clearConditions"
+        },
+        "position": {
+          "basis": "30px",
+          "shrink": 0
+        },
+        "props": {
+          "image": {
+            "height": 16,
+            "icon": {
+              "color": "#0C4E8B",
+              "path": "material/close"
+            },
+            "position": "center",
+            "width": 16
+          },
+          "style": {
+            "classes": "Filter/Filter_Border_Default Filter/Filter_Container",
+            "marginRight": "40px"
+          },
+          "text": "",
+          "textStyle": {
+            "classes": "GreyColor"
+          }
+        },
+        "type": "ia.input.button"
+      }
+    ],
+    "custom": {
+      "_devClean": false,
+      "_devPulse": false,
+      "_isDev": false
+    },
+    "meta": {
+      "name": "root"
+    },
+    "propConfig": {
+      "custom._devClean": {
+        "onChange": {
+          "enabled": null,
+          "script": "\t\n\temvProviderType \u003d self.getChild(\"emvProviderType\")\n\temvActivityRange \u003d self.getChild(\"emvActivityRange\")\n\temvSearch \u003d self.getChild(\"emvSearch\")\n\t\n\temvProviderType.props.params.clear \u003d True\n\temvActivityRange.props.params.clear \u003d True\n\temvSearch.props.params.clear \u003d True\n\t\n\n\t\n\tif self.custom._devClean:\n\t\tself.custom._devClean \u003d False"
+        }
+      },
+      "custom._devPulse": {
+        "onChange": {
+          "enabled": null,
+          "script": "\t\n\temvProviderType \u003d self.getChild(\"emvProviderType\")\n\temvActivityRange \u003d self.getChild(\"emvActivityRange\")\n\temvSearch \u003d self.getChild(\"emvSearch\")\n\t\n\t\n\tif self.custom._isDev:\n\t\tif currentValue.value is True:\n\t\t\tself.setPropsDropdowns()\n\t\telse:\n\t\t\temvProviderType.props.params.options \u003d []\n\t\t\temvActivityRange.props.params.options \u003d []\n\t\n\temvProviderType.props.params.actionPerformedPulse \u003d False\n\temvActivityRange.props.params.actionPerformedPulse \u003d False\n\temvSearch.props.params.keyUpPulse \u003d False"
+        }
+      }
+    },
+    "props": {
+      "style": {
+        "classes": "Filter/Header_Text"
+      }
+    },
+    "scripts": {
+      "customMethods": [
+        {
+          "name": "setPropsDropdowns",
+          "params": [],
+          "script": "\temvShelter \u003d self.getChild(\"emvShelter\")\n\temvStaff \u003d self.getChild(\"emvStaff\")\n\temvDateRange \u003d self.getChild(\"emvDateRange\")\n\temvAction \u003d self.getChild(\"emvAction\")\n\temvShelter.setOptions()\n\temvStaff.setOptions()\n#\temvAction.setOptions()\n\tself.session.custom.dateRangeFromDate \u003d system.date.format(system.date.addDays(system.date.now(), -1),\u0027MM/dd/yyyy\u0027)\n\tself.session.custom.dateRangeToDate \u003d system.date.format(system.date.now(),\u0027MM/dd/yyyy\u0027)\n\t#\t\n"
+        },
+        {
+          "name": "sendMsgCondition",
+          "params": [
+            "payload\u003dNone"
+          ],
+          "script": "\t\n\tpass\n"
+        }
+      ],
+      "extensionFunctions": null,
+      "messageHandlers": [
+        {
+          "messageType": "refreshReservations",
+          "pageScope": true,
+          "script": "\tself.sendMsgCondition()",
+          "sessionScope": true,
+          "viewScope": false
+        }
+      ]
+    },
+    "type": "ia.container.flex"
+  }
+}

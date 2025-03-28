@@ -1,0 +1,2208 @@
+{
+  "custom": {
+    "RegistrationData": {
+      "biracialId": null,
+      "chronicHealthConditions": null,
+      "communication_type_id": -1,
+      "developmentalDisability": null,
+      "disability_id": -1,
+      "dob": null,
+      "dob_quality_id": -1,
+      "email": "",
+      "emergency_contact_type_id": -1,
+      "emergency_email": "",
+      "emergency_name": "",
+      "emergency_phone": "",
+      "ethnicity_id": -1,
+      "family_id": -1,
+      "first_name": "",
+      "gender_id": -1,
+      "hoh_relationship_id": -1,
+      "incomeAmount": 0,
+      "incomeSource": null,
+      "incomeStartDate": null,
+      "lastHmisUpdateBy": "",
+      "lastHmisUpdateDate": null,
+      "last_name": "",
+      "mentalHealth": null,
+      "middle_name": "",
+      "nick_name": "",
+      "phone": "",
+      "phone_alt": "",
+      "physicalDisability": null,
+      "race_id": -1,
+      "referral_provider_id": -1,
+      "referral_status_id": -1,
+      "referral_type_id": -1,
+      "ssn": "",
+      "ssn_quality_id": -1,
+      "substanceAbuse": null,
+      "suffix_name": "",
+      "vaHealthCareEligible": 0,
+      "veteran_id": 1,
+      "viSpidatScore": null,
+      "viSpidateAssessmentDate": null
+    },
+    "func_save_partial": false
+  },
+  "events": {
+    "system": {
+      "onStartup": {
+        "config": {
+          "script": "\tsystem.perspective.sendMessage(\"ResetSearch\", payload\u003d{}, scope\u003d\"session\")\n\tsystem.perspective.sendMessage(\"ResetRegistration\", payload\u003d{}, scope\u003d\"session\")"
+        },
+        "scope": "G",
+        "type": "script"
+      }
+    }
+  },
+  "params": {
+    "dob_day": "",
+    "dob_month": "",
+    "dob_year": "",
+    "first_name": "",
+    "func_new_data": false,
+    "last_name": "",
+    "middle_name": "",
+    "nick_name": "",
+    "race": "",
+    "ssn": ""
+  },
+  "propConfig": {
+    "custom.RegistrationData": {
+      "persistent": true
+    },
+    "custom.RegistrationData.veteran_id": {
+      "onChange": {
+        "enabled": null,
+        "script": "\tif currentValue.value \u003d\u003d 1: ## Veteran is No then\n\t\tself.custom.RegistrationData.vaHealthCareEligible \u003d0 ## set to No"
+      }
+    },
+    "custom.func_save_partial": {
+      "onChange": {
+        "enabled": null,
+        "script": "\timport re\n\timport traceback\n\tself.view.params.func_new_data \u003d False\n\tif self.custom.func_save_partial:\n\t\ttry:\n\t\t\t#system.perspective.print(\u0027Partial Registration Save\u0027)\n\t\t\tproject \u003d \"RITI\"\n\t\t\t### Declare parameters \n\t\t\t\n\t\t\tuser_name \u003d self.session.props.auth.user.userName\n\t\t\tfirst_name \u003d self.view.custom.RegistrationData.first_name\n\t\t\tmiddle_name \u003d self.view.custom.RegistrationData.middle_name\n\t\t\tlast_name \u003d self.view.custom.RegistrationData.last_name\n\t\t\tsuffix_name \u003d self.view.custom.RegistrationData.suffix_name\n\t\t\tnick_name \u003d self.view.custom.RegistrationData.nick_name\n\t\t\tgender_id \u003d self.view.custom.RegistrationData.gender_id\n\t\t\tdob \u003d self.view.custom.RegistrationData.dob\n\t\t\tdob_quality \u003d self.view.custom.RegistrationData.dob_quality_id\n\t\t\tssn \u003d self.view.custom.RegistrationData.ssn\n\t\t\tssn_quality \u003d self.view.custom.RegistrationData.ssn_quality_id\n\t\t\trace \u003d self.view.custom.RegistrationData.race_id\n\t\t\tethnicity \u003d 4 ## we do not need to collect and store for new participants as this menu is disabled. Ref Ticket #233\n\t\t\tveteran \u003d self.view.custom.RegistrationData.veteran_id\n\t\t\tdisability \u003d self.view.custom.RegistrationData.disability_id\n\t\t\tparticipant_phone \u003d self.view.custom.RegistrationData.phone\n\t\t\tparticipant_phone_alt \u003d self.view.custom.RegistrationData.phone_alt\n\t\t\tparticipant_email \u003d self.view.custom.RegistrationData.email\n\t\t\tpreferred_communication \u003d self.view.custom.RegistrationData.communication_type_id\n\t\t\t\n\t\t\treferral_provider_id \u003d self.view.custom.RegistrationData.referral_provider_id\n\t\t\treferral_status_id \u003d self.view.custom.RegistrationData.referral_status_id\n\t\t\treferral_type_id \u003d self.view.custom.RegistrationData.referral_type_id\n\t\t\t\n\t\t\temergency_contact_name \u003d self.view.custom.RegistrationData.emergency_name\n\t\t\temergency_contact_email \u003d self.view.custom.RegistrationData.emergency_email\n\t\t\temergency_contact_phone \u003d self.view.custom.RegistrationData.emergency_phone\n\t\t\temergency_contact_type \u003d self.view.custom.RegistrationData.emergency_contact_type_id\n\t\t\t\n\t\t\tfamily_id \u003d self.view.custom.RegistrationData.family_id\n\t\t\thoh_relationship_id \u003d self.view.custom.RegistrationData.hoh_relationship_id\n\t\t\tdobForFamilyCreation \u003d \u00271900\u0027\n\t\t\t\n\t\t\t## new fields\n\t\t\tmentalHealth \u003d None #self.view.custom.RegistrationData.mentalHealth\n\t\t\tchronicHealthConditions \u003d None #self.view.custom.RegistrationData.chronicHealthConditions\n\t\t\tphysicalDisability \u003d None #self.view.custom.RegistrationData.physicalDisability\n\t\t\tdevelopmentalDisability \u003d None #self.view.custom.RegistrationData.developmentalDisability\n\t\t\tsubstanceAbuse \u003d self.view.custom.RegistrationData.substanceAbuse\n\t\t\t\n\t\t\tisTriMorbid \u003d None\n\t\t\tif mentalHealth \u003d\u003d 1 and substanceAbuse \u003d\u003d 1 and (chronicHealthConditions \u003d\u003d1 or physicalDisability \u003d\u003d 1):\n\t\t\t\tisTriMorbid \u003d True\n\t\t\tlastHmisUpdateDate \u003d self.view.custom.RegistrationData.lastHmisUpdateDate\n\t\t\tlastHmisUpdateBy \u003d self.view.custom.RegistrationData.lastHmisUpdateBy\n\t\t\tviSpidatScore \u003d self.view.custom.RegistrationData.viSpidatScore\n\t\t\tviSpidateAssessmentDate \u003d self.view.custom.RegistrationData.viSpidateAssessmentDate\n\t\t\tvaHealthCareEligible \u003d self.view.custom.RegistrationData.vaHealthCareEligible\n\t\t\tincomeSource \u003d self.view.custom.RegistrationData.incomeSource\n\t\t\tincomeAmount \u003d self.view.custom.RegistrationData.incomeAmount\n\t\t\tincomeStartDate \u003d self.view.custom.RegistrationData.incomeStartDate\n\t\t\tbiracialId \u003d self.custom.RegistrationData.biracialId\n\t\t\t\n\t\t\t\n\t\t\t## Check if parameters are filled in correctly \n\t\t\t#if None in [gender_id, first_name, last_name, dob]:\n\t\t\tif None in [gender_id, first_name, last_name, race]:\n\t\t\t\tvalid \u003d False\n\t\t\t\t#system.perspective.print(\u0027Null Error\u0027)\n\t\t\t\terror_message \u003d \"Please fill in all the mandatory fields correctly before saving.\"\n\t\t\telif gender_id \u003c 0:\n\t\t\t\tvalid \u003d False\n\t\t\t\t#system.perspective.print(\u0027Gender Error\u0027)\n\t\t\t\terror_message \u003d \"Please fill in the Participant Gender before saving.\"\n\t\t\telif race \u003c 0:\n\t\t\t\tvalid \u003d False\n\t\t\t\t#system.perspective.print(\u0027Gender Error\u0027)\n\t\t\t\terror_message \u003d \"Please fill in the Participant Race before saving.\"\n\t\t\telif first_name.strip() \u003d\u003d \"\":\n\t\t\t\tvalid \u003d False\n\t\t\t\t#system.perspective.print(\u0027First Name Error\u0027)\n\t\t\t\terror_message \u003d \"Please fill in the Participant First Name before saving.\"\n\t\t\telif last_name.strip() \u003d\u003d \"\":\n\t\t\t\tvalid \u003d False\n\t\t\t\t#system.perspective.print(\u0027Last Name Error\u0027)\n\t\t\t\terror_message \u003d \"Please fill in the Participant Last Name before saving.\"\n\t\t\telse:\n\t\t\t\tvalid \u003d True\n\t\t\t### Check if data is valid otherwise show error message.\n\t\t\tif valid:\n\t\t\t\n\t\t\t\t## Convert Phone numbers to numeric value only\n\t\t\t\tparticipant_phone \u003d normalize.phone(participant_phone)\n\t\t\t\tparticipant_phone_alt \u003d normalize.phone(participant_phone_alt)\n\t\t\t\temergency_contact_phone \u003d normalize.phone(emergency_contact_phone)\n\t\t\t\t#\n\t\t\t\t#Set non-null allowed values to \u0027Data Not Collected\"\n\t\t\t\tif preferred_communication \u003d\u003d -1:\n\t\t\t\t\tpreferred_communication \u003d None\n\t\t\t\tif disability \u003d\u003d -1:\n\t\t\t\t\tdisability \u003d None\n\t\t\t\tif dob_quality \u003d\u003d -1:\n\t\t\t\t\tdob_quality \u003d 6\n\t\t\t\tif emergency_contact_type \u003d\u003d -1:\n\t\t\t\t\temergency_contact_type \u003d None\n\t\t\t\tif ethnicity \u003d\u003d -1:\n\t\t\t\t\tethnicity \u003d 4\n\t\t\t\tif family_id \u003d\u003d -1:\n\t\t\t\t\tfamily_id \u003d None\n\t\t\t\tif hoh_relationship_id \u003d\u003d -1:\n\t\t\t\t\thoh_relationship_id \u003d 8\n\t\t\t\tif race \u003d\u003d -1:\n\t\t\t\t\trace \u003d 8\n\t\t\t\tif referral_provider_id \u003d\u003d -1:\n\t\t\t\t\tpass\n\t\t\t\tif referral_status_id \u003d\u003d -1:\n\t\t\t\t\tpass\n\t\t\t\tif referral_type_id \u003d\u003d -1:\n\t\t\t\t\tpass\n\t\t\t\tif ssn_quality \u003d\u003d -1:\n\t\t\t\t\tssn_quality \u003d 6\n\t\t\t\tif veteran \u003d\u003d -1:\n\t\t\t\t\tveteran \u003d 4\n\t\t\t\t#SSN validation and normalization\n\t\t\t\tssn \u003d normalize.ssn(ssn)\n\t\t\t\t#system.perspective.print(ssn)\n\n\t\t\t\t#DOB validation\t\n\t\t\t\ttry:\n\t\t\t\t\tdob \u003d system.date.parse(dob)\n\t\t\t\t\t#system.perspective.print(\u0027DOB sucessfully parsed: \u0027 + str(dob))\n\t\t\t\t\tdobForFamilyCreation \u003d system.date.getYear(dob)\n\t\t\t\texcept:\n\t\t\t\t\tdob \u003d \u00271900-01-01 00:00:00\u0027\n\t\t\t\t\t#system.perspective.print(\u0027DOB set to default: \u0027 + str(dob))\n\t\t\t\t\n\t\t\t\tif family_id \u003d\u003d None or family_id \u003d\u003d -1 or family_id \u003d\u003d \"\":\n\t\t\t\t\t## create the default family as Last Name, First Name - Year of Birth\n\t\t\t\t\tfamilyName \u003d str(last_name) + \", \" + str(first_name) + \" - \" + str(dobForFamilyCreation)\n\t\t\t\t\t#\n\t\t\t\t\tpath \u003d \"Participants/Registration/GetOrCreateFamily\"\n\t\t\t\t\tsystem.perspective.print(path)\n\t\t\t\t\tparameters \u003d {\"familyName\":familyName}\n\t\t\t\t\tsystem.perspective.print(parameters)\n\t\t\t\t\tfamilyData \u003d system.db.runNamedQuery(project\u003dproject,path\u003dpath,parameters\u003dparameters)\n\t\t\t\t\tif familyData is not None and familyData.getRowCount() \u003e 0:\n\t\t\t\t\t\tfamily_id \u003d familyData.getValueAt(0,\u0027familyId\u0027)\n\t\t\t\t\t\thoh_relationship_id \u003d 0\n\t\t\t\t\telse:\n\t\t\t\t\t\tsystem.perspective.print(\"family data none\")\n\t\t\t\t## check if full or partial reg\n\t\t\t\tfull_register \u003d True\n\t\t\t\tif gender_id \u003d\u003d 5:\n\t\t\t\t\tfull_register \u003d False\n\t\t\t\telif ssn_quality \u003d\u003d 6:\n\t\t\t\t\tfull_register \u003d False\n\t\t\t\telif dob_quality \u003d\u003d 6:\n\t\t\t\t\tfull_register \u003d False\n\t\t\t\telif race \u003d\u003d 8:\n\t\t\t\t\tfull_register \u003d False\n\t\t\t\telif veteran \u003d\u003d 4:\n\t\t\t\t\tfull_register \u003d False\n\t\t\t\t### Create transaction\n\t\t\t\ttransactionFailed \u003d False\n\t\t\t\tsuccess \u003d False\n\t\t\t\thuman_id \u003d None\n\t\t\t\ttxId \u003d system.db.beginTransaction(timeout\u003d5000)\n\t\t\t\ttry:\n\t\t\t\t\t#Insert the Human Data\n\t\t\t\t\tpath \u003d \"Participants/Registration/Insert New Human\"\n\t\t\t\t\tparameters \u003d {\"first_name\":first_name,\n\t\t\t\t\t\t\t\t\"middle_name\":middle_name,\n\t\t\t\t\t\t\t\t\"last_name\":last_name,\n\t\t\t\t\t\t\t\t\"suffix_name\":suffix_name,\n\t\t\t\t\t\t\t\t\"nick_name\":nick_name,\n\t\t\t\t\t\t\t\t\"dob\":dob,\n\t\t\t\t\t\t\t\t\"dob_quality\":dob_quality,\n\t\t\t\t\t\t\t\t\"ssn\":ssn,\n\t\t\t\t\t\t\t\t\"ssn_quality\":ssn_quality,\n\t\t\t\t\t\t\t\t\"gender_id\":gender_id,\n\t\t\t\t\t\t\t\t\"race_id\":race,\n\t\t\t\t\t\t\t\t\"ethnicity_id\":ethnicity,\n\t\t\t\t\t\t\t\t\"veteran_id\":veteran,\n\t\t\t\t\t\t\t\t\"disability_id\":disability,\n\t\t\t\t\t\t\t\t\"phone\":participant_phone,\n\t\t\t\t\t\t\t\t\"alt_phone\":participant_phone_alt,\n\t\t\t\t\t\t\t\t\"email\":participant_email,\n\t\t\t\t\t\t\t\t\"communication_type_id\":preferred_communication,\n\t\t\t\t\t\t\t\t\"emergency_contact_name\":emergency_contact_name,\n\t\t\t\t\t\t\t\t\"emergency_contact_email\":emergency_contact_email,\n\t\t\t\t\t\t\t\t\"emergency_contact_phone\":emergency_contact_phone,\n\t\t\t\t\t\t\t\t\"emergency_contact_type_id\":emergency_contact_type,\n\t\t\t\t\t\t\t\t\"family_id\":family_id,\n\t\t\t\t\t\t\t\t\"hoh_relationship_id\":hoh_relationship_id,\n\t\t\t\t\t\t\t\t\"full_register\":full_register,\n\t\t\t\t\t\t\t\t\"mentalHealth\":mentalHealth,\n\t\t\t\t\t\t\t\t\"chronicHealthConditions\":chronicHealthConditions,\n\t\t\t\t\t\t\t\t\"physicalDisability\":physicalDisability,\n\t\t\t\t\t\t\t\t\"developmentalDisability\":developmentalDisability,\n\t\t\t\t\t\t\t\t\"substanceAbuse\":substanceAbuse,\n\t\t\t\t\t\t\t\t\"lastHmisUpdateDate\":lastHmisUpdateDate,\n\t\t\t\t\t\t\t\t\"lastHmisUpdateBy\":lastHmisUpdateBy,\n\t\t\t\t\t\t\t\t\"viSpidatScore\":viSpidatScore,\n\t\t\t\t\t\t\t\t\"viSpidateAssessmentDate\":viSpidateAssessmentDate,\n\t\t\t\t\t\t\t\t\"vaHealthCareEligible\":vaHealthCareEligible,\n\t\t\t\t\t\t\t\t\"incomeSource\":incomeSource,\n\t\t\t\t\t\t\t\t\"incomeAmount\":incomeAmount,\n\t\t\t\t\t\t\t\t\"incomeStartDate\":incomeStartDate,\n\t\t\t\t\t\t\t\t\"triMorbid\":isTriMorbid,\n\t\t\t\t\t\t\t\t\"biracialId\":biracialId}\n\t\t\t\t\thuman_id \u003d system.db.runNamedQuery(project\u003dproject,path\u003dpath,parameters\u003dparameters, tx\u003dtxId, getKey\u003dTrue)\n\t\t\t\t\t#Insert the new participant data\n\t\t\t\t\tpath \u003d \"Participants/Registration/InsertNewParticipant\"\n\t\t\t\t\tparameters \u003d {\"human_id\":human_id}\n\t\t\t\t\tparticipant_id \u003d system.db.runNamedQuery(project\u003dproject,path\u003dpath,parameters\u003dparameters, tx\u003dtxId, getKey\u003dTrue)\n\t\t\t\t\t\n\t\t\t\t\tpath \u003d \"Participants/Registration/InsertRegistrationLog\"\n\t\t\t\t\tparameters \u003d {\"participantId\":participant_id, \"actionBy\":self.session.custom.loggedInStaffEmployeeID, \"action\":\"New Registration\", \"actionFields\":None, \"userName\":self.session.props.auth.user.userName}\n\t\t\t\t\tsystem.db.runNamedQuery(project\u003dproject,path\u003dpath,parameters\u003dparameters, tx\u003dtxId)\n\t\t\t\t\t\u0027\u0027\u0027\n\t\t\t\t\t#\n\t\t\t\t\t#Removed referrals on add new participant - not sure, so leaving it here\n\t\t\t\t\t#\n\t\t\t\t\t#Insert the referral if the information was provided\n\t\t\t\t\tif referral_provider_id \u003e -1 and referral_status_id \u003e -1 and referral_type_id \u003e -1:\n\t\t\t\t\t\tpath \u003d \"Participants/Referrals/ReferralDetailInsert\"\n\t\t\t\t\t\tparameters \u003d {\"participant_id\":participant_id,\n\t\t\t\t\t\t\t\t\t\"provider_id\":referral_provider_id,\n\t\t\t\t\t\t\t\t\t\"status_id\":referral_status_id,\n\t\t\t\t\t\t\t\t\t\"type_id\":referral_type_id,\n\t\t\t\t\t\t\t\t\t\"program_id\":3}\n\t\t\t\t\t\treferral \u003d system.db.runNamedQuery(project\u003dproject,path\u003dpath,parameters\u003dparameters, tx\u003dtxId, getKey\u003dTrue)\n\t\t\t\t\t\t#Insert the first entry inotreferral log\n\t\t\t\t\t\tstatus_id \u003d referral_status_id\n\t\t\t\t\t\ttime_created \u003d system.date.now()\n\t\t\t\t\t\tcomment \u003d \"Automatic referral log entry on new participant addition\"\n\t\t\t\t\t\treferral_id \u003d referral\n\t\t\t\t\t\tpath \u003d \"Participants/Referrals/ReferralDetailNoteInsert\"\n\t\t\t\t\t\tparameters \u003d {\"comment\":comment,\n\t\t\t\t\t\t\t\t\t\"referral_id\":referral_id,\n\t\t\t\t\t\t\t\t\t\"status_id\":status_id,\n\t\t\t\t\t\t\t\t\t\"type_id\":referral_type_id,\n\t\t\t\t\t\t\t\t\t\"time_created\":time_created,\n\t\t\t\t\t\t\t\t\t\"user_name\":user_name}\n\t\t\t\t\t\tRefresh \u003d system.db.runNamedQuery(project\u003dproject,path\u003dpath,parameters\u003dparameters, tx\u003dtxId, getKey\u003dTrue)\n\t\t\t\t\t\t\u0027\u0027\u0027\n\t\t\t\t#Transaction failure :(\n\t\t\t\texcept:\n\t\t\t\t\ttransactionFailed \u003d True\n\t\t\t\t\tlogger \u003d system.util.getLogger(\"Participants RegisterParticipant Button Save\")\n\t\t\t\t\tmsg \u003d traceback.format_exc()\n\t\t\t\t\tlogger.error(msg)\n\t\t\t\t\t\n\t\t\t\t### Check if an error occured rollback the transaction\n\t\t\t\tif transactionFailed:\n\t\t\t\t\tsystem.db.rollbackTransaction(txId)\n\t\t\t\t\tpayload \u003d {\u0027message\u0027:\"Something went wrong while saving data. Please try again.\"}\n\t\t\t\t\tsystem.perspective.sendMessage(\"showError\", payload\u003dpayload, scope\u003d\"view\")\n\t\t\t\t### Otherwise commit \n\t\t\t\telse:\n\t\t\t\t\t#Success!!!!\n\t\t\t\t\tsystem.db.commitTransaction(txId)\n\t\t\t\t\tpayload \u003d {\u0027message\u0027:\"Participant Added Successfully\"}\n\t\t\t\t\tsystem.perspective.sendMessage(\"showError\", payload\u003dpayload, scope\u003d\"view\")\n\t\t\t\t\tsuccess \u003d True\n\t\t\t\t\t## auto enroll participants\n\t\t\t\t\tparticipants.autoEnroll(participant_id)\n### Participant Events Change - Comment out Breeze Integration\n\t\t\t\t\t\"\"\"\n\t\t\t\t\tif full_register \u003d\u003d True and human_id is not None:\n\t\t\t\t\t\t## sync with Breeze when full register is true\n\t\t\t\t\t\tIntegrations.breeze.helper.addHumanToBreeze(human_id, tags \u003d [\u0027Participant\u0027])\n\t\t\t\t\t\"\"\"\n### End Change\n\t\t\t\t### Always close the transaction\t\n\t\t\t\tsystem.db.closeTransaction(txId)\n\t\t\t\t# If successful reset and close the dock\n\t\t\t\tif success:\n\t\t\t\t\tself.view.params.func_new_data \u003d False\n\t\t\t\t\tsystem.perspective.sendMessage(\"ResetSearch\", payload\u003d{}, scope\u003d\"session\")\n\t\t\t\t\tsystem.perspective.sendMessage(\"ResetRegistration\", payload\u003d{}, scope\u003d\"session\")\n\t\t\t\t\tsystem.perspective.closeDock(\u0027RegisterParticipant\u0027)\n\t\t\t\t\t#Go to the detail view\n\t\t\t\t\ttab_id \u003d 10\n\t\t\t\t\tsystem.perspective.navigate(\"Participants/Detail/\" + str(participant_id) + \"/\" + str(tab_id))\n\t\t\t\t\tsystem.perspective.sendMessage(\"refreshPersonalData\", payload\u003d{}, scope\u003d\"session\")\t\n\t\t\t\n\t\t\telse:\n\t\t\t\t#system.perspective.print(\u0027showMessage\u0027)\n\t\t\t\tpayload \u003d {\u0027message\u0027:error_message}\n\t\t\t\tsystem.perspective.sendMessage(\"showError\", payload\u003dpayload, scope\u003d\"view\")\n\t\t\t\t#Set the script trigger to false when done\n\t\t\t\n\t\t\tself.custom.func_save_partial \u003d False\n\n\t\texcept:\n\t\t\tlogger \u003d system.util.getLogger(\"Participants RegisterParticipant view.custom.func_save_partial\")\n\t\t\tmsg \u003d traceback.format_exc()\n\t\t\tlogger.error(msg)\n\t\t\tself.custom.func_save_partial \u003d False"
+      },
+      "persistent": true
+    },
+    "params.dob_day": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.dob_month": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.dob_year": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.first_name": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.func_new_data": {
+      "onChange": {
+        "enabled": null,
+        "script": "\timport traceback\n\ttry:\n\t\tif currentValue.value:\n\t\t\t#First name and last name and ssn\n\t\t\tif self.params.first_name is not None:\n\t\t\t\tself.custom.RegistrationData.first_name \u003d self.params.first_name\n\t\t\telse:\n\t\t\t\tself.custom.RegistrationData.first_name \u003d \u0027\u0027\n\t\t\t\n\t\t\tif self.params.middle_name is not None:\n\t\t\t\tself.custom.RegistrationData.middle_name \u003d self.params.middle_name\n\t\t\telse:\n\t\t\t\tself.custom.RegistrationData.middle_name \u003d \u0027\u0027\n\t\t\t\n\t\t\tif self.params.last_name is not None:\n\t\t\t\tself.custom.RegistrationData.last_name \u003d self.params.last_name\n\t\t\telse:\n\t\t\t\tself.custom.RegistrationData.last_name \u003d \u0027\u0027\n\t\t\t\n\t\t\tif self.params.nick_name is not None:\n\t\t\t\tself.custom.RegistrationData.nick_name \u003d self.params.nick_name\n\t\t\telse:\n\t\t\t\tself.custom.RegistrationData.nick_name \u003d \u0027\u0027\n\t\t\t\n\t\t\tif self.params.ssn is not None:\n\t\t\t\tself.custom.RegistrationData.ssn \u003d self.params.ssn\n\t\t\telse:\n\t\t\t\tself.custom.RegistrationData.ssn \u003d\u0027\u0027\n\t\t\t#Race if valid, otherwise set to -1\n\t\t\ttry:\n\t\t\t\tself.custom.RegistrationData.race_id \u003d int(self.params.race)\n\t\t\texcept:\n\t\t\t\tself.custom.RegistrationData.race_id \u003d -1\n\t\t\t#DOB\n\t\t\t#Set today as the default birth month and day \n\t\t\t#as a futile attempt to create a unique birthdate\n#\t\t\tdob_year_default \u003d \"1920\"\n#\t\t\tdob_month_default \u003d str(system.date.getMonth(system.date.now()) + 1)\n#\t\t\tdob_day_default \u003d str(system.date.getDayOfMonth(system.date.now()) + 1)\n#\t\t\t#Convert to default string if None\n#\t\t\tif self.params.dob_year \u003d\u003d None:\n#\t\t\t\tself.params.dob_year \u003d dob_year_default\n#\t\t\tif self.params.dob_month \u003d\u003d None:\n#\t\t\t\tself.params.dob_month \u003d dob_month_default\n#\t\t\tif self.params.dob_day \u003d\u003d None:\n#\t\t\t\tself.params.dob_day \u003d dob_day_default\n#\t\t\t#Convert the param is a string\n#\t\t\tself.params.dob_year \u003d str(self.params.dob_year)\n#\t\t\tself.params.dob_month \u003d str(self.params.dob_month)\n#\t\t\tself.params.dob_day \u003d str(self.params.dob_day)\n#\t\t\t#fill in any missing information with defaults\n#\t\t\tif self.params.dob_year \u003d\u003d \u0027\u0027:\n#\t\t\t\tself.params.dob_year \u003d dob_year_default\n#\t\t\tif self.params.dob_month \u003d\u003d \u0027\u0027:\n#\t\t\t\tself.params.dob_month \u003d dob_month_default\n#\t\t\tif self.params.dob_day \u003d\u003d \u0027\u0027:\n#\t\t\t\tself.params.dob_day \u003d dob_day_default\n#\t\t\t#If not the correct length change to defaults\n#\t\t\tif len(self.params.dob_year) !\u003d 4:\n#\t\t\t\tself.params.dob_year \u003d dob_year_default\n#\t\t\tif len(self.params.dob_month) !\u003d 2:\n#\t\t\t\tself.params.dob_month \u003d dob_month_default\n#\t\t\tif len(self.params.dob_day) !\u003d 2:\n#\t\t\t\tself.params.dob_day \u003d dob_day_default\n\t\t\ttry:#Try to make a date. Dating is difficult. Ask any single man.\n\t\t\t\tparse_string \u003d self.params.dob_year + \u0027-\u0027 + self.params.dob_month + \u0027-\u0027 + self.params.dob_day + \u0027 00:00:00\u0027\n\t\t\t\t#system.perspective.print(\"DOB string:\" + str(parse_string))\n\t\t\t\tself.custom.RegistrationData.dob \u003d system.date.parse(parse_string + \u0027 00:00:00\u0027)\n\t\t\texcept:#Give up. This date is hopelessly fubar.\n\t\t\t\t#system.perspective.print(\"Date Parse Exception\")\n#\t\t\t\tself.custom.RegistrationData.dob \u003d \u00271920-01-01 00:00:00\u0027\n\t\t\t\tself.custom.RegistrationData.dob \u003d None\n\t\t\t#system.perspective.print(\"Registered DOB:\" + str(self.custom.RegistrationData.dob))\n\t\t\t#Set dropdowns to -1 so the selection data type is integer\n\t\t\tself.custom.RegistrationData.communication_type_id \u003d -1\n\t\t\tself.custom.RegistrationData.disability_id \u003d -1\n\t\t\tself.custom.RegistrationData.dob_quality_id \u003d -1\n\t\t\tself.custom.RegistrationData.emergency_contact_type_id \u003d -1\n\t\t\tself.custom.RegistrationData.ethnicity_id \u003d -1\n\t\t\tself.custom.RegistrationData.family_id \u003d -1\n\t\t\tself.custom.RegistrationData.gender_id \u003d -1\n\t\t\tself.custom.RegistrationData.hoh_relationship_id \u003d -1\n\t\t\tself.custom.RegistrationData.referral_provider_id \u003d -1\n\t\t\tself.custom.RegistrationData.referral_status_id \u003d -1\n\t\t\tself.custom.RegistrationData.referral_type_id \u003d -1\n\t\t\tself.custom.RegistrationData.ssn_quality_id \u003d -1\n\t\t\tself.custom.RegistrationData.veteran_id \u003d 1\n\t\t\tself.custom.RegistrationData.mentalHealth \u003d -1\n\t\t\tself.custom.RegistrationData.chronicHealthConditions \u003d -1\n\t\t\tself.custom.RegistrationData.physicalDisability \u003d -1\n\t\t\tself.custom.RegistrationData.developmentalDisability \u003d -1\n\t\t\tself.custom.RegistrationData.substanceAbuse \u003d -1\n\t\t\tself.custom.RegistrationData.lastHmisUpdateDate \u003d None\n\t\t\tself.custom.RegistrationData.lastHmisUpdateBy \u003d \u0027\u0027\n\t\t\tself.custom.RegistrationData.viSpidatScore \u003d -1\n\t\t\tself.custom.RegistrationData.viSpidateAssessmentDate \u003d None\n\t\t\tself.custom.RegistrationData.vaHealthCareEligible \u003d 0\n\t\t\tself.custom.RegistrationData.incomeSource \u003d -1\n\t\t\tself.custom.RegistrationData.incomeAmount \u003d 0\n\t\t\tself.custom.RegistrationData.incomeStartDate \u003d None\n\t\tself.params.func_new_data \u003d False\n\texcept:\n\t\tlogger \u003d system.util.getLogger(\"Participants RegisterParticipant view.params.func_new_data\")\n\t\tmsg \u003d traceback.format_exc()\n\t\tlogger.error(msg)"
+      },
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.last_name": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.middle_name": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.nick_name": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.race": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.ssn": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 1080,
+      "width": 600
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "EmbeddedView"
+        },
+        "position": {
+          "shrink": 0
+        },
+        "props": {
+          "params": {
+            "text": "New Participant"
+          },
+          "path": "Participants/Registration/Cards/RegistrationHeader",
+          "useDefaultViewHeight": true
+        },
+        "scripts": {
+          "customMethods": [],
+          "extensionFunctions": null,
+          "messageHandlers": [
+            {
+              "messageType": "ResetRegistration",
+              "pageScope": true,
+              "script": "\tself.view.custom.RegistrationData.communication_type_id \u003d -1\n\tself.view.custom.RegistrationData.disability_id \u003d -1\n\tself.view.custom.RegistrationData.dob \u003d None\n\tself.view.custom.RegistrationData.dob_quality_id \u003d -1\n\tself.view.custom.RegistrationData.email \u003d \u0027\u0027\n\tself.view.custom.RegistrationData.emergency_contact_type_id \u003d -1\n\tself.view.custom.RegistrationData.emergency_email \u003d \u0027\u0027\n\tself.view.custom.RegistrationData.emergency_name \u003d \u0027\u0027\n\tself.view.custom.RegistrationData.emergency_phone \u003d \u0027\u0027\n\tself.view.custom.RegistrationData.ethnicity_id \u003d -1\n\tself.view.custom.RegistrationData.family_id \u003d -1\n\tself.view.custom.RegistrationData.first_name \u003d \u0027\u0027\n\tself.view.custom.RegistrationData.gender_id \u003d -1\n\tself.view.custom.RegistrationData.hoh_relationship_id \u003d -1\n\tself.view.custom.RegistrationData.last_name \u003d \u0027\u0027\n\tself.view.custom.RegistrationData.middle_name \u003d \u0027\u0027\n\tself.view.custom.RegistrationData.nick_name \u003d \u0027\u0027\n\tself.view.custom.RegistrationData.phone \u003d \u0027\u0027\n\tself.view.custom.RegistrationData.phone_alt \u003d \u0027\u0027\n\tself.view.custom.RegistrationData.race_id \u003d -1\n\tself.view.custom.RegistrationData.referral_provider_id \u003d -1\n\tself.view.custom.RegistrationData.referral_status_id \u003d -1\n\tself.view.custom.RegistrationData.referral_type_id \u003d -1\n\tself.view.custom.RegistrationData.ssn \u003d \u0027\u0027\n\tself.view.custom.RegistrationData.ssn_quality_id \u003d -1\n\tself.view.custom.RegistrationData.suffix_name \u003d \u0027\u0027\n\tself.view.custom.RegistrationData.veteran_id \u003d 1\n\tself.view.custom.RegistrationData.vaHealthCareEligible \u003d 0\n\t\u0027\u0027\u0027\n\tself.parent.getChild(\"FlexContainer Personal\").getChild(\"FlexContainer Left\").getChild(\"FirstName\").props.params.inputText \u003d \"\"\n\tself.parent.getChild(\"FlexContainer Personal\").getChild(\"FlexContainer Left\").getChild(\"LastName\").props.params.inputText \u003d \"\"\n\tself.parent.getChild(\"FlexContainer Personal\").getChild(\"FlexContainer Left\").getChild(\"DateOfBirth\").props.params.date \u003d None\n\tself.parent.getChild(\"FlexContainer Personal\").getChild(\"FlexContainer Left\").getChild(\"Race\").props.params.SelectedValue \u003d None\n\tself.parent.getChild(\"FlexContainer Personal\").getChild(\"FlexContainer Left\").getChild(\"SocialSecurityNumber\").props.params.inputText \u003d \"\"\n\tself.parent.getChild(\"FlexContainer Personal\").getChild(\"FlexContainer Left\").getChild(\"Gender\").props.params.SelectedValue\n\tself.parent.getChild(\"FlexContainer Personal\").getChild(\"FlexContainer Left\").getChild(\"DeceasedDate\").props.params.date \u003d None\n\t\n\tself.parent.getChild(\"FlexContainer Personal\").getChild(\"FlexContainer Right\").getChild(\"MiddleName\").props.params.inputText \u003d \"\"\n\tself.parent.getChild(\"FlexContainer Personal\").getChild(\"FlexContainer Right\").getChild(\"Nickname\").props.params.inputText \u003d \"\"\n\tself.parent.getChild(\"FlexContainer Personal\").getChild(\"FlexContainer Right\").getChild(\"DateOfBirthQuality\").props.params.SelectedValue \u003d None\n\tself.parent.getChild(\"FlexContainer Personal\").getChild(\"FlexContainer Right\").getChild(\"Ethnicity\").props.params.SelectedValue \u003d None\n\tself.parent.getChild(\"FlexContainer Personal\").getChild(\"FlexContainer Right\").getChild(\"SSNQuality\").props.params.SelectedValue \u003d None\n\t\n\tself.parent.getChild(\"FlexContainer Family\").getChild(\"FlexContainer Left\").getChild(\"Family\").props.params.SelectedValue \u003d None\n\tself.parent.getChild(\"FlexContainer Family\").getChild(\"FlexContainer Right\").getChild(\"RelationshipHousehold\").props.params.SelectedValue \u003d None\n\t\n\tself.parent.getChild(\"FlexContainer Contact\").getChild(\"FlexContainer Left\").getChild(\"ParticipantPhone\").props.params.inputText \u003d \"\"\n\tself.parent.getChild(\"FlexContainer Contact\").getChild(\"FlexContainer Left\").getChild(\"ParticipantEmail\").props.params.inputText \u003d \"\"\n\t\n\tself.parent.getChild(\"FlexContainer Contact\").getChild(\"FlexContainer Right\").getChild(\"EmergencyName\").props.params.inputText \u003d \"\"\n\tself.parent.getChild(\"FlexContainer Contact\").getChild(\"FlexContainer Right\").getChild(\"EmergencyPhone\").props.params.inputText \u003d \"\"\n\t\n\tself.parent.getChild(\"FlexContainer Extra\").getChild(\"FlexContainer Left\").getChild(\"DisablingCondition\").props.params.SelectedValue \u003d None\n\tself.parent.getChild(\"FlexContainer Extra\").getChild(\"FlexContainer Right\").getChild(\"VeteranStatus\").props.params.SelectedValue \u003d None",
+              "sessionScope": true,
+              "viewScope": true
+            }
+          ]
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Label",
+          "visible": false
+        },
+        "position": {
+          "basis": "25px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.text": {
+            "binding": {
+              "config": {
+                "expression": "\u0027New Data:\u0027 + {view.params.func_new_data} +\r\n\u0027 DOB:\u0027 + {view.custom.RegistrationData.dob}"
+              },
+              "type": "expr"
+            }
+          }
+        },
+        "props": {
+          "style": {
+            "classes": "Text/Error_Message"
+          }
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "meta": {
+          "name": "TypeOfRegistration"
+        },
+        "position": {
+          "basis": "50px",
+          "display": false,
+          "shrink": 0
+        },
+        "props": {
+          "params": {
+            "full": false
+          },
+          "path": "Participants/Registration/Cards/TypeOfRegistration"
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "meta": {
+                  "name": "FirstName"
+                },
+                "position": {
+                  "shrink": 0
+                },
+                "propConfig": {
+                  "props.params.inputText": {
+                    "binding": {
+                      "config": {
+                        "bidirectional": true,
+                        "path": "view.custom.RegistrationData.first_name"
+                      },
+                      "type": "property"
+                    }
+                  }
+                },
+                "props": {
+                  "params": {
+                    "text": "First Name"
+                  },
+                  "path": "Participants/Registration/Cards/TextInput_Mandatory",
+                  "style": {
+                    "marginTop": "5px"
+                  },
+                  "useDefaultViewHeight": true
+                },
+                "type": "ia.display.view"
+              },
+              {
+                "meta": {
+                  "name": "LastName"
+                },
+                "position": {
+                  "shrink": 0
+                },
+                "propConfig": {
+                  "props.params.inputText": {
+                    "binding": {
+                      "config": {
+                        "bidirectional": true,
+                        "path": "view.custom.RegistrationData.last_name"
+                      },
+                      "type": "property"
+                    }
+                  }
+                },
+                "props": {
+                  "params": {
+                    "text": "Last Name"
+                  },
+                  "path": "Participants/Registration/Cards/TextInput_Mandatory",
+                  "style": {
+                    "marginTop": "5px"
+                  },
+                  "useDefaultViewHeight": true
+                },
+                "type": "ia.display.view"
+              },
+              {
+                "meta": {
+                  "name": "Nickname"
+                },
+                "position": {
+                  "shrink": 0
+                },
+                "propConfig": {
+                  "props.params.inputText": {
+                    "binding": {
+                      "config": {
+                        "bidirectional": true,
+                        "path": "view.custom.RegistrationData.nick_name"
+                      },
+                      "type": "property"
+                    }
+                  }
+                },
+                "props": {
+                  "params": {
+                    "text": "Nickname"
+                  },
+                  "path": "Participants/Registration/Cards/TextInput",
+                  "style": {
+                    "marginTop": "5px"
+                  },
+                  "useDefaultViewHeight": true
+                },
+                "type": "ia.display.view"
+              },
+              {
+                "meta": {
+                  "name": "DateOfBirth"
+                },
+                "position": {
+                  "shrink": 0
+                },
+                "propConfig": {
+                  "props.params.date": {
+                    "binding": {
+                      "config": {
+                        "bidirectional": true,
+                        "path": "view.custom.RegistrationData.dob"
+                      },
+                      "type": "property"
+                    }
+                  },
+                  "props.params.maxDate": {
+                    "binding": {
+                      "config": {
+                        "expression": "now(0)"
+                      },
+                      "type": "expr"
+                    }
+                  },
+                  "props.params.minDate": {
+                    "binding": {
+                      "config": {
+                        "expression": "toDate(\u00271900-01-01\u0027)"
+                      },
+                      "type": "expr"
+                    }
+                  }
+                },
+                "props": {
+                  "params": {
+                    "text": "Date of Birth"
+                  },
+                  "path": "Participants/Registration/Cards/DateInput",
+                  "style": {
+                    "marginTop": "5px"
+                  },
+                  "useDefaultViewHeight": true
+                },
+                "type": "ia.display.view"
+              },
+              {
+                "meta": {
+                  "name": "SocialSecurityNumber"
+                },
+                "position": {
+                  "shrink": 0
+                },
+                "propConfig": {
+                  "props.params.inputText": {
+                    "binding": {
+                      "config": {
+                        "bidirectional": true,
+                        "path": "view.custom.RegistrationData.ssn"
+                      },
+                      "type": "property"
+                    }
+                  }
+                },
+                "props": {
+                  "params": {
+                    "text": "SSN (0\u0027s where unknown - 000-00-1234)"
+                  },
+                  "path": "Participants/Registration/Cards/TextInput",
+                  "style": {
+                    "marginTop": "5px"
+                  },
+                  "useDefaultViewHeight": true
+                },
+                "type": "ia.display.view"
+              },
+              {
+                "meta": {
+                  "name": "Race"
+                },
+                "position": {
+                  "shrink": 0
+                },
+                "propConfig": {
+                  "props.params.Options": {
+                    "binding": {
+                      "config": {
+                        "queryPath": "Participants/Registration/GetRaces"
+                      },
+                      "type": "query"
+                    }
+                  },
+                  "props.params.SelectedValue": {
+                    "binding": {
+                      "config": {
+                        "bidirectional": true,
+                        "path": "view.custom.RegistrationData.race_id"
+                      },
+                      "type": "property"
+                    }
+                  }
+                },
+                "props": {
+                  "params": {
+                    "Text": "Race"
+                  },
+                  "path": "Participants/Registration/Cards/SelectionInput",
+                  "style": {
+                    "marginTop": "5px"
+                  },
+                  "useDefaultViewHeight": true
+                },
+                "type": "ia.display.view"
+              },
+              {
+                "meta": {
+                  "name": "BiracialId"
+                },
+                "position": {
+                  "shrink": 0
+                },
+                "propConfig": {
+                  "props.params.Options": {
+                    "binding": {
+                      "config": {
+                        "queryPath": "Participants/Registration/GetBiRacialOptions"
+                      },
+                      "type": "query"
+                    }
+                  },
+                  "props.params.SelectedValue": {
+                    "binding": {
+                      "config": {
+                        "bidirectional": true,
+                        "path": "view.custom.RegistrationData.biracialId"
+                      },
+                      "type": "property"
+                    }
+                  }
+                },
+                "props": {
+                  "params": {
+                    "Text": "Biracial"
+                  },
+                  "path": "Participants/Registration/Cards/SelectionInput",
+                  "style": {
+                    "marginTop": "5px"
+                  },
+                  "useDefaultViewHeight": true
+                },
+                "type": "ia.display.view"
+              },
+              {
+                "meta": {
+                  "name": "Veteran"
+                },
+                "position": {
+                  "shrink": 0
+                },
+                "propConfig": {
+                  "props.params.Options": {
+                    "binding": {
+                      "config": {
+                        "queryPath": "Participants/Registration/GetVeteranStatus"
+                      },
+                      "type": "query"
+                    }
+                  },
+                  "props.params.SelectedValue": {
+                    "binding": {
+                      "config": {
+                        "bidirectional": true,
+                        "path": "view.custom.RegistrationData.veteran_id"
+                      },
+                      "type": "property"
+                    }
+                  }
+                },
+                "props": {
+                  "params": {
+                    "Text": "Veteran Status"
+                  },
+                  "path": "Participants/Registration/Cards/SelectionInput",
+                  "style": {
+                    "marginTop": "5px"
+                  },
+                  "useDefaultViewHeight": true
+                },
+                "type": "ia.display.view"
+              }
+            ],
+            "meta": {
+              "name": "FlexContainer Left"
+            },
+            "position": {
+              "basis": "200px",
+              "grow": 1
+            },
+            "props": {
+              "direction": "column",
+              "style": {
+                "paddingLeft": "25px",
+                "paddingRight": "20px"
+              }
+            },
+            "type": "ia.container.flex"
+          },
+          {
+            "children": [
+              {
+                "meta": {
+                  "name": "MiddleName"
+                },
+                "position": {
+                  "shrink": 0
+                },
+                "propConfig": {
+                  "props.params.inputText": {
+                    "binding": {
+                      "config": {
+                        "bidirectional": true,
+                        "path": "view.custom.RegistrationData.middle_name"
+                      },
+                      "type": "property"
+                    }
+                  }
+                },
+                "props": {
+                  "params": {
+                    "text": "Middle Name"
+                  },
+                  "path": "Participants/Registration/Cards/TextInput",
+                  "style": {
+                    "marginTop": "5px"
+                  },
+                  "useDefaultViewHeight": true
+                },
+                "type": "ia.display.view"
+              },
+              {
+                "meta": {
+                  "name": "Suffix"
+                },
+                "position": {
+                  "shrink": 0
+                },
+                "propConfig": {
+                  "props.params.inputText": {
+                    "binding": {
+                      "config": {
+                        "bidirectional": true,
+                        "path": "view.custom.RegistrationData.suffix_name"
+                      },
+                      "type": "property"
+                    }
+                  }
+                },
+                "props": {
+                  "params": {
+                    "text": "Suffix"
+                  },
+                  "path": "Participants/Registration/Cards/TextInput",
+                  "style": {
+                    "marginTop": "5px"
+                  },
+                  "useDefaultViewHeight": true
+                },
+                "type": "ia.display.view"
+              },
+              {
+                "meta": {
+                  "name": "Gender"
+                },
+                "propConfig": {
+                  "props.params.Options": {
+                    "binding": {
+                      "config": {
+                        "queryPath": "Participants/Registration/GetGender"
+                      },
+                      "type": "query"
+                    }
+                  },
+                  "props.params.SelectedValue": {
+                    "binding": {
+                      "config": {
+                        "bidirectional": true,
+                        "path": "view.custom.RegistrationData.gender_id"
+                      },
+                      "type": "property"
+                    }
+                  }
+                },
+                "props": {
+                  "params": {
+                    "Text": "Gender"
+                  },
+                  "path": "Participants/Registration/Cards/SelectionInput_Mandatory",
+                  "style": {
+                    "marginTop": "5px"
+                  },
+                  "useDefaultViewHeight": true
+                },
+                "type": "ia.display.view"
+              },
+              {
+                "meta": {
+                  "name": "DateOfBirthQuality"
+                },
+                "position": {
+                  "shrink": 0
+                },
+                "propConfig": {
+                  "props.params.Options": {
+                    "binding": {
+                      "config": {
+                        "queryPath": "Participants/Registration/GetDOBQuality"
+                      },
+                      "type": "query"
+                    }
+                  },
+                  "props.params.SelectedValue": {
+                    "binding": {
+                      "config": {
+                        "bidirectional": true,
+                        "path": "view.custom.RegistrationData.dob_quality_id"
+                      },
+                      "type": "property"
+                    }
+                  }
+                },
+                "props": {
+                  "params": {
+                    "Text": "Date of Birth Quality"
+                  },
+                  "path": "Participants/Registration/Cards/SelectionInput",
+                  "style": {
+                    "marginTop": "5px"
+                  },
+                  "useDefaultViewHeight": true
+                },
+                "type": "ia.display.view"
+              },
+              {
+                "meta": {
+                  "name": "SSNQuality"
+                },
+                "propConfig": {
+                  "props.params.Options": {
+                    "binding": {
+                      "config": {
+                        "queryPath": "Participants/Registration/GetSSNQuality"
+                      },
+                      "type": "query"
+                    }
+                  },
+                  "props.params.SelectedValue": {
+                    "binding": {
+                      "config": {
+                        "bidirectional": true,
+                        "path": "view.custom.RegistrationData.ssn_quality_id"
+                      },
+                      "type": "property"
+                    }
+                  }
+                },
+                "props": {
+                  "params": {
+                    "Text": "SSN Quality"
+                  },
+                  "path": "Participants/Registration/Cards/SelectionInput",
+                  "style": {
+                    "marginTop": "5px"
+                  },
+                  "useDefaultViewHeight": true
+                },
+                "type": "ia.display.view"
+              },
+              {
+                "meta": {
+                  "name": "Ethnicity"
+                },
+                "position": {
+                  "display": false
+                },
+                "propConfig": {
+                  "props.params.Options": {
+                    "binding": {
+                      "config": {
+                        "queryPath": "Participants/Registration/GetEthnicity"
+                      },
+                      "type": "query"
+                    }
+                  },
+                  "props.params.SelectedValue": {
+                    "binding": {
+                      "config": {
+                        "bidirectional": true,
+                        "path": "view.custom.RegistrationData.ethnicity_id"
+                      },
+                      "type": "property"
+                    }
+                  }
+                },
+                "props": {
+                  "params": {
+                    "Text": "Ethnicity"
+                  },
+                  "path": "Participants/Registration/Cards/SelectionInput",
+                  "style": {
+                    "marginTop": "5px"
+                  },
+                  "useDefaultViewHeight": true
+                },
+                "type": "ia.display.view"
+              },
+              {
+                "meta": {
+                  "name": "Disable"
+                },
+                "position": {
+                  "shrink": 0
+                },
+                "propConfig": {
+                  "props.params.Options": {
+                    "binding": {
+                      "config": {
+                        "queryPath": "Participants/Registration/GetDisablingCondition"
+                      },
+                      "type": "query"
+                    }
+                  },
+                  "props.params.SelectedValue": {
+                    "binding": {
+                      "config": {
+                        "bidirectional": true,
+                        "path": "view.custom.RegistrationData.disability_id"
+                      },
+                      "type": "property"
+                    }
+                  }
+                },
+                "props": {
+                  "params": {
+                    "Text": "Disabling Condition"
+                  },
+                  "path": "Participants/Registration/Cards/SelectionInput",
+                  "style": {
+                    "marginTop": "5px"
+                  },
+                  "useDefaultViewHeight": true
+                },
+                "type": "ia.display.view"
+              }
+            ],
+            "meta": {
+              "name": "FlexContainer Right"
+            },
+            "position": {
+              "basis": "200px",
+              "grow": 1
+            },
+            "props": {
+              "direction": "column",
+              "style": {
+                "paddingLeft": "15px",
+                "paddingRight": "30px"
+              }
+            },
+            "type": "ia.container.flex"
+          }
+        ],
+        "meta": {
+          "name": "FlexContainer Personal"
+        },
+        "position": {
+          "shrink": 0
+        },
+        "props": {
+          "style": {
+            "borderBottomColor": "#e6e6e6",
+            "borderBottomStyle": "solid",
+            "borderBottomWidth": 1,
+            "paddingBottom": "20px",
+            "paddingTop": "5px"
+          }
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "meta": {
+                  "name": "MentalHealth"
+                },
+                "position": {
+                  "shrink": 0
+                },
+                "propConfig": {
+                  "props.params.SelectedValue": {
+                    "binding": {
+                      "config": {
+                        "bidirectional": true,
+                        "path": "view.custom.RegistrationData.mentalHealth"
+                      },
+                      "type": "property"
+                    }
+                  }
+                },
+                "props": {
+                  "params": {
+                    "Options": {
+                      "$": [
+                        "ds",
+                        192,
+                        1680781159453
+                      ],
+                      "$columns": [
+                        {
+                          "data": [
+                            0,
+                            1
+                          ],
+                          "name": "id",
+                          "type": "Integer"
+                        },
+                        {
+                          "data": [
+                            "None Reported",
+                            "Yes"
+                          ],
+                          "name": "text",
+                          "type": "String"
+                        }
+                      ]
+                    },
+                    "Text": "Mental Health"
+                  },
+                  "path": "Participants/Registration/Cards/SelectionInput",
+                  "style": {
+                    "marginTop": "5px"
+                  },
+                  "useDefaultViewHeight": true
+                },
+                "type": "ia.display.view"
+              },
+              {
+                "meta": {
+                  "name": "PhysicalDisability"
+                },
+                "position": {
+                  "shrink": 0
+                },
+                "propConfig": {
+                  "props.params.SelectedValue": {
+                    "binding": {
+                      "config": {
+                        "bidirectional": true,
+                        "path": "view.custom.RegistrationData.physicalDisability"
+                      },
+                      "type": "property"
+                    }
+                  }
+                },
+                "props": {
+                  "params": {
+                    "Options": {
+                      "$": [
+                        "ds",
+                        192,
+                        1680781159453
+                      ],
+                      "$columns": [
+                        {
+                          "data": [
+                            0,
+                            1
+                          ],
+                          "name": "id",
+                          "type": "Integer"
+                        },
+                        {
+                          "data": [
+                            "None Reported",
+                            "Yes"
+                          ],
+                          "name": "text",
+                          "type": "String"
+                        }
+                      ]
+                    },
+                    "Text": "Physical Disability"
+                  },
+                  "path": "Participants/Registration/Cards/SelectionInput",
+                  "style": {
+                    "marginTop": "5px"
+                  },
+                  "useDefaultViewHeight": true
+                },
+                "type": "ia.display.view"
+              },
+              {
+                "meta": {
+                  "name": "SubstanceAbuse"
+                },
+                "position": {
+                  "shrink": 0
+                },
+                "propConfig": {
+                  "props.params.SelectedValue": {
+                    "binding": {
+                      "config": {
+                        "bidirectional": true,
+                        "path": "view.custom.RegistrationData.substanceAbuse"
+                      },
+                      "type": "property"
+                    }
+                  }
+                },
+                "props": {
+                  "params": {
+                    "Options": {
+                      "$": [
+                        "ds",
+                        192,
+                        1680781159453
+                      ],
+                      "$columns": [
+                        {
+                          "data": [
+                            0,
+                            1
+                          ],
+                          "name": "id",
+                          "type": "Integer"
+                        },
+                        {
+                          "data": [
+                            "None Reported",
+                            "Yes"
+                          ],
+                          "name": "text",
+                          "type": "String"
+                        }
+                      ]
+                    },
+                    "Text": "Substance Abuse"
+                  },
+                  "path": "Participants/Registration/Cards/SelectionInput",
+                  "style": {
+                    "marginTop": "5px"
+                  },
+                  "useDefaultViewHeight": true
+                },
+                "type": "ia.display.view"
+              }
+            ],
+            "meta": {
+              "name": "FlexContainer Left"
+            },
+            "position": {
+              "basis": "200px",
+              "grow": 1
+            },
+            "props": {
+              "direction": "column",
+              "style": {
+                "paddingLeft": "25px",
+                "paddingRight": "20px"
+              }
+            },
+            "type": "ia.container.flex"
+          },
+          {
+            "children": [
+              {
+                "meta": {
+                  "name": "ChronicHealthConditions"
+                },
+                "position": {
+                  "shrink": 0
+                },
+                "propConfig": {
+                  "props.params.SelectedValue": {
+                    "binding": {
+                      "config": {
+                        "bidirectional": true,
+                        "path": "view.custom.RegistrationData.chronicHealthConditions"
+                      },
+                      "type": "property"
+                    }
+                  }
+                },
+                "props": {
+                  "params": {
+                    "Options": {
+                      "$": [
+                        "ds",
+                        192,
+                        1680781159453
+                      ],
+                      "$columns": [
+                        {
+                          "data": [
+                            0,
+                            1
+                          ],
+                          "name": "id",
+                          "type": "Integer"
+                        },
+                        {
+                          "data": [
+                            "None Reported",
+                            "Yes"
+                          ],
+                          "name": "text",
+                          "type": "String"
+                        }
+                      ]
+                    },
+                    "Text": "Chronic Health Conditions"
+                  },
+                  "path": "Participants/Registration/Cards/SelectionInput",
+                  "style": {
+                    "marginTop": "5px"
+                  },
+                  "useDefaultViewHeight": true
+                },
+                "type": "ia.display.view"
+              },
+              {
+                "meta": {
+                  "name": "DevelopmentalDisabilities"
+                },
+                "position": {
+                  "shrink": 0
+                },
+                "propConfig": {
+                  "props.params.SelectedValue": {
+                    "binding": {
+                      "config": {
+                        "bidirectional": true,
+                        "path": "view.custom.RegistrationData.developmentalDisability"
+                      },
+                      "type": "property"
+                    }
+                  }
+                },
+                "props": {
+                  "params": {
+                    "Options": {
+                      "$": [
+                        "ds",
+                        192,
+                        1680781159453
+                      ],
+                      "$columns": [
+                        {
+                          "data": [
+                            0,
+                            1
+                          ],
+                          "name": "id",
+                          "type": "Integer"
+                        },
+                        {
+                          "data": [
+                            "None Reported",
+                            "Yes"
+                          ],
+                          "name": "text",
+                          "type": "String"
+                        }
+                      ]
+                    },
+                    "Text": "Developmental Disabilities"
+                  },
+                  "path": "Participants/Registration/Cards/SelectionInput",
+                  "style": {
+                    "marginTop": "5px"
+                  },
+                  "useDefaultViewHeight": true
+                },
+                "type": "ia.display.view"
+              }
+            ],
+            "meta": {
+              "name": "FlexContainer Right"
+            },
+            "position": {
+              "basis": "200px",
+              "grow": 1
+            },
+            "props": {
+              "direction": "column",
+              "style": {
+                "paddingLeft": "15px",
+                "paddingRight": "30px"
+              }
+            },
+            "type": "ia.container.flex"
+          }
+        ],
+        "meta": {
+          "name": "FlexContainer Health"
+        },
+        "position": {
+          "shrink": 0
+        },
+        "propConfig": {
+          "position.display": {
+            "binding": {
+              "config": {
+                "expression": "false //{session.custom.isAdministrator} || {session.custom.isManager} || {session.custom.isWSManager}"
+              },
+              "type": "expr"
+            }
+          }
+        },
+        "props": {
+          "style": {
+            "borderBottomColor": "#e6e6e6",
+            "borderBottomStyle": "solid",
+            "borderBottomWidth": 1,
+            "paddingBottom": "20px",
+            "paddingTop": "5px"
+          }
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "meta": {
+                  "name": "lastHmisUpdateDate"
+                },
+                "position": {
+                  "shrink": 0
+                },
+                "propConfig": {
+                  "props.params.date": {
+                    "binding": {
+                      "config": {
+                        "bidirectional": true,
+                        "path": "view.custom.RegistrationData.lastHmisUpdateDate"
+                      },
+                      "type": "property"
+                    }
+                  }
+                },
+                "props": {
+                  "params": {
+                    "inputText": "",
+                    "maxDate": null,
+                    "minDate": null,
+                    "text": "Last HMIS Update"
+                  },
+                  "path": "Participants/Registration/Cards/DateInput",
+                  "style": {
+                    "marginTop": "5px"
+                  },
+                  "useDefaultViewHeight": true
+                },
+                "type": "ia.display.view"
+              },
+              {
+                "meta": {
+                  "name": "VISpidatScore"
+                },
+                "position": {
+                  "shrink": 0
+                },
+                "propConfig": {
+                  "props.params.SelectedValue": {
+                    "binding": {
+                      "config": {
+                        "bidirectional": true,
+                        "path": "view.custom.RegistrationData.viSpidatScore"
+                      },
+                      "type": "property"
+                    }
+                  }
+                },
+                "props": {
+                  "params": {
+                    "Options": {
+                      "$": [
+                        "ds",
+                        192,
+                        1680776576585
+                      ],
+                      "$columns": [
+                        {
+                          "data": [
+                            1,
+                            2,
+                            3,
+                            4,
+                            5,
+                            6,
+                            7,
+                            8,
+                            9,
+                            10,
+                            11,
+                            12,
+                            13,
+                            14
+                          ],
+                          "name": "id",
+                          "type": "Integer"
+                        },
+                        {
+                          "data": [
+                            1,
+                            2,
+                            3,
+                            4,
+                            5,
+                            6,
+                            7,
+                            8,
+                            9,
+                            10,
+                            11,
+                            12,
+                            13,
+                            14
+                          ],
+                          "name": "score",
+                          "type": "Integer"
+                        }
+                      ]
+                    },
+                    "Text": "VI Spidat Score"
+                  },
+                  "path": "Participants/Registration/Cards/SelectionInput",
+                  "style": {
+                    "marginTop": "5px"
+                  },
+                  "useDefaultViewHeight": true
+                },
+                "type": "ia.display.view"
+              },
+              {
+                "meta": {
+                  "name": "VAHealthcareEligible"
+                },
+                "position": {
+                  "shrink": 0
+                },
+                "propConfig": {
+                  "position.display": {
+                    "binding": {
+                      "config": {
+                        "path": "view.custom.RegistrationData.veteran_id"
+                      },
+                      "transforms": [
+                        {
+                          "code": "\tif value is not None and value \u003d\u003d 0:\n\t\treturn True\n\telse:\n\t\treturn False",
+                          "type": "script"
+                        }
+                      ],
+                      "type": "property"
+                    }
+                  },
+                  "props.params.SelectedValue": {
+                    "binding": {
+                      "config": {
+                        "bidirectional": true,
+                        "path": "view.custom.RegistrationData.vaHealthCareEligible"
+                      },
+                      "type": "property"
+                    }
+                  }
+                },
+                "props": {
+                  "params": {
+                    "Options": {
+                      "$": [
+                        "ds",
+                        192,
+                        1680776598192
+                      ],
+                      "$columns": [
+                        {
+                          "data": [
+                            0,
+                            1
+                          ],
+                          "name": "id",
+                          "type": "Integer"
+                        },
+                        {
+                          "data": [
+                            "No",
+                            "Yes"
+                          ],
+                          "name": "text",
+                          "type": "String"
+                        }
+                      ]
+                    },
+                    "Text": "VA Healthcare Eligible"
+                  },
+                  "path": "Participants/Registration/Cards/SelectionInput",
+                  "style": {
+                    "marginTop": "5px"
+                  },
+                  "useDefaultViewHeight": true
+                },
+                "type": "ia.display.view"
+              }
+            ],
+            "meta": {
+              "name": "FlexContainer Left"
+            },
+            "position": {
+              "basis": "200px",
+              "grow": 1
+            },
+            "props": {
+              "direction": "column",
+              "style": {
+                "paddingLeft": "25px",
+                "paddingRight": "20px"
+              }
+            },
+            "type": "ia.container.flex"
+          },
+          {
+            "children": [
+              {
+                "meta": {
+                  "name": "hmisUpdateBy"
+                },
+                "position": {
+                  "shrink": 0
+                },
+                "propConfig": {
+                  "props.params.inputText": {
+                    "binding": {
+                      "config": {
+                        "bidirectional": true,
+                        "path": "view.custom.RegistrationData.lastHmisUpdateBy"
+                      },
+                      "type": "property"
+                    }
+                  }
+                },
+                "props": {
+                  "params": {
+                    "text": "Last HMIS Update By"
+                  },
+                  "path": "Participants/Registration/Cards/TextInput",
+                  "style": {
+                    "marginTop": "5px"
+                  },
+                  "useDefaultViewHeight": true
+                },
+                "type": "ia.display.view"
+              },
+              {
+                "meta": {
+                  "name": "viSpidatAssessmentDate"
+                },
+                "position": {
+                  "shrink": 0
+                },
+                "propConfig": {
+                  "props.params.date": {
+                    "binding": {
+                      "config": {
+                        "bidirectional": true,
+                        "path": "view.custom.RegistrationData.viSpidateAssessmentDate"
+                      },
+                      "type": "property"
+                    }
+                  }
+                },
+                "props": {
+                  "params": {
+                    "inputText": "",
+                    "maxDate": null,
+                    "minDate": null,
+                    "text": "VI Spidat Assessment"
+                  },
+                  "path": "Participants/Registration/Cards/DateInput",
+                  "style": {
+                    "marginTop": "5px"
+                  },
+                  "useDefaultViewHeight": true
+                },
+                "type": "ia.display.view"
+              }
+            ],
+            "meta": {
+              "name": "FlexContainer Right"
+            },
+            "position": {
+              "basis": "200px",
+              "grow": 1
+            },
+            "props": {
+              "direction": "column",
+              "style": {
+                "paddingLeft": "15px",
+                "paddingRight": "30px"
+              }
+            },
+            "type": "ia.container.flex"
+          }
+        ],
+        "meta": {
+          "name": "FlexContainer HMISUpdate"
+        },
+        "position": {
+          "display": false,
+          "shrink": 0
+        },
+        "props": {
+          "style": {
+            "borderBottomColor": "#e6e6e6",
+            "borderBottomStyle": "solid",
+            "borderBottomWidth": 1,
+            "paddingBottom": "20px",
+            "paddingTop": "5px"
+          }
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "meta": {
+                  "name": "ParticipantPhone"
+                },
+                "position": {
+                  "shrink": 0
+                },
+                "propConfig": {
+                  "props.params.inputText": {
+                    "binding": {
+                      "config": {
+                        "bidirectional": true,
+                        "path": "view.custom.RegistrationData.phone"
+                      },
+                      "type": "property"
+                    }
+                  }
+                },
+                "props": {
+                  "params": {
+                    "text": "Participant Phone"
+                  },
+                  "path": "Participants/Registration/Cards/TextInput",
+                  "style": {
+                    "marginTop": "5px"
+                  },
+                  "useDefaultViewHeight": true
+                },
+                "type": "ia.display.view"
+              },
+              {
+                "meta": {
+                  "name": "ParticipantEmail"
+                },
+                "position": {
+                  "shrink": 0
+                },
+                "propConfig": {
+                  "props.params.inputText": {
+                    "binding": {
+                      "config": {
+                        "bidirectional": true,
+                        "path": "view.custom.RegistrationData.email"
+                      },
+                      "type": "property"
+                    }
+                  }
+                },
+                "props": {
+                  "params": {
+                    "text": "Participant Email Address"
+                  },
+                  "path": "Participants/Registration/Cards/TextInput",
+                  "style": {
+                    "marginTop": "5px"
+                  },
+                  "useDefaultViewHeight": true
+                },
+                "type": "ia.display.view"
+              },
+              {
+                "meta": {
+                  "name": "EmergencyName"
+                },
+                "position": {
+                  "shrink": 0
+                },
+                "propConfig": {
+                  "props.params.inputText": {
+                    "binding": {
+                      "config": {
+                        "bidirectional": true,
+                        "path": "view.custom.RegistrationData.emergency_name"
+                      },
+                      "type": "property"
+                    }
+                  }
+                },
+                "props": {
+                  "params": {
+                    "text": "Emergency Contact Name"
+                  },
+                  "path": "Participants/Registration/Cards/TextInput",
+                  "style": {
+                    "marginTop": "5px"
+                  },
+                  "useDefaultViewHeight": true
+                },
+                "type": "ia.display.view"
+              },
+              {
+                "meta": {
+                  "name": "EmergencyPhone"
+                },
+                "position": {
+                  "shrink": 0
+                },
+                "propConfig": {
+                  "props.params.inputText": {
+                    "binding": {
+                      "config": {
+                        "bidirectional": true,
+                        "path": "view.custom.RegistrationData.emergency_phone"
+                      },
+                      "type": "property"
+                    }
+                  }
+                },
+                "props": {
+                  "params": {
+                    "text": "Emergency Contact Phone"
+                  },
+                  "path": "Participants/Registration/Cards/TextInput",
+                  "style": {
+                    "marginTop": "5px"
+                  },
+                  "useDefaultViewHeight": true
+                },
+                "type": "ia.display.view"
+              }
+            ],
+            "meta": {
+              "name": "FlexContainer Left"
+            },
+            "position": {
+              "basis": "200px",
+              "grow": 1
+            },
+            "props": {
+              "direction": "column",
+              "style": {
+                "paddingLeft": "25px",
+                "paddingRight": "20px"
+              }
+            },
+            "type": "ia.container.flex"
+          },
+          {
+            "children": [
+              {
+                "meta": {
+                  "name": "Alt_Phone"
+                },
+                "position": {
+                  "shrink": 0
+                },
+                "propConfig": {
+                  "props.params.inputText": {
+                    "binding": {
+                      "config": {
+                        "bidirectional": true,
+                        "path": "view.custom.RegistrationData.phone_alt"
+                      },
+                      "type": "property"
+                    }
+                  }
+                },
+                "props": {
+                  "params": {
+                    "text": "Alternate Phone"
+                  },
+                  "path": "Participants/Registration/Cards/TextInput",
+                  "style": {
+                    "marginTop": "5px"
+                  },
+                  "useDefaultViewHeight": true
+                },
+                "type": "ia.display.view"
+              },
+              {
+                "meta": {
+                  "name": "CommunicationMethod"
+                },
+                "position": {
+                  "shrink": 0
+                },
+                "propConfig": {
+                  "props.params.Options": {
+                    "binding": {
+                      "config": {
+                        "queryPath": "Participants/Registration/GetCommunicationType"
+                      },
+                      "type": "query"
+                    }
+                  },
+                  "props.params.SelectedValue": {
+                    "binding": {
+                      "config": {
+                        "bidirectional": true,
+                        "path": "view.custom.RegistrationData.communication_type_id"
+                      },
+                      "type": "property"
+                    }
+                  }
+                },
+                "props": {
+                  "params": {
+                    "Text": "Preferred Communication Method"
+                  },
+                  "path": "Participants/Registration/Cards/SelectionInput",
+                  "style": {
+                    "marginTop": "5px"
+                  },
+                  "useDefaultViewHeight": true
+                },
+                "type": "ia.display.view"
+              },
+              {
+                "meta": {
+                  "name": "EmergencyEmail"
+                },
+                "position": {
+                  "shrink": 0
+                },
+                "propConfig": {
+                  "props.params.inputText": {
+                    "binding": {
+                      "config": {
+                        "bidirectional": true,
+                        "path": "view.custom.RegistrationData.emergency_email"
+                      },
+                      "type": "property"
+                    }
+                  }
+                },
+                "props": {
+                  "params": {
+                    "text": "Emergency Contact Email Address"
+                  },
+                  "path": "Participants/Registration/Cards/TextInput",
+                  "style": {
+                    "marginTop": "5px"
+                  },
+                  "useDefaultViewHeight": true
+                },
+                "type": "ia.display.view"
+              },
+              {
+                "meta": {
+                  "name": "EmergencyType"
+                },
+                "position": {
+                  "shrink": 0
+                },
+                "propConfig": {
+                  "props.params.Options": {
+                    "binding": {
+                      "config": {
+                        "queryPath": "Participants/Registration/GetEmergencyContactType"
+                      },
+                      "type": "query"
+                    }
+                  },
+                  "props.params.SelectedValue": {
+                    "binding": {
+                      "config": {
+                        "bidirectional": true,
+                        "path": "view.custom.RegistrationData.emergency_contact_type_id"
+                      },
+                      "type": "property"
+                    }
+                  }
+                },
+                "props": {
+                  "params": {
+                    "Text": "Emergency Contact Type"
+                  },
+                  "path": "Participants/Registration/Cards/SelectionInput",
+                  "style": {
+                    "marginTop": "5px"
+                  },
+                  "useDefaultViewHeight": true
+                },
+                "type": "ia.display.view"
+              }
+            ],
+            "meta": {
+              "name": "FlexContainer Right"
+            },
+            "position": {
+              "basis": "200px",
+              "grow": 1
+            },
+            "props": {
+              "direction": "column",
+              "style": {
+                "paddingLeft": "15px",
+                "paddingRight": "30px"
+              }
+            },
+            "type": "ia.container.flex"
+          }
+        ],
+        "meta": {
+          "name": "FlexContainer Contact"
+        },
+        "position": {
+          "shrink": 0
+        },
+        "propConfig": {
+          "position.display": {
+            "binding": {
+              "config": {
+                "path": "../TypeOfRegistration.props.params.full"
+              },
+              "transforms": [
+                {
+                  "code": "\treturn True",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "style": {
+            "borderBottomColor": "#e6e6e6",
+            "borderBottomStyle": "solid",
+            "borderBottomWidth": 1,
+            "paddingBottom": "20px",
+            "paddingTop": "5px"
+          }
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "meta": {
+                  "name": "Family"
+                },
+                "position": {
+                  "shrink": 0
+                },
+                "propConfig": {
+                  "props.params.Options": {
+                    "binding": {
+                      "config": {
+                        "queryPath": "Participants/Registration/GetFamilies"
+                      },
+                      "type": "query"
+                    }
+                  },
+                  "props.params.SelectedValue": {
+                    "binding": {
+                      "config": {
+                        "bidirectional": true,
+                        "path": "view.custom.RegistrationData.family_id"
+                      },
+                      "type": "property"
+                    }
+                  }
+                },
+                "props": {
+                  "params": {
+                    "Text": "Family"
+                  },
+                  "path": "Participants/Registration/Cards/SelectionInput",
+                  "style": {
+                    "marginTop": "5px"
+                  },
+                  "useDefaultViewHeight": true
+                },
+                "type": "ia.display.view"
+              }
+            ],
+            "meta": {
+              "name": "FlexContainer Left"
+            },
+            "position": {
+              "basis": "200px",
+              "grow": 1
+            },
+            "props": {
+              "direction": "column",
+              "style": {
+                "paddingLeft": "25px",
+                "paddingRight": "20px"
+              }
+            },
+            "type": "ia.container.flex"
+          },
+          {
+            "children": [
+              {
+                "meta": {
+                  "name": "RelationshipHousehold"
+                },
+                "propConfig": {
+                  "props.params.Options": {
+                    "binding": {
+                      "config": {
+                        "queryPath": "Participants/Registration/GetRHOH"
+                      },
+                      "type": "query"
+                    }
+                  },
+                  "props.params.SelectedValue": {
+                    "binding": {
+                      "config": {
+                        "bidirectional": true,
+                        "path": "view.custom.RegistrationData.hoh_relationship_id"
+                      },
+                      "type": "property"
+                    }
+                  }
+                },
+                "props": {
+                  "params": {
+                    "Text": "Relationship to Head of Household*"
+                  },
+                  "path": "Participants/Registration/Cards/SelectionInput",
+                  "style": {
+                    "marginTop": "5px"
+                  },
+                  "useDefaultViewHeight": true
+                },
+                "type": "ia.display.view"
+              }
+            ],
+            "meta": {
+              "name": "FlexContainer Right"
+            },
+            "position": {
+              "basis": "200px",
+              "grow": 1
+            },
+            "props": {
+              "direction": "column",
+              "style": {
+                "paddingLeft": "15px",
+                "paddingRight": "30px"
+              }
+            },
+            "type": "ia.container.flex"
+          }
+        ],
+        "meta": {
+          "name": "FlexContainer Family"
+        },
+        "position": {
+          "shrink": 0
+        },
+        "propConfig": {
+          "position.display": {
+            "binding": {
+              "config": {
+                "path": "../TypeOfRegistration.props.params.full"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "style": {
+            "borderBottomColor": "#e6e6e6",
+            "borderBottomStyle": "solid",
+            "borderBottomWidth": 1,
+            "paddingBottom": "20px",
+            "paddingTop": "5px"
+          }
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "meta": {
+                  "name": "IncomeSource"
+                },
+                "position": {
+                  "basis": "60px",
+                  "shrink": 0
+                },
+                "propConfig": {
+                  "props.params.Options": {
+                    "binding": {
+                      "config": {
+                        "queryPath": "Participants/Registration/GetIncomeSources"
+                      },
+                      "type": "query"
+                    }
+                  },
+                  "props.params.SelectedValue": {
+                    "binding": {
+                      "config": {
+                        "bidirectional": true,
+                        "path": "view.custom.RegistrationData.incomeSource"
+                      },
+                      "type": "property"
+                    }
+                  }
+                },
+                "props": {
+                  "params": {
+                    "Text": "Income Source"
+                  },
+                  "path": "Participants/Registration/Cards/SelectionInput",
+                  "style": {
+                    "marginTop": "5px"
+                  },
+                  "useDefaultViewHeight": true
+                },
+                "type": "ia.display.view"
+              },
+              {
+                "meta": {
+                  "name": "IncomeStartDate"
+                },
+                "position": {
+                  "shrink": 0
+                },
+                "propConfig": {
+                  "props.params.date": {
+                    "binding": {
+                      "config": {
+                        "bidirectional": true,
+                        "path": "view.custom.RegistrationData.incomeStartDate"
+                      },
+                      "type": "property"
+                    }
+                  }
+                },
+                "props": {
+                  "params": {
+                    "inputText": "",
+                    "maxDate": null,
+                    "minDate": null,
+                    "text": "Start Date"
+                  },
+                  "path": "Participants/Registration/Cards/DateInput",
+                  "style": {
+                    "marginTop": "5px"
+                  },
+                  "useDefaultViewHeight": true
+                },
+                "type": "ia.display.view"
+              }
+            ],
+            "meta": {
+              "name": "FlexContainer Left"
+            },
+            "position": {
+              "basis": "200px",
+              "grow": 1
+            },
+            "props": {
+              "direction": "column",
+              "style": {
+                "paddingLeft": "25px",
+                "paddingRight": "20px"
+              }
+            },
+            "type": "ia.container.flex"
+          },
+          {
+            "children": [
+              {
+                "meta": {
+                  "name": "IncomeAmount"
+                },
+                "position": {
+                  "shrink": 0
+                },
+                "propConfig": {
+                  "props.params.value": {
+                    "binding": {
+                      "config": {
+                        "bidirectional": true,
+                        "path": "view.custom.RegistrationData.incomeAmount"
+                      },
+                      "type": "property"
+                    }
+                  }
+                },
+                "props": {
+                  "params": {
+                    "label": "Amount",
+                    "placeholder": ""
+                  },
+                  "path": "Participants/Registration/Cards/Input_Value",
+                  "style": {
+                    "marginTop": "5px"
+                  },
+                  "useDefaultViewHeight": true
+                },
+                "type": "ia.display.view"
+              }
+            ],
+            "meta": {
+              "name": "FlexContainer Right"
+            },
+            "position": {
+              "basis": "200px",
+              "grow": 1
+            },
+            "props": {
+              "alignContent": "flex-start",
+              "direction": "column",
+              "style": {
+                "paddingLeft": "15px",
+                "paddingRight": "30px"
+              }
+            },
+            "type": "ia.container.flex"
+          }
+        ],
+        "meta": {
+          "name": "FlexContainer Income"
+        },
+        "position": {
+          "shrink": 0
+        },
+        "propConfig": {
+          "position.display": {
+            "binding": {
+              "config": {
+                "expression": "false //{session.custom.isAdministrator} || {session.custom.isManager} || {session.custom.isWSManager}"
+              },
+              "type": "expr"
+            }
+          }
+        },
+        "props": {
+          "style": {
+            "borderBottomColor": "#e6e6e6",
+            "borderBottomStyle": "solid",
+            "borderBottomWidth": 1,
+            "paddingBottom": "20px",
+            "paddingTop": "5px"
+          }
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "children": [
+          {
+            "events": {
+              "component": {
+                "onActionPerformed": {
+                  "config": {
+                    "script": "\timport traceback\n\tself.view.params.func_new_data \u003d False\n\ttry:\n\t\tself.view.custom.func_save_partial \u003d True\n\texcept:\n\t\tlogger \u003d system.util.getLogger(\"Participants Register Participant Save Button\")\n\t\tmsg \u003d traceback.format_exc()\n\t\tlogger.error(msg)"
+                  },
+                  "scope": "G",
+                  "type": "script"
+                }
+              }
+            },
+            "meta": {
+              "name": "Button Save"
+            },
+            "position": {
+              "basis": "120px",
+              "shrink": 0
+            },
+            "props": {
+              "style": {
+                "classes": "Buttons/Main",
+                "marginBottom": "15px",
+                "marginLeft": "20px",
+                "marginRight": "20px",
+                "marginTop": "15px"
+              },
+              "text": "Save"
+            },
+            "type": "ia.input.button"
+          },
+          {
+            "events": {
+              "component": {
+                "onActionPerformed": [
+                  {
+                    "config": {
+                      "script": "\tself.view.params.func_new_data \u003d False\n\tsystem.perspective.sendMessage(\"ResetSearch\", payload\u003d{}, scope\u003d\"session\")\n\tsystem.perspective.sendMessage(\"ResetRegistration\", payload\u003d{}, scope\u003d\"session\")\n\tsystem.perspective.closeDock(\u0027RegisterParticipantFull\u0027)\n\t"
+                    },
+                    "scope": "G",
+                    "type": "script"
+                  },
+                  {
+                    "config": {
+                      "id": "RegisterParticipant",
+                      "type": "close"
+                    },
+                    "scope": "C",
+                    "type": "dock"
+                  }
+                ]
+              }
+            },
+            "meta": {
+              "name": "Button Cancel"
+            },
+            "position": {
+              "basis": "120px",
+              "shrink": 0
+            },
+            "props": {
+              "style": {
+                "classes": "Buttons/Secondary_Orange",
+                "marginBottom": "15px",
+                "marginTop": "15px"
+              },
+              "text": "Cancel"
+            },
+            "type": "ia.input.button"
+          },
+          {
+            "meta": {
+              "name": "Label"
+            },
+            "position": {
+              "basis": "50px",
+              "display": false,
+              "grow": 1
+            },
+            "props": {
+              "style": {
+                "classes": "Text/Error_Message"
+              },
+              "text": "Something went wrong while saving data. Please try again."
+            },
+            "scripts": {
+              "customMethods": [],
+              "extensionFunctions": null,
+              "messageHandlers": [
+                {
+                  "messageType": "showError",
+                  "pageScope": false,
+                  "script": "\timport time\n\tsystem.perspective.print(payload[\u0027message\u0027])\n\tself.props.text \u003d payload[\u0027message\u0027]\n\tself.position.display \u003d True\n\ttime.sleep(5)\n\tself.position.display \u003d False",
+                  "sessionScope": false,
+                  "viewScope": true
+                }
+              ]
+            },
+            "type": "ia.display.label"
+          }
+        ],
+        "meta": {
+          "name": "FlexContainer"
+        },
+        "position": {
+          "basis": "65px",
+          "shrink": 0
+        },
+        "type": "ia.container.flex"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column",
+      "style": {
+        "classes": "Background/Default"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

@@ -1,0 +1,374 @@
+{
+  "custom": {},
+  "params": {
+    "instanceID": 1040
+  },
+  "propConfig": {
+    "params.instanceID": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {},
+  "root": {
+    "children": [
+      {
+        "children": [
+          {
+            "meta": {
+              "name": "Label"
+            },
+            "position": {
+              "grow": 1
+            },
+            "props": {
+              "style": {
+                "classes": "Event/Event_DateText",
+                "fontSize": 30
+              },
+              "text": "Attendance"
+            },
+            "type": "ia.display.label"
+          },
+          {
+            "meta": {
+              "name": "EmbeddedView"
+            },
+            "position": {
+              "basis": "320px"
+            },
+            "props": {
+              "params": {
+                "filterData": [
+                  {
+                    "label": "Facilitator",
+                    "value": "Facilitator"
+                  },
+                  {
+                    "label": "Staff",
+                    "value": "Staff"
+                  },
+                  {
+                    "label": "Volunteer",
+                    "value": "Volunteer"
+                  }
+                ],
+                "filterName": "All",
+                "selectedValues": null
+              },
+              "path": "Events/Dashboard/Components/EventDetail/Attendance/MultiselectFilter"
+            },
+            "type": "ia.display.view"
+          }
+        ],
+        "meta": {
+          "name": "FlexContainer"
+        },
+        "props": {
+          "alignItems": "center"
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "events": {
+          "component": {
+            "onRowClick": {
+              "config": {
+                "script": "\t\n\n\tselectedColumn \u003d self.props.selection.selectedColumn\n\n\tif selectedColumn \u003d\u003d \"PictureLink\":\n\t\tid \u003d \"PreviewVolunteer\" \n\t\tparams \u003d {\"trackID\":self.props.data[event.row].ID}\n\t\tsystem.perspective.openDock(id\u003did,params\u003dparams)\n"
+              },
+              "scope": "G",
+              "type": "script"
+            }
+          }
+        },
+        "meta": {
+          "name": "Table"
+        },
+        "position": {
+          "basis": "400px"
+        },
+        "propConfig": {
+          "custom.filteredData": {
+            "binding": {
+              "config": {
+                "struct": {
+                  "check": "hasChanged({../FlexContainer/EmbeddedView.props.params.selectedValues})",
+                  "source": "hasChanged({this.custom.sqlData})"
+                },
+                "waitOnAll": true
+              },
+              "transforms": [
+                {
+                  "code": "\tfilteredDataset \u003d self.custom.sqlData\n\tfilter \u003d self.parent.getChild(\"FlexContainer\").getChild(\"EmbeddedView\").props.params.selectedValues\n\t\n\theaders \u003d [str(x) for x in filteredDataset.getColumnNames()]\n\t\n\treturnDataset \u003d []\n\tif filter:\n\t\tfor x in range(filteredDataset.getRowCount()) :\n\t\t\toneRow \u003d []\n\t\t\tcell \u003d filteredDataset.getValueAt(x,\"role\")\n\t\t\tfor y in filter:\n\t\t\t\tif y \u003d\u003d cell:\n\t\t\t\t\tfor column in range(filteredDataset.getColumnCount()) :\n\t\t\t\t\t\toneRow.append(filteredDataset.getValueAt(x,column))\n\t\t\t\t\treturnDataset.append(oneRow)\n\t\t\t\t\tbreak\n\t\tfilteredDataset \u003d system.dataset.toDataSet(headers,returnDataset)\n\t\n\t\n\t\n\treturn filteredDataset",
+                  "type": "script"
+                }
+              ],
+              "type": "expr-struct"
+            }
+          },
+          "custom.sqlData": {
+            "binding": {
+              "config": {
+                "parameters": {
+                  "id": "{view.params.instanceID}"
+                },
+                "queryPath": "Calendar/Event Instance People/GetAllPeopleByID"
+              },
+              "type": "query"
+            }
+          },
+          "props.data": {
+            "binding": {
+              "config": {
+                "path": "this.custom.filteredData"
+              },
+              "transforms": [
+                {
+                  "code": "\tdata \u003d []\n\n\tfor x in range(value.getRowCount()):\n\t\t\tdata.append({\u0027firstName\u0027 : value.getValueAt(x,\"firstName\"),\n\t\t\t\t\t\u0027lastname\u0027 : value.getValueAt(x,\"lastName\"),\n\t\t\t\t\t\u0027Name\u0027 : value.getValueAt(x,\"firstName\") + \" \" + value.getValueAt(x,\"lastName\"),\n\t\t\t\t\t\u0027Role\u0027 : value.getValueAt(x, \"role\"),\n\t\t\t\t\t\u0027PictureLink\u0027 : value.getValueAt(x,\"id\")})\n\treturn data",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "columns": [
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "PictureLink",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": " "
+              },
+              "justify": "auto",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": false,
+              "strictWidth": false,
+              "style": {
+                "classes": ""
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "Events/Dashboard/Components/EventDetail/Attendance/TableOptions",
+              "visible": true,
+              "width": ""
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "Name",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "justify": "auto",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": false,
+              "style": {
+                "classes": ""
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": ""
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "role",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": "Role"
+              },
+              "justify": "auto",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": false,
+              "style": {
+                "classes": ""
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": ""
+            }
+          ],
+          "pager": {
+            "bottom": false
+          },
+          "style": {
+            "classes": "Table/Cell_Detail",
+            "marginTop": 20
+          }
+        },
+        "type": "ia.display.table"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column"
+    },
+    "scripts": {
+      "customMethods": [],
+      "extensionFunctions": null,
+      "messageHandlers": [
+        {
+          "messageType": "refreshPeople",
+          "pageScope": false,
+          "script": "\t# implement your handler here\n\tself.getChild(\"Table\").refreshBinding(\"custom.sqlData\")\n\tself.getChild(\"Table\").refreshBinding(\"custom.filteredData\")\n\tself.getChild(\"FlexContainer\").getChild(\"Dropdown\").refreshBinding(\"props.options\")",
+          "sessionScope": true,
+          "viewScope": false
+        }
+      ]
+    },
+    "type": "ia.container.flex"
+  }
+}

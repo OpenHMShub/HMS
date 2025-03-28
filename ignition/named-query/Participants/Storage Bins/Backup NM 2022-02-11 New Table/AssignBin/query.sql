@@ -1,0 +1,21 @@
+INSERT INTO 
+	participant.StorageBinsLog
+(
+	 col
+	,bin
+	,participantId
+	,createdOn
+	,createdByStaffEmployeeId
+	,startOn
+	,expireOn
+)
+VALUES
+(
+	:col,
+	:bin,
+	:participantId,
+	GETDATE(),
+	:employeeId,
+	:startOn,
+	:expireOn
+)

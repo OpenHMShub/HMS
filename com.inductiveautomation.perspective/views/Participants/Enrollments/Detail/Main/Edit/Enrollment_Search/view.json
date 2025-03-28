@@ -1,0 +1,352 @@
+{
+  "custom": {
+    "participantSelectedPrograms": [
+      82,
+      44,
+      47,
+      29,
+      81,
+      58
+    ]
+  },
+  "params": {
+    "func_add_participant": true,
+    "participantId": 435701
+  },
+  "propConfig": {
+    "custom.participantSelectedPrograms": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "participantId": "{view.params.participantId}"
+          },
+          "queryPath": "Participants/Enrollments/ParticipantSelectedEnrollments",
+          "returnFormat": "json"
+        },
+        "transforms": [
+          {
+            "code": "\treturn [ oneValue[\u0027programId\u0027] for oneValue in value]",
+            "type": "script"
+          }
+        ],
+        "type": "query"
+      },
+      "persistent": true
+    },
+    "params.participantId": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "width": 600
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "Header"
+        },
+        "position": {
+          "basis": "26px",
+          "shrink": 0
+        },
+        "props": {
+          "params": {
+            "Text": "All Programs"
+          },
+          "path": "Participants/Templates/Header"
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Filter"
+        },
+        "position": {
+          "basis": "30px",
+          "shrink": 0
+        },
+        "props": {
+          "params": {
+            "InputText": ""
+          },
+          "path": "Participants/Enrollments/Detail/Main/Edit/ProgramFilter"
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Label"
+        },
+        "position": {
+          "basis": "32px"
+        },
+        "props": {
+          "style": {
+            "classes": "Text/Summary_Title"
+          },
+          "text": "Program Name"
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "events": {
+          "component": {
+            "onRowClick": {
+              "config": {
+                "script": "\t#Highlight the selected row\n\t#system.perspective.print(\u0027Single Click\u0027)\n\tfor item in range(len(self.props.data)):\n\t\tif item \u003d\u003d event.row:\n\t\t\tself.props.data[item].style.classes \u003d \u0027Table/Row_Select_Detail\u0027\n\t\telse:\n\t\t\tself.props.data[item].style.classes \u003d \u0027Table/Cell_Detail\u0027"
+              },
+              "enabled": false,
+              "scope": "G",
+              "type": "script"
+            },
+            "onRowDoubleClick": {
+              "config": {
+                "script": "\t#Triiger the add participant script\n\t#system.perspective.print(self.view.params.func_add_participant)\n\tself.view.params.func_add_participant \u003d True\t"
+              },
+              "scope": "G",
+              "type": "script"
+            }
+          }
+        },
+        "meta": {
+          "name": "Table"
+        },
+        "position": {
+          "basis": "100%"
+        },
+        "propConfig": {
+          "custom.allData": {
+            "binding": {
+              "config": {
+                "parameters": {
+                  "SearchQuery": "{session.custom.filters.participantProgramDetail.Search.where}"
+                },
+                "queryPath": "Participants/Enrollments/ParticipantEnrollments"
+              },
+              "type": "query"
+            }
+          },
+          "custom.basicData": {
+            "binding": {
+              "config": {
+                "parameters": {
+                  "SearchQuery": "{session.custom.filters.participantProgramDetail.Search.where}"
+                },
+                "queryPath": "Participants/Enrollments/GetBasicEnrollments"
+              },
+              "type": "query"
+            }
+          },
+          "props.data": {
+            "binding": {
+              "config": {
+                "expression": "if ({session.custom.isCareCoordinator} , {this.custom.basicData}, {this.custom.allData})"
+              },
+              "type": "expr"
+            }
+          },
+          "props.selection.style.backgroundColor": {
+            "binding": {
+              "config": {
+                "path": "this.props.selection.selectedRow"
+              },
+              "transforms": [
+                {
+                  "code": "\treturn \"#FFFFFF00\" if value is None or value \u003d\u003d -1 else \"#9AF4EB4D\"",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "cells": {
+            "style": {
+              "classes": "Table/Cell_Detail_NoBG",
+              "marginLeft": "20px"
+            }
+          },
+          "columns": [
+            {
+              "align": "top",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "ProgramName",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Background/Default Table/Column_Header_Detail"
+                },
+                "title": "ProgramName"
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": false,
+              "style": {
+                "classes": "Table/Column_Normal_Detail"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": ""
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "Id",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "justify": "auto",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": false,
+              "style": {
+                "classes": ""
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": false,
+              "width": ""
+            }
+          ],
+          "enableHeader": false,
+          "pager": {
+            "bottom": false
+          },
+          "rows": {
+            "highlight": {
+              "color": "#ccffff"
+            },
+            "striped": {
+              "enabled": false
+            },
+            "style": {
+              "cursor": "pointer"
+            }
+          },
+          "style": {
+            "classes": "Background/Default",
+            "color": "#0B0000"
+          }
+        },
+        "scripts": {
+          "customMethods": [],
+          "extensionFunctions": null,
+          "messageHandlers": [
+            {
+              "messageType": "AddEnrollment",
+              "pageScope": true,
+              "script": "\tselection \u003d self.props.selection.data[0]\n\tprogram_name \u003d selection[\"programName\"]\n\tprogram_id \u003d selection[\"id\"]\n\tparticipant_id \u003d self.view.params.participantId\n\t\n\t#query_get_name \u003d \"Participants/Enrollments/ParticipantSelectedEnrollments\"\n\t#query_get_params \u003d {\"participantId\": participant_id}\n\t#query_get_result \u003d system.db.runNamedQuery(query_get_name, query_get_params)\n\t#py_query_get_result \u003d system.dataset.toPyDataSet(query_get_result)\n\t#for row in py_query_get_result:  \n\t#\tif row[1] \u003d\u003d program_id:\n\t#\t\treturn\n\t\n\tquery_insert_name \u003d \"Participants/Enrollments/ParticipantAddSelectedEnrollments\"\n\tquery_insert_params \u003d {\"participantId\": participant_id, \"programId\": program_id}\n\tsystem.db.runNamedQuery(query_insert_name, query_insert_params)\n\t\n\t\n\t## Ticket 308 - Yogini Marathe - Call a named query to insert the audit log, only insert if program does not exist\n\tif program_id not in self.view.custom.participantSelectedPrograms:\n\t\tquery_insert_log \u003d \"Participants/Enrollments/AddEnrollmentLog\"\n\t\tquery_insert_log_params \u003d {\"participantId\": participant_id, \"programId\": program_id, \"action\":\"Entry\", \"userName\":self.session.props.auth.user.userName}\n\t\tsystem.db.runNamedQuery(query_insert_log, query_insert_log_params)\n\t\t\n\t\t## also refresh the binding\n\t\tself.view.refreshBinding(\"custom.participantSelectedPrograms\")\n\t## End Ticket 308\n\tsystem.perspective.sendMessage(\u0027refreshSelectedEnrollments\u0027, payload \u003d {},  scope \u003d \"page\")\n\tself.props.selection.selectedRow \u003d -1\n\t\n\t## added by YM for refreshing the assignment count on nav bar and menu\n\tsystem.perspective.sendMessage(\"refreshAssignments\",payload\u003d{}, scope\u003d\"session\")\n\tsystem.perspective.sendMessage(\"staffAssigned\",payload\u003d{}, scope\u003d\"session\")",
+              "sessionScope": false,
+              "viewScope": false
+            }
+          ]
+        },
+        "type": "ia.display.table"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column",
+      "style": {
+        "classes": "ActivityCards/Card"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

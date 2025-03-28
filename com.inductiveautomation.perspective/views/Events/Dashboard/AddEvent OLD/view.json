@@ -1,0 +1,1844 @@
+{
+  "custom": {
+    "blankArray": [],
+    "eventFacilitators": [],
+    "eventParams": {
+      "audienceMen": null,
+      "audienceMinors": null,
+      "audienceParticipants": null,
+      "audienceStaff": null,
+      "audienceVolunteers": null,
+      "audienceWomen": null,
+      "bymonth": null,
+      "bymonthday": null,
+      "bysetpos": null,
+      "byweekday": null,
+      "category": null,
+      "description": null,
+      "endDate": null,
+      "frequency": null,
+      "friday": null,
+      "interval": null,
+      "monday": null,
+      "monthlyType": null,
+      "room": null,
+      "saturday": null,
+      "staffNeeded": null,
+      "startDate": null,
+      "subCategory": null,
+      "sunday": null,
+      "thursday": null,
+      "title": null,
+      "tuesday": null,
+      "venue": null,
+      "volunteersNeeded": null,
+      "wednesday": null,
+      "yearlyType": null
+    },
+    "eventStaff": [],
+    "eventVolunteers": []
+  },
+  "params": {
+    "eventId": 3327,
+    "isUpdateEvent": false
+  },
+  "propConfig": {
+    "custom.blankArray": {
+      "persistent": true
+    },
+    "custom.eventFacilitators": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "eventID": "{view.params.eventId}"
+          },
+          "queryPath": "Calendar/GetEventFacilitators"
+        },
+        "transforms": [
+          {
+            "code": "\tarray \u003d []\n\tfor row in range(value.getRowCount()):\n\t\tname \u003d value.getValueAt(row, \"name\")\n\t\tid \u003d value.getValueAt(row, \"id\")\n\t\tarray.append({\u0027text\u0027: name, \u0027id\u0027: id})\n\treturn array",
+            "type": "script"
+          }
+        ],
+        "type": "query"
+      },
+      "persistent": true
+    },
+    "custom.eventParams": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "eventID": "{view.params.eventId}"
+          },
+          "queryPath": "Calendar/GetEventByID"
+        },
+        "transforms": [
+          {
+            "code": "\tdef getByWeekDay(row):\n\t\tweekDayDict \u003d {\n\t\t\u0027mo\u0027: value.getValueAt(row, \"monday\"),\n\t\t\u0027tu\u0027: value.getValueAt(row, \"tuesday\"),\n\t\t\u0027we\u0027: value.getValueAt(row, \"wednesday\"),\n\t\t\u0027th\u0027: value.getValueAt(row, \"thursday\"),\n\t\t\u0027fr\u0027: value.getValueAt(row, \"friday\"),\n\t\t\u0027sa\u0027: value.getValueAt(row, \"saturday\"),\n\t\t\u0027su\u0027: value.getValueAt(row, \"sunday\")}\n\t\t\t\n\t\tbyweekday \u003d []\n\t\tfor key in [\u0027mo\u0027, \u0027tu\u0027, \u0027we\u0027, \u0027th\u0027, \u0027fr\u0027, \u0027sa\u0027, \u0027su\u0027,]:\n\t\t\tif weekDayDict[key]:\n\t\t\t\tbyweekday.append(key)\n\t\t\t\n\t\treturn byweekday\n\t\n\teventParams \u003d {}\n\tif value.getRowCount() \u003d\u003d 0:\n\t\treturn {\n\t\t\u0027category\u0027: None,\n\t\t\u0027subCategory\u0027: None,\n\t\t\u0027title\u0027: None,\n\t\t\u0027description\u0027: None,\n\t\t\u0027audienceMen\u0027: None,\n\t\t\u0027audienceMinors\u0027: None,\n\t\t\u0027audienceParticipants\u0027: None,\n\t\t\u0027audienceStaff\u0027: None,\n\t\t\u0027audienceVolunteers\u0027: None,\n\t\t\u0027audienceWomen\u0027: None,\n\t\t\u0027venue\u0027: None,\n\t\t\u0027room\u0027: None,\n\t\t\u0027volunteersNeeded\u0027: None,\n\t\t\u0027staffNeeded\u0027: None,\n\t\t\u0027frequency\u0027: None,\n\t\t\u0027monday\u0027: None,\n\t\t\u0027tuesday\u0027: None,\n\t\t\u0027wednesday\u0027: None,\n\t\t\u0027thursday\u0027: None,\n\t\t\u0027friday\u0027: None,\n\t\t\u0027saturday\u0027: None,\n\t\t\u0027sunday\u0027: None,\n\t\t\u0027bysetpos\u0027: None,\n\t\t\u0027startDate\u0027: None,\n\t\t\u0027endDate\u0027: None,\n\t\t\u0027byweekday\u0027: None,\n\t\t\u0027bymonthday\u0027: None,\n\t\t\u0027bymonth\u0027: None,\n\t\t\u0027interval\u0027: None,\n\t\t\u0027yearlyType\u0027: None,\n\t\t\u0027monthlyType\u0027: None\n\t\t}\n\t\n\teventParams[\u0027category\u0027] \u003d value.getValueAt(0, \u0027category\u0027)\n\teventParams[\u0027subCategory\u0027] \u003d value.getValueAt(0, \u0027subCategory\u0027)\n\teventParams[\u0027title\u0027] \u003d value.getValueAt(0, \u0027title\u0027)\n\teventParams[\u0027description\u0027] \u003d value.getValueAt(0, \u0027description\u0027)\n\teventParams[\u0027audienceMen\u0027] \u003d value.getValueAt(0, \u0027audienceMen\u0027)\n\teventParams[\u0027audienceMinors\u0027] \u003d value.getValueAt(0, \u0027audienceMinors\u0027)\n\teventParams[\u0027audienceParticipants\u0027] \u003d value.getValueAt(0, \u0027audienceParticipants\u0027)\n\teventParams[\u0027audienceStaff\u0027] \u003d value.getValueAt(0, \u0027audienceStaff\u0027)\n\teventParams[\u0027audienceVolunteers\u0027] \u003d value.getValueAt(0, \u0027audienceVolunteers\u0027)\n\teventParams[\u0027audienceWomen\u0027] \u003d value.getValueAt(0, \u0027audienceWomen\u0027)\n\teventParams[\u0027venue\u0027] \u003d value.getValueAt(0, \u0027venue\u0027)\n\teventParams[\u0027room\u0027] \u003d value.getValueAt(0, \u0027room\u0027)\n\teventParams[\u0027volunteersNeeded\u0027] \u003d value.getValueAt(0, \u0027volunteersNeeded\u0027)\n\teventParams[\u0027staffNeeded\u0027] \u003d value.getValueAt(0, \u0027staffNeeded\u0027)\n\teventParams[\u0027frequency\u0027] \u003d value.getValueAt(0, \u0027freq\u0027)\n\teventParams[\u0027monday\u0027] \u003d value.getValueAt(0, \u0027monday\u0027)\n\teventParams[\u0027tuesday\u0027] \u003d value.getValueAt(0, \u0027tuesday\u0027)\n\teventParams[\u0027wednesday\u0027] \u003d value.getValueAt(0, \u0027wednesday\u0027)\n\teventParams[\u0027thursday\u0027] \u003d value.getValueAt(0, \u0027thursday\u0027)\n\teventParams[\u0027friday\u0027] \u003d value.getValueAt(0, \u0027friday\u0027)\n\teventParams[\u0027saturday\u0027] \u003d value.getValueAt(0, \u0027saturday\u0027)\n\teventParams[\u0027sunday\u0027] \u003d value.getValueAt(0, \u0027sunday\u0027)\n\teventParams[\u0027bysetpos\u0027] \u003d value.getValueAt(0, \u0027bysetpos\u0027)\n\teventParams[\u0027startDate\u0027] \u003d startDate \u003d value.getValueAt(0, \u0027startDate\u0027)\n\teventParams[\u0027endDate\u0027] \u003d endDate \u003d value.getValueAt(0, \u0027endDate\u0027)\n\teventParams[\u0027byweekday\u0027] \u003d byweekday \u003d getByWeekDay(0)\n\teventParams[\u0027bymonthday\u0027] \u003d system.date.getDayOfMonth(startDate)\n\teventParams[\u0027bymonth\u0027] \u003d value.getValueAt(0, \u0027bymonth\u0027)\n\teventParams[\u0027interval\u0027] \u003d value.getValueAt(0, \u0027interval\u0027)\n\tif len(byweekday) \u003d\u003d 0:\n\t\teventParams[\u0027yearlyType\u0027] \u003d \u0027yearlydate\u0027\n\t\teventParams[\u0027monthlyType\u0027] \u003d \u0027monthlydate\u0027\n\telse:\n\t\teventParams[\u0027yearlyType\u0027] \u003d \u0027yearlyday\u0027\n\t\teventParams[\u0027monthlyType\u0027] \u003d \u0027monthlyday\u0027\n\t\n\t\n\treturn eventParams",
+            "type": "script"
+          }
+        ],
+        "type": "query"
+      },
+      "persistent": true
+    },
+    "custom.eventStaff": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "eventID": "{view.params.eventId}"
+          },
+          "queryPath": "Calendar/GetEventStaff"
+        },
+        "transforms": [
+          {
+            "code": "\tarray \u003d []\n\tfor row in range(value.getRowCount()):\n\t\tname \u003d value.getValueAt(row, \"name\")\n\t\tid \u003d value.getValueAt(row, \"id\")\n\t\tarray.append({\u0027text\u0027: name, \u0027id\u0027: id})\n\treturn array",
+            "type": "script"
+          }
+        ],
+        "type": "query"
+      },
+      "persistent": true
+    },
+    "custom.eventVolunteers": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "eventID": "{view.params.eventId}"
+          },
+          "queryPath": "Calendar/GetEventVolunteers"
+        },
+        "transforms": [
+          {
+            "code": "\tarray \u003d []\n\tfor row in range(value.getRowCount()):\n\t\tname \u003d value.getValueAt(row, \"name\")\n\t\tid \u003d value.getValueAt(row, \"id\")\n\t\tarray.append({\u0027text\u0027: name, \u0027id\u0027: id})\n\treturn array",
+            "type": "script"
+          }
+        ],
+        "type": "query"
+      },
+      "persistent": true
+    },
+    "params.eventId": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.isUpdateEvent": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 1673,
+      "width": 600
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "Header"
+        },
+        "position": {
+          "basis": "62px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.text": {
+            "binding": {
+              "config": {
+                "expression": "if({view.params.isUpdateEvent}, \"Update Event\", \"Add Event\") "
+              },
+              "type": "expr"
+            }
+          }
+        },
+        "props": {
+          "path": "Overview/Dashboard/EventPopupHeader",
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "EventCategory"
+        },
+        "position": {
+          "basis": "149px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.Category": {
+            "binding": {
+              "config": {
+                "expression": "if({view.params.isUpdateEvent}, {view.custom.eventParams.category}, \u0027Classes \u0026 Workshops\u0027)"
+              },
+              "type": "expr"
+            }
+          },
+          "props.style.marginBottom": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.bottom-margin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginLeft": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.left-margin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginRight": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.right-margin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginTop": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.top-margin"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "ClassesAndWorkshop": false,
+            "FaithMeetings": false,
+            "Fundraising": false,
+            "PersonalGrowth": false,
+            "Seminar": false,
+            "SocialEvent": false
+          },
+          "path": "Events/Dashboard/CategoryInput",
+          "style": {
+            "overflow": "visible"
+          },
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Subcategory"
+        },
+        "position": {
+          "basis": "72px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.Subcategory": {
+            "binding": {
+              "config": {
+                "expression": "if({view.params.isUpdateEvent}, {view.custom.eventParams.subCategory}, \"AA Meeting\")"
+              },
+              "type": "expr"
+            }
+          },
+          "props.style.marginBottom": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.bottom-margin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginLeft": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.left-margin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginRight": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.right-margin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginTop": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.top-margin"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "path": "Events/Dashboard/SubcategoryInput",
+          "style": {
+            "borderBottomColor": "#E6E6E6",
+            "borderBottomStyle": "solid",
+            "borderBottomWidth": 1,
+            "paddingBottom": 10
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Title"
+        },
+        "position": {
+          "basis": "64px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.inputText": {
+            "binding": {
+              "config": {
+                "expression": "if({view.params.isUpdateEvent}, {view.custom.eventParams.title}, \"\")"
+              },
+              "type": "expr"
+            }
+          },
+          "props.style.marginBottom": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.bottom-margin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginLeft": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.left-margin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginRight": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.right-margin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginTop": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.top-margin"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "area": false,
+            "astrix": true,
+            "astrixCorrection": 8,
+            "placeholder": "Event title",
+            "text": "Event Title"
+          },
+          "path": "Events/Dashboard/TextInput",
+          "style": {
+            "paddingTop": "10px"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Description"
+        },
+        "position": {
+          "basis": "103px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.inputText": {
+            "binding": {
+              "config": {
+                "expression": "if({view.params.isUpdateEvent}, {view.custom.eventParams.description}, \"\")"
+              },
+              "type": "expr"
+            }
+          },
+          "props.style.marginBottom": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.bottom-margin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginLeft": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.left-margin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginRight": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.right-margin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginTop": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.top-margin"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "area": true,
+            "astrix": false,
+            "placeholder": "Enter a discription here",
+            "text": "Description"
+          },
+          "path": "Events/Dashboard/TextAreaInput",
+          "style": {
+            "paddingBottom": 15
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Audience"
+        },
+        "position": {
+          "basis": "72px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.Men": {
+            "binding": {
+              "config": {
+                "expression": "if({view.params.isUpdateEvent}, {view.custom.eventParams.audienceMen}, False)"
+              },
+              "type": "expr"
+            }
+          },
+          "props.params.Minors": {
+            "binding": {
+              "config": {
+                "expression": "if({view.params.isUpdateEvent}, {view.custom.eventParams.audienceMinors}, False)"
+              },
+              "type": "expr"
+            }
+          },
+          "props.params.Participants": {
+            "binding": {
+              "config": {
+                "expression": "if({view.params.isUpdateEvent}, {view.custom.eventParams.audienceParticipants}, False)"
+              },
+              "type": "expr"
+            }
+          },
+          "props.params.Staff": {
+            "binding": {
+              "config": {
+                "expression": "if({view.params.isUpdateEvent}, {view.custom.eventParams.audienceStaff}, False)"
+              },
+              "type": "expr"
+            }
+          },
+          "props.params.Volunteers": {
+            "binding": {
+              "config": {
+                "expression": "if({view.params.isUpdateEvent}, {view.custom.eventParams.audienceVolunteers}, False)"
+              },
+              "type": "expr"
+            }
+          },
+          "props.params.Women": {
+            "binding": {
+              "config": {
+                "expression": "if({view.params.isUpdateEvent}, {view.custom.eventParams.audienceWomen}, False)"
+              },
+              "type": "expr"
+            }
+          },
+          "props.style.marginBottom": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.bottom-margin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginLeft": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.left-margin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginRight": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.right-margin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginTop": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.top-margin"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "text": "Audience"
+          },
+          "path": "Events/Dashboard/AudienceInput",
+          "style": {
+            "borderTopColor": "#E6E6E6",
+            "borderTopStyle": "solid",
+            "borderTopWidth": 1,
+            "paddingTop": 10
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "children": [
+          {
+            "meta": {
+              "name": "Venue"
+            },
+            "position": {
+              "basis": "300px"
+            },
+            "propConfig": {
+              "props.params.inputText": {
+                "binding": {
+                  "config": {
+                    "expression": "if({view.params.isUpdateEvent}, {view.custom.eventParams.venue}, \"\")"
+                  },
+                  "type": "expr"
+                }
+              }
+            },
+            "props": {
+              "params": {
+                "area": true,
+                "astrix": true,
+                "placeholder": "Venue",
+                "text": "Location"
+              },
+              "path": "Events/Dashboard/TextInput",
+              "style": {
+                "marginRight": "20px"
+              }
+            },
+            "type": "ia.display.view"
+          },
+          {
+            "meta": {
+              "name": "Room"
+            },
+            "position": {
+              "basis": "300px"
+            },
+            "propConfig": {
+              "props.params.inputText": {
+                "binding": {
+                  "config": {
+                    "expression": "if({view.params.isUpdateEvent}, {view.custom.eventParams.room}, \"\")"
+                  },
+                  "type": "expr"
+                }
+              }
+            },
+            "props": {
+              "params": {
+                "area": true,
+                "astrix": false,
+                "placeholder": "Room",
+                "text": ""
+              },
+              "path": "Events/Dashboard/TextInput",
+              "style": {
+                "marginLeft": "20px"
+              }
+            },
+            "type": "ia.display.view"
+          }
+        ],
+        "meta": {
+          "name": "FlexContainer Location"
+        },
+        "position": {
+          "basis": "52px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.style.marginBottom": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.bottom-margin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginLeft": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.left-margin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginRight": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.right-margin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginTop": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.top-margin"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "justify": "space-between",
+          "style": {
+            "borderTopStyle": "none"
+          }
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "meta": {
+          "name": "Facilitators"
+        },
+        "position": {
+          "shrink": 0
+        },
+        "propConfig": {
+          "position.basis": {
+            "binding": {
+              "config": {
+                "path": "this.props.params.items"
+              },
+              "transforms": [
+                {
+                  "code": "\treturn str(75 + ( 40 * len(value) )) + \"px\"",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          },
+          "props.params.items": {
+            "binding": {
+              "config": {
+                "expression": "if({view.params.isUpdateEvent}, {view.custom.eventFacilitators}, {view.custom.blankArray})"
+              },
+              "type": "expr"
+            }
+          },
+          "props.params.options": {
+            "binding": {
+              "config": {
+                "queryPath": "Calendar/GetFacilitatorsOptions"
+              },
+              "type": "query"
+            }
+          },
+          "props.style.marginBottom": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.bottom-margin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginLeft": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.left-margin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginRight": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.right-margin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginTop": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.top-margin"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "text": "Facilitators"
+          },
+          "path": "Events/Dashboard/TextRepeat"
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "meta": {
+                  "name": "VolunteersNeeded"
+                },
+                "position": {
+                  "basis": "320px"
+                },
+                "propConfig": {
+                  "props.params.inputValue": {
+                    "binding": {
+                      "config": {
+                        "expression": "if({view.params.isUpdateEvent}, {view.custom.eventParams.volunteersNeeded}, 0)"
+                      },
+                      "type": "expr"
+                    }
+                  }
+                },
+                "props": {
+                  "params": {
+                    "inputText": "",
+                    "subTitle": "Total Needed",
+                    "title": "Volunteers"
+                  },
+                  "path": "Events/Dashboard/WholeNumberInput"
+                },
+                "type": "ia.display.view"
+              },
+              {
+                "meta": {
+                  "name": "StaffNeeded"
+                },
+                "position": {
+                  "basis": "320px"
+                },
+                "propConfig": {
+                  "props.params.inputValue": {
+                    "binding": {
+                      "config": {
+                        "expression": "if({view.params.isUpdateEvent}, {view.custom.eventParams.staffNeeded}, 0)"
+                      },
+                      "type": "expr"
+                    }
+                  }
+                },
+                "props": {
+                  "params": {
+                    "inputText": "",
+                    "subTitle": "Total Needed",
+                    "title": "Staff"
+                  },
+                  "path": "Events/Dashboard/WholeNumberInput"
+                },
+                "type": "ia.display.view"
+              }
+            ],
+            "meta": {
+              "name": "FlexContainer_Volunteers_Staff"
+            },
+            "position": {
+              "basis": "100px",
+              "grow": 1
+            },
+            "props": {
+              "justify": "space-between",
+              "style": {
+                "marginBottom": 5
+              }
+            },
+            "type": "ia.container.flex"
+          },
+          {
+            "children": [
+              {
+                "meta": {
+                  "name": "Volunteers"
+                },
+                "position": {
+                  "basis": "320px"
+                },
+                "propConfig": {
+                  "props.params.items": {
+                    "binding": {
+                      "config": {
+                        "expression": "if({view.params.isUpdateEvent}, {view.custom.eventVolunteers}, {view.custom.blankArray})"
+                      },
+                      "type": "expr"
+                    }
+                  },
+                  "props.params.options": {
+                    "binding": {
+                      "config": {
+                        "queryPath": "Calendar/GetVolunteersOptions"
+                      },
+                      "type": "query"
+                    }
+                  }
+                },
+                "props": {
+                  "params": {
+                    "text": "Assigned"
+                  },
+                  "path": "Events/Dashboard/TextRepeat",
+                  "style": {
+                    "overflow": "auto"
+                  }
+                },
+                "type": "ia.display.view"
+              },
+              {
+                "meta": {
+                  "name": "Staff"
+                },
+                "position": {
+                  "basis": "320px"
+                },
+                "propConfig": {
+                  "props.params.items": {
+                    "binding": {
+                      "config": {
+                        "expression": "if({view.params.isUpdateEvent}, {view.custom.eventStaff}, {view.custom.blankArray})"
+                      },
+                      "type": "expr"
+                    }
+                  },
+                  "props.params.options": {
+                    "binding": {
+                      "config": {
+                        "queryPath": "Calendar/GetStaffOptions"
+                      },
+                      "type": "query"
+                    }
+                  }
+                },
+                "props": {
+                  "params": {
+                    "text": "Assigned"
+                  },
+                  "path": "Events/Dashboard/TextRepeat"
+                },
+                "type": "ia.display.view"
+              }
+            ],
+            "meta": {
+              "name": "FlexContainer_Volunteers_Staff_Assigned"
+            },
+            "propConfig": {
+              "custom.staffAssignedNum": {
+                "binding": {
+                  "config": {
+                    "path": "./Staff.props.params.items"
+                  },
+                  "transforms": [
+                    {
+                      "code": "\treturn len(value)",
+                      "type": "script"
+                    }
+                  ],
+                  "type": "property"
+                }
+              },
+              "custom.volunteersAssignedNum": {
+                "binding": {
+                  "config": {
+                    "path": "./Volunteers.props.params.items"
+                  },
+                  "transforms": [
+                    {
+                      "code": "\treturn len(value)",
+                      "type": "script"
+                    }
+                  ],
+                  "type": "property"
+                }
+              },
+              "position.basis": {
+                "binding": {
+                  "config": {
+                    "expression": "If({this.custom.volunteersAssignedNum} \u003e {this.custom.staffAssignedNum},\r\nconcat(toStr(75 + ({this.custom.volunteersAssignedNum} * 40)), \"px\"),\r\nconcat(toStr(75 + ({this.custom.staffAssignedNum} * 40)), \"px\"))"
+                  },
+                  "type": "expr"
+                }
+              }
+            },
+            "props": {
+              "justify": "space-between"
+            },
+            "type": "ia.container.flex"
+          }
+        ],
+        "meta": {
+          "name": "FlexContainer"
+        },
+        "position": {
+          "shrink": 0
+        },
+        "propConfig": {
+          "position.basis": {
+            "binding": {
+              "config": {
+                "expression": "If({./FlexContainer_Volunteers_Staff_Assigned.custom.volunteersAssignedNum} \u003e {./FlexContainer_Volunteers_Staff_Assigned.custom.staffAssignedNum},\r\nconcat(toStr(200 + ({./FlexContainer_Volunteers_Staff_Assigned.custom.volunteersAssignedNum} * 40)), \"px\"),\r\nconcat(toStr(200 + ({./FlexContainer_Volunteers_Staff_Assigned.custom.staffAssignedNum} * 40)), \"px\"))"
+              },
+              "type": "expr"
+            }
+          },
+          "props.style.marginBottom": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.bottom-margin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginLeft": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.left-margin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginRight": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.right-margin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginTop": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.top-margin"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "direction": "column"
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "meta": {
+          "name": "RepeatType"
+        },
+        "position": {
+          "basis": "80px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.SelectedValue": {
+            "binding": {
+              "config": {
+                "expression": "if({view.params.isUpdateEvent}, {view.custom.eventParams.frequency}, \"once\")"
+              },
+              "type": "expr"
+            },
+            "onChange": {
+              "enabled": null,
+              "script": "\tself.parent.getChild(\"DateRange\").getChild(\"StartDate\").updateDate()\n\tself.parent.getChild(\"DateRange\").getChild(\"Label\").calculateNumberEvents()"
+            }
+          },
+          "props.params.interval": {
+            "binding": {
+              "config": {
+                "expression": "if({view.params.isUpdateEvent}, {view.custom.eventParams.interval}, 1)"
+              },
+              "type": "expr"
+            }
+          },
+          "props.style.marginBottom": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.bottom-margin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginLeft": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.left-margin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginRight": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.right-margin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginTop": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.top-margin"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "Friday": false,
+            "Monday": false,
+            "Saturday": false,
+            "Sunday": false,
+            "Thursday": false,
+            "Tuesday": false,
+            "Wednesday": false
+          },
+          "path": "Events/Dashboard/FreqSelector",
+          "style": {
+            "borderBottomStyle": "none",
+            "borderLeftStyle": "none",
+            "borderRightStyle": "none",
+            "borderTopColor": "#E6E6E6",
+            "borderTopStyle": "solid",
+            "borderTopWidth": 1,
+            "overflow": "visible",
+            "paddingTop": 15
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "DaysOfWeek"
+        },
+        "position": {
+          "basis": "80px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "position.display": {
+            "binding": {
+              "config": {
+                "path": "../RepeatType.props.params.SelectedValue"
+              },
+              "transforms": [
+                {
+                  "fallback": false,
+                  "inputType": "scalar",
+                  "mappings": [
+                    {
+                      "input": "weekly",
+                      "output": true
+                    }
+                  ],
+                  "outputType": "scalar",
+                  "type": "map"
+                }
+              ],
+              "type": "property"
+            }
+          },
+          "props.params.Friday": {
+            "binding": {
+              "config": {
+                "expression": "if({view.params.isUpdateEvent}, {view.custom.eventParams.friday}, False)"
+              },
+              "type": "expr"
+            },
+            "onChange": {
+              "enabled": null,
+              "script": "\tself.parent.getChild(\"DateRange\").getChild(\"Label\").calculateNumberEvents()"
+            }
+          },
+          "props.params.Monday": {
+            "binding": {
+              "config": {
+                "expression": "if({view.params.isUpdateEvent}, {view.custom.eventParams.monday}, False)"
+              },
+              "type": "expr"
+            },
+            "onChange": {
+              "enabled": null,
+              "script": "\tself.parent.getChild(\"DateRange\").getChild(\"Label\").calculateNumberEvents()"
+            }
+          },
+          "props.params.Saturday": {
+            "binding": {
+              "config": {
+                "expression": "if({view.params.isUpdateEvent}, {view.custom.eventParams.saturday}, False)"
+              },
+              "type": "expr"
+            },
+            "onChange": {
+              "enabled": null,
+              "script": "\tself.parent.getChild(\"DateRange\").getChild(\"Label\").calculateNumberEvents()"
+            }
+          },
+          "props.params.Sunday": {
+            "binding": {
+              "config": {
+                "expression": "if({view.params.isUpdateEvent}, {view.custom.eventParams.sunday}, False)"
+              },
+              "type": "expr"
+            },
+            "onChange": {
+              "enabled": null,
+              "script": "\tself.parent.getChild(\"DateRange\").getChild(\"Label\").calculateNumberEvents()"
+            }
+          },
+          "props.params.Thursday": {
+            "binding": {
+              "config": {
+                "expression": "if({view.params.isUpdateEvent}, {view.custom.eventParams.thursday}, False)"
+              },
+              "type": "expr"
+            },
+            "onChange": {
+              "enabled": null,
+              "script": "\tself.parent.getChild(\"DateRange\").getChild(\"Label\").calculateNumberEvents()"
+            }
+          },
+          "props.params.Tuesday": {
+            "binding": {
+              "config": {
+                "expression": "if({view.params.isUpdateEvent}, {view.custom.eventParams.tuesday}, False)"
+              },
+              "type": "expr"
+            },
+            "onChange": {
+              "enabled": null,
+              "script": "\tself.parent.getChild(\"DateRange\").getChild(\"Label\").calculateNumberEvents()"
+            }
+          },
+          "props.params.Wednesday": {
+            "binding": {
+              "config": {
+                "expression": "if({view.params.isUpdateEvent}, {view.custom.eventParams.wednesday}, False)"
+              },
+              "type": "expr"
+            },
+            "onChange": {
+              "enabled": null,
+              "script": "\tself.parent.getChild(\"DateRange\").getChild(\"Label\").calculateNumberEvents()"
+            }
+          },
+          "props.style.marginBottom": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.bottom-margin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginLeft": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.left-margin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginRight": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.right-margin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginTop": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.top-margin"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "bymonthday": 1,
+            "bysetpos": 1,
+            "byweekday": [
+              "mo"
+            ],
+            "repeatType": "yearlydate",
+            "text": "Every...",
+            "yearlyDate_bymonth": 1,
+            "yearlyDay_bymonth": 1
+          },
+          "path": "Events/Dashboard/DaysOfWeekInput",
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "YearlyRepeatInput"
+        },
+        "position": {
+          "basis": "100px"
+        },
+        "propConfig": {
+          "position.display": {
+            "binding": {
+              "config": {
+                "path": "../RepeatType.props.params.SelectedValue"
+              },
+              "transforms": [
+                {
+                  "fallback": false,
+                  "inputType": "scalar",
+                  "mappings": [
+                    {
+                      "input": "yearly",
+                      "output": true
+                    }
+                  ],
+                  "outputType": "scalar",
+                  "type": "map"
+                }
+              ],
+              "type": "property"
+            }
+          },
+          "props.params.bymonthday": {
+            "binding": {
+              "config": {
+                "expression": "if({view.params.isUpdateEvent}, {view.custom.eventParams.bymonthday}, 1)"
+              },
+              "type": "expr"
+            },
+            "onChange": {
+              "enabled": null,
+              "script": "\tself.parent.getChild(\"DateRange\").getChild(\"StartDate\").updateDate()"
+            }
+          },
+          "props.params.bysetpos": {
+            "binding": {
+              "config": {
+                "expression": "if({view.params.isUpdateEvent} \u0026 !isNull({view.custom.eventParams.bysetpos}), {view.custom.eventParams.bysetpos}, 1)"
+              },
+              "type": "expr"
+            }
+          },
+          "props.params.byweekday": {
+            "binding": {
+              "config": {
+                "path": "view.custom.eventParams.byweekday"
+              },
+              "transforms": [
+                {
+                  "code": "\tif self.view.params.isUpdateEvent and value is not None:\n\t\treturn value\n\treturn [\u0027mo\u0027]",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          },
+          "props.params.repeatType": {
+            "binding": {
+              "config": {
+                "expression": "if({view.params.isUpdateEvent}, {view.custom.eventParams.yearlyType}, \"yearlydate\")"
+              },
+              "type": "expr"
+            },
+            "onChange": {
+              "enabled": null,
+              "script": "\tself.parent.getChild(\"DateRange\").getChild(\"StartDate\").updateDate()"
+            }
+          },
+          "props.params.yearlyDate_bymonth": {
+            "binding": {
+              "config": {
+                "expression": "if({view.params.isUpdateEvent} \u0026 ! isNULL({view.custom.eventParams.bymonth}), {view.custom.eventParams.bymonth}, 1)"
+              },
+              "type": "expr"
+            },
+            "onChange": {
+              "enabled": null,
+              "script": "\tself.parent.getChild(\"DateRange\").getChild(\"StartDate\").updateDate()"
+            }
+          },
+          "props.params.yearlyDay_bymonth": {
+            "binding": {
+              "config": {
+                "expression": "if({view.params.isUpdateEvent} \u0026 ! isNULL({view.custom.eventParams.bymonth}), {view.custom.eventParams.bymonth}, 1)"
+              },
+              "type": "expr"
+            }
+          },
+          "props.style.marginBottom": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.bottom-margin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginLeft": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.left-margin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginRight": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.right-margin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginTop": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.top-margin"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "path": "Events/Dashboard/YearlyRepeatInput"
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "MonthlyRepeatInput"
+        },
+        "position": {
+          "basis": "100px"
+        },
+        "propConfig": {
+          "position.display": {
+            "binding": {
+              "config": {
+                "path": "../RepeatType.props.params.SelectedValue"
+              },
+              "transforms": [
+                {
+                  "fallback": false,
+                  "inputType": "scalar",
+                  "mappings": [
+                    {
+                      "input": "monthly",
+                      "output": true
+                    }
+                  ],
+                  "outputType": "scalar",
+                  "type": "map"
+                }
+              ],
+              "type": "property"
+            }
+          },
+          "props.params.bymonthday": {
+            "binding": {
+              "config": {
+                "expression": "if({view.params.isUpdateEvent}, {view.custom.eventParams.bymonthday}, 1)"
+              },
+              "type": "expr"
+            },
+            "onChange": {
+              "enabled": null,
+              "script": "\tself.parent.getChild(\"DateRange\").getChild(\"StartDate\").updateDate()"
+            }
+          },
+          "props.params.bysetpos": {
+            "binding": {
+              "config": {
+                "expression": "if({view.params.isUpdateEvent} \u0026 !isNull({view.custom.eventParams.bysetpos}), {view.custom.eventParams.bysetpos}, 1)"
+              },
+              "type": "expr"
+            }
+          },
+          "props.params.byweekday": {
+            "binding": {
+              "config": {
+                "path": "view.custom.eventParams.byweekday"
+              },
+              "transforms": [
+                {
+                  "code": "\tif self.view.params.isUpdateEvent and value is not None:\n\t\treturn value\n\treturn [\u0027mo\u0027]",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          },
+          "props.params.repeatType": {
+            "binding": {
+              "config": {
+                "expression": "if({view.params.isUpdateEvent}, {view.custom.eventParams.monthlyType}, \"monthlydate\")"
+              },
+              "type": "expr"
+            },
+            "onChange": {
+              "enabled": null,
+              "script": "\tself.parent.getChild(\"DateRange\").getChild(\"StartDate\").updateDate()"
+            }
+          },
+          "props.style.marginBottom": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.bottom-margin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginLeft": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.left-margin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginRight": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.right-margin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginTop": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.top-margin"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "path": "Events/Dashboard/MonthlyRepeatInput"
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "children": [
+          {
+            "meta": {
+              "name": "StartDate"
+            },
+            "position": {
+              "basis": "150px"
+            },
+            "propConfig": {
+              "props.params.inputDate": {
+                "binding": {
+                  "config": {
+                    "expression": "if({view.params.isUpdateEvent}, {view.custom.eventParams.startDate}, now(0))"
+                  },
+                  "type": "expr"
+                },
+                "onChange": {
+                  "enabled": null,
+                  "script": "\tendDate \u003d self.getSibling(\"EndDate\").props.params.inputDate\n\tstartDate \u003d currentValue.value\n\n\tself.getSibling(\"Label\").calculateNumberEvents()\n\n\tif system.date.isAfter(startDate, endDate):\n\t\tself.getSibling(\"EndDate\").props.params.inputDate \u003d startDate"
+                }
+              }
+            },
+            "props": {
+              "params": {
+                "text": "Start Date"
+              },
+              "path": "Events/Dashboard/DateInput"
+            },
+            "scripts": {
+              "customMethods": [
+                {
+                  "name": "updateDate",
+                  "params": [],
+                  "script": "\t#system.perspective.print(\"started\")\n\t\n\ttry:\n\t\t#initialize variables that determine flow\n\t\trepeatType \u003d self.parent.parent.getChild(\"RepeatType\").props.params.SelectedValue\n\t\tyearlyType \u003d self.parent.parent.getChild(\"YearlyRepeatInput\").props.params.repeatType\n\t\tmonthlyType \u003d self.parent.parent.getChild(\"MonthlyRepeatInput\").props.params.repeatType\n\t\n\t\t#initialize variables about current moment\n\t\tnow \u003d system.date.now()\n\t\tcurrentYear \u003d system.date.getYear(now)\n\texcept:\n\t\tpass\n\t\n\t#if the current repeat selection is yearlydate\n\tif repeatType \u003d\u003d \"yearly\" and yearlyType \u003d\u003d \u0027yearlydate\u0027:\n\t\t\n\t\t#initialize variables with new date info\n\t\tnewMonthNum \u003d self.parent.parent.getChild(\"YearlyRepeatInput\").props.params.yearlyDate_bymonth - 1\n\t\tnewDayNum \u003d self.parent.parent.getChild(\"YearlyRepeatInput\").props.params.bymonthday\n\t\t\n\t\t#make a new date. If the new date is before the current moment, add a year\n\t\tnewDate \u003d system.date.getDate(currentYear, newMonthNum, newDayNum)\n\t\tif system.date.isBefore(newDate, now):\n\t\t\tnewDate \u003d system.date.addYears(newDate, 1)\n\t\t\n\t\t#set new date to the start date selector object\n\t\tself.props.params.inputDate \u003d newDate\n\t\n\telif repeatType \u003d\u003d \u0027monthly\u0027 and monthlyType \u003d\u003d \u0027monthlydate\u0027:\n\t\n\t\t#initialize variables with new date info\n\t\tnewDayNum \u003d self.parent.parent.getChild(\"MonthlyRepeatInput\").props.params.bymonthday\n\t\t\n\t\t#make a new date. If the new date is before the current moment, add a month\n\t\tcurrentMonth \u003d system.date.getMonth(now)\n\t\tnewDate \u003d system.date.getDate(currentYear, currentMonth, newDayNum)\n\t\tif system.date.isBefore(newDate, now):\n\t\t\tnewDate \u003d system.date.addMonths(newDate, 1)\n\t\t\n\t\t#set new date to the start and end date selector objects\n\t\tself.props.params.inputDate \u003d self.getSibling(\"EndDate\").props.params.inputDate \u003d newDate"
+                }
+              ],
+              "extensionFunctions": null,
+              "messageHandlers": []
+            },
+            "type": "ia.display.view"
+          },
+          {
+            "meta": {
+              "name": "EndDate"
+            },
+            "position": {
+              "basis": "150px"
+            },
+            "propConfig": {
+              "props.params.inputDate": {
+                "binding": {
+                  "config": {
+                    "expression": "if({view.params.isUpdateEvent}, {view.custom.eventParams.endDate}, now(0))"
+                  },
+                  "type": "expr"
+                },
+                "onChange": {
+                  "enabled": null,
+                  "script": "\tstartDate \u003d self.getSibling(\"StartDate\").props.params.inputDate\n\tendDate \u003d currentValue.value\n\t\n\tself.getSibling(\"Label\").calculateNumberEvents()\n\t\t\n\tif system.date.isAfter(startDate, endDate):\n\t\tself.getSibling(\"StartDate\").props.params.inputDate \u003d endDate"
+                }
+              }
+            },
+            "props": {
+              "params": {
+                "text": "End Date"
+              },
+              "path": "Events/Dashboard/DateInput",
+              "style": {
+                "marginLeft": 40
+              }
+            },
+            "type": "ia.display.view"
+          },
+          {
+            "meta": {
+              "name": "Label"
+            },
+            "props": {
+              "style": {
+                "classes": "Text/Add_TextArea",
+                "marginLeft": 5
+              },
+              "text": "Events : 1"
+            },
+            "scripts": {
+              "customMethods": [
+                {
+                  "name": "calculateNumberEvents",
+                  "params": [],
+                  "script": "\t# get dates / times\n\tstartTime \u003d self.parent.parent.getChild(\"TimeRange\").props.params.startTime\n\tstartHour \u003d system.date.getHour24(startTime)\n\tstartMinute \u003d system.date.getMinute(startTime)\n\tstartSecond \u003d system.date.getSecond(startTime)\n\t\n\tendTime \u003d self.parent.parent.getChild(\"TimeRange\").props.params.endTime\n\tendHour \u003d system.date.getHour24(endTime)\n\tendMinute \u003d system.date.getMinute(endTime)\n\tendSecond \u003d system.date.getSecond(endTime)\n\t\n\tstartDate \u003d self.getSibling(\"StartDate\").props.params.inputDate\n\tendDate \u003d self.getSibling(\"EndDate\").props.params.inputDate\n\t\n\tstartDateTime \u003d system.date.setTime(startDate,startHour,startMinute,startSecond)\n\tendDateTime \u003d system.date.setTime(endDate,endHour,endMinute,endSecond)\n\t\n\tif self.parent.parent.getChild(\"RepeatType\").props.params.SelectedValue \u003d\u003d \u0027once\u0027 :\n\t\tself.props.text \u003d \"Events : \" + str(1)\n\t\n\tif self.parent.parent.getChild(\"RepeatType\").props.params.SelectedValue \u003d\u003d \u0027hourly\u0027:\n\t\tnumberOfHours \u003d system.date.hoursBetween(startDateTime,endDateTime)\n\t\tnumberOfHours \u003d 0 if numberOfHours \u003c0 else numberOfHours\n\t\tself.props.text \u003d \"Events : \" + str(numberOfHours)\n\t\t\n\tif self.parent.parent.getChild(\"RepeatType\").props.params.SelectedValue \u003d\u003d \u0027daily\u0027:\n\t\tnumberOfDays \u003d system.date.daysBetween(startDateTime,endDateTime)\n\t\tself.props.text \u003d \"Events : \" + str(numberOfDays)\n\t\t\t\t\n\t\n\tif self.parent.parent.getChild(\"RepeatType\").props.params.SelectedValue \u003d\u003d \u0027weekly\u0027:\n\t\t# check selected Days\n\t\tdaysSelected \u003d []\n\t\tif self.parent.parent.getChild(\"DaysOfWeek\").props.params.Sunday : daysSelected.append(1)\n\t\tif self.parent.parent.getChild(\"DaysOfWeek\").props.params.Monday : daysSelected.append(2)\n\t\tif self.parent.parent.getChild(\"DaysOfWeek\").props.params.Tuesday : daysSelected.append(3)\n\t\tif self.parent.parent.getChild(\"DaysOfWeek\").props.params.Wednesday : daysSelected.append(4)\n\t\tif self.parent.parent.getChild(\"DaysOfWeek\").props.params.Thursday : daysSelected.append(5)\n\t\tif self.parent.parent.getChild(\"DaysOfWeek\").props.params.Friday : daysSelected.append(6)\n\t\tif self.parent.parent.getChild(\"DaysOfWeek\").props.params.Saturday : daysSelected.append(7)\n\t\t\n\t\t# get number of weeks\n\t\tnumberOfWeeks \u003d system.date.weeksBetween(startDate,endDate)\n\t\tdate \u003d startDateTime\n\t\t\n\t\tnumberOfEvents \u003d 0\n\t\t# loop trough weeks\n\t\tfor x in range(numberOfWeeks +2) :\n\t\t\tfor y in daysSelected:\n\t\t\t\tdayNumber \u003d y - system.date.getDayOfWeek(date)\n\t\t\t\t\n\t\t\t\ttempDate \u003d system.date.addDays(date,dayNumber)\n\t\t\t\ttempDateEnd \u003d system.date.setTime(date,endHour,endMinute,endSecond)\n\n\t\t\t\tif system.date.isBefore(tempDateEnd,tempDate) :\n\t\t\t\t\ttempDateEnd \u003d system.date.addDays(tempDateEnd,1)\n\t\t\t\t\t\t\t\t\t\n\t\t\t\tif(system.date.isAfter(tempDate,startDateTime) and system.date.isBefore(tempDate,endDateTime)) or tempDate \u003d\u003d startDateTime :\n\t\t\t\t\tif (system.date.isAfter(tempDateEnd,startDateTime) and system.date.isBefore(tempDateEnd,endDateTime)) or tempDateEnd \u003d\u003d endDateTime:\n\t\t\t\t\t\tnumberOfEvents +\u003d 1\n\t\t\tdate \u003d system.date.addWeeks(date,1)\n\t\tself.props.text \u003d \"Events : \" + str(numberOfEvents)\n\t\t\n\tif self.parent.parent.getChild(\"RepeatType\").props.params.SelectedValue \u003d\u003d \u0027monthly\u0027:\n\t\tnumberOfMonths \u003d system.date.monthsBetween(startDateTime,endDateTime)\n\t\tself.props.text \u003d \"Events : \" + str(numberOfMonths)\n\t\n\tif self.parent.parent.getChild(\"RepeatType\").props.params.SelectedValue \u003d\u003d \u0027yearly\u0027:\n\t\t\tnumberOfYears \u003d system.date.yearsBetween(startDateTime,endDateTime)\n\t\t\tself.props.text \u003d \"Events : \" + str(numberOfYears)"
+                }
+              ],
+              "extensionFunctions": null,
+              "messageHandlers": []
+            },
+            "type": "ia.display.label"
+          }
+        ],
+        "meta": {
+          "name": "DateRange"
+        },
+        "position": {
+          "basis": "72px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.style.marginBottom": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.bottom-margin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginLeft": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.left-margin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginRight": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.right-margin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginTop": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.top-margin"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "meta": {
+          "name": "TimeRange"
+        },
+        "position": {
+          "basis": "110px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.endTime": {
+            "binding": {
+              "config": {
+                "expression": "if({view.params.isUpdateEvent}, {view.custom.eventParams.endDate}, dateArithmetic(now(0), 1, \"hour\"))"
+              },
+              "type": "expr"
+            },
+            "onChange": {
+              "enabled": null,
+              "script": "\tself.parent.getChild(\"DateRange\").getChild(\"Label\").calculateNumberEvents()"
+            }
+          },
+          "props.params.startTime": {
+            "binding": {
+              "config": {
+                "expression": "if({view.params.isUpdateEvent}, {view.custom.eventParams.startDate}, now(0))"
+              },
+              "type": "expr"
+            },
+            "onChange": {
+              "enabled": null,
+              "script": "\t\"\"\"endTime \u003d self.props.params.endTime\n\tendHour \u003d system.date.getHour24(endTime)\n\tendMinute \u003d system.date.getMinute(endTime)\n\tendSecond \u003d system.date.getSecond(endTime)\n\t\n\tstartTime \u003d currentValue\n\tstartHour \u003d system.date.getHour24(startTime)\n\tstartMinute \u003d system.date.getMinute(startTime)\n\tstartSecond \u003d system.date.getSecond(startTime)\n\t\n\tcompareDate \u003d system.date.getDate(2020, 0, 1)\n\tsystem.date.setTime(date, endHour, endMinute, endSecond)\"\"\"\n\tself.parent.getChild(\"DateRange\").getChild(\"Label\").calculateNumberEvents()\n\tendTime \u003d self.props.params.endTime\n\tstartTime \u003d currentValue.value\n\t\n\tendHour \u003d system.date.getHour24(endTime)\n\tstartHour \u003d system.date.getHour24(startTime)\n\t\n\tendMinute \u003d system.date.getMinute(endTime)\n\tstartMinute \u003d system.date.getMinute(startTime)\n\t\n\tendSecond \u003d system.date.getSecond(endTime)\n\tstartSecond \u003d system.date.getSecond(startTime)\n\t\n\tnow \u003d system.date.now()\n\tcompare_endDate \u003d system.date.setTime(now, endHour, endMinute, endSecond)\n\tcompare_startDate \u003d system.date.setTime(now, startHour, startMinute, startSecond)\n\t\n\tendDate \u003d self.parent.getChild(\"DateRange\").getChild(\"EndDate\").props.params.inputDate\n\tstartDate \u003d self.parent.getChild(\"DateRange\").getChild(\"StartDate\").props.params.inputDate\n\t\n\tsystem.perspective.print(system.date.daysBetween(endDate, startDate))\n\tif system.date.daysBetween(endDate, startDate) \u003e\u003d 0 and system.date.isAfter(compare_startDate, compare_endDate):\n\t\tself.props.params.endTime \u003d system.date.addHours(startTime, 1)"
+            }
+          },
+          "props.style.marginBottom": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.bottom-margin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginLeft": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.left-margin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginRight": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.right-margin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginTop": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.top-margin"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "text": "Time"
+          },
+          "path": "Events/Dashboard/TimeRangeInput"
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "children": [
+          {
+            "events": {
+              "component": {
+                "onActionPerformed": [
+                  {
+                    "config": {
+                      "script": "\t\t\n\t#define variables that will be used for the start and end dateTime\n\tstartTime \u003d self.parent.parent.getChild(\"TimeRange\").props.params.startTime\n\tstartHour \u003d system.date.getHour24(startTime)\n\tstartMinute \u003d system.date.getMinute(startTime)\n\tstartSecond \u003d system.date.getSecond(startTime)\n\tstartDate \u003d self.parent.parent.getChild(\"DateRange\").getChild(\"StartDate\").props.params.inputDate\n\tstartYear \u003d system.date.getYear(startDate)\n\tstartMonth \u003d system.date.getMonth(startDate)\n\tendTime \u003d self.parent.parent.getChild(\"TimeRange\").props.params.endTime\n\tendHour \u003d system.date.getHour24(endTime)\n\tendMinute \u003d system.date.getMinute(endTime)\n\tendSecond \u003d system.date.getSecond(endTime)\n\tendDate \u003d self.parent.parent.getChild(\"DateRange\").getChild(\"EndDate\").props.params.inputDate\n\t\n\t#Initialize all of the event params\n\teventParams \u003d {\n\t\"allDay\": False,\n\t\"audienceMen\": self.parent.parent.getChild(\"Audience\").props.params.Men,\n\t\"audienceMinors\": self.parent.parent.getChild(\"Audience\").props.params.Minors,\n\t\"audienceParticipants\": self.parent.parent.getChild(\"Audience\").props.params.Participants,\n\t\"audienceStaff\": self.parent.parent.getChild(\"Audience\").props.params.Staff,\n\t\"audienceVolunteers\": self.parent.parent.getChild(\"Audience\").props.params.Volunteers,\n\t\"audienceWomen\": self.parent.parent.getChild(\"Audience\").props.params.Women,\n\t\"category\": self.parent.parent.getChild(\"EventCategory\").props.params.Category,\n\t\"description\": self.parent.parent.getChild(\"Description\").props.params.inputText,\n\t\"room\": self.parent.parent.getChild(\"FlexContainer Location\").getChild(\"Room\").props.params.inputText,\n\t\"staffNeeded\": self.parent.parent.getChild(\"FlexContainer\").getChild(\"FlexContainer_Volunteers_Staff\").getChild(\"StaffNeeded\").props.params.inputValue,\n\t\"subCategory\": self.parent.parent.getChild(\"Subcategory\").props.params.Subcategory,\n\t\"title\": self.parent.parent.getChild(\"Title\").props.params.inputText,\n\t\"venue\": self.parent.parent.getChild(\"FlexContainer Location\").getChild(\"Venue\").props.params.inputText,\n\t\"volunteersNeeded\": self.parent.parent.getChild(\"FlexContainer\").getChild(\"FlexContainer_Volunteers_Staff\").getChild(\"VolunteersNeeded\").props.params.inputValue,\n\t\"interval\": self.parent.parent.getChild(\"RepeatType\").props.params.interval,\n\t\"freq\": self.parent.parent.getChild(\"RepeatType\").props.params.SelectedValue,\n\t\n\t#Initialize the start and end dateTimes using the input dates and times. These dates will be updated for monthly and yearly repeating events\n\t\"startDate\": system.date.setTime(startDate, startHour, startMinute, startSecond),\n\t\"endDate\": system.date.setTime(endDate, endHour, endMinute, endSecond),\n\t\n\t#initialize other variables to default values. These values will be updated for some repeating events\n\t\"monday\": False,\n\t\"tuesday\": False,\n\t\"wednesday\": False,\n\t\"thursday\": False,\n\t\"friday\": False,\n\t\"saturday\": False,\n\t\"sunday\": False,\n\t\"bymonth\": None,\n\t\"bysetpos\": None\n\t}\n\t\n\t#weekly\n\tif eventParams[\u0027freq\u0027] \u003d\u003d \u0027weekly\u0027:\n\t\teventParams[\u0027monday\u0027] \u003d self.parent.parent.getChild(\"DaysOfWeek\").props.params.Monday\n\t\teventParams[\u0027tuesday\u0027] \u003d self.parent.parent.getChild(\"DaysOfWeek\").props.params.Tuesday\n\t\teventParams[\u0027wednesday\u0027] \u003d self.parent.parent.getChild(\"DaysOfWeek\").props.params.Wednesday\n\t\teventParams[\u0027thursday\u0027] \u003d self.parent.parent.getChild(\"DaysOfWeek\").props.params.Thursday\n\t\teventParams[\u0027friday\u0027] \u003d self.parent.parent.getChild(\"DaysOfWeek\").props.params.Friday\n\t\teventParams[\u0027saturday\u0027] \u003d self.parent.parent.getChild(\"DaysOfWeek\").props.params.Saturday\n\t\teventParams[\u0027sunday\u0027] \u003d self.parent.parent.getChild(\"DaysOfWeek\").props.params.Sunday\n\t\n\t#monthly\n\telif eventParams[\u0027freq\u0027] \u003d\u003d \u0027monthly\u0027:\n\t\trepeatType \u003d self.parent.parent.getChild(\"MonthlyRepeatInput\").props.params.repeatType\n\t\t\n\t\t#monthlydate\n\t\tif repeatType \u003d\u003d \u0027monthlydate\u0027:\n\t\t\t#Update the day of the START DATE they selected with the day they picked in the monthly section\n\t\t\tbymonthday \u003d self.parent.parent.getChild(\"MonthlyRepeatInput\").props.params.bymonthday\n\t\t\teventParams[\u0027startDate\u0027] \u003d system.date.setTime(system.date.getDate(startYear, startMonth, bymonthday), startHour, startMinute, startSecond)\n\t\t\n\t\t#monthlyday\n\t\telif repeatType \u003d\u003d \u0027monthlyday\u0027:\n\t\t\tbyweekday \u003d self.parent.parent.getChild(\"MonthlyRepeatInput\").props.params.byweekday\n\t\t\teventParams[\u0027monday\u0027] \u003d \u0027mo\u0027 in byweekday\n\t\t\teventParams[\u0027tuesday\u0027] \u003d \u0027tu\u0027 in byweekday\n\t\t\teventParams[\u0027wednesday\u0027] \u003d \u0027we\u0027 in byweekday\n\t\t\teventParams[\u0027thursday\u0027] \u003d \u0027th\u0027 in byweekday\n\t\t\teventParams[\u0027friday\u0027] \u003d \u0027fr\u0027 in byweekday\n\t\t\teventParams[\u0027saturday\u0027] \u003d \u0027sa\u0027 in byweekday\n\t\t\teventParams[\u0027sunday\u0027] \u003d \u0027su\u0027 in byweekday\n\t\t\teventParams[\u0027bysetpos\u0027] \u003d self.parent.parent.getChild(\"MonthlyRepeatInput\").props.params.bysetpos\t\t\t\n\t\t\n\t#yearly\n\telif eventParams[\u0027freq\u0027] \u003d\u003d \u0027yearly\u0027:\n\t\trepeatType \u003d self.parent.parent.getChild(\"YearlyRepeatInput\").props.params.repeatType\n\t\t\n\t\t#yearlydate\n\t\tif repeatType \u003d\u003d \u0027yearlydate\u0027:\n\t\t\t#Update the day of the START DATE they selected with the day they picked in the yearly section\n\t\t\tbymonthday \u003d self.parent.parent.getChild(\"YearlyRepeatInput\").props.params.bymonthday\n\t\t\tbymonth \u003d self.parent.parent.getChild(\"YearlyRepeatInput\").props.params.yearlyDate_bymonth\n\t\t\teventParams[\u0027startDate\u0027] \u003d system.date.setTime(system.date.getDate(startYear, bymonth - 1, bymonthday), startHour, startMinute, startSecond)\n\t\t\n\t\t#yearlyday\n\t\telif repeatType \u003d\u003d \u0027yearlyday\u0027:\n\t\t\tbyweekday \u003d self.parent.parent.getChild(\"YearlyRepeatInput\").props.params.byweekday\n\t\t\teventParams[\u0027monday\u0027] \u003d \u0027mo\u0027 in byweekday\n\t\t\teventParams[\u0027tuesday\u0027] \u003d \u0027tu\u0027 in byweekday\n\t\t\teventParams[\u0027wednesday\u0027] \u003d \u0027we\u0027 in byweekday\n\t\t\teventParams[\u0027thursday\u0027] \u003d \u0027th\u0027 in byweekday\n\t\t\teventParams[\u0027friday\u0027] \u003d \u0027fr\u0027 in byweekday\n\t\t\teventParams[\u0027saturday\u0027] \u003d \u0027sa\u0027 in byweekday\n\t\t\teventParams[\u0027sunday\u0027] \u003d \u0027su\u0027 in byweekday\n\t\t\teventParams[\u0027bysetpos\u0027] \u003d self.parent.parent.getChild(\"YearlyRepeatInput\").props.params.bysetpos\n\t\t\teventParams[\u0027bymonth\u0027] \u003d self.parent.parent.getChild(\"YearlyRepeatInput\").props.params.yearlyDay_bymonth\n\t\t\teventParams[\u0027startDate\u0027] \u003d system.date.setTime(system.date.getDate(startYear, startMonth, 1), startHour, startMinute, startSecond)\n\t\n\t#get the facilitators, volunteers, and staff\n\tfacilitators \u003d self.parent.parent.getChild(\"Facilitators\").props.params.items\n\tvolunteers \u003d self.parent.parent.getChild(\"FlexContainer\").getChild(\"FlexContainer_Volunteers_Staff_Assigned\").getChild(\"Volunteers\").props.params.items\n\tstaff \u003d self.parent.parent.getChild(\"FlexContainer\").getChild(\"FlexContainer_Volunteers_Staff_Assigned\").getChild(\"Staff\").props.params.items\n\t\n\t#if we are updating an existing event\n\tif self.view.params.isUpdateEvent:\n\t\t\n\t\t#get the event id\n\t\teventID \u003d eventParams[\u0027eventID\u0027] \u003d self.view.params.eventId\n\t\t\n\t\t# delete the facilitators, volunteers, and staff\n\t\tsystem.db.runNamedQuery(\"Calendar/DeleteEventFacilitators\", {\u0027eventID\u0027: eventID})\n\t\tsystem.db.runNamedQuery(\"Calendar/DeleteEventStaff\", {\u0027eventID\u0027: eventID})\n\t\tsystem.db.runNamedQuery(\"Calendar/DeleteEventVolunteers\", {\u0027eventID\u0027: eventID})\n\t\t\n\t\t# delete all instances.\n\t\tdataset \u003d system.db.runNamedQuery(\"Calendar/Event Instance People/GetTaskID\",{\u0027eventID\u0027: eventID})\n\t\tfor x in range(dataset.getRowCount()) :\n\t\t\tinstanceID \u003d dataset.getValueAt(x,\"instanceID\")\n\t\t\tsystem.db.runNamedQuery(\"Calendar/Event Instance People/DeleteInstanceFacilitator\",{\u0027instanceID\u0027: instanceID })\n\t\t\tsystem.db.runNamedQuery(\"Calendar/Event Instance People/DeleteInstanceStaff\",{\u0027instanceID\u0027: instanceID })\n\t\t\tsystem.db.runNamedQuery(\"Calendar/Event Instance People/DeleteInstanceVolunteer\",{\u0027instanceID\u0027: instanceID })\n\t\t\n\t\t#update the event\n\t\tsystem.db.runNamedQuery(\"Calendar/UpdateEvent\", eventParams)\n\t\t\n\t\t# add the facilitators, volunteers and staff by looping through the elements\n\t\tfor f in facilitators:\n\t\t\tfacilitatorID \u003d f[\u0027id\u0027]\n\t\t\tsystem.db.runNamedQuery(\"Calendar/AddFacilitator\", {\u0027eventID\u0027: eventID, \u0027facilitatorID\u0027: facilitatorID})\n\t\t\tsystem.db.runNamedQuery(\"Calendar/Event Instance People/AddInstanceFacilitator\", {\u0027instanceID\u0027: instanceID, \u0027facilitatorID\u0027: facilitatorID})\n\t\t\t\n\t\tfor v in volunteers:\n\t\t\tvolunteerID \u003d v[\u0027id\u0027]\n\t\t\tsystem.db.runNamedQuery(\"Calendar/AddVolunteer\", {\u0027eventID\u0027: eventID, \u0027volunteerID\u0027: volunteerID})\n\t\t\tsystem.db.runNamedQuery(\"Calendar/Event Instance People/AddInstanceVolunteer\", {\u0027instanceID\u0027: instanceID, \u0027volunteerID\u0027: volunteerID})\n\t\t\t\n\t\tfor s in staff:\n\t\t\tstaffID \u003d s[\u0027id\u0027]\n\t\t\tsystem.db.runNamedQuery(\"Calendar/AddStaff\", {\u0027eventID\u0027: eventID, \u0027staffID\u0027: staffID})\n\t\t\tsystem.db.runNamedQuery(\"Calendar/Event Instance People/AddInstanceStaff\", {\u0027instanceID\u0027: instanceID, \u0027staffID\u0027: staffID})\n\t\t\t\n\t\t\n\telse:\n\t\t#add the event\n\t\teventID \u003d system.db.runNamedQuery(\"Calendar/AddEvent\", eventParams)\n\t\t\t\n\t\t# add the facilitators, volunteers and staff by looping through the elements\n\t\tfor f in facilitators:\n\t\t\tfacilitatorID \u003d f[\u0027id\u0027]\n\t\t\tsystem.db.runNamedQuery(\"Calendar/AddFacilitator\", {\u0027eventID\u0027: eventID, \u0027facilitatorID\u0027: facilitatorID})\n\t\t\n\t\tfor v in volunteers:\n\t\t\tvolunteerID \u003d v[\u0027id\u0027]\n\t\t\tsystem.db.runNamedQuery(\"Calendar/AddVolunteer\", {\u0027eventID\u0027: eventID, \u0027volunteerID\u0027: volunteerID})\n\t\t\n\t\tfor s in staff:\n\t\t\tstaffID \u003d s[\u0027id\u0027]\n\t\t\tsystem.db.runNamedQuery(\"Calendar/AddStaff\", {\u0027eventID\u0027: eventID, \u0027staffID\u0027: staffID})\n\t\t\n\t\tstartDate \u003d eventParams[\u0027startDate\u0027]\n\t\tstartHour \u003d system.date.getHour24(startDate)\n\t\tstartMinute \u003d system.date.getMinute(startDate)\n\t\tstartSecond \u003d system.date.getSecond(startDate)\t\n\t\t\n\t\tendDate \u003d eventParams[\u0027endDate\u0027]\n\t\tendHour \u003d system.date.getHour24(endDate)\n\t\tendMinute \u003d system.date.getMinute(endDate)\n\t\tendSecond \u003d system.date.getSecond(endDate)\n\t\t\n\t\t#add event instances\n\t\tif eventParams[\u0027freq\u0027] \u003d\u003d \u0027once\u0027:\n\t\t\tinstanceID \u003d system.db.runNamedQuery(\"Calendar/EventInstance/AddEventInstance\",{\u0027eventID\u0027 : eventID, \u0027startDate\u0027 : startDate, \u0027endDate\u0027 : endDate, \u0027venue\u0027 : eventParams[\u0027venue\u0027], \u0027room\u0027 : eventParams[\u0027room\u0027]})\n\t\t\tfor f in facilitators:\n\t\t\t\tfacilitatorID \u003d f[\u0027id\u0027]\n\t\t\t\tsystem.db.runNamedQuery(\"Calendar/Event Instance People/AddInstanceFacilitator\", {\u0027instanceID\u0027: instanceID, \u0027facilitatorID\u0027: facilitatorID})\n\t\t\tfor v in volunteers:\n\t\t\t\tvolunteerID \u003d v[\u0027id\u0027]\n\t\t\t\tsystem.db.runNamedQuery(\"Calendar/Event Instance People/AddInstanceVolunteer\", {\u0027instanceID\u0027: instanceID, \u0027volunteerID\u0027: volunteerID})\t\t\t\t\n\t\t\tfor s in staff:\n\t\t\t\tstaffID \u003d s[\u0027id\u0027]\n\t\t\t\tsystem.db.runNamedQuery(\"Calendar/Event Instance People/AddInstanceStaff\", {\u0027instanceID\u0027: instanceID, \u0027staffID\u0027: staffID})\n\t\t\t\n\t\tif eventParams[\u0027freq\u0027] \u003d\u003d \u0027hourly\u0027:\n\t\t\tnumberOfHours \u003d system.date.hoursBetween(startDate,endDate)\n\t\t\tendDate \u003d system.date.setTime(endDate,startHour+1,startMinute,startSecond)\n\t\t\t\n\t\t\tfor x in range(numberOfHours) :\n\t\t\t\tinstanceID \u003d system.db.runNamedQuery(\"Calendar/EventInstance/AddEventInstance\",{\u0027eventID\u0027 : eventID, \u0027startDate\u0027 : startDate, \u0027endDate\u0027 : endDate, \u0027venue\u0027 : eventParams[\u0027venue\u0027], \u0027room\u0027 : eventParams[\u0027room\u0027]})\n\t\t\t\tfor f in facilitators:\n\t\t\t\t\tfacilitatorID \u003d f[\u0027id\u0027]\n\t\t\t\t\tsystem.db.runNamedQuery(\"Calendar/Event Instance People/AddInstanceFacilitator\", {\u0027instanceID\u0027: instanceID, \u0027facilitatorID\u0027: facilitatorID})\n\t\t\t\tfor v in volunteers:\n\t\t\t\t\tvolunteerID \u003d v[\u0027id\u0027]\n\t\t\t\t\tsystem.db.runNamedQuery(\"Calendar/Event Instance People/AddInstanceVolunteer\", {\u0027instanceID\u0027: instanceID, \u0027volunteerID\u0027: volunteerID})\t\t\t\t\n\t\t\t\tfor s in staff:\n\t\t\t\t\tstaffID \u003d s[\u0027id\u0027]\n\t\t\t\t\tsystem.db.runNamedQuery(\"Calendar/Event Instance People/AddInstanceStaff\", {\u0027instanceID\u0027: instanceID, \u0027staffID\u0027: staffID})\n\t\t\t\t\n\t\t\t\ttempHour \u003d system.date.getHour24(endDate)\n\t\t\t\ttempMinute \u003d system.date.getMinute(endDate)\n\t\t\t\ttempSecond \u003d system.date.getSecond(endDate)\n\t\t\t\tstartDate \u003d system.date.setTime(startDate,tempHour,tempMinute,tempSecond)\n\t\t\t\tendDate \u003d system.date.setTime(startDate,tempHour+1,tempMinute,tempSecond)\n\t\t\n\t\tif eventParams[\u0027freq\u0027] \u003d\u003d \u0027daily\u0027:\n\t\t\tnumberOfDays \u003d system.date.daysBetween(startDate,endDate)\n\t\t\t\n\t\t\tdate \u003d startDate\n\t\t\tdatePlus \u003d system.date.addDays(date,1)\n\t\t\tdatePlus \u003d system.date.setTime(datePlus,endHour,endMinute,endSecond)\n\t\t\tfor x in range(numberOfDays) :\n\t\t\t\tif (system.date.isAfter(date,startDate) or date \u003d\u003d startDate) and (system.date.isBefore(datePlus,endDate) or datePlus \u003d\u003d endDate):\n\t\t\t\t\tinstanceID \u003d system.db.runNamedQuery(\"Calendar/EventInstance/AddEventInstance\",{\u0027eventID\u0027 : eventID, \u0027startDate\u0027 : date, \u0027endDate\u0027 : datePlus, \u0027venue\u0027 : eventParams[\u0027venue\u0027], \u0027room\u0027 : eventParams[\u0027room\u0027]})\n\t\t\t\t\tfor f in facilitators:\n\t\t\t\t\t\tfacilitatorID \u003d f[\u0027id\u0027]\n\t\t\t\t\t\tsystem.db.runNamedQuery(\"Calendar/Event Instance People/AddInstanceFacilitator\", {\u0027instanceID\u0027: instanceID, \u0027facilitatorID\u0027: facilitatorID})\n\t\t\t\t\tfor v in volunteers:\n\t\t\t\t\t\tvolunteerID \u003d v[\u0027id\u0027]\n\t\t\t\t\t\tsystem.db.runNamedQuery(\"Calendar/Event Instance People/AddInstanceVolunteer\", {\u0027instanceID\u0027: instanceID, \u0027volunteerID\u0027: volunteerID})\t\t\t\t\n\t\t\t\t\tfor s in staff:\n\t\t\t\t\t\tstaffID \u003d s[\u0027id\u0027]\n\t\t\t\t\t\tsystem.db.runNamedQuery(\"Calendar/Event Instance People/AddInstanceStaff\", {\u0027instanceID\u0027: instanceID, \u0027staffID\u0027: staffID})\n\t\t\t\tdate \u003d system.date.addDays(date,1)\n\t\t\t\tdatePlus \u003d system.date.addDays(datePlus,1)\n\t\t\t\n\t\tif eventParams[\u0027freq\u0027] \u003d\u003d \u0027weekly\u0027:\n\t\t\t#calculate days + days selected. Sunday \u003d day 1\n\t\t\tnumberOfWeeks \u003d system.date.weeksBetween(startDate,endDate)\n\t\t\tsystem.perspective.print(message\u003d\"Aantal weken: \" + str(numberOfWeeks), destination\u003d\"all\")\n\t\t\t\n\t\t\tdaysSelected \u003d []\n\t\t\tif eventParams[\u0027sunday\u0027] : daysSelected.append(1)\n\t\t\tif eventParams[\u0027monday\u0027] : daysSelected.append(2)\n\t\t\tif eventParams[\u0027tuesday\u0027] : daysSelected.append(3)  \n\t\t\tif eventParams[\u0027wednesday\u0027] : daysSelected.append(4)\n\t\t\tif eventParams[\u0027thursday\u0027]  : daysSelected.append(5)\n\t\t\tif eventParams[\u0027friday\u0027]  : daysSelected.append(6)\n\t\t\tif eventParams[\u0027saturday\u0027] : daysSelected.append(7)  \n\t\t\t\n\t\t\t# loop trough weeks +2 to make sure all days are covered.\n\t\t\tdate \u003d startDate\n\t\t\tfor x in range(numberOfWeeks +2) :\n\t\t\t\tfor y in daysSelected :\n\t\t\t\t\tdayNumber \u003d y - system.date.getDayOfWeek(date) \n\t\t\t\t\ttempDate \u003d system.date.addDays(date,dayNumber)\n\t\t\t\t\ttempDateEnd \u003d system.date.setTime(tempDate,endHour,endMinute,endSecond)\n\t\t\t\t\t\n\t\t\t\t\t#if endtime is before starttime add an extra day. \n\t\t\t\t\tif system.date.isBefore(tempDateEnd,tempDate) : \n\t\t\t\t\t\ttempDateEnd \u003d system.date.addDays(tempDateEnd,1)\n\t\t\t\t\t\t\n\t\t\t\t\t#check if calculated instance is between start and end dates.\n\t\t\t\t\tif (system.date.isAfter(tempDate,startDate) and system.date.isBefore(tempDate,endDate)) or tempDate \u003d\u003d startDate :\n\t\t\t\t\t\tif (system.date.isAfter(tempDateEnd,startDate)  and system.date.isBefore(tempDateEnd,endDate)) or tempDateEnd \u003d\u003d endDate :\n\t\t\t\t\t\t\tinstanceID \u003d system.db.runNamedQuery(\"Calendar/EventInstance/AddEventInstance\",{\u0027eventID\u0027 : eventID, \u0027startDate\u0027 : tempDate, \u0027endDate\u0027 : tempDateEnd, \u0027venue\u0027 : eventParams[\u0027venue\u0027], \u0027room\u0027 : eventParams[\u0027room\u0027]})\n\t\t\t\t\t\t\tfor f in facilitators:\n\t\t\t\t\t\t\t\tfacilitatorID \u003d f[\u0027id\u0027]\n\t\t\t\t\t\t\t\tsystem.db.runNamedQuery(\"Calendar/Event Instance People/AddInstanceFacilitator\", {\u0027instanceID\u0027: instanceID, \u0027facilitatorID\u0027: facilitatorID})\n\t\t\t\t\t\t\tfor v in volunteers:\n\t\t\t\t\t\t\t\tvolunteerID \u003d v[\u0027id\u0027]\n\t\t\t\t\t\t\t\tsystem.db.runNamedQuery(\"Calendar/Event Instance People/AddInstanceVolunteer\", {\u0027instanceID\u0027: instanceID, \u0027volunteerID\u0027: volunteerID})\t\t\t\t\n\t\t\t\t\t\t\tfor s in staff:\n\t\t\t\t\t\t\t\tstaffID \u003d s[\u0027id\u0027]\n\t\t\t\t\t\t\t\tsystem.db.runNamedQuery(\"Calendar/Event Instance People/AddInstanceStaff\", {\u0027instanceID\u0027: instanceID, \u0027staffID\u0027: staffID})\n\t\t\t\t\n\t\t\t\tdate \u003d system.date.addWeeks(date,1)\n\t\t\t\t\n\t\tif eventParams[\u0027freq\u0027] \u003d\u003d \u0027monthly\u0027:\n\t\t\trepeatType \u003d self.parent.parent.getChild(\"MonthlyRepeatInput\").props.params.repeatType\n\t\t\tif repeatType \u003d\u003d \"monthlydate\" :\n\t\t\t\tnumberOfMonths \u003d system.date.monthsBetween(startDate,endDate)\n\t\t\t\ttempDate \u003d startDate\n\t\t\t\ttempDateEnd \u003d system.date.setTime(tempDate,endHour,endMinute,endSecond)\n\t\t\t\t\n\t\t\t\tfor x in range(numberOfMonths) :\n\t\t\t\t\tinstanceID \u003d system.db.runNamedQuery(\"Calendar/EventInstance/AddEventInstance\",{\u0027eventID\u0027 : eventID, \u0027startDate\u0027 : tempDate, \u0027endDate\u0027 : tempDateEnd, \u0027venue\u0027 : eventParams[\u0027venue\u0027], \u0027room\u0027 : eventParams[\u0027room\u0027]})\n\t\t\t\t\tfor f in facilitators:\n\t\t\t\t\t\tfacilitatorID \u003d f[\u0027id\u0027]\n\t\t\t\t\t\tsystem.db.runNamedQuery(\"Calendar/Event Instance People/AddInstanceFacilitator\", {\u0027instanceID\u0027: instanceID, \u0027facilitatorID\u0027: facilitatorID})\n\t\t\t\t\tfor v in volunteers:\n\t\t\t\t\t\tvolunteerID \u003d v[\u0027id\u0027]\n\t\t\t\t\t\tsystem.db.runNamedQuery(\"Calendar/Event Instance People/AddInstanceVolunteer\", {\u0027instanceID\u0027: instanceID, \u0027volunteerID\u0027: volunteerID})\t\t\t\t\n\t\t\t\t\tfor s in staff:\n\t\t\t\t\t\tstaffID \u003d s[\u0027id\u0027]\n\t\t\t\t\t\tsystem.db.runNamedQuery(\"Calendar/Event Instance People/AddInstanceStaff\", {\u0027instanceID\u0027: instanceID, \u0027staffID\u0027: staffID})\n\t\t\t\t\ttempDate \u003d system.date.addMonths(tempDate,1)\n\t\t\t\t\ttempDateEnd \u003d system.date.addMonths(tempDateEnd,1)\n\t\t\t\t\t\n\t\t\tif repeatType \u003d\u003d \"monthlyday\":\n\t\t\t\ttempDate \u003d system.date.getDate(system.date.getYear(startDate),system.date.getMonth(startDate),1)\n\t\t\t\ttempDay \u003d system.date.getDayOfWeek(tempDate)\n\t\t\t\tnumberOfDaysInMonth \u003d system.date.daysBetween(tempDate,system.date.addMonths(tempDate,1))\n\t\t\t\tlastDay \u003d system.date.getDate(system.date.getYear(startDate),system.date.getMonth(startDate),numberOfDaysInMonth)\n\t\t\t\t\n\t\t\t\tdaySelected \u003d 0\n\t\t\t\tdayDifference \u003d0\t\t\t\t\n\t\t\t\t# check selected day\n\t\t\t\tif len(byweekday) \u003d\u003d 1:\n\t\t\t\t\tif eventParams[\u0027sunday\u0027] : daySelected \u003d 1\n\t\t\t\t\tif eventParams[\u0027monday\u0027] : daySelected \u003d2 \n\t\t\t\t\tif eventParams[\u0027tuesday\u0027] : daySelected \u003d3\n\t\t\t\t\tif eventParams[\u0027wednesday\u0027] : daySelected \u003d4\n\t\t\t\t\tif eventParams[\u0027thursday\u0027]  : daySelected \u003d5\n\t\t\t\t\tif eventParams[\u0027friday\u0027]  : daySelected \u003d6\n\t\t\t\t\tif eventParams[\u0027saturday\u0027] : daySelected \u003d7\n\t\t\t\t\n\t\t\t\telif len(byweekday) \u003d\u003d 2:\n\t\t\t\t\tdaySelected \u003d 7 if eventParams[\u0027bysetpos\u0027] \u003d\u003d 1 else 1\n\t\t\t\t\t\n\t\t\t\telif len(byweekday) \u003d\u003d 5:\n\t\t\t\t\tif eventParams[\u0027bysetpos\u0027] !\u003d -1:\n\t\t\t\t\t\tdaySelected \u003d eventParams[\u0027bysetpos\u0027] + 1\n\t\t\t\t\telse :\n\t\t\t\t\t\tdaySelected \u003d system.date.getDayOfWeek(lastDay)\n\t\t\t\t\t\tif daySelected \u003d\u003d 7 or daySelected \u003d\u003d 1:\n\t\t\t\t\t\t\tdaySelected \u003d 6\n\t\n\t\t\t\telif len(byweekday) \u003d\u003d 7:\n\t\t\t\t\tif eventParams[\u0027bysetpos\u0027] !\u003d -1:\n\t\t\t\t\t\tdaySelected \u003d eventParams[\u0027bysetpos\u0027] + 1\n\t\t\t\t\telse :\n\t\t\t\t\t\tdaySelected \u003d system.date.getDayOfWeek(lastDay)\n\t\t\t\t\t\t\t\n\t\t\t\t# calculate days to add\t\t\t\t\t\n\t\t\t\tif eventParams[\u0027bysetpos\u0027] !\u003d -1 :\n\t\t\t\t\tdayDifference \u003d 7 + (daySelected - tempDay) if tempDay \u003e daySelected else daySelected - tempDay\n\t\t\t\t\tdayDifference \u003d dayDifference + (eventParams[\u0027bysetpos\u0027] -1)*7\n\t\t\t\telse :\n\t\t\t\t\tlastDayNumber \u003d system.date.getDayOfWeek(lastDay)\n\t\t\t\t\tdayDifference \u003d 7 - (daySelected - lastDayNumber) if lastDayNumber \u003c daySelected else daySelected - lastDayNumber\n\t\t\t\t\tdayDifference \u003d dayDifference *-1 if dayDifference \u003e0 else dayDifference\n\t\t\t\t\tdayDifference \u003d numberOfDaysInMonth + dayDifference -1\n\t\t\t\t\n\t\t\t\ttempDate \u003d system.date.addDays(startDate,dayDifference)\n\t\t\t\ttempDateEnd \u003d system.date.setTime(tempDate,endHour,endMinute,endSecond)\n\t\t\t\t\n\t\t\t\tnumberOfMonths \u003d system.date.monthsBetween(startDate,endDate)\n\t\t\t\t\n\t\t\t\tfor x in range(numberOfMonths) :\n\t\t\t\t\tinstanceID \u003d system.db.runNamedQuery(\"Calendar/EventInstance/AddEventInstance\",{\u0027eventID\u0027 : eventID, \u0027startDate\u0027 : tempDate, \u0027endDate\u0027 : tempDateEnd, \u0027venue\u0027 : eventParams[\u0027venue\u0027], \u0027room\u0027 : eventParams[\u0027room\u0027]})\n\t\t\t\t\tfor f in facilitators:\n\t\t\t\t\t\tfacilitatorID \u003d f[\u0027id\u0027]\n\t\t\t\t\t\tsystem.db.runNamedQuery(\"Calendar/Event Instance People/AddInstanceFacilitator\", {\u0027instanceID\u0027: instanceID, \u0027facilitatorID\u0027: facilitatorID})\n\t\t\t\t\tfor v in volunteers:\n\t\t\t\t\t\tvolunteerID \u003d v[\u0027id\u0027]\n\t\t\t\t\t\tsystem.db.runNamedQuery(\"Calendar/Event Instance People/AddInstanceVolunteer\", {\u0027instanceID\u0027: instanceID, \u0027volunteerID\u0027: volunteerID})\t\t\t\t\n\t\t\t\t\tfor s in staff:\n\t\t\t\t\t\tstaffID \u003d s[\u0027id\u0027]\n\t\t\t\t\t\tsystem.db.runNamedQuery(\"Calendar/Event Instance People/AddInstanceStaff\", {\u0027instanceID\u0027: instanceID, \u0027staffID\u0027: staffID})\t\n\t\n\t\t\t\n\t\tif eventParams[\u0027freq\u0027] \u003d\u003d \u0027yearly\u0027:\n\t\t\trepeatType \u003d self.parent.parent.getChild(\"YearlyRepeatInput\").props.params.repeatType\n\t\t\tif repeatType \u003d\u003d \u0027yearlydate\u0027:\n\t\t\t\tnumberOfYears \u003d system.date.yearsBetween(startDate,endDate)\n\t\t\t\ttempDate \u003d startDate\n\t\t\t\ttempDateEnd \u003d system.date.setTime(tempDate,endHour,endMinute,endSecond)\n\t\t\t\t\n\t\t\t\tfor x in range(numberOfYears) :\n\t\t\t\t\tinstanceID \u003d system.db.runNamedQuery(\"Calendar/EventInstance/AddEventInstance\",{\u0027eventID\u0027 : eventID, \u0027startDate\u0027 : tempDate, \u0027endDate\u0027 : tempDateEnd, \u0027venue\u0027 : eventParams[\u0027venue\u0027], \u0027room\u0027 : eventParams[\u0027room\u0027]})\n\t\t\t\t\tfor f in facilitators:\n\t\t\t\t\t\tfacilitatorID \u003d f[\u0027id\u0027]\n\t\t\t\t\t\tsystem.db.runNamedQuery(\"Calendar/Event Instance People/AddInstanceFacilitator\", {\u0027instanceID\u0027: instanceID, \u0027facilitatorID\u0027: facilitatorID})\n\t\t\t\t\tfor v in volunteers:\n\t\t\t\t\t\tvolunteerID \u003d v[\u0027id\u0027]\n\t\t\t\t\t\tsystem.db.runNamedQuery(\"Calendar/Event Instance People/AddInstanceVolunteer\", {\u0027instanceID\u0027: instanceID, \u0027volunteerID\u0027: volunteerID})\t\t\t\t\n\t\t\t\t\tfor s in staff:\n\t\t\t\t\t\tstaffID \u003d s[\u0027id\u0027]\n\t\t\t\t\t\tsystem.db.runNamedQuery(\"Calendar/Event Instance People/AddInstanceStaff\", {\u0027instanceID\u0027: instanceID, \u0027staffID\u0027: staffID})\n\t\t\t\t\ttempDate \u003d system.date.addYears(tempDate,1)\n\t\t\t\t\ttempDateEnd \u003d system.date.addYears(tempDateEnd,1)\n\t\t\t\n\t\t\tif repeatType \u003d\u003d \u0027yearlyday\u0027:\n\t\t\t\tmonth \u003d self.parent.parent.getChild(\"YearlyRepeatInput\").props.params.yearlyDay_bymonth -1\n\t\t\t\ttempDate \u003d system.date.getDate(system.date.getYear(startDate),month,1)\n\t\t\t\ttempDate \u003d system.date.setTime(tempDate,startHour,startMinute,startSecond)\n\t\t\t\ttempDay \u003d system.date.getDayOfWeek(tempDate)\n\t\t\t\tsystem.perspective.print(message\u003dstr(tempDate), destination\u003d\"all\")\n\t\t\t\tnumberOfDaysInMonth \u003d system.date.daysBetween(tempDate,system.date.addMonths(tempDate,1))\n\t\t\t\tlastDay \u003d system.date.getDate(system.date.getYear(tempDate),system.date.getMonth(tempDate),numberOfDaysInMonth)\n\t\t\t\t\n\t\t\t\tdaySelected \u003d 0\n\t\t\t\tdayDifference \u003d0\t\t\t\t\n\t\t\t\t# check selected day\n\t\t\t\tif len(byweekday) \u003d\u003d 1:\n\t\t\t\t\tif eventParams[\u0027sunday\u0027] : daySelected \u003d 1\n\t\t\t\t\tif eventParams[\u0027monday\u0027] : daySelected \u003d2 \n\t\t\t\t\tif eventParams[\u0027tuesday\u0027] : daySelected \u003d3\n\t\t\t\t\tif eventParams[\u0027wednesday\u0027] : daySelected \u003d4\n\t\t\t\t\tif eventParams[\u0027thursday\u0027]  : daySelected \u003d5\n\t\t\t\t\tif eventParams[\u0027friday\u0027]  : daySelected \u003d6\n\t\t\t\t\tif eventParams[\u0027saturday\u0027] : daySelected \u003d7\n\t\t\t\t\n\t\t\t\telif len(byweekday) \u003d\u003d 2:\n\t\t\t\t\tdaySelected \u003d 7 if eventParams[\u0027bysetpos\u0027] \u003d\u003d 1 else 1\n\t\t\t\t\t\n\t\t\t\telif len(byweekday) \u003d\u003d 5:\n\t\t\t\t\tif eventParams[\u0027bysetpos\u0027] !\u003d -1:\n\t\t\t\t\t\tdaySelected \u003d eventParams[\u0027bysetpos\u0027] + 1\n\t\t\t\t\telse :\n\t\t\t\t\t\tdaySelected \u003d system.date.getDayOfWeek(lastDay)\n\t\t\t\t\t\tif daySelected \u003d\u003d 7 or daySelected \u003d\u003d 1:\n\t\t\t\t\t\t\tdaySelected \u003d 6\n\t\n\t\t\t\telif len(byweekday) \u003d\u003d 7:\n\t\t\t\t\tif eventParams[\u0027bysetpos\u0027] !\u003d -1:\n\t\t\t\t\t\tdaySelected \u003d eventParams[\u0027bysetpos\u0027] + 1\n\t\t\t\t\telse :\n\t\t\t\t\t\tdaySelected \u003d system.date.getDayOfWeek(lastDay)\n\t\t\t\t\n\t\t\t\t# calculate days to add\t\t\t\t\t\n\t\t\t\tif eventParams[\u0027bysetpos\u0027] !\u003d -1 :\n\t\t\t\t\tdayDifference \u003d 7 + (daySelected - tempDay) if tempDay \u003e daySelected else daySelected - tempDay\n\t\t\t\t\tdayDifference \u003d dayDifference + (eventParams[\u0027bysetpos\u0027] -1)*7\n\t\t\t\t\t\n\t\t\t\telse :\n\t\t\t\t\tlastDayNumber \u003d system.date.getDayOfWeek(lastDay)\n\t\t\t\t\tdayDifference \u003d 7 - (daySelected - lastDayNumber) if lastDayNumber \u003c daySelected else daySelected - lastDayNumber\n\t\t\t\t\tdayDifference \u003d dayDifference *-1 if dayDifference \u003e0 else dayDifference\n\t\t\t\t\tdayDifference \u003d numberOfDaysInMonth + dayDifference -1\n\t\t\t\t\t\n\t\t\t\tsystem.perspective.print(message\u003dstr(dayDifference), destination\u003d\"all\")\n\t\t\t\ttempDate \u003d system.date.addDays(tempDate,dayDifference)\n\t\t\t\ttempDateEnd \u003d system.date.setTime(tempDate,endHour,endMinute,endSecond)\n\t\t\t\tnumberOfYears \u003d system.date.yearsBetween(startDate,endDate)\n\t\t\t\t\n\t\t\t\tfor x in range(numberOfYears) :\n\t\t\t\t\tinstanceID \u003d system.db.runNamedQuery(\"Calendar/EventInstance/AddEventInstance\",{\u0027eventID\u0027 : eventID, \u0027startDate\u0027 : tempDate, \u0027endDate\u0027 : tempDateEnd, \u0027venue\u0027 : eventParams[\u0027venue\u0027], \u0027room\u0027 : eventParams[\u0027room\u0027]})\n\t\t\t\t\tfor f in facilitators:\n\t\t\t\t\t\tfacilitatorID \u003d f[\u0027id\u0027]\n\t\t\t\t\t\tsystem.db.runNamedQuery(\"Calendar/Event Instance People/AddInstanceFacilitator\", {\u0027instanceID\u0027: instanceID, \u0027facilitatorID\u0027: facilitatorID})\n\t\t\t\t\tfor v in volunteers:\n\t\t\t\t\t\tvolunteerID \u003d v[\u0027id\u0027]\n\t\t\t\t\t\tsystem.db.runNamedQuery(\"Calendar/Event Instance People/AddInstanceVolunteer\", {\u0027instanceID\u0027: instanceID, \u0027volunteerID\u0027: volunteerID})\t\t\t\t\n\t\t\t\t\tfor s in staff:\n\t\t\t\t\t\tstaffID \u003d s[\u0027id\u0027]\n\t\t\t\t\t\tsystem.db.runNamedQuery(\"Calendar/Event Instance People/AddInstanceStaff\", {\u0027instanceID\u0027: instanceID, \u0027staffID\u0027: staffID})\n\t\t\t\t\ttempDate \u003d system.date.addYears(tempDate,1)\n\t\t\t\t\ttempDateEnd \u003d system.date.addYears(tempDateEnd,1)\n\t\t\t\n\t#send a message that will reload the events in the calendar\n\tpayload \u003d None\n\tsystem.perspective.sendMessage(\u0027CreateCalendarEvent\u0027, payload, scope \u003d \u0027session\u0027)\n\tpayload \u003d {\u0027Refresh\u0027 : True}\n\tsystem.perspective.sendMessage(\u0027RefreshEventList\u0027, payload, scope \u003d \u0027session\u0027)\n\t"
+                    },
+                    "scope": "G",
+                    "type": "script"
+                  },
+                  {
+                    "config": {
+                      "id": "AddEvent",
+                      "type": "close"
+                    },
+                    "scope": "C",
+                    "type": "dock"
+                  }
+                ]
+              }
+            },
+            "meta": {
+              "name": "Create_Btn"
+            },
+            "position": {
+              "basis": "150px"
+            },
+            "propConfig": {
+              "props.text": {
+                "binding": {
+                  "config": {
+                    "expression": "If({view.params.isUpdateEvent}, \"Update\", \"Create\")"
+                  },
+                  "type": "expr"
+                }
+              }
+            },
+            "props": {
+              "style": {
+                "classes": "Buttons/Main",
+                "marginLeft": 20,
+                "marginRight": 20
+              }
+            },
+            "type": "ia.input.button"
+          },
+          {
+            "events": {
+              "component": {
+                "onActionPerformed": {
+                  "config": {
+                    "id": "AddEvent",
+                    "type": "close"
+                  },
+                  "scope": "C",
+                  "type": "dock"
+                }
+              }
+            },
+            "meta": {
+              "name": "Cancel_Btn"
+            },
+            "position": {
+              "basis": "150px"
+            },
+            "props": {
+              "style": {
+                "classes": "Buttons/Btn_Orange_Outline",
+                "marginLeft": 20,
+                "marginRight": 20
+              },
+              "text": "Cancel"
+            },
+            "type": "ia.input.button"
+          },
+          {
+            "events": {
+              "component": {
+                "onActionPerformed": [
+                  {
+                    "config": {
+                      "script": "\t\n\tsystem.db.runNamedQuery(\"Calendar/DeleteEvent\", {\u0027eventID\u0027: self.view.params.eventId})\n\t\n\t#send a message that will reload the events in the calendar\n\tpayload \u003d None\n\tsystem.perspective.sendMessage(\u0027CreateCalendarEvent\u0027, payload, scope \u003d \u0027session\u0027)\n\tpayload \u003d {\u0027Refresh\u0027 : True}\n\tsystem.perspective.sendMessage(\u0027RefreshEventList\u0027, payload, scope \u003d \u0027session\u0027)"
+                    },
+                    "scope": "G",
+                    "type": "script"
+                  },
+                  {
+                    "config": {
+                      "id": "AddEvent",
+                      "type": "close"
+                    },
+                    "scope": "C",
+                    "type": "dock"
+                  }
+                ]
+              }
+            },
+            "meta": {
+              "name": "Delete_Btn"
+            },
+            "position": {
+              "basis": "150px"
+            },
+            "propConfig": {
+              "meta.visible": {
+                "binding": {
+                  "config": {
+                    "path": "view.params.isUpdateEvent"
+                  },
+                  "type": "property"
+                }
+              }
+            },
+            "props": {
+              "style": {
+                "classes": "Buttons/Delete",
+                "marginLeft": 20,
+                "marginRight": 20
+              },
+              "text": "Delete"
+            },
+            "type": "ia.input.button"
+          }
+        ],
+        "meta": {
+          "name": "FlexContainer Buttons"
+        },
+        "position": {
+          "basis": "60px",
+          "shrink": 0
+        },
+        "props": {
+          "alignContent": "center",
+          "style": {
+            "borderBottomColor": "#e6e6e6",
+            "borderBottomStyle": "solid",
+            "borderBottomWidth": 1,
+            "borderTopColor": "#E6E6E6",
+            "borderTopStyle": "solid",
+            "borderTopWidth": 1,
+            "paddingBottom": "20px",
+            "paddingTop": "5px"
+          }
+        },
+        "type": "ia.container.flex"
+      }
+    ],
+    "custom": {
+      "bottom-margin": "5px",
+      "left-margin": "25px",
+      "right-margin": "25px",
+      "top-margin": "5px"
+    },
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column",
+      "style": {
+        "classes": "Background/Default"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

@@ -1,0 +1,168 @@
+{
+  "custom": {
+    "data": [
+      {
+        "case_note": "Note",
+        "date": "Oct 01 2022",
+        "id": 55544,
+        "time": "04:19 PM",
+        "user": null
+      }
+    ]
+  },
+  "params": {
+    "More": false,
+    "participantID": 431697
+  },
+  "propConfig": {
+    "custom.data": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "participantID": "{view.params.participantID}"
+          },
+          "queryPath": "Participants/Preview/Select Last Case Note",
+          "returnFormat": "dataset"
+        },
+        "transforms": [
+          {
+            "code": "\t#data is the data object to return\n\tdata \u003d []\n\titem \u003d {}\n\tif value !\u003d None and value.getRowCount() \u003e 0:\n\t\titem[\u0027id\u0027] \u003d value.getValueAt(0, \"id\")\n\t\titem[\u0027user\u0027] \u003d value.getValueAt(0,\u0027user\u0027)\n\t\titem[\u0027case_note\u0027] \u003d value.getValueAt(0,\u0027case_note\u0027)\n\t\ttime_created \u003d value.getValueAt(0,\u0027time_created\u0027)\n\t\titem[\u0027date\u0027] \u003d system.date.format(time_created,\"MMM dd yyyy\")\n\t\titem[\u0027time\u0027] \u003d system.date.format(time_created,\"hh:mm a\")\n\telse:\n\t\titem[\u0027id\u0027] \u003d \u0027\u0027\n\t\titem[\u0027user\u0027] \u003d \"No Case Note Entered Yet.\"\n\t\titem[\u0027case_note\u0027] \u003d \u0027\u0027\n\t\titem[\u0027date\u0027] \u003d \u0027\u0027\n\t\titem[\u0027time\u0027] \u003d \u0027\u0027\n\t\t\n\tdata.append(item)\n\t\n\treturn data",
+            "type": "script"
+          }
+        ],
+        "type": "query"
+      },
+      "persistent": true
+    },
+    "params.More": {
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.participantID": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 200,
+      "width": 600
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "Label_Date_User"
+        },
+        "position": {
+          "basis": "25px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.text": {
+            "binding": {
+              "config": {
+                "expression": "if({view.custom.data[0].date} !\u003d \"\", \r\n\tconcat({view.custom.data[0].date},\u0027 - \u0027,{view.custom.data[0].user}),\r\n\t{view.custom.data[0].user})"
+              },
+              "type": "expr"
+            }
+          }
+        },
+        "props": {
+          "style": {
+            "classes": "Text/About_description",
+            "paddingLeft": "20px"
+          }
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "meta": {
+          "name": "Label_CaseNote"
+        },
+        "position": {
+          "shrink": 0
+        },
+        "propConfig": {
+          "position.basis": {
+            "binding": {
+              "config": {
+                "expression": "if({view.params.More},\u0027140px\u0027,\u002725px\u0027)"
+              },
+              "type": "expr"
+            }
+          },
+          "props.text": {
+            "binding": {
+              "config": {
+                "expression": "{view.custom.data[0].case_note}"
+              },
+              "type": "expr"
+            }
+          }
+        },
+        "props": {
+          "alignVertical": "top",
+          "style": {
+            "classes": "Text/About_info",
+            "overflow": "hidden",
+            "overflowWrap": "break-word",
+            "paddingLeft": "20px",
+            "paddingTop": "5px",
+            "textOverflow": "ellipsis"
+          }
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "events": {
+          "dom": {
+            "onClick": {
+              "config": {
+                "script": "\tself.view.params.More \u003d not self.view.params.More "
+              },
+              "scope": "G",
+              "type": "script"
+            }
+          }
+        },
+        "meta": {
+          "name": "Label_More"
+        },
+        "position": {
+          "basis": "25px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.text": {
+            "binding": {
+              "config": {
+                "expression": "if({view.params.More}, \u0027LESS\u0027, \u0027MORE\u0027)"
+              },
+              "type": "expr"
+            }
+          }
+        },
+        "props": {
+          "style": {
+            "classes": "Text/About_info",
+            "paddingLeft": "20px",
+            "textDecoration": "underline"
+          }
+        },
+        "type": "ia.display.label"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column",
+      "style": {
+        "classes": "Background/Default"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

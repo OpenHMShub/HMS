@@ -1,0 +1,850 @@
+{
+  "custom": {},
+  "params": {},
+  "props": {
+    "defaultSize": {
+      "height": 899,
+      "width": 1815
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "txaQuery"
+        },
+        "position": {
+          "height": 338,
+          "width": 450,
+          "x": 0.0057,
+          "y": 41.00370000000001
+        },
+        "props": {
+          "style": {
+            "color": "#000000"
+          },
+          "text": "SELECT  [lodging].[Bed].[id] AS [bedId] \n\t, [lodging].[Bed].[bedName] AS [Bed] \n\tFROM [RITIOps].[lodging].[Bed] \n\tWHERE  [lodging].[Bed].[timeRetired] IS NULL \n\t"
+        },
+        "type": "ia.input.text-area"
+      },
+      {
+        "meta": {
+          "name": "txaJsonQuery"
+        },
+        "position": {
+          "height": 346,
+          "width": 472,
+          "x": 498.006,
+          "y": 34.9994
+        },
+        "propConfig": {
+          "props.text": {
+            "onChange": {
+              "enabled": null,
+              "script": "\t\n\ttxaJsonQueryPreety \u003d self.getSibling(\"txaJsonQueryPreety\")\n\tif not(self.props.text):\n\t\ttxaJsonQueryPreety.props.text \u003d None\n\telse:\n\t\timport json\n\t\t\n\t\tpyObj \u003d json.loads(self.props.text) \n\t\tjsonObj \u003d json.dumps(pyObj, indent\u003d4) \n\t\ttxaJsonQueryPreety.props.text \u003d jsonObj\n\t"
+            }
+          }
+        },
+        "props": {
+          "style": {
+            "backgroundColor": "#000000",
+            "color": "#FFFFFF"
+          },
+          "text": "{\"select\":[{\"column\":\"[lodging].[Bed].[id]\",\"alias\":\"bedId\"},{\"column\":\"[lodging].[Bed].[bedName]\",\"alias\":\"Bed\"}],\"from\":\"[RITIOps].[lodging].[Bed]\",\"where\":\"[lodging].[Bed].[timeRetired] IS NULL\"}"
+        },
+        "type": "ia.input.text-area"
+      },
+      {
+        "events": {
+          "component": {
+            "onActionPerformed": {
+              "config": {
+                "script": "\texampleSqlQuery \u003d \"\"\"SELECT  [lodging].[Bed].[id] AS [bedId] \n\t, [lodging].[Bed].[bedName] AS [Bed] \n\tFROM [RITIOps].[lodging].[Bed] \n\tWHERE  [lodging].[Bed].[timeRetired] IS NULL \n\t\"\"\" \n\t\n\troot \u003d self.parent\n\ttxaQuery \u003d self.getSibling(\"txaQuery\")\n\ttxaJsonQuery \u003d self.getSibling(\"txaJsonQuery\")\n\tif not(txaQuery.props.text):\n\t\ttxaQuery.props.text \u003d exampleSqlQuery\n\t\n\tquery \u003d txaQuery.props.text\n\ttry:\n\t\tjsonQuery \u003d root.prepQueryToJson(query)\n\texcept:\n\t\tfrom traceback import format_exc\n\t\ttxaJsonQuery.props.text \u003d format_exc()\n\ttxaJsonQuery.props.text \u003d jsonQuery"
+              },
+              "scope": "G",
+              "type": "script"
+            }
+          }
+        },
+        "meta": {
+          "name": "Button"
+        },
+        "position": {
+          "height": 37,
+          "rotate": {
+            "anchor": "25% -838%"
+          },
+          "width": 134,
+          "x": 364.00032479858396,
+          "y": -2.022959656982422
+        },
+        "props": {
+          "text": "(1) -\u003e convert -\u003e"
+        },
+        "type": "ia.input.button"
+      },
+      {
+        "events": {
+          "component": {
+            "onActionPerformed": {
+              "config": {
+                "script": "\troot \u003d self.parent\n\ttxaJsonQuery \u003d self.getSibling(\"txaJsonQuery\")\n\ttxaJsonWherePlus \u003d self.getSibling(\"txaJsonWherePlus\")\n\ttxaJsonQueryPreety \u003d self.getSibling(\"txaJsonQueryPreety\")\n\ttxaQueryArgs \u003d self.getSibling(\"txaQueryArgs\")\n\ttxaError \u003d self.getSibling(\"txaError\")\n\ttblA \u003d self.getSibling(\"tblA\")\n\t\n\ttxaError.props.text \u003d \u0027\u0027\n\t\n\tjsonQuery \u003d txaJsonQuery.props.text \n\t\n\tif jsonQuery is None:\n\t\traise ValueError(\u0027JsonQuery is null!\u0027)\n\t\t\n\tjsonWherePlus \u003d txaJsonWherePlus.props.text\n\t\n\tfrom jsonizer.convert import toPrepQuery\n\n\tquery , args \u003d toPrepQuery(jsonQuery, jsonWherePlus \u003d jsonWherePlus, top \u003d 8, offset \u003d 0, orderby \u003d \"[lodging].[Bed].[id]\")\n\ttxaQueryArgs.props.text \u003d \u0027query , args:\\n{} , {}\u0027.format(query , args)\n\t\n\ttry:\n\t\t\n\t\ttblA.props.data \u003d system.db.runPrepQuery(query, args, \u0027RITIOps\u0027)\n\n\texcept:\n\t\timport sys\n\t\tfrom java.lang import Exception\n\t\texceptionType, exception, stacktrace \u003d sys.exc_info()\n\t\tif exceptionType \u003d\u003d Exception:\n\t\t\texception \u003d exception.getCause()\t\t\n\t\t\n\t\tfrom traceback import format_exc\n\t\ttxaError.props.text +\u003d \u0027\\nFailed exec \\n{} \\n{}\u0027.format(str(exception), format_exc())\n\t\t\n\t"
+              },
+              "scope": "G",
+              "type": "script"
+            }
+          }
+        },
+        "meta": {
+          "name": "Button_0"
+        },
+        "position": {
+          "height": 34,
+          "rotate": {
+            "anchor": "-94% 297%"
+          },
+          "width": 264,
+          "x": 666.01,
+          "y": 585.0616051940918
+        },
+        "props": {
+          "text": "(3) -\u003e exec -\u003e"
+        },
+        "type": "ia.input.button"
+      },
+      {
+        "meta": {
+          "name": "tblA"
+        },
+        "position": {
+          "height": 329,
+          "width": 735,
+          "x": 1027.439559173584,
+          "y": 590.6377580871582
+        },
+        "props": {
+          "data": {
+            "$": [
+              "ds",
+              192,
+              1605790358775
+            ],
+            "$columns": [
+              {
+                "data": [
+                  51,
+                  52,
+                  53,
+                  54,
+                  55,
+                  56,
+                  57,
+                  58
+                ],
+                "name": "bedId",
+                "type": "Integer"
+              },
+              {
+                "data": [
+                  "Bed 1",
+                  "Bed 2",
+                  "Bed 3",
+                  "Bed 4",
+                  "Bed 5",
+                  "Bed 6",
+                  "Bed 7",
+                  "Bed 8"
+                ],
+                "name": "Bed",
+                "type": "String"
+              }
+            ]
+          },
+          "style": {
+            "backgroundColor": "#008080"
+          }
+        },
+        "type": "ia.display.table"
+      },
+      {
+        "events": {
+          "component": {
+            "onActionPerformed": {
+              "config": {
+                "script": "\troot \u003d self.parent\n\ttxaQuery \u003d self.getSibling(\"txaQuery\")\n\ttxaJsonQuery \u003d self.getSibling(\"txaJsonQuery\")\n\ttxaJsonQueryPreety \u003d self.getSibling(\"txaJsonQueryPreety\")\n\ttxaWherePlus \u003d self.getSibling(\"txaWherePlus\")\n\ttxaJsonWherePlus \u003d self.getSibling(\"txaJsonWherePlus\")\n\ttxaJsonWherePlusPreety \u003d self.getSibling(\"txaJsonWherePlusPreety\")\n\ttxaQueryArgs \u003d self.getSibling(\"txaQueryArgs\")\n\ttxaError \u003d self.getSibling(\"txaError\")\n\t\n\t\n\ttblA \u003d self.getSibling(\"tblA\")\n\ttxaQuery.props.text \u003d None\n\ttxaJsonQuery.props.text \u003d None \n\ttxaJsonQueryPreety.props.text \u003d None\n\ttxaWherePlus.props.text \u003d None\n\ttxaJsonWherePlus.props.text \u003d None\n\ttxaJsonWherePlusPreety.props.text \u003d None\n\ttxaQueryArgs.props.text \u003d None\n\ttxaError.props.text \u003d \u0027\u0027\n\tsystem.perspective.print( dir(txaQueryArgs))\n\ttblA.props.data \u003d None\n\t\n\t#txaQueryArgs.__setattr__(\u0027text\u0027,\u0027xyz\u0027)"
+              },
+              "scope": "G",
+              "type": "script"
+            }
+          }
+        },
+        "meta": {
+          "name": "Button_1"
+        },
+        "position": {
+          "height": 34,
+          "rotate": {
+            "anchor": "323% 50%"
+          },
+          "width": 80,
+          "x": 1722.3217491149903,
+          "y": 0.4820703430175399
+        },
+        "props": {
+          "text": "clear all"
+        },
+        "type": "ia.input.button"
+      },
+      {
+        "meta": {
+          "name": "txaJsonQueryPreety"
+        },
+        "position": {
+          "height": 542,
+          "width": 374,
+          "x": 1027.99,
+          "y": 30.9708
+        },
+        "props": {
+          "style": {
+            "backgroundColor": "#D5D5D5",
+            "color": "#2B2B2B",
+            "fontFamily": "inherit",
+            "fontSize": 10
+          },
+          "text": "{\n    \"select\": [\n        {\n            \"column\": \"[lodging].[Bed].[id]\", \n            \"alias\": \"bedId\"\n        }, \n        {\n            \"column\": \"[lodging].[Bed].[bedName]\", \n            \"alias\": \"Bed\"\n        }\n    ], \n    \"from\": \"[RITIOps].[lodging].[Bed]\", \n    \"where\": \"[lodging].[Bed].[timeRetired] IS NULL\"\n}"
+        },
+        "type": "ia.input.text-area"
+      },
+      {
+        "meta": {
+          "name": "txaJsonWherePlus"
+        },
+        "position": {
+          "height": 133,
+          "width": 478,
+          "x": 492.011,
+          "y": 425.946
+        },
+        "propConfig": {
+          "props.text": {
+            "onChange": {
+              "enabled": null,
+              "script": "\ttxaPrep \u003d self.getSibling(\"txaJsonWherePlusPreety\")\n\t#txaPrep.props.text \u003d \u0027x\u0027\n\tif not(self.props.text):\n\t\ttxaPrep.props.text \u003d None\n\telse:\t\n\t\timport json\n\t\t\n\t\tpyObj \u003d json.loads(self.props.text) \n\t\tsystem.perspective.print((\u0027pyObj\u0027, pyObj))\n\t\tjsonObj \u003d json.dumps(pyObj, indent\u003d4) #, separators\u003d(\u0027,\u0027, \u0027: \u0027))\n\t\ttxaPrep.props.text \u003d jsonObj\t"
+            }
+          }
+        },
+        "props": {
+          "style": {
+            "backgroundColor": "#000000",
+            "color": "#FFFFFF"
+          },
+          "text": "[{\"arg\":45,\"cnd\":\"[lodging].[Bed].[roomId] \u003d ?\"}]"
+        },
+        "type": "ia.input.text-area"
+      },
+      {
+        "meta": {
+          "name": "txaQueryArgs"
+        },
+        "position": {
+          "height": 270,
+          "width": 445.99999999999994,
+          "x": 5.0066,
+          "y": 628.457
+        },
+        "props": {
+          "style": {
+            "backgroundColor": "#D5D5D5",
+            "color": "#000000",
+            "fontFamily": "inherit",
+            "fontSize": 12
+          },
+          "text": "query , args:\nSELECT [lodging].[Bed].[id] AS [bedId], [lodging].[Bed].[bedName] AS [Bed] FROM [RITIOps].[lodging].[Bed]  WHERE ([lodging].[Bed].[timeRetired] IS NULL) AND ([lodging].[Bed].[roomId] \u003d ?) ORDER BY [lodging].[Bed].[id] OFFSET 0 ROWS FETCH NEXT 8 ROWS ONLY , [45]"
+        },
+        "type": "ia.input.text-area"
+      },
+      {
+        "meta": {
+          "name": "Label"
+        },
+        "position": {
+          "height": 32,
+          "rotate": {
+            "anchor": "25% 25%"
+          },
+          "width": 343,
+          "x": 2,
+          "y": -3
+        },
+        "props": {
+          "style": {
+            "backgroundColor": "#D5D5D5",
+            "color": "#2B2B2B",
+            "fontWeight": "bold"
+          },
+          "text": "Simple Sql Query (Select + From + Where)"
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "meta": {
+          "name": "Label_0"
+        },
+        "position": {
+          "height": 32,
+          "rotate": {
+            "anchor": "25% 25%"
+          },
+          "width": 276,
+          "x": 500,
+          "y": -1.01563
+        },
+        "props": {
+          "style": {
+            "backgroundColor": "#D5D5D5",
+            "color": "#2B2B2B",
+            "fontWeight": "bold"
+          },
+          "text": "jsonQuery"
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "meta": {
+          "name": "Label_1"
+        },
+        "position": {
+          "height": 32,
+          "rotate": {
+            "anchor": "25% 25%"
+          },
+          "width": 276,
+          "x": 1027.98,
+          "y": -1.01563
+        },
+        "props": {
+          "style": {
+            "backgroundColor": "#D5D5D5",
+            "color": "#2B2B2B",
+            "fontWeight": "bold"
+          },
+          "text": "Preety: jsonQuery"
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "meta": {
+          "name": "Label_2"
+        },
+        "position": {
+          "height": 32,
+          "rotate": {
+            "anchor": "25% 25%"
+          },
+          "width": 276,
+          "x": 498.016,
+          "y": 385.969
+        },
+        "props": {
+          "style": {
+            "backgroundColor": "#D5D5D5",
+            "color": "#2B2B2B",
+            "fontWeight": "bold"
+          },
+          "text": "jsonWherePlus"
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "meta": {
+          "name": "txaJsonWherePlusPreety"
+        },
+        "position": {
+          "height": 535,
+          "width": 335,
+          "x": 1415.98,
+          "y": 36.5112
+        },
+        "props": {
+          "style": {
+            "backgroundColor": "#D5D5D5",
+            "color": "#2B2B2B",
+            "fontFamily": "inherit",
+            "fontSize": 10
+          },
+          "text": "[\n    {\n        \"arg\": 45, \n        \"cnd\": \"[lodging].[Bed].[roomId] \u003d ?\"\n    }\n]"
+        },
+        "type": "ia.input.text-area"
+      },
+      {
+        "events": {
+          "component": {
+            "onActionPerformed": {
+              "config": {
+                "script": "\troot \u003d self.parent\n\ttxaJsonQuery \u003d self.getSibling(\"txaJsonQuery\")\n\ttxaJsonWherePlus \u003d self.getSibling(\"txaJsonWherePlus\")\n\ttxaQueryArgs \u003d self.getSibling(\"txaQueryArgs\")\n\n\tjsonQuery \u003d txaJsonQuery.props.text \n\t\n\tif jsonQuery is None:\n\t\traise ValueError(\u0027JsonQuery is null!\u0027)\n\t\t\n\tjsonWherePlus \u003d txaJsonWherePlus.props.text\n\t\n\tfrom jsonizer.convert import toPrepQuery\n\t\n\tquery , args \u003d toPrepQuery(jsonQuery, jsonWherePlus \u003d jsonWherePlus, top \u003d 7, offset \u003d 0, orderby \u003d \"[lodging].[Bed].[id]\")\n\ttxaQueryArgs.props.text \u003d \u0027prepQuery :\\n{} \\nargs :\\n{}\u0027.format(query , args)\n\ttxaQueryArgs.props.text +\u003d \u0027\\n{}\u0027.format([type(x) for x in args])\n"
+              },
+              "scope": "G",
+              "type": "script"
+            }
+          }
+        },
+        "meta": {
+          "name": "Button_2"
+        },
+        "position": {
+          "height": 49,
+          "rotate": {
+            "anchor": "-94% 297%"
+          },
+          "width": 557,
+          "x": 0.26499999999998636,
+          "y": 570.575
+        },
+        "props": {
+          "text": "(2) jsonQuery + jsonWherePlus + orderby + offset fetch -\u003e  prepQuery, args"
+        },
+        "type": "ia.input.button"
+      },
+      {
+        "meta": {
+          "name": "txaWherePlus"
+        },
+        "position": {
+          "height": 133,
+          "width": 447,
+          "x": 5.00958,
+          "y": 425.881
+        },
+        "props": {
+          "style": {
+            "color": "#000000"
+          },
+          "text": "[lodging].[Bed].[roomId] \u003d 45"
+        },
+        "type": "ia.input.text-area"
+      },
+      {
+        "meta": {
+          "name": "Label_8"
+        },
+        "position": {
+          "height": 32,
+          "rotate": {
+            "anchor": "25% 25%"
+          },
+          "width": 276,
+          "x": 5.014580932617207,
+          "y": 393.91064657592773
+        },
+        "props": {
+          "style": {
+            "backgroundColor": "#D5D5D5",
+            "color": "#2B2B2B",
+            "fontWeight": "bold"
+          },
+          "text": "Sql wherePlus"
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "meta": {
+          "name": "Label_9"
+        },
+        "position": {
+          "height": 32,
+          "rotate": {
+            "anchor": "25% 25%"
+          },
+          "width": 276,
+          "x": 1416.98,
+          "y": 0.991229
+        },
+        "props": {
+          "style": {
+            "backgroundColor": "#D5D5D5",
+            "color": "#2B2B2B",
+            "fontWeight": "bold"
+          },
+          "text": "Preety: jsonWherePlus"
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "events": {
+          "component": {
+            "onActionPerformed": {
+              "config": {
+                "script": "\troot \u003d self.parent\n\ttxaWherePlus \u003d self.getSibling(\"txaWherePlus\")\n\ttxaJsonWherePlus \u003d self.getSibling(\"txaJsonWherePlus\")\n\t\n\texampleSqlWherePlus \u003d \"\"\"[lodging].[Bed].[roomId] \u003d 45\"\"\"\n\t\n\tif not(txaWherePlus.props.text):\n\t\tsystem.perspective.print((not(txaWherePlus.props.text), txaWherePlus.props.text))\n\t\ttxaWherePlus.props.text \u003d exampleSqlWherePlus\n\t\n\tsystem.perspective.print((\u0027txaWherePlus.props.text:\u0027,txaWherePlus.props.text))\n\t\n\ttry:\n\t\ttxaJsonWherePlus.props.text \u003d root.wherePlusToJsonWherePlus(txaWherePlus.props.text)\n\texcept:\n\t\tfrom traceback import format_exc\n\t\ttxaJsonWherePlus.props.text \u003d format_exc()\n"
+              },
+              "scope": "G",
+              "type": "script"
+            }
+          }
+        },
+        "meta": {
+          "name": "Button_3"
+        },
+        "position": {
+          "height": 44,
+          "rotate": {
+            "anchor": "25% -838%"
+          },
+          "width": 134,
+          "x": 344.747,
+          "y": 381.864
+        },
+        "props": {
+          "text": "(1.1) -\u003e wP"
+        },
+        "type": "ia.input.button"
+      },
+      {
+        "events": {
+          "component": {
+            "onActionPerformed": {
+              "config": {
+                "script": "\troot \u003d self.parent\n\tcompName \u003d \"txaQuery\"\n\tcomp \u003d self.getSibling(compName)\n\tcomp.props.text \u003d None\n"
+              },
+              "scope": "G",
+              "type": "script"
+            }
+          }
+        },
+        "meta": {
+          "name": "Button_4"
+        },
+        "position": {
+          "height": 29,
+          "rotate": {
+            "anchor": "323% 50%"
+          },
+          "width": 25,
+          "x": 424.491,
+          "y": 40.8708
+        },
+        "props": {
+          "text": "x"
+        },
+        "type": "ia.input.button"
+      },
+      {
+        "events": {
+          "component": {
+            "onActionPerformed": {
+              "config": {
+                "script": "\troot \u003d self.parent\n\tcompName \u003d \"txaJsonQuery\"\n\tcomp \u003d self.getSibling(compName)\n\tcomp.props.text \u003d None"
+              },
+              "scope": "G",
+              "type": "script"
+            }
+          }
+        },
+        "meta": {
+          "name": "Button_5"
+        },
+        "position": {
+          "height": 29,
+          "rotate": {
+            "anchor": "323% 50%"
+          },
+          "width": 25,
+          "x": 944.4814136657715,
+          "y": 34.86087034301758
+        },
+        "props": {
+          "text": "x"
+        },
+        "type": "ia.input.button"
+      },
+      {
+        "events": {
+          "component": {
+            "onActionPerformed": {
+              "config": {
+                "script": "\troot \u003d self.parent\n\tcompName \u003d \"txaJsonQueryPreety\"\n\tcomp \u003d self.getSibling(compName)\n\tcomp.props.text \u003d None"
+              },
+              "scope": "G",
+              "type": "script"
+            }
+          }
+        },
+        "meta": {
+          "name": "Button_6"
+        },
+        "position": {
+          "height": 29,
+          "rotate": {
+            "anchor": "323% 50%"
+          },
+          "width": 25,
+          "x": 1376.4581995544434,
+          "y": 34.85097034301758
+        },
+        "props": {
+          "text": "x"
+        },
+        "type": "ia.input.button"
+      },
+      {
+        "events": {
+          "component": {
+            "onActionPerformed": {
+              "config": {
+                "script": "\troot \u003d self.parent\n\tcompName \u003d \"txaJsonWherePlusPreety\"\n\tcomp \u003d self.getSibling(compName)\n\tcomp.props.text \u003d None"
+              },
+              "scope": "G",
+              "type": "script"
+            }
+          }
+        },
+        "meta": {
+          "name": "Button_7"
+        },
+        "position": {
+          "height": 29,
+          "rotate": {
+            "anchor": "323% 50%"
+          },
+          "width": 25,
+          "x": 1725.4528894958496,
+          "y": 34.85097034301758
+        },
+        "props": {
+          "text": "x"
+        },
+        "type": "ia.input.button"
+      },
+      {
+        "events": {
+          "component": {
+            "onActionPerformed": {
+              "config": {
+                "script": "\troot \u003d self.parent\n\tcompName \u003d \"txaWherePlus\"\n\tcomp \u003d self.getSibling(compName)\n\tcomp.props.text \u003d None"
+              },
+              "scope": "G",
+              "type": "script"
+            }
+          }
+        },
+        "meta": {
+          "name": "Button_8"
+        },
+        "position": {
+          "height": 29,
+          "rotate": {
+            "anchor": "323% 50%"
+          },
+          "width": 25,
+          "x": 424.478314453125,
+          "y": 425.80254657592775
+        },
+        "props": {
+          "text": "x"
+        },
+        "type": "ia.input.button"
+      },
+      {
+        "events": {
+          "component": {
+            "onActionPerformed": {
+              "config": {
+                "script": "\troot \u003d self.parent\n\tcompName \u003d \"txaJsonWherePlus\"\n\tcomp \u003d self.getSibling(compName)\n\tcomp.props.text \u003d None"
+              },
+              "scope": "G",
+              "type": "script"
+            }
+          }
+        },
+        "meta": {
+          "name": "Button_9"
+        },
+        "position": {
+          "height": 29,
+          "rotate": {
+            "anchor": "323% 50%"
+          },
+          "width": 25,
+          "x": 944.4714136657715,
+          "y": 425.80254657592775
+        },
+        "props": {
+          "text": "x"
+        },
+        "type": "ia.input.button"
+      },
+      {
+        "events": {
+          "component": {
+            "onActionPerformed": {
+              "config": {
+                "script": "\troot \u003d self.parent\n\tcompName \u003d \"txaQueryArgs\"\n\tcomp \u003d self.getSibling(compName)\n\tcomp.props.text \u003d None"
+              },
+              "scope": "G",
+              "type": "script"
+            }
+          }
+        },
+        "meta": {
+          "name": "Button_10"
+        },
+        "position": {
+          "height": 29,
+          "rotate": {
+            "anchor": "323% 50%"
+          },
+          "width": 25,
+          "x": 424.46631445312505,
+          "y": 633.2961553649902
+        },
+        "props": {
+          "text": "x"
+        },
+        "type": "ia.input.button"
+      },
+      {
+        "events": {
+          "component": {
+            "onActionPerformed": {
+              "config": {
+                "script": "\troot \u003d self.parent\n\ttblA \u003d self.getSibling(\"tblA\")\n\ttblA.props.data \u003d None"
+              },
+              "scope": "G",
+              "type": "script"
+            }
+          }
+        },
+        "meta": {
+          "name": "Button_11"
+        },
+        "position": {
+          "height": 29,
+          "rotate": {
+            "anchor": "323% 50%"
+          },
+          "width": 25,
+          "x": 1736.8717491149903,
+          "y": 590.3001118011474
+        },
+        "props": {
+          "text": "x"
+        },
+        "type": "ia.input.button"
+      },
+      {
+        "meta": {
+          "name": "txaError"
+        },
+        "position": {
+          "height": 204,
+          "width": 554,
+          "x": 465.952,
+          "y": 687.27
+        },
+        "props": {
+          "style": {
+            "backgroundColor": "#FFCCCC",
+            "color": "#AC0000",
+            "fontFamily": "inherit",
+            "fontSize": 12
+          }
+        },
+        "type": "ia.input.text-area"
+      },
+      {
+        "events": {
+          "component": {
+            "onActionPerformed": {
+              "config": {
+                "script": "\troot \u003d self.parent\n\ttxaJsonQuery \u003d self.getSibling(\"txaJsonQuery\")\n\ttxaJsonWherePlus \u003d self.getSibling(\"txaJsonWherePlus\")\n\ttxaJsonQueryPreety \u003d self.getSibling(\"txaJsonQueryPreety\")\n\ttxaQueryArgs \u003d self.getSibling(\"txaQueryArgs\")\n\ttxaError \u003d self.getSibling(\"txaError\")\n\ttblA \u003d self.getSibling(\"tblA\")\n\t\n\ttxaError.props.text  \u003d \u0027\u0027\n\tjsonQuery \u003d txaJsonQuery.props.text \n\n\t\n\tif jsonQuery is None:\n\t\traise ValueError(\u0027JsonQuery is null!\u0027)\n\t\t\n\tjsonWherePlus \u003d txaJsonWherePlus.props.text\n\n\n\tfrom jsonizer.convert import toPrepQuery\n\t\n\ttestList \u003d []\n\tquery , args \u003d toPrepQuery(jsonQuery, jsonWherePlus \u003d jsonWherePlus)\n\ttestList.append(dict(query\u003d query, args\u003dargs))\n\tquery , args \u003d toPrepQuery(jsonQuery, jsonWherePlus \u003d jsonWherePlus, offset \u003d 0,fetch \u003d 2, orderby \u003d \"[dbo].[Orders].[CustomerID], [dbo].[Order Details].[Quantity] desc\")\n\ttestList.append(dict(query\u003d query, args\u003dargs))\n\tquery , args \u003d toPrepQuery(jsonQuery, jsonWherePlus \u003d jsonWherePlus, top \u003d 5, offset \u003d 0, orderby \u003d \"[dbo].[Orders].[CustomerID], [dbo].[Order Details].[Quantity] desc\")\n\ttestList.append(dict(query\u003d query, args\u003dargs))\n\tquery , args \u003d toPrepQuery(jsonQuery, jsonWherePlus \u003d jsonWherePlus, distinct \u003d True, top \u003d 5, offset \u003d 0, orderby \u003d \"[dbo].[Orders].[CustomerID]\")\n\ttestList.append(dict(query\u003d query, args\u003dargs))\n\tquery , args \u003d toPrepQuery(jsonQuery, jsonWherePlus \u003d jsonWherePlus, isCountQuery \u003d True, distinct \u003d True, top \u003d 5, offset \u003d 0, orderby \u003d \"[dbo].[Orders].[CustomerID]\")\n\ttestList.append(dict(query\u003d query, args\u003dargs))\n\tquery , args \u003d toPrepQuery(jsonQuery, jsonWherePlus \u003d jsonWherePlus, top \u003d 5, offset \u003d 0, orderby \u003d \"[dbo].[Orders].[CustomerID], [dbo].[Order Details].[Quantity] desc\")\n\ttestList.append(dict(query\u003d query, args\u003dargs))\n\ttxaQueryArgs.props.text \u003d \u0027query , args:\\n{} , {}\u0027.format(query , args)\n\t#system.perspective.print((\u0027q+args: \u0027,query,args))\n\t\n\t\n\ti\u003d0\n\tfor test in testList:\n\t\ttry:\n\t\t\tresult \u003d system.db.runPrepQuery(test[\u0027query\u0027],test[\u0027args\u0027], \u0027Northwind\u0027)\n\t\texcept:\n\t\t\timport sys\n\t\t\tfrom java.lang import Exception\n\t\t\texceptionType, exception, stacktrace \u003d sys.exc_info()\n\t\t\tif exceptionType \u003d\u003d Exception:\n\t\t\t\texception \u003d exception.getCause()\t\t\n\t\t\t\n\t\t\tfrom traceback import format_exc\n\t\t\ttxaError.props.text +\u003d \u0027\\nFailed test no {} \\n{} \\n{}\u0027.format(i+1, str(exception), format_exc())  \n\t\ti +\u003d 1\n\t\t#tblA.props.data \u003d system.db.runPrepQuery(query, args, \u0027Northwind\u0027)\n\n\t\t\n\t"
+              },
+              "scope": "G",
+              "type": "script"
+            }
+          }
+        },
+        "meta": {
+          "name": "Button_12"
+        },
+        "position": {
+          "height": 34,
+          "rotate": {
+            "anchor": "-94% 297%"
+          },
+          "width": 264,
+          "x": 673.972,
+          "y": 662.2308322906495
+        },
+        "props": {
+          "enabled": false,
+          "text": "* multitest exec"
+        },
+        "type": "ia.input.button"
+      },
+      {
+        "events": {
+          "component": {
+            "onActionPerformed": {
+              "config": {
+                "script": "\troot \u003d self.parent\n\tcompName \u003d \"txaError\"\n\tcomp \u003d self.getSibling(compName)\n\tcomp.props.text \u003d None"
+              },
+              "scope": "G",
+              "type": "script"
+            }
+          }
+        },
+        "meta": {
+          "name": "Button_13"
+        },
+        "position": {
+          "height": 29,
+          "rotate": {
+            "anchor": "323% 50%"
+          },
+          "width": 28.000000000000004,
+          "x": 991.8850035095215,
+          "y": 687.5001386566162
+        },
+        "props": {
+          "text": "x"
+        },
+        "type": "ia.input.button"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "style": {
+        "backgroundColor": "#CCFFCC"
+      }
+    },
+    "scripts": {
+      "customMethods": [
+        {
+          "name": "queryToJson",
+          "params": [
+            "query"
+          ],
+          "script": "\t\n\tquery \u003d query.replace(\"\\n\", \" \")\n\tquery \u003d query.replace(\"\\t\", \" \")\n\t\n\tdef unquote(text):\n\t\tunquoted \u003d text.strip()\n\t\tif len(unquoted) \u003e\u003d 2 and unquoted[0] \u003d\u003d \u0027[\u0027 and unquoted[-1] \u003d\u003d \u0027]\u0027:\n\t\t\tunquoted \u003d unquoted[1:-1]\n\t\treturn unquoted\n\t\t\t\n\tlowQuery \u003d query.lower() \n\tposSelect \u003d query.lower().find(\u0027select \u0027)\n\t#system.perspective.print(posSelect)\n\t\n\tqtyFrom \u003d lowQuery.count(\u0027 from \u0027)\n\tposFrom \u003d lowQuery.find(\u0027 from \u0027)\n\t\n\t\n\tqtyWhere \u003d lowQuery.count(\u0027 where \u0027)\n\tposWhere \u003d lowQuery.find(\u0027 where \u0027)\n\t\n\tqtyOrderBy \u003d lowQuery.count(\u0027 order by \u0027)\n\tposOrderBy \u003d lowQuery.find(\u0027 order by \u0027)\n\t\n\t#system.perspective.print(\u0027{} {}\u0027.format(qtyFrom, posFrom))\n\t\n\t#system.perspective.print(\u0027{} {}\u0027.format(qtyWhere, posWhere))\n\t\n\tfromClause \u003d query[(posFrom + len(\u0027 from \u0027)):posWhere]\n\tfromClause \u003d fromClause.strip()\n\tsystem.perspective.print(\u0027{} {}\u0027.format(\u0027fromClause\u0027,fromClause))\n\t\n\twhereClause \u003d query[(posWhere + len(\u0027 where \u0027)):posOrderBy]\n\twhereClause \u003d whereClause.strip()\n\t\n\torderByClause \u003d query[(posOrderBy + len(\u0027 order by \u0027)):] if posOrderBy \u003e 0 else \u0027\u0027\n\torderByClause \u003d orderByClause.strip()\n\t\n\tselectList \u003d query[(posSelect + len(\u0027select \u0027)):posFrom]\n\tselectList \u003d selectList.split(\u0027,\u0027)\n\tselectList \u003d [x.split(\u0027 AS \u0027) for x in selectList]\n\tselectList\n\tselect \u003d []\n\tfor item in selectList:\n\t\titemAux \u003d item\n\t\tdictAux \u003d {}\n\t\t#if len(item) \u003d\u003d 1:\n\t\t\t#item.append(\u0027\u0027)\n\t\t\t\n\t\t#item \u003d [x.replace(\u0027[\u0027,\u0027\u0027) for x in item]\n\t\t#item \u003d [x.replace(\u0027]\u0027,\u0027\u0027) for x in item]\n\t\t\n\t\ttabcol \u003d item[0].split(\u0027.\u0027)\n\t\tdictAux[\u0027schema\u0027] \u003d unquote(tabcol[0].strip())\n\t\tdictAux[\u0027table\u0027] \u003d unquote(tabcol[1].strip())\n\t\tdictAux[\u0027column\u0027] \u003d unquote(tabcol[2].strip())\n\t\t\n\t\tsystem.perspective.print(item)\n\t\n\t#return\n\t\t\n\t\tdictAux[\u0027alias\u0027] \u003d unquote(item[1].strip()) if len(item) \u003d\u003d 2 else \u0027\u0027\n\t\tselect.append(dictAux)\n\tsystem.perspective.print(\u0027{} {}\u0027.format(\u0027select\u0027, select))\n\tsystem.perspective.print(\u0027{} {}\u0027.format(\u0027fromClause\u0027,fromClause))\n\tsystem.perspective.print(\u0027{} {}\u0027.format(\u0027whereClause\u0027,whereClause))\n\tsystem.perspective.print(\u0027{} {}\u0027.format(\u0027orderByClause\u0027, orderByClause))\n\tsource \u003d {}\n\tsource[\u0027select\u0027] \u003d select\n\tsource[\u0027from\u0027] \u003d fromClause \n\tsource[\u0027where\u0027] \u003d whereClause\n\tsource[\u0027orderby\u0027] \u003d orderByClause\n\t\n\treturn system.util.jsonEncode(source)"
+        },
+        {
+          "name": "prepQueryToJson",
+          "params": [
+            "query"
+          ],
+          "script": "\t\n\tquery \u003d query.replace(\"\\n\", \" \")\n\tquery \u003d query.replace(\"\\t\", \" \")\n\t\n\tdef unquote(text):\n\t\tunquoted \u003d text.strip()\n\t\tif len(unquoted) \u003e\u003d 2 and unquoted[0] \u003d\u003d \u0027[\u0027 and unquoted[-1] \u003d\u003d \u0027]\u0027:\n\t\t\tunquoted \u003d unquoted[1:-1]\n\t\treturn unquoted\n\t\t\t\n\tlowQuery \u003d query.lower() \n\tposSelect \u003d query.lower().find(\u0027select \u0027)\n\t#system.perspective.print(posSelect)\n\t\n\tqtyFrom \u003d lowQuery.count(\u0027 from \u0027)\n\tposFrom \u003d lowQuery.find(\u0027 from \u0027)\n\t\n\t\n\tqtyWhere \u003d lowQuery.count(\u0027 where \u0027)\n\tposWhere \u003d lowQuery.find(\u0027 where \u0027)\n\t\n\tqtyOrderBy \u003d lowQuery.count(\u0027 order by \u0027)\n\tif qtyOrderBy \u003e 0:\n\t\traise ValueError(\u0027Remove ORDER BY clause!\u0027)\n\n\t\n\t#system.perspective.print(\u0027{} {}\u0027.format(qtyFrom, posFrom))\n\t\n\t#system.perspective.print(\u0027{} {}\u0027.format(qtyWhere, posWhere))\n\t\n\tfromClause \u003d query[(posFrom + len(\u0027 from \u0027)):posWhere]\n\tfromClause \u003d fromClause.strip()\n\tsystem.perspective.print(\u0027{} {}\u0027.format(\u0027fromClause\u0027,fromClause))\n\t\n\twhereClause \u003d query[(posWhere + len(\u0027 where \u0027)):] \n\twhereClause \u003d whereClause.strip()\n\t\n\t\n\tselectList \u003d query[(posSelect + len(\u0027select \u0027)):posFrom]\n\tselectList \u003d selectList.split(\u0027, \u0027)\n\tselectList \u003d [x.split(\u0027 AS \u0027) for x in selectList]\n\tselectList\n\tselect \u003d []\n\tfor item in selectList:\n\t\tif len(item) \u003c 1:\n\t\t\traise ValueError(\u0027Column name (full) is missing\u0027)\n\n\t\tdictAux \u003d {}\n\t\tsystem.perspective.print(item)\n\n\t\tdictAux[\u0027column\u0027] \u003d item[0].strip() if len(item) \u003e\u003d 1 else \u0027\u0027\n\t\tdictAux[\u0027alias\u0027] \u003d unquote(item[1].strip()) if len(item) \u003d\u003d 2 else \u0027\u0027\n\t\tselect.append(dictAux)\n\t\t\n\t#system.perspective.print(\u0027{} {}\u0027.format(\u0027select\u0027, select))\n\t#system.perspective.print(\u0027{} {}\u0027.format(\u0027fromClause\u0027,fromClause))\n\t#system.perspective.print(\u0027{} {}\u0027.format(\u0027whereClause\u0027,whereClause))\n\n\tsource \u003d {}\n\tsource[\u0027select\u0027] \u003d select\n\tsource[\u0027from\u0027] \u003d fromClause \n\tsource[\u0027where\u0027] \u003d whereClause\n\t\n\treturn system.util.jsonEncode(source)"
+        },
+        {
+          "name": "wherePlusToJsonWherePlus",
+          "params": [
+            "wherePlus"
+          ],
+          "script": "\t\n\t\n\tlstCnd \u003d [x.strip() for x in wherePlus.split(\u0027 AND \u0027)]\n\t\n\tlstOpArg \u003d [(x.strip()).split(\u0027] \u0027)[1] for x in lstCnd]\n\t\n\tsystem.perspective.print(lstCnd)\n\tsystem.perspective.print(lstOpArg)\n\t\n\t\n\tauxList \u003d []\n\ti\u003d 0\n\tfor x in lstOpArg:\n\t\tauxDict \u003d {}\n\t\t#get string reverse\n\t\txRev \u003d x[::-1]\n\t\t\n\t\t\n\t\tif xRev[0] \u003d\u003d \u0027\"\u0027:\n\t\t\tfirstQuoteFromBack \u003d (xRev[1:]).find(\u0027\"\u0027)\n\t\t\tstrArgRev \u003d xRev[1:firstQuoteFromBack + 1]\n\t\t\tstrArg \u003d strArgRev[::-1]\n\t\t\t\n\t\t\ttry:\n\t\t\t\tsystem.date.parse(strArg,\u0027yyyy-MM-dd HH:mm:ss\u0027) \n\t\t\t\tauxDict[\u0027arg\u0027] \u003d strArg\n\t\t\t\tauxDict[\u0027type\u0027] \u003d \u0027datetime\u0027\n\t\t\texcept:\n\t\t\t\tauxDict[\u0027arg\u0027] \u003d strArg\n\t\t\t\n\t\t\ttoDel \u003d len(strArg) + 2\n\t\t\tauxDict[\u0027cnd\u0027] \u003d lstCnd[i][:-toDel] + \u0027?\u0027\n\t\t\t\n\t\t\tsystem.perspective.print(auxDict)\n\t\telse:\n\t\t\tfirstBlankFromBack \u003d xRev.find(\u0027 \u0027)\n\t\t\tstrArgRev \u003d xRev[:firstBlankFromBack]\n\t\t\tstrArg \u003d strArgRev[::-1]\t\n\t\t\ttoDel \u003d len(strArg)\t\n\t\t\tauxDict[\u0027cnd\u0027] \u003d lstCnd[i][:-toDel] + \u0027?\u0027\n\t\t\t\n\t\t\tif strArg \u003d\u003d \u0027true\u0027:\n\t\t\t\targ \u003d True\n\t\t\telif strArg \u003d\u003d \u0027false\u0027:\n\t\t\t\targ \u003d False\n\t\t\telif strArg \u003d\u003d \u0027null\u0027:\n\t\t\t\targ \u003d None\n\t\t\telse:\n\t\t\t\ttry:\n\t\t\t\t\targ \u003d int(strArg)\n\t\t\t\texcept:\n\t\t\t\t\ttry:\n\t\t\t\t\t\targ \u003d long(strArg)\n\t\t\t\t\texcept:\t\t\t\t\n\t\t\t\t\t\ttry:\n\t\t\t\t\t\t\targ \u003d float(strArg)\n\t\t\t\t\t\texcept:\t\t\t\t\n\t\t\t\t\t\t\traise ValueError(\"Unknown arg type!\")\n\t\t\tauxDict[\u0027arg\u0027] \u003d arg\n\t\tauxList.append(auxDict)\n\t\n\t\tsystem.perspective.print(auxDict)\t\t\n\t\ti +\u003d 1\t\n\t\t\n\tsystem.perspective.print(auxList)\n\t\t\t\n\t\t\n\n\treturn system.util.jsonEncode(auxList)\n\t\n\t\n\t #[\u0027[dbo].[Order Details].[Quantity] \u003c 15\u0027, \u0027[dbo].[Orders].[EmployeeID] \u003d 4\u0027, \u0027[dbo].[Orders].[OrderDate] \u003c \"1996-07-18 23:00:00\"\u0027]\n\t#[[\u0027[dbo].[Order Details].[Quantity\u0027, \u0027\u003c 15\u0027], [\u0027[dbo].[Orders].[EmployeeID\u0027, \u0027\u003d 4\u0027], [\u0027[dbo].[Orders].[OrderDate\u0027, \u0027\u003c \"1996-07-18 23:00:00\"\u0027]]\n\n\t"
+        }
+      ],
+      "messageHandlers": []
+    },
+    "type": "ia.container.coord"
+  }
+}

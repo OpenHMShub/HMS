@@ -1,0 +1,113 @@
+{
+  "custom": {
+    "providerId": null
+  },
+  "params": {
+    "locationID": null,
+    "trackID": null
+  },
+  "propConfig": {
+    "custom.providerId": {
+      "persistent": true
+    },
+    "params.locationID": {
+      "onChange": {
+        "enabled": null,
+        "script": "\tself.params.trackID \u003d self.params.locationID\n\t\n\tif currentValue and currentValue.value:\n\t\n\t\tquery \u003d \"\"\"\n\tDECLARE @location_id AS INT \u003d ?\n\tSELECT \n\t\t[Congregation].[providerId]\n\tFROM [organization].[Congregation]\n\t\tINNER JOIN [shelter].[Location] ON [Location].[congregationId] \u003d [Congregation].[id]\n\tWHERE [Location].[id] \u003d @location_id AND @location_id IS NOT NULL\n\t\t\"\"\"\n\t\ttry:\n\t\t\tproviderId \u003d system.db.runScalarPrepQuery(query,[currentValue.value],\u0027RITIOps\u0027)\n\t\t\tself.custom.providerId \u003d providerId \n\t\texcept:\n\t\t\tself.custom.providerId \u003d None\n\telse:\n\t\tself.custom.providerId \u003d None\n\t\t\n\t\t"
+      },
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 827,
+      "width": 1261
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "Filter"
+        },
+        "position": {
+          "basis": "30px"
+        },
+        "propConfig": {
+          "props.params.providerId": {
+            "binding": {
+              "config": {
+                "path": "view.custom.providerId"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "path": "WinterShelter/Referrals/Detail/Main/Filter/Referrals_Conditions",
+          "style": {
+            "marginLeft": "40px",
+            "marginRight": "37px"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Label"
+        },
+        "position": {
+          "basis": "32px"
+        },
+        "propConfig": {
+          "props.text": {
+            "binding": {
+              "config": {
+                "path": "../Filter.props.params.providerId"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "style": {
+            "classes": "Text/Error_Message"
+          }
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "meta": {
+          "name": "Table"
+        },
+        "position": {
+          "basis": "75%",
+          "grow": 1
+        },
+        "props": {
+          "params": {
+            "fetch": 100,
+            "resultRowCount": 0
+          },
+          "path": "WinterShelter/Referrals/Detail/Main/Table/Referrals_Table",
+          "style": {
+            "marginLeft": 40,
+            "marginRight": 40
+          }
+        },
+        "type": "ia.display.view"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column",
+      "style": {
+        "classes": "Background/Alternative"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

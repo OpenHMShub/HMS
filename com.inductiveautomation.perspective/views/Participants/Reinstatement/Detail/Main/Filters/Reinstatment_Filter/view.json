@@ -1,0 +1,128 @@
+{
+  "custom": {},
+  "params": {},
+  "props": {
+    "defaultSize": {
+      "height": 30,
+      "width": 1817
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "Active"
+        },
+        "position": {
+          "basis": "240px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.options": {
+            "binding": {
+              "config": {
+                "path": "../Placeholder_1.props.text"
+              },
+              "transforms": [
+                {
+                  "code": "\theaders \u003d [\"value\", \"label\"]\n\tdata \u003d []\n\t#val \u003d system.date.format(system.date.now(), \"YYYY-MM-dd hh:mm:ss\")\n\tval \u003d \u0027isNull\u0027\n\tlabel \u003d \u0027Active Suspensions Only\u0027\n\tlist \u003d [val,label]\n\tdata.append(list)\n\t#val \u003d system.date.format(system.date.now(), \"YYYY-MM-dd hh:mm:ss\")\n\tval \u003d \u0027isNotNull\u0027\n\tlabel \u003d \u0027Previous Suspensions Only\u0027\n\tlist \u003d [val,label]\n\tdata.append(list)\n\t\n\tdataset \u003d system.dataset.toDataSet(headers, data)\n\treturn dataset",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "column_name": "dateReinstated",
+            "filter": "reinstatementDetail",
+            "key": "reinstateDate",
+            "placeholder": "(All Suspensions)",
+            "searchType": "nullOrNotNull"
+          },
+          "path": "1_TEMPLATES/Filtering/Session/SingleDropDown",
+          "style": {
+            "marginBottom": "2px",
+            "marginLeft": "5px",
+            "marginTop": "2px"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Label"
+        },
+        "position": {
+          "basis": "400px",
+          "display": false,
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.text": {
+            "binding": {
+              "config": {
+                "path": "session.custom.filters.reinstatementDetail.reinstateDate.where"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "style": {
+            "classes": "Text/Error_Message"
+          }
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "meta": {
+          "name": "Placeholder_1"
+        },
+        "position": {
+          "basis": "1px",
+          "grow": 1
+        },
+        "props": {
+          "style": {
+            "classes": "Table/Filter_Header",
+            "paddingRight": "10px",
+            "textAlign": "end"
+          }
+        },
+        "type": "ia.display.label"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "style": {
+        "classes": "Table/Filter_Header_Container",
+        "overflow": "hidden"
+      }
+    },
+    "scripts": {
+      "customMethods": [],
+      "extensionFunctions": null,
+      "messageHandlers": [
+        {
+          "messageType": "ParticipantDashboardAgeRange",
+          "pageScope": true,
+          "script": "\timport traceback\n\ttry:\n\t\t#Get the min and max age from the message payload\n\t\tself.view.params.min_age \u003d payload[\u0027min\u0027]\n\t\tself.view.params.max_age \u003d payload[\u0027max\u0027]\n\t\t#Calculate the date of birth range\n\t\ttoday \u003d system.date.now()\n\t\tdob_min \u003d -1 * int(self.view.params.max_age)\n\t\tdob_max \u003d -1 * int(self.view.params.min_age )\n\t\tself.view.params.dob_start \u003d system.date.addYears(today,dob_min)\n\t\tself.view.params.dob_end \u003d system.date.addYears(today,dob_max)\n\texcept:\n\t\tlogger \u003d system.util.getLogger(\"Participants_Filter ParticipantDashboardAgeRange Message\")\n\t\tmsg \u003d traceback.format_exc()\n\t\tlogger.error(msg)",
+          "sessionScope": true,
+          "viewScope": true
+        },
+        {
+          "messageType": "ParticipantDashboardActivityRange",
+          "pageScope": true,
+          "script": "\timport traceback\n\ttry:\n\t\t#Get the min and max age from the message payload\n\t\tself.view.params.activity_begin \u003d payload[\u0027min\u0027]\n\t\tself.view.params.activity_end \u003d payload[\u0027max\u0027]\n\t\t#logger \u003d system.util.getLogger(\"Activity Range Message\")\n\t\t#logger.error(str(payload[\u0027min\u0027]) + \u0027 \u0027 + str(payload[\u0027max\u0027]))\n\texcept:\n\t\tlogger \u003d system.util.getLogger(\"Participants_Filter ParticipantDashboardActivityRange Message\")\n\t\tmsg \u003d traceback.format_exc()\n\t\tlogger.error(msg)",
+          "sessionScope": false,
+          "viewScope": false
+        }
+      ]
+    },
+    "type": "ia.container.flex"
+  }
+}

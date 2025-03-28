@@ -1,0 +1,627 @@
+{
+  "custom": {
+    "_devPulse": false,
+    "_isDev": false
+  },
+  "events": {
+    "system": {
+      "onStartup": {
+        "config": {
+          "script": "\troot \u003d self.getChild(\"root\")\n\tdpkFrom \u003d root.getChild(\"body\").getChild(\"DateTimePickerCurrent\")\n\tdpkTo \u003d root.getChild(\"body\").getChild(\"DateTimePickerNext\")\n\temvDateRangeName \u003d root.getChild(\"footer\").getChild(\"emvDateRangeName\")\n\n\temvDateRangeName.setOptions()\n\n\tnow \u003d system.date.now()\n\tnow0 \u003d system.date.midnight(now)\n\ttommorow0 \u003d system.date.addDays(now0, 1)\n\n\tdpkFrom.props.value \u003d self.session.custom.dateRangeFromDate if self.session.custom.dateRangeFromDate else now0\n\tdpkTo.props.value \u003d self.session.custom.dateRangeToDate if self.session.custom.dateRangeToDate else tommorow0\n\temvDateRangeName.props.params.selection \u003d self.session.custom.selectedDateRange if self.session.custom.selectedDateRange else None"
+        },
+        "scope": "G",
+        "type": "script"
+      }
+    }
+  },
+  "params": {
+    "pageId": "value",
+    "startDate_column": "value"
+  },
+  "propConfig": {
+    "custom._devPulse": {
+      "onChange": {
+        "enabled": null,
+        "script": "\temvDateRangeName \u003d self.getChild(\"root\").getChild(\"footer\").getChild(\"emvDateRangeName\")\n\temvDateRangeName.setOptions()"
+      },
+      "persistent": true
+    },
+    "custom._isDev": {
+      "persistent": true
+    },
+    "params.pageId": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.startDate_column": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 330,
+      "width": 700
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "children": [
+          {
+            "events": {
+              "dom": {
+                "onClick": {
+                  "config": {
+                    "script": "\tself.session.custom.selectedDateRange \u003d \"currentCalendar\"\n\tself.parent.parent.getChild(\"footer\").getChild(\"From\").props.text \u003d system.date.format(self.props.value, \u0027MM/dd/yyyy\u0027)\n\t#self.session.custom.dateRangeFromDate \u003d system.date.format(self.props.value, \u0027MM/dd/yyyy\u0027)"
+                  },
+                  "scope": "G",
+                  "type": "script"
+                }
+              }
+            },
+            "meta": {
+              "name": "DateTimePickerCurrent"
+            },
+            "position": {
+              "shrink": 0
+            },
+            "propConfig": {
+              "props.maxDate": {
+                "binding": {
+                  "config": {
+                    "path": "../DateTimePickerNext.props.value"
+                  },
+                  "type": "property"
+                }
+              }
+            },
+            "props": {
+              "formattedValue": "Jul 2, 2021 2:00 AM",
+              "formattedValues": {
+                "date": "Jun 19, 2021"
+              },
+              "pickerType": "date",
+              "style": {
+                "classes": "Calendar",
+                "marginLeft": "10px"
+              }
+            },
+            "type": "ia.input.date-time-picker"
+          },
+          {
+            "events": {
+              "dom": {
+                "onClick": {
+                  "config": {
+                    "script": "\tself.session.custom.selectedDateRange \u003d \"NextCalendar\"\n\tself.parent.parent.getChild(\"footer\").getChild(\"To\").props.text \u003d system.date.format(self.props.value, \u0027MM/dd/yyyy\u0027)\n\t#self.session.custom.dateRangeToDate \u003d system.date.format(self.props.value, \u0027MM/dd/yyyy\u0027) "
+                  },
+                  "scope": "G",
+                  "type": "script"
+                }
+              }
+            },
+            "meta": {
+              "name": "DateTimePickerNext"
+            },
+            "position": {
+              "shrink": 0
+            },
+            "propConfig": {
+              "props.minDate": {
+                "binding": {
+                  "config": {
+                    "path": "../DateTimePickerCurrent.props.value"
+                  },
+                  "type": "property"
+                }
+              }
+            },
+            "props": {
+              "formattedValue": "Jul 3, 2021 2:00 AM",
+              "formattedValues": {
+                "date": "Oct 15, 2020"
+              },
+              "pickerType": "date",
+              "style": {
+                "classes": "Calendar",
+                "marginLeft": "10px"
+              }
+            },
+            "type": "ia.input.date-time-picker"
+          },
+          {
+            "custom": {
+              "_devPulse": true
+            },
+            "events": {
+              "system": {
+                "onStartup": {
+                  "config": {
+                    "script": "\tself.setOptions()"
+                  },
+                  "scope": "G",
+                  "type": "script"
+                }
+              }
+            },
+            "meta": {
+              "name": "DateRangeLabelsFlex_0"
+            },
+            "position": {
+              "shrink": 0
+            },
+            "propConfig": {
+              "custom._devPulse": {
+                "onChange": {
+                  "enabled": null,
+                  "script": "\tif currentValue.value:\n\t\tself.setOptions()\n\telse:\n\t\tself.props.instances \u003d []\t"
+                }
+              }
+            },
+            "props": {
+              "data": [],
+              "direction": "column",
+              "instances": [
+                {
+                  "dateFrom": {
+                    "$": [
+                      "ts",
+                      192,
+                      1625349248779
+                    ],
+                    "$ts": 1625270400000
+                  },
+                  "dateRangeLabel": "Yesterday",
+                  "dateTo": {
+                    "$": [
+                      "ts",
+                      192,
+                      1625349248779
+                    ],
+                    "$ts": 1625356800000
+                  }
+                },
+                {
+                  "dateFrom": {
+                    "$": [
+                      "ts",
+                      192,
+                      1625349248779
+                    ],
+                    "$ts": 1624838400000
+                  },
+                  "dateRangeLabel": "This Week",
+                  "dateTo": {
+                    "$": [
+                      "ts",
+                      192,
+                      1625349248779
+                    ],
+                    "$ts": 1625356800000
+                  }
+                },
+                {
+                  "dateFrom": {
+                    "$": [
+                      "ts",
+                      192,
+                      1625349248779
+                    ],
+                    "$ts": 1624233600000
+                  },
+                  "dateRangeLabel": "Last Week",
+                  "dateTo": {
+                    "$": [
+                      "ts",
+                      192,
+                      1625349248779
+                    ],
+                    "$ts": 1624838400000
+                  }
+                },
+                {
+                  "dateFrom": {
+                    "$": [
+                      "ts",
+                      192,
+                      1625349248779
+                    ],
+                    "$ts": 1625097600000
+                  },
+                  "dateRangeLabel": "Month To Date",
+                  "dateTo": {
+                    "$": [
+                      "ts",
+                      192,
+                      1625349248779
+                    ],
+                    "$ts": 1625356800000
+                  }
+                },
+                {
+                  "dateFrom": {
+                    "$": [
+                      "ts",
+                      192,
+                      1625349248779
+                    ],
+                    "$ts": 1622505600000
+                  },
+                  "dateRangeLabel": "Last Month",
+                  "dateTo": {
+                    "$": [
+                      "ts",
+                      192,
+                      1625349248779
+                    ],
+                    "$ts": 1625097600000
+                  }
+                },
+                {
+                  "dateFrom": {
+                    "$": [
+                      "ts",
+                      192,
+                      1625349248779
+                    ],
+                    "$ts": 1609459200000
+                  },
+                  "dateRangeLabel": "Year To Date",
+                  "dateTo": {
+                    "$": [
+                      "ts",
+                      192,
+                      1625349248779
+                    ],
+                    "$ts": 1625356800000
+                  }
+                },
+                {
+                  "dateFrom": {
+                    "$": [
+                      "ts",
+                      192,
+                      1625349248779
+                    ],
+                    "$ts": 1577836800000
+                  },
+                  "dateRangeLabel": "Last Year",
+                  "dateTo": {
+                    "$": [
+                      "ts",
+                      192,
+                      1625349248779
+                    ],
+                    "$ts": 1609459200000
+                  }
+                },
+                {
+                  "dateFrom": null,
+                  "dateRangeLabel": "All",
+                  "dateTo": null
+                }
+              ],
+              "path": "Employers/Templates/DateRange/DateRangeLabel",
+              "style": {
+                "backgroundColor": "#FFFFFF",
+                "marginLeft": "10px"
+              },
+              "useDefaultViewWidth": false,
+              "wrap": "wrap"
+            },
+            "scripts": {
+              "customMethods": [
+                {
+                  "name": "setOptions",
+                  "params": [],
+                  "script": "\tnow \u003d system.date.now()\n\tyear \u003d system.date.getYear(now)\n\tmonth \u003d system.date.getMonth(now)\n\tnow0 \u003d system.date.midnight(now)\n\ttommorow0 \u003d system.date.addDays(now0, 1)\n\twdNow \u003d system.date.getDayOfWeek(now)\n\tdaysAfterMonday \u003d wdNow - 2 if wdNow - 2 \u003e\u003d 0 else 7 + (wdNow-2)\n\tthisWeekMonday \u003dsystem.date.addDays(now0,-daysAfterMonday)   \n\tfirstDayOfYear \u003d system.date.getDate(year, 0, 1)\n\tfirstDayOfMonth \u003d system.date.getDate(year, month, 1)\n\tsystem.date.addMonths\n\t\n\t_data \u003d [\n\t{\u0027dateFrom\u0027: now0, \u0027dateTo\u0027: tommorow0, \u0027dateRangeLabel\u0027: \u0027Yesterday\u0027},\n\t{\u0027dateFrom\u0027: thisWeekMonday, \u0027dateTo\u0027: tommorow0, \u0027dateRangeLabel\u0027: \u0027This Week\u0027},\n\t{\u0027dateFrom\u0027: system.date.addDays(thisWeekMonday,-7), \u0027dateTo\u0027: thisWeekMonday, \u0027dateRangeLabel\u0027: \u0027Last Week\u0027},\n\t{\u0027dateFrom\u0027: firstDayOfMonth, \u0027dateTo\u0027: tommorow0, \u0027dateRangeLabel\u0027: \u0027Month To Date\u0027},\n\t{\u0027dateFrom\u0027: system.date.addMonths(firstDayOfMonth,-1), \u0027dateTo\u0027: firstDayOfMonth , \u0027dateRangeLabel\u0027: \u0027Last Month\u0027},\n\t{\u0027dateFrom\u0027: firstDayOfYear, \u0027dateTo\u0027: tommorow0, \u0027dateRangeLabel\u0027: \u0027Year To Date\u0027},\t\n\t{\u0027dateFrom\u0027: system.date.addYears(firstDayOfYear,-1) , \u0027dateTo\u0027: firstDayOfYear, \u0027dateRangeLabel\u0027: \u0027Last Year\u0027},\n\t{\u0027dateFrom\u0027: None, \u0027dateTo\u0027: None, \u0027dateRangeLabel\u0027: \u0027All\u0027},\n\t]\n\t#system.date.getDayOfWeek(now)\n\tself.props.instances \u003d _data"
+                }
+              ],
+              "extensionFunctions": null,
+              "messageHandlers": []
+            },
+            "type": "ia.display.flex-repeater"
+          }
+        ],
+        "custom": {
+          "_devPulse": "value"
+        },
+        "meta": {
+          "name": "body"
+        },
+        "position": {
+          "grow": 1,
+          "shrink": 0
+        },
+        "props": {
+          "alignItems": "center",
+          "style": {
+            "backgroundColor": "#FFFFFF"
+          }
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "children": [
+          {
+            "meta": {
+              "name": "emvDateRangeName"
+            },
+            "position": {
+              "basis": "260px",
+              "shrink": 0
+            },
+            "propConfig": {
+              "props.params.selection": {
+                "onChange": {
+                  "enabled": null,
+                  "script": "\t\n\tdpkFrom \u003d self.parent.parent.getChild(\"body\").getChild(\"DateTimePickerCurrent\")\n\tdpkTo \u003d self.parent.parent.getChild(\"body\").getChild(\"DateTimePickerNext\")\n\t\n\tif currentValue.value is None:\n\t\tdpkFrom.props.value \u003d None\n\t\tdpkTo.props.value \u003d None\n\telse:\n\t\tif currentValue.value \u003d\u003d self.session.custom.selectedDateRange and not(dpkFrom.props.value) and not(dpkTo.props.value):\n\t\t\tdpkFrom.props.value \u003d self.session.custom.dateRangeFromDate\n\t\t\tdpkTo.props.value \u003d self.session.custom.dateRangeToDate"
+                }
+              }
+            },
+            "props": {
+              "params": {
+                "clear": false,
+                "multiSelect": false,
+                "options": [
+                  {
+                    "label": "Applied Date",
+                    "value": "appliedDate"
+                  },
+                  {
+                    "label": "Interviewed Date",
+                    "value": "interviewedDate"
+                  },
+                  {
+                    "label": "Hired Date",
+                    "value": "hiredDate"
+                  }
+                ],
+                "placeholder": "All",
+                "selection": null
+              },
+              "path": "Employers/Templates/DateRange/SelectedRangeDropdown",
+              "style": {
+                "classes": "Filter/Filter_Container",
+                "marginLeft": "10px"
+              }
+            },
+            "scripts": {
+              "customMethods": [
+                {
+                  "name": "setOptions",
+                  "params": [],
+                  "script": "\t\n\tlstDateFrom \u003d \t[\n\t\t[\u0027appliedDate\u0027, \u0027Applied Date\u0027],\n\t\t[\u0027interviewedDate\u0027, \u0027Interviewed Date\u0027],\n\t\t[\u0027hiredDate\u0027, \u0027Hired Date\u0027]\n\t]\n\t\n\t\n\tself.props.params.options \u003d [ dict(value \u003d x[0],label \u003d x[1]) for x in lstDateFrom]\n"
+                }
+              ],
+              "extensionFunctions": null,
+              "messageHandlers": []
+            },
+            "type": "ia.display.view"
+          },
+          {
+            "meta": {
+              "name": "From",
+              "visible": false
+            },
+            "position": {
+              "grow": 1
+            },
+            "propConfig": {
+              "props.text": {
+                "binding": {
+                  "config": {
+                    "expression": "if({session.custom.selectedDateRange} \u003d \"Hour\", dateFormat(dateArithmetic(now(), -1, \"hour\"),\"MM/dd/yyyy hh\"),if({session.custom.selectedDateRange} \u003d \"Yesterday\",dateFormat(dateArithmetic(now(), -1, \"days\"),\"MM/dd/yyyy\"),if({session.custom.selectedDateRange} \u003d \"Week\",dateFormat(dateArithmetic(now(), -1, \"weeks\"),\"MM/dd/yyyy\"),if({session.custom.selectedDateRange} \u003d \"4 Weeks\",dateFormat(dateArithmetic(now(), -4, \"weeks\"),\"MM/dd/yyyy\"),if({session.custom.selectedDateRange} \u003d \"Month to Date\",dateFormat({.../body/DateRangeLabelsFlex.custom.firstDayOfMonth},\"MM/dd/yyyy\"),if({session.custom.selectedDateRange} \u003d \"MM/dd/yyyy\",dateFormat(dateArithmetic(now(), -90, \"days\"),\"MM/dd/yyyy\"),if({session.custom.selectedDateRange}\u003d \"6 Months\",dateFormat(dateArithmetic(now(), -6, \"months\"),\"MM/dd/yyyy\"),if({session.custom.selectedDateRange}\u003d \"Year to Date\",dateFormat({.../body/DateRangeLabelsFlex.custom.firstDayOfYear},\"MM/dd/yyyy\"),dateformat({.../body/DateTimePickerCurrent.props.value},\"MM/dd/yyyy\")))))))))"
+                  },
+                  "type": "expr"
+                }
+              }
+            },
+            "props": {
+              "style": {
+                "color": "#2B2B2B"
+              }
+            },
+            "type": "ia.display.label"
+          },
+          {
+            "meta": {
+              "name": "To",
+              "visible": false
+            },
+            "position": {
+              "grow": 1
+            },
+            "propConfig": {
+              "props.text": {
+                "binding": {
+                  "config": {
+                    "expression": "if({session.custom.selectedDateRange} \u003d \"Hour\", dateFormat(now(),\"MM/dd/yyyy hh\"),if({session.custom.selectedDateRange} \u003d \"Yesterday\",dateFormat(now(),\"MM/dd/yyyy\"),if({session.custom.selectedDateRange} \u003d \"Week\",dateFormat(now(),\"MM/dd/yyyy\"),if({session.custom.selectedDateRange} \u003d \"4 Weeks\",dateFormat(now(),\"MM/dd/yyyy\"),if({session.custom.selectedDateRange} \u003d \"Month to Date\",dateFormat(now(),\"MM/dd/yyyy\"),if({session.custom.selectedDateRange} \u003d \"90 Days\",dateFormat(now(),\"MM/dd/yyyy\"),if({session.custom.selectedDateRange}\u003d \"6 Months\",dateFormat(now(),\"MM/dd/yyyy\"),if({session.custom.selectedDateRange}\u003d \"Year to Date\",dateFormat(now(),\"MM/dd/yyyy\"), dateFormat({.../body/DateTimePickerNext.props.value},\"MM/dd/yyyy\")))))))))"
+                  },
+                  "type": "expr"
+                }
+              }
+            },
+            "props": {
+              "style": {
+                "color": "#2B2B2B"
+              }
+            },
+            "type": "ia.display.label"
+          },
+          {
+            "meta": {
+              "name": "Label"
+            },
+            "position": {
+              "grow": 1
+            },
+            "props": {
+              "style": {
+                "color": "#AC0000"
+              }
+            },
+            "type": "ia.display.label"
+          },
+          {
+            "events": {
+              "dom": {
+                "onClick": {
+                  "config": {
+                    "script": "\tsystem.perspective.closePopup(\u0027lcPXqfCl\u0027)"
+                  },
+                  "scope": "G",
+                  "type": "script"
+                }
+              }
+            },
+            "meta": {
+              "name": "btnCancel"
+            },
+            "position": {
+              "basis": "70px"
+            },
+            "props": {
+              "image": {
+                "style": {
+                  "backgroundColor": "#181818",
+                  "borderBottomLeftRadius": 5,
+                  "borderBottomRightRadius": 5,
+                  "borderColor": "#4D4D4D",
+                  "borderStyle": "solid",
+                  "borderTopLeftRadius": 5,
+                  "borderTopRightRadius": 5,
+                  "borderWidth": 1
+                },
+                "width": 50
+              },
+              "style": {
+                "classes": "Buttons/Secondary"
+              },
+              "text": "Cancel"
+            },
+            "type": "ia.input.button"
+          },
+          {
+            "meta": {
+              "name": "filler"
+            },
+            "position": {
+              "basis": "20px",
+              "shrink": 0
+            },
+            "type": "ia.display.label"
+          },
+          {
+            "events": {
+              "dom": {
+                "onClick": {
+                  "config": {
+                    "script": "\tdpkCurrent \u003d self.parent.parent.getChild(\"body\").getChild(\"DateTimePickerCurrent\")\n\tdpkNext \u003d self.parent.parent.getChild(\"body\").getChild(\"DateTimePickerNext\")\n\temvDateRangeName \u003d self.getSibling(\"emvDateRangeName\")\n\t\n\tif emvDateRangeName.props.params.selection is None:\n\t\tself.session.custom.dateRangeFromDate \u003d None\n\t\tself.session.custom.dateRangeToDate \u003d None\n\t\tself.session.custom.selectedDateRange \u003d None\t\t\n\telse:\n\t\tself.session.custom.dateRangeFromDate \u003d dpkCurrent.props.value\n\t\tself.session.custom.dateRangeToDate \u003d dpkNext.props.value \n\t\tself.session.custom.selectedDateRange \u003d emvDateRangeName.props.params.selection\n\t\n\tsystem.perspective.closePopup(\u0027lcPXqfCl\u0027)\n"
+                  },
+                  "scope": "G",
+                  "type": "script"
+                }
+              }
+            },
+            "meta": {
+              "name": "btnApply"
+            },
+            "position": {
+              "basis": "70px",
+              "shrink": 0
+            },
+            "props": {
+              "image": {
+                "style": {
+                  "backgroundColor": "#181818",
+                  "borderBottomLeftRadius": 5,
+                  "borderBottomRightRadius": 5,
+                  "borderColor": "#4D4D4D",
+                  "borderStyle": "solid",
+                  "borderTopLeftRadius": 5,
+                  "borderTopRightRadius": 5,
+                  "borderWidth": 1
+                }
+              },
+              "style": {
+                "classes": "Buttons/Main"
+              },
+              "text": "Apply"
+            },
+            "type": "ia.input.button"
+          },
+          {
+            "meta": {
+              "name": "filler1"
+            },
+            "position": {
+              "basis": "10px",
+              "shrink": 0
+            },
+            "type": "ia.display.label"
+          }
+        ],
+        "meta": {
+          "name": "footer"
+        },
+        "position": {
+          "basis": "40px",
+          "shrink": 0
+        },
+        "props": {
+          "style": {
+            "backgroundColor": "#FFFFFF",
+            "paddingBottom": 5,
+            "paddingTop": 5
+          }
+        },
+        "type": "ia.container.flex"
+      }
+    ],
+    "custom": {
+      "endDate_column": "eventEnd",
+      "pageId": "Employers/Applicants/Dashboard/Main/Filters/Applicants_Conditions",
+      "startDate_column": "eventStart"
+    },
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column",
+      "style": {
+        "borderStyle": "solid"
+      }
+    },
+    "scripts": {
+      "customMethods": [
+        {
+          "name": "setDateFromTo",
+          "params": [
+            "payload"
+          ],
+          "script": "\t\n\tdpkCurrent \u003d self.getChild(\"body\").getChild(\"DateTimePickerCurrent\")\n\tdpkNext \u003d self.getChild(\"body\").getChild(\"DateTimePickerNext\")\n\t\n\tdpkCurrent.props.value \u003d payload.get(\u0027dateFrom\u0027)\n\tdpkNext.props.value \u003d payload.get(\u0027dateTo\u0027)\n\t\n"
+        }
+      ],
+      "extensionFunctions": null,
+      "messageHandlers": [
+        {
+          "messageType": "XsetDateFilters",
+          "pageScope": false,
+          "script": "\tsystem.perspective.print(\"Hi\")\n\tself.custom.pageId \u003d payload[\u0027pageId\u0027]\n\tself.custom.startDate_column \u003d payload[\u0027startDate_column\u0027]\n\tself.custom.endDate_column \u003d payload[\u0027endDate_column\u0027]",
+          "sessionScope": true,
+          "viewScope": false
+        },
+        {
+          "messageType": "mhSetDateFromTo",
+          "pageScope": true,
+          "script": "\tself.setDateFromTo(payload)",
+          "sessionScope": false,
+          "viewScope": false
+        }
+      ]
+    },
+    "type": "ia.container.flex"
+  }
+}

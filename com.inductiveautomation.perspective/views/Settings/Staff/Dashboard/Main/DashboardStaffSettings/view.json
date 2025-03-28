@@ -1,0 +1,145 @@
+{
+  "custom": {
+    "reset": false,
+    "rowData": {
+      "active": 1,
+      "altPhone": "",
+      "assignment": 0,
+      "breezeId": -1,
+      "dob": "",
+      "email": "",
+      "firstName": "",
+      "gender": "",
+      "genderId": -1,
+      "humanId": -1,
+      "isFacilitator": 0,
+      "jobTitle": "",
+      "lastName": "",
+      "middleName": "",
+      "phone": "",
+      "staffId": -1,
+      "suffix": ""
+    },
+    "selectedRow": -1,
+    "selectionData": []
+  },
+  "params": {},
+  "propConfig": {
+    "custom.reset": {
+      "onChange": {
+        "enabled": null,
+        "script": "\timport traceback\n\ttry:\n\t\tif currentValue.value:\n\t\t\tsystem.perspective.print(\u0027Staff Data Reset\u0027)\n\t\t\tstaffData \u003d self.custom.selectionData\n\t\t\tselectedRow \u003d self.custom.selectedRow\n\t\t\tif len(staffData) \u003e 0 and selectedRow \u003e -1:\n\t\t\t\t#Data is selected, set row data to selection data\n\t\t\t\tif staffData[0].active:\n\t\t\t\t\tactive \u003d 1\n\t\t\t\telse:\n\t\t\t\t\tactive \u003d 0\n\t\t\t\tif staffData[0].isFacilitator:\n\t\t\t\t\tisFacilitator \u003d 1\n\t\t\t\telse:\n\t\t\t\t\tisFacilitator \u003d 0\n\t\t\t\ttry:\n\t\t\t\t\tdob \u003d system.date.parse(staffData[0].dob,\"MM/dd/yyyy\")\n\t\t\t\texcept:\n\t\t\t\t\tdob \u003d staffData[0].dob\n\t\t\t\tself.custom.rowData \u003d {\n\t\t\t\t\t\"staffId\":staffData[0].staffId,\n\t\t\t\t\t\"humanId\":staffData[0].humanId,\n\t\t\t\t\t\"breezeId\":staffData[0].breezeId,\n\t\t\t\t\t\"genderId\":staffData[0].genderId,\n\t\t\t\t\t\"active\":active,\n\t\t\t\t\t\"firstName\":staffData[0].firstName,\n\t\t\t\t\t\"middleName\":staffData[0].middleName,\n\t\t\t\t\t\"lastName\":staffData[0].lastName,\n\t\t\t\t\t\"suffix\":staffData[0].suffix,\n\t\t\t\t\t\"phone\":staffData[0].phone,\n\t\t\t\t\t\"altPhone\":staffData[0].altPhone,\n\t\t\t\t\t\"dob\":dob,\n\t\t\t\t\t\"gender\":staffData[0].genderName,\n\t\t\t\t\t\"email\":staffData[0].email,\n\t\t\t\t\t\"isFacilitator\":isFacilitator,\n\t\t\t\t\t\"jobTitle\":staffData[0].jobTitle,\n\t\t\t\t\t\"assignment\":staffData[0].assignments\n\t\t\t\t\t}\n\t\t\telse:\n\t\t\t\t#no Data selected, set to defaults\n\t\t\t\tself.custom.rowData \u003d {\n\t\t\t\t\t\"staffId\":-1,\n\t\t\t\t\t\"humanId\":-1,\n\t\t\t\t\t\"breezeId\":-1,\n\t\t\t\t\t\"genderId\":-1,\n\t\t\t\t\t\"active\":1,\n\t\t\t\t\t\"isFacilitator\":0,\n\t\t\t\t\t\"firstName\":\u0027\u0027,\n\t\t\t\t\t\"middleName\":\u0027\u0027,\n\t\t\t\t\t\"lastName\":\u0027\u0027,\n\t\t\t\t\t\"suffix\":\u0027\u0027,\n\t\t\t\t\t\"phone\":\u0027\u0027,\n\t\t\t\t\t\"altPhone\":\u0027\u0027,\n\t\t\t\t\t\"dob\":\u0027\u0027,\n\t\t\t\t\t\"gender\":\u0027\u0027,\n\t\t\t\t\t\"email\":\u0027\u0027,\n\t\t\t\t\t\"jobTitle\":\u0027\u0027,\n\t\t\t\t\t\"assignment\":0\n\t\t\t\t\t}\n\t\t\n\t\tself.custom.reset \u003d False\n\texcept:\n\t    logger \u003d system.util.getLogger(\"SettingsStaffCustomFuncReset()\")\n\t    msg \u003d traceback.format_exc()\n\t    logger.error(msg)"
+      },
+      "persistent": true
+    },
+    "custom.selectedRow": {
+      "binding": {
+        "config": {
+          "path": "/root/Table.props.params.selectedRow"
+        },
+        "type": "property"
+      },
+      "onChange": {
+        "enabled": null,
+        "script": "\tself.custom.reset \u003d True"
+      },
+      "persistent": true
+    },
+    "custom.selectionData": {
+      "binding": {
+        "config": {
+          "path": "/root/Table.props.params.selectionData"
+        },
+        "type": "property"
+      },
+      "persistent": true
+    },
+    "custom.table_data": {
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "width": 2016
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "Edit"
+        },
+        "position": {
+          "basis": "265px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.rowData": {
+            "binding": {
+              "config": {
+                "path": "view.custom.rowData"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "path": "Settings/Staff/Dashboard/Main/Edit/StaffSettingsEdit",
+          "style": {
+            "marginLeft": "40px",
+            "marginRight": "40px"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Filter"
+        },
+        "position": {
+          "basis": "30px",
+          "shrink": 0
+        },
+        "props": {
+          "path": "Settings/Staff/Dashboard/Main/Filter/TableFilter_Staff",
+          "style": {
+            "marginLeft": "40px",
+            "marginRight": "40px"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Table"
+        },
+        "position": {
+          "basis": "320px",
+          "grow": 1
+        },
+        "props": {
+          "params": {
+            "selectedRow": -1,
+            "selectionData": []
+          },
+          "path": "Settings/Staff/Dashboard/Main/Tables/StaffSettingsTable",
+          "style": {
+            "marginLeft": "40px",
+            "marginRight": "40px"
+          }
+        },
+        "type": "ia.display.view"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column",
+      "style": {
+        "classes": "Background/Alternative"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

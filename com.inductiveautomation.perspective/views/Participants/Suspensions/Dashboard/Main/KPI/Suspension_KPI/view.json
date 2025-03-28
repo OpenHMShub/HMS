@@ -1,0 +1,208 @@
+{
+  "custom": {},
+  "params": {
+    "activity_range": 365
+  },
+  "propConfig": {
+    "params.activity_range": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 185,
+      "width": 1470
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "KPI1"
+        },
+        "position": {
+          "basis": "345px",
+          "grow": 1,
+          "shrink": 0
+        },
+        "props": {
+          "params": {
+            "Title": "Total Suspensions",
+            "Value": 999
+          },
+          "path": "Participants/Templates/KPI/Metric_Flex",
+          "style": {
+            "classes": "KPIs/KPI_Card",
+            "marginLeft": "40px"
+          },
+          "useDefaultViewHeight": true
+        },
+        "scripts": {
+          "customMethods": [],
+          "extensionFunctions": null,
+          "messageHandlers": [
+            {
+              "messageType": "suspensionsMonthly",
+              "pageScope": true,
+              "script": "\tself.props.params.Value \u003d payload[\"totalSuspensions\"]",
+              "sessionScope": false,
+              "viewScope": false
+            }
+          ]
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "KPI2"
+        },
+        "position": {
+          "basis": "270px",
+          "grow": 1,
+          "shrink": 0
+        },
+        "props": {
+          "params": {
+            "Title": "Currently Suspended Participants",
+            "Value": 12
+          },
+          "path": "Participants/Templates/KPI/Metric_Flex",
+          "style": {
+            "classes": "KPIs/KPI_Card"
+          },
+          "useDefaultViewHeight": true
+        },
+        "scripts": {
+          "customMethods": [],
+          "extensionFunctions": null,
+          "messageHandlers": [
+            {
+              "messageType": "suspensionsMonthly",
+              "pageScope": true,
+              "script": "\tself.props.params.Value \u003d payload[\"currentSuspendedCount\"]",
+              "sessionScope": false,
+              "viewScope": false
+            }
+          ]
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "KPI3"
+        },
+        "position": {
+          "basis": "345px",
+          "grow": 1,
+          "shrink": 0
+        },
+        "propConfig": {
+          "custom.startDateForChart": {
+            "binding": {
+              "config": {
+                "expression": "now(0)"
+              },
+              "transforms": [
+                {
+                  "code": "\tdayOfMonth \u003d system.date.getDayOfMonth(value) - 1\n\tstartDateOfMonth \u003d system.date.addDays(value, -(dayOfMonth))\n\tstartDateOfMonth \u003d system.date.midnight(startDateOfMonth)\n\treturn system.date.addMonths(startDateOfMonth, -(5))",
+                  "type": "script"
+                }
+              ],
+              "type": "expr"
+            }
+          },
+          "props.params.Value": {
+            "binding": {
+              "config": {
+                "parameters": {
+                  "activity_range": "{view.params.activity_range}",
+                  "dateBegin": "{session.custom.filters.suspensionDashboard.dateBegin.where}",
+                  "dateEnd": "{session.custom.filters.suspensionDashboard.dateEnd.where}",
+                  "dateReinstated": "{session.custom.filters.suspensionDashboard.dateReinstated.where}",
+                  "duration": "{session.custom.filters.suspensionDashboard.duration.where}",
+                  "firstName": "{session.custom.filters.suspensionDashboard.FirstName.where}",
+                  "lastName": "{session.custom.filters.suspensionDashboard.LastName.where}",
+                  "middleName": "{session.custom.filters.suspensionDashboard.MiddleName.where}",
+                  "nickName": "{session.custom.filters.suspensionDashboard.NickName.where}",
+                  "search": "{session.custom.filters.suspensionDashboard.Search.where}",
+                  "suspensionActive": "{session.custom.filters.suspensionDashboard.suspensionActive.where}",
+                  "typeId": "{session.custom.filters.suspensionDashboard.typeId.where}"
+                },
+                "queryPath": "Participants/Suspensions/SuspensionRateMonthly",
+                "returnFormat": "dataset"
+              },
+              "transforms": [
+                {
+                  "code": "\tdateKeys \u003d {}\n\tchartData \u003d []\n\ttodaysDate \u003d system.date.now()\n\tdayOfMonth \u003d system.date.getDayOfMonth(todaysDate) - 1\n\tstartDateOfMonth \u003d system.date.addDays(todaysDate, -(dayOfMonth))\n\tstartDateOfMonth \u003d system.date.midnight(startDateOfMonth)\n\t\n\tnoOfMonthsToAdd \u003d 5 ## start month is 0 ?\n\twhile noOfMonthsToAdd \u003e\u003d 0:\n\t\tdateKeys[system.date.format(system.date.addMonths(startDateOfMonth, -(noOfMonthsToAdd)),\"MM/dd/yyyy\")] \u003d 0\n\t\tnoOfMonthsToAdd \u003d noOfMonthsToAdd -1\n\t\n\tif value is not None and value.getRowCount() \u003e 0:\n\t\tfor i in range(value.getRowCount()):\n\t\t\tif value.getValueAt(i,\u0027monthStartDate\u0027) is not None:\n\t\t\t\tdateKeys[value.getValueAt(i,\u0027monthStartDate\u0027)] \u003d value.getValueAt(i,\u0027totalSuspensions\u0027)\t\n\t\n\tfor key,value in dateKeys.items():\n\t\toneChartData \u003d {}\n\t\toneChartData[\u0027time\u0027] \u003d key\n\t\toneChartData[\u0027Value\u0027] \u003d value\n\t\tchartData.append(oneChartData)\n\treturn chartData",
+                  "type": "script"
+                }
+              ],
+              "type": "query"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "Title": "Suspensions Monthly"
+          },
+          "path": "Participants/Suspensions/Dashboard/Main/KPI/Graph_Flex _bar",
+          "style": {
+            "classes": "KPIs/KPI_Card"
+          },
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "KPI4"
+        },
+        "position": {
+          "basis": "270px",
+          "grow": 1,
+          "shrink": 0
+        },
+        "props": {
+          "params": {
+            "Title": "Avg Suspension Duration (Days)",
+            "Value": 0
+          },
+          "path": "Participants/Templates/KPI/Metric_Flex",
+          "style": {
+            "classes": "KPIs/KPI_Card",
+            "marginRight": "40px"
+          },
+          "useDefaultViewHeight": true
+        },
+        "scripts": {
+          "customMethods": [],
+          "extensionFunctions": null,
+          "messageHandlers": [
+            {
+              "messageType": "suspensionsMonthly",
+              "pageScope": true,
+              "script": "\tself.props.params.Value \u003d payload[\"avgDuration\"]",
+              "sessionScope": false,
+              "viewScope": false
+            }
+          ]
+        },
+        "type": "ia.display.view"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "alignContent": "flex-start",
+      "alignItems": "center",
+      "style": {
+        "classes": "KPIs/KPI_Flex_Container",
+        "overflow": "hidden",
+        "overflowY": "hidden"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

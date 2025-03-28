@@ -1,0 +1,94 @@
+{
+  "custom": {
+    "edit_data": {
+      "HMIS": null,
+      "comment": "",
+      "employee_id": -1,
+      "enrollment_id": null,
+      "quantity": null,
+      "search_selection": "No Selection",
+      "selected_id": null,
+      "selected_id_list": [],
+      "selected_participants": [],
+      "service_id": null,
+      "time_created": {
+        "$": [
+          "ts",
+          192,
+          1604512594406
+        ],
+        "$ts": 1604512594406
+      }
+    },
+    "func_add_participant": false,
+    "func_delete_participant": -1
+  },
+  "params": {},
+  "propConfig": {
+    "custom.edit_data": {
+      "persistent": true
+    },
+    "custom.edit_data[0].id": {
+      "binding": {
+        "config": {
+          "path": "view.params.drugscreenlogid"
+        },
+        "type": "property"
+      }
+    },
+    "custom.func_add_participant": {
+      "onChange": {
+        "enabled": null,
+        "script": "\timport traceback\n\ttry:\n\t\tif currentValue.value:\n\t\t\t#system.perspective.print(currentValue)\n\t\t\tvalid \u003d True\n\t\t\t#Verify its greater then -1\n\t\t\tif self.custom.edit_data.selected_id \u003c 0:\n\t\t\t\tvalid \u003d False\n\t\t\t\tsystem.perspective.print(\u0027Participant ID not valid\u0027)\n\t\t\t#Verify the ID doesn\u0027t already exist in the list\n\t\t\tfor row in range(len(self.custom.edit_data.selected_id_list)):\n\t\t\t\tif self.custom.edit_data.selected_id_list[row] \u003d\u003d self.custom.edit_data.selected_id:\n\t\t\t\t\tvalid \u003d False\n\t\t\t\t\tsystem.perspective.print(\u0027Duplicate Participant ID\u0027)\n\t\t\tif valid:\n\t\t\t\tsystem.perspective.print(\u0027Valid\u0027)\t\t\n\t\t\t\tself.custom.edit_data.selected_id_list.append(self.custom.edit_data.selected_id)\n\t\t\t\tself.custom.edit_data.selected_participants.append(self.custom.edit_data.search_selection[0])\n\t\t\t#Reset the script trigger\n\t\t\tself.custom.func_add_participant \u003d False\n\texcept:\n\t\tlogger \u003d system.util.getLogger(\"Participants ServciesBatchEdit view.custom.func_add_participant\")\n\t\tmsg \u003d traceback.format_exc()\n\t\tlogger.error(msg)"
+      },
+      "persistent": true
+    },
+    "custom.func_delete_participant": {
+      "onChange": {
+        "enabled": null,
+        "script": "\timport traceback\n\ttry:\n\t\tif currentValue.value \u003e -1:\n\t\t\tsystem.perspective.print(\u0027Delete Participant\u0027)\n\t\t\tparticipant_id \u003d currentValue.value\n\t\t\tsystem.perspective.print(participant_id)\n\t\t\t#Remove the participant from the ID list\n\t\t\tfor row in range(len(self.custom.edit_data.selected_id_list)):\n\t\t\t\tif self.custom.edit_data.selected_id_list[row] \u003d\u003d participant_id:\n\t\t\t\t\tself.custom.edit_data.selected_id_list.pop(row)\n\t\t\t\t\t#Find the table row and delete from the table\n\t\t\t\t\tfor id_row in range(len(self.custom.edit_data.selected_participants)):\n\t\t\t\t\t\tif self.custom.edit_data.selected_participants[id_row].participant_id \u003d\u003d participant_id:\n\t\t\t\t\t\t\tself.custom.edit_data.selected_participants.pop(id_row)\n\t\t\t\t\t\t\tbreak\n\t\t\t\t\tbreak\n\t\t\t\t\tsystem.perspective.print(\u0027Participant removed from selection list\u0027)\n\t\t#Reset the value to -1\n\t\tself.custom.func_delete_participant \u003d -1\n\texcept:\n\t\tlogger \u003d system.util.getLogger(\"Participants ServicesBatchEdit view.custom.func_delete_participant\")\n\t\tmsg \u003d traceback.format_exc()\n\t\tlogger.error(msg)"
+      },
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 721,
+      "width": 1244
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "EmbeddedView Row2"
+        },
+        "position": {
+          "basis": "200px",
+          "grow": 1
+        },
+        "props": {
+          "params": {
+            "selected_id": null
+          },
+          "path": "Participants/Storage Bins/Cards/Content",
+          "style": {
+            "marginLeft": "0px",
+            "marginRight": "0px"
+          }
+        },
+        "type": "ia.display.view"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column",
+      "style": {
+        "classes": "Background/Default"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

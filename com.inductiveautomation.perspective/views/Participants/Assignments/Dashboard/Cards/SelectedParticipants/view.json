@@ -1,0 +1,486 @@
+{
+  "custom": {
+    "allowSuspended": true,
+    "allowWithPartialRegistration": true,
+    "allowWithoutShelterProgram": true,
+    "currentSeasonId": null,
+    "disableForPastDates": true,
+    "noOfSelectedGuests": 0,
+    "participantToAdd": {
+      "dateOfBirth": "",
+      "id": -1,
+      "name": ""
+    },
+    "seasonForSchedule": null,
+    "selectedCongregation": {
+      "dayOfYear": "",
+      "gender": "",
+      "id": "",
+      "name": "",
+      "originalStatusValue": "",
+      "scheduleId": "",
+      "status": "",
+      "totalBeds": ""
+    },
+    "selectedStaff": {
+      "email": "",
+      "name": ""
+    },
+    "settingsData": {
+      "$": [
+        "ds",
+        192,
+        1738396347554
+      ],
+      "$columns": [
+        {
+          "data": [],
+          "name": "id",
+          "type": "Integer"
+        },
+        {
+          "data": [],
+          "name": "settingName",
+          "type": "String"
+        },
+        {
+          "data": [],
+          "name": "settingValue",
+          "type": "String"
+        }
+      ]
+    }
+  },
+  "events": {
+    "system": {
+      "onStartup": {
+        "config": {
+          "script": "\tsystem.perspective.sendMessage(\"ResetSearch\", payload\u003d{}, scope\u003d\"session\")\n\tsystem.perspective.sendMessage(\"ResetRegistration\", payload\u003d{}, scope\u003d\"session\")"
+        },
+        "scope": "G",
+        "type": "script"
+      }
+    }
+  },
+  "params": {
+    "selectedId": 0,
+    "selected_id": 0
+  },
+  "propConfig": {
+    "custom.allowSuspended": {
+      "binding": {
+        "config": {
+          "expression": "lookup({view.custom.settingsData},\u0027allow_suspended_participants\u0027,true,\u0027settingName\u0027,\u0027settingValue\u0027)"
+        },
+        "type": "expr"
+      },
+      "persistent": true
+    },
+    "custom.allowWithPartialRegistration": {
+      "binding": {
+        "config": {
+          "expression": "lookup({view.custom.settingsData},\u0027allow_participants_with_partial_registration\u0027,true,\u0027settingName\u0027,\u0027settingValue\u0027)"
+        },
+        "type": "expr"
+      },
+      "persistent": true
+    },
+    "custom.allowWithoutShelterProgram": {
+      "binding": {
+        "config": {
+          "expression": "lookup({view.custom.settingsData},\u0027allow_participants_without_winter_shelter\u0027,true,\u0027settingName\u0027,\u0027settingValue\u0027)"
+        },
+        "type": "expr"
+      },
+      "persistent": true
+    },
+    "custom.currentSeasonId": {
+      "binding": {
+        "config": {
+          "queryPath": "WinterShelterGlobal/getCurrentSeason"
+        },
+        "transforms": [
+          {
+            "code": "\treturn value.getValueAt(0,\u0027id\u0027)",
+            "type": "script"
+          },
+          {
+            "formatType": "numeric",
+            "formatValue": "integer",
+            "type": "format"
+          }
+        ],
+        "type": "query"
+      },
+      "persistent": true
+    },
+    "custom.disableForPastDates": {
+      "binding": {
+        "config": {
+          "expression": "lookup({view.custom.settingsData},\u0027disable_checkin_for_past_dates\u0027,true,\u0027settingName\u0027,\u0027settingValue\u0027)"
+        },
+        "type": "expr"
+      },
+      "persistent": true
+    },
+    "custom.noOfSelectedGuests": {
+      "binding": {
+        "config": {
+          "path": "/root/FlexContainer/participantsList.props.instances"
+        },
+        "transforms": [
+          {
+            "code": "\tcount \u003d 0\n\tif value is not None and len(value) \u003e 0:\n\t\tfor instance in value:\n\t\t\tif instance[\u0027markedForDelete\u0027] \u003d\u003d False:\n\t\t\t\tcount \u003d count + 1\n\t\t\n\treturn count\t",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      },
+      "persistent": true
+    },
+    "custom.participantToAdd": {
+      "persistent": true
+    },
+    "custom.seasonForSchedule": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "scheduleId": "{view.custom.selectedCongregation.scheduleId}"
+          },
+          "queryPath": "WinterShelterGlobal/getSeasonForScheduleId"
+        },
+        "type": "query"
+      },
+      "persistent": true
+    },
+    "custom.selectedCongregation": {
+      "persistent": true
+    },
+    "custom.selectedStaff": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "staffId": "{/root/FlexContainer/Embed_Staff.props.params.selection}"
+          },
+          "queryPath": "Settings/Staff/GetStaffDetailsFromEmployeeID"
+        },
+        "transforms": [
+          {
+            "code": "\tselectedStaff \u003d {\"name\":\"\", \"email\":\"\"}\n\tif value is not None and value.getRowCount() \u003e 0:\n\t\tselectedStaff[\"name\"] \u003d value.getValueAt(0,\u0027name\u0027)\n\t\tselectedStaff[\"email\"] \u003d value.getValueAt(0,\u0027email\u0027)\n\treturn selectedStaff\n\t\t",
+            "type": "script"
+          }
+        ],
+        "type": "query"
+      },
+      "persistent": true
+    },
+    "custom.settingsData": {
+      "binding": {
+        "config": {
+          "queryPath": "WinterShelterGlobal/Settings/GetAllSettings"
+        },
+        "type": "query"
+      },
+      "persistent": true
+    },
+    "params.dob_day": {
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.dob_month": {
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.dob_year": {
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.first_name": {
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.last_name": {
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.middle_name": {
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.nick_name": {
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.race_id": {
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.search_active": {
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.search_selection": {
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.selectedId": {
+      "paramDirection": "output"
+    },
+    "params.selected_first_name": {
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.selected_last_name": {
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.selected_middle_name": {
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.ssn": {
+      "paramDirection": "output",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 500,
+      "width": 250
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "Header"
+        },
+        "position": {
+          "basis": "25px",
+          "shrink": 0
+        },
+        "props": {
+          "params": {
+            "Text": "Selected Participants"
+          },
+          "path": "1_globalTEMPLATES/Header/Header",
+          "style": {
+            "borderTopLeftRadius": "8px",
+            "borderTopRightRadius": "8px"
+          },
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "children": [
+          {
+            "meta": {
+              "name": "Embed_Staff"
+            },
+            "position": {
+              "basis": "11%",
+              "shrink": 0
+            },
+            "propConfig": {
+              "props.params.IsBorder": {
+                "binding": {
+                  "config": {
+                    "path": "../participantsList.props.instances"
+                  },
+                  "transforms": [
+                    {
+                      "code": "\tIsBorder \u003d False\n\tif value \u003d\u003d None:\n\t\tIsBorder \u003d False\n\telif value \u003d\u003d \u0027\u0027:\n\t\tIsBorder \u003d False\n\telif len(value) \u003c 1:\n\t\t## check if list is empty\n\t\tIsBorder \u003d False\n\telif len(value)\u003e0:\n\t\t## check if participant is \"x\"ed out\n\t\tfor i in range(0,len(value)):\n\t\t\tone_instance \u003d value[i]\n\t\t\tif one_instance[\u0027markedForDelete\u0027] \u003d\u003d False:\n\t\t\t\tIsBorder \u003d True\n\t\t\t\tbreak\n\treturn IsBorder",
+                      "type": "script"
+                    }
+                  ],
+                  "type": "property"
+                }
+              },
+              "props.params.options": {
+                "binding": {
+                  "config": {
+                    "queryPath": "Participants/Assignments/GetStaff"
+                  },
+                  "type": "query"
+                }
+              }
+            },
+            "props": {
+              "params": {
+                "highlight": false,
+                "selection": null,
+                "text": "Staff"
+              },
+              "path": "1_TEMPLATES/60px/top/Input_DropDownSingle_MandatoryWithBorder",
+              "style": {
+                "marginLeft": 10,
+                "marginRight": 20
+              }
+            },
+            "type": "ia.display.view"
+          },
+          {
+            "meta": {
+              "name": "participantsList"
+            },
+            "position": {
+              "basis": "340px",
+              "grow": 1
+            },
+            "props": {
+              "direction": "column",
+              "path": "Participants/Assignments/Dashboard/Cards/OneParticipant",
+              "style": {
+                "borderColor": "#0C4E8B",
+                "borderStyle": "solid",
+                "borderWidth": "1px",
+                "marginBottom": 5,
+                "marginLeft": 15,
+                "marginRight": 15,
+                "marginTop": 10
+              },
+              "useDefaultViewWidth": false
+            },
+            "type": "ia.display.flex-repeater"
+          },
+          {
+            "children": [
+              {
+                "events": {
+                  "dom": {
+                    "onClick": {
+                      "config": {
+                        "script": "\timport time\n\tparticipantsList \u003d \tself.parent.parent.getChild(\"participantsList\").props.instances\n\tselectedStaffId \u003d self.parent.parent.getChild(\"Embed_Staff\").props.params.selection\t\t\t\t\n\tisSuccess \u003d False\n\tif len(participantsList) \u003e 0:\n\t\t## check for date validations\n\t\trecordsToUpdate \u003d  \",\".join(\"{0}\".format(i.recordId) for i in participantsList if i.markedForDelete \u003d\u003d False)\n\t\tparticipantsForTaskToUpdate \u003d \",\".join(\"{0}\".format(i.participantID) for i in participantsList if i.markedForDelete \u003d\u003d False) \n\t\tif selectedStaffId \u003d\u003d None or selectedStaffId \u003d\u003d -1 or selectedStaffId \u003d\u003d \u0027\u0027:\n\t\t\tself.parent.parent.getChild(\"Error\").props.text \u003d \"Please select staff.\"\n\n\t\telse:\n\t\t\t## UpDate the Staff Id and Assigned Date into the Participant Program History Table\n\t\t\tupdateQ \u003d \"UPDATE participant.ProgramsHistory SET assignedStaffId \u003d \"\n\t\t\tupdateQ \u003d updateQ + str(selectedStaffId) + \" , AssignedDate \u003d CURRENT_TIMESTAMP , \"\n\t\t\tupdateQ \u003d updateQ + \" AssignedBy \u003d \" +str(self.session.custom.loggedInStaffEmployeeID)\n\t\t\tupdateQ \u003d updateQ + \" WHERE id in (\" + recordsToUpdate + \")\"\n#\t\t\tsystem.perspective.print(updateQ)\n\t\t\t## construct tasks update query\n\t\t\tupdateTasksQ \u003d \"UPDATE participant.Tasks SET staffId \u003d \" + str(selectedStaffId) + \" , assignerId \u003d \" + str(self.session.custom.loggedInStaffEmployeeID)\n\t\t\tupdateTasksQ \u003d updateTasksQ + \" WHERE participantId IN ( \" + participantsForTaskToUpdate + \") \" \n\t\t\tupdateTasksQ \u003d updateTasksQ + \" AND statusId in ( SELECT id from shelter.Status where Status in (\u0027Not Started\u0027,\u0027In Progress\u0027,\u0027Waiting on Someone\u0027));\"\n#\t\t\tsystem.perspective.print(updateTasksQ)\n\t\t\ttry:\n\t\t\t\tsystem.db.runUpdateQuery(updateQ)\n\t\t\t\tsystem.db.runUpdateQuery(updateTasksQ)\n\t\t\t\tsystem.perspective.sendMessage(\"staffAssigned\",payload\u003d{}, scope\u003d\"session\")\n\t\t\t\tsystem.perspective.sendMessage(\"refreshAssignments\",payload\u003d{}, scope\u003d\"session\")\n\t\t\t\tself.parent.parent.getChild(\"Error\").props.text \u003d \"Assignment successful.\"\n\t\t\t\tisSuccess\u003dTrue\n\t\t\texcept Exception as e:\n\t\t\t\tsystem.perspective.print(str(e))\n\t\t\t\tself.parent.parent.getChild(\"Error\").props.text \u003d \"Error in Assignment. Please try again ...\"\n\t\t\n\t\ttime.sleep(3)\n\t\tself.parent.parent.getChild(\"Error\").props.text \u003d \"\"\n\t\tif isSuccess:\n\t\t\t\n\t\t\tstaffEmail \u003d self.view.custom.selectedStaff.email\n\t\t\tstaffName \u003d self.view.custom.selectedStaff.name\n\t\t\tif staffEmail is not None and staffEmail !\u003d \"\":\n\t\t\t\t## Also send an email to the assigned Staff\n\t\t\t\t\n\t\t\t\t\n\t\t\t\tparticipantsText \u003d \"\"\n\t\t\t\tfor oneInstance in self.parent.parent.getChild(\"participantsList\").props.instances:\n\t\t\t\t\tif oneInstance.markedForDelete \u003d\u003d False:\n\t\t\t\t\t\tparticipantsText \u003d participantsText + \"\u003cli\u003e\" + str(oneInstance.participantName) + \"\u003c/li\u003e\"\n\t\t\t\t\n\t\t\t\tif participantsText !\u003d \"\": ## actually participants are present\n\t\t\t\t\temailText \u003d \"\u003cHTML\u003e\u003cBODY\u003e\"\n\t\t\t\t\temailText \u003d emailText + \"Dear \" + str(staffName) + \", \u003cbr\u003e\"\n\t\t\t\t\temailText \u003d emailText + \"You have been assigned following participants : \u003cbr\u003e\u003cbr\u003e\"\n\t\t\t\t\temailText \u003d emailText + \"\u003col\u003e\"\n\t\t\t\t\temailText \u003d emailText + participantsText \n\t\t\t\t\temailText \u003d emailText + \"\u003c/ol\u003e\u003cbr\u003e Thank you. \u003cbr\u003e \u003c/BODY\u003e\u003c/HTML\u003e\"\n\t\t\t\t\n\t\t\t\t\temailSubject \u003d \"Participant Assignments\"\n\t\t\t\t\tto_addr \u003d staffEmail\n\t\t\t\t\tmessage \u003d emailText\n\t\t\t\t\tlogger \u003d system.util.getLogger(\"Participant Assignments Email Notification\")\n\t\t\t\t\t\n\t\t\t\t\t\n\t\t\t\t\ttry:\n\t\t\t\t\t\tsystem.net.sendEmail(fromAddr\u003d\"test-notifications@test.org\", subject\u003demailSubject, \n\t\t\t\t\t\t\t\t\t\t\tbody\u003d message, to\u003d to_addr, smtpProfile\u003d\"testnotifications\")\n\t\t\t\t\t\tlogger.info(\u0027Email sent successfully.\\nSubject: \u0027+ str(emailSubject) + \u0027\\nTo: \u0027 + to_addr)\n\t\t\t\t\texcept:\n\t\t\t\t\t\tlogger.info(\u0027Could not send email because none of the recipients had invalid email addresses.\u0027)\n\t\t\t\n\t\t\t## Reset the data\n\t\t\tself.parent.parent.getChild(\"participantsList\").props.instances \u003d []\n\t\t\tself.parent.parent.getChild(\"Embed_Staff\").props.params.selection \u003d None\n\t\t\t\n\t\t\t\n\t\t\n\t\t"
+                      },
+                      "scope": "G",
+                      "type": "script"
+                    }
+                  }
+                },
+                "meta": {
+                  "name": "Assign"
+                },
+                "position": {
+                  "basis": "100px"
+                },
+                "propConfig": {
+                  "position.display": {
+                    "binding": {
+                      "config": {
+                        "expression": "{session.custom.isAdministrator} || {session.custom.isManager} || {session.custom.isWSManager}\r\n"
+                      },
+                      "type": "expr"
+                    }
+                  }
+                },
+                "props": {
+                  "style": {
+                    "classes": "Buttons/Main",
+                    "margin": 2
+                  },
+                  "text": "Assign"
+                },
+                "type": "ia.input.button"
+              },
+              {
+                "events": {
+                  "dom": {
+                    "onClick": {
+                      "config": {
+                        "script": "\tself.parent.parent.getChild(\"participantsList\").refreshBinding(\"props.instances\")"
+                      },
+                      "scope": "G",
+                      "type": "script"
+                    }
+                  }
+                },
+                "meta": {
+                  "name": "Clear",
+                  "visible": false
+                },
+                "position": {
+                  "basis": "100px"
+                },
+                "props": {
+                  "style": {
+                    "classes": "Buttons/Delete",
+                    "margin": 2
+                  },
+                  "text": "CLEAR"
+                },
+                "type": "ia.input.button"
+              }
+            ],
+            "meta": {
+              "name": "Buttons"
+            },
+            "position": {
+              "basis": "40px"
+            },
+            "props": {
+              "justify": "space-between",
+              "style": {
+                "overflow": "hidden",
+                "paddingLeft": 13,
+                "paddingRight": 13
+              }
+            },
+            "type": "ia.container.flex"
+          },
+          {
+            "meta": {
+              "name": "Error"
+            },
+            "position": {
+              "basis": "25px"
+            },
+            "props": {
+              "style": {
+                "classes": "Text/Error_Message"
+              }
+            },
+            "type": "ia.display.label"
+          }
+        ],
+        "meta": {
+          "name": "FlexContainer"
+        },
+        "position": {
+          "basis": "100%",
+          "grow": 1
+        },
+        "props": {
+          "direction": "column",
+          "style": {
+            "classes": "Background/Default"
+          }
+        },
+        "type": "ia.container.flex"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column",
+      "style": {
+        "classes": "Background/Alternative"
+      }
+    },
+    "scripts": {
+      "customMethods": [],
+      "extensionFunctions": null,
+      "messageHandlers": [
+        {
+          "messageType": "addParticipantForAssignment",
+          "pageScope": true,
+          "script": "\t# implement your handler here\n\timport time\n\timport copy\n\tmessage \u003d \"\"\n\tproject \u003d \"RITI\"\n\ttry:\n\t\tif payload is not None:\n\t\t\t\n\t\t\trecordId \u003d payload[\u0027record_id\u0027]\n\t\t\tparticipantName \u003d payload[\u0027participant_name\u0027]\n\t\t\tprogramName \u003d payload[\u0027program_name\u0027]\n\t\t\tparticipantID \u003d payload[\u0027participant_id\u0027]\n\t\t\tprogramId \u003d payload[\u0027program_id\u0027]\n\t\t\tbirthDate \u003d payload[\u0027birth_date\u0027]\n\t\t\tentryDate \u003d payload[\u0027entry_date\u0027]\n\t\t\texistingParticipants \u003d self.getChild(\"FlexContainer\").getChild(\"participantsList\").props.instances\n\t\t\t## check if participant already exists\n\t\t\tif recordId in [instance.recordId for instance in existingParticipants]:\n\t\t\t\tmessage \u003d \"Participant is already added\"\n\t\t\telse: # add the participant to list\n\t\t\t\tinstanceStruct \u003d {\n\t\t\t\t\t\t  \"instanceStyle\": {\n\t\t\t\t\t\t\t\"classes\": \"\"\n\t\t\t\t\t\t  },\n\t\t\t\t\t\t  \"instancePosition\": {},\n\t\t\t\t\t\t  \"recordId\": -1,\n\t\t\t\t\t\t  \"participantName\":\u0027\u0027,\n\t\t\t\t\t\t  \"programName\":\u0027\u0027,\n\t\t\t\t\t\t  \"participantID\":-1,\n\t\t\t\t\t\t  \"programId\":-1,\n\t\t\t\t\t\t  \"birthDate\":\u0027\u0027,\n\t\t\t\t\t\t  \"entryDate\":\u0027\u0027,\n\t\t\t\t\t\t  \"markedForDelete\":False\n\t\t\t\t\t\t}\n\t\t\t\tinstanceStruct[\u0027recordId\u0027] \u003d recordId\n\t\t\t\tinstanceStruct[\u0027participantName\u0027] \u003d participantName\n\t\t\t\tinstanceStruct[\u0027programName\u0027] \u003d programName\n\t\t\t\tinstanceStruct[\u0027participantID\u0027] \u003d participantID\n\t\t\t\tinstanceStruct[\u0027programId\u0027] \u003d programId\n\t\t\t\tinstanceStruct[\u0027birthDate\u0027] \u003d birthDate\n\t\t\t\tinstanceStruct[\u0027entryDate\u0027] \u003d entryDate\n\t\t\t\tinstanceStruct[\u0027markedForDelete\u0027] \u003d False\n\t\t\t\t\n\t\t\t\texistingParticipants.append(instanceStruct)\n\t\t\t\tself.getChild(\"FlexContainer\").getChild(\"participantsList\").props.instances \u003d existingParticipants\n\t\t \n\texcept Exception as e:\n\t\tsystem.perspective.print(str(e))\n\t\tmessage \u003d \"Internal error, try again\"\n\n\tif message !\u003d \"\":\n\t\tself.getChild(\"FlexContainer\").getChild(\"Error\").props.text \u003d message\n\t\ttime.sleep(3)\n\t\tself.getChild(\"FlexContainer\").getChild(\"Error\").props.text \u003d \"\"",
+          "sessionScope": true,
+          "viewScope": false
+        }
+      ]
+    },
+    "type": "ia.container.flex"
+  }
+}

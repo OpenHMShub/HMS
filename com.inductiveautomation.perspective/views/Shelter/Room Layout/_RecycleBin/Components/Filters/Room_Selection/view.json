@@ -1,0 +1,172 @@
+{
+  "custom": {},
+  "events": {
+    "system": {
+      "onStartup": {
+        "config": {
+          "script": "\t\n\temvRoom \u003d self.getChild(\"root\").getChild(\"emvRoom\")\n\temvRoom.props.params.actionPerformedPulse \u003d False\n"
+        },
+        "scope": "G",
+        "type": "script"
+      }
+    }
+  },
+  "params": {
+    "facilityId": -1,
+    "version": 4
+  },
+  "propConfig": {
+    "params.facilityId": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.version": {
+      "binding": {
+        "config": {
+          "path": "/root/emvVersion.props.params.version"
+        },
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 30,
+      "width": 1820
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "emvRoom"
+        },
+        "position": {
+          "basis": "400px"
+        },
+        "propConfig": {
+          "props.params.actionPerformedPulse": {
+            "onChange": {
+              "enabled": null,
+              "script": "\troot \u003d self.parent\n\troot.sendMsgCondition()\n"
+            }
+          },
+          "props.params.options": {
+            "binding": {
+              "config": {
+                "parameters": {
+                  "facilityId": "{view.params.facilityId}"
+                },
+                "queryPath": "Shelter/RoomAvailability/Rooms"
+              },
+              "type": "query"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "actionPerformedPulse": false,
+            "clear": false,
+            "multiSelect": false,
+            "placeholder": "Select Room",
+            "selection": null
+          },
+          "path": "Providers/Dashboard/Components/Filters/Conditional_DropDown",
+          "style": {
+            "classes": "Filter/Filter_Container"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Placeholder"
+        },
+        "position": {
+          "basis": "200px",
+          "grow": 1
+        },
+        "props": {
+          "path": "1_TEMPLATES/Filtering/Filter_Placeholder"
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "emvVersion"
+        },
+        "position": {
+          "basis": "200px",
+          "grow": 1
+        },
+        "propConfig": {
+          "props.params.actionPerformedPulse": {
+            "onChange": {
+              "enabled": null,
+              "script": "\tself.getSibling(\"emvRoom\").props.params.clear \u003d True"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "actionPerformedPulse": false,
+            "version": 4
+          },
+          "path": "Shelter/Room Layout/Components/Filters/Version_Mtb"
+        },
+        "type": "ia.display.view"
+      }
+    ],
+    "custom": {
+      "_devClean": false,
+      "_devPulse": false,
+      "_isDev": false
+    },
+    "meta": {
+      "name": "root"
+    },
+    "propConfig": {
+      "custom._devClean": {
+        "onChange": {
+          "enabled": null,
+          "script": "\t\n\temvRoom \u003d self.getChild(\"emvRoom\")\n\t\n\temvRoom.props.params.clear \u003d True\n\n\t\n\tif self.custom._devClean:\n\t\tself.custom._devClean \u003d False"
+        }
+      },
+      "custom._devPulse": {
+        "onChange": {
+          "enabled": null,
+          "script": "\t\n\temvRoom \u003d self.getChild(\"emvRoom\")\n\t\n\tif self.custom._isDev:\n\t\tif currentValue.value is True:\n\t\t\tself.setPropsDropdowns()\n\t\telse:\n\t\t\temvRoom.props.params.options \u003d []\n\t\n\temvRoom.props.params.actionPerformedPulse \u003d False\n"
+        }
+      }
+    },
+    "props": {
+      "style": {
+        "classes": "Filter/Header_Text"
+      }
+    },
+    "scripts": {
+      "customMethods": [
+        {
+          "name": "sendMsgCondition",
+          "params": [
+            "payload\u003dNone"
+          ],
+          "script": "\t\n\temvRoom \u003d self.getChild(\"emvRoom\")\n\t\n\tif payload is None:\n\t\tpayload \u003d {}\n\t\tpayload[\u0027oneDay\u0027] \u003d system.date.now()\n\t\tpayload[\u0027facilityId\u0027] \u003d self.view.params.facilityId\n\t\tpayload[\u0027roomId\u0027] \u003d emvRoom.props.params.selection\n\n\tsystem.perspective.print((\u0027mhByCondition\u0027,payload)) \n\t\n\tsystem.perspective.sendMessage(\u0027mhByCondition\u0027, payload \u003d payload)\n\t\n"
+        }
+      ],
+      "extensionFunctions": null,
+      "messageHandlers": [
+        {
+          "messageType": "refreshProviderTableFromFilter",
+          "pageScope": true,
+          "script": "\tself.sendMsgCondition()",
+          "sessionScope": false,
+          "viewScope": false
+        }
+      ]
+    },
+    "type": "ia.container.flex"
+  }
+}

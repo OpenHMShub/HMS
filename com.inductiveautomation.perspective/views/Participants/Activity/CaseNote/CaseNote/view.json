@@ -1,0 +1,173 @@
+{
+  "custom": {
+    "Data": [
+      {
+        "HMIS": "No",
+        "Note": "Kelly is showing me the new data base and this is amazing.",
+        "Services": ""
+      }
+    ]
+  },
+  "params": {
+    "Date": "Apr. 19, 2020 at 11:32 AM",
+    "ID": 80,
+    "Size": 220
+  },
+  "propConfig": {
+    "custom.Data": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "CaseNoteID": "{view.params.ID}"
+          },
+          "queryPath": "Participants/Activities/SelectSingleCaseNote",
+          "returnFormat": "json"
+        },
+        "transforms": [
+          {
+            "code": "\tif len(value):\n\t\treturn value\n\telse:\n\t\treturn [{\n\t  \"HMIS\": \"\",\n\t  \"Note\": \"\",\n\t  \"Services\": \"\"\n\t}]",
+            "type": "script"
+          }
+        ],
+        "type": "query"
+      },
+      "persistent": true
+    },
+    "params.Date": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.ID": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.Size": {
+      "binding": {
+        "config": {
+          "path": "view.props.defaultSize.height"
+        },
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 220
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "EmbeddedView"
+        },
+        "position": {
+          "basis": "40px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.Date": {
+            "binding": {
+              "config": {
+                "expression": "{view.params.Date}"
+              },
+              "transforms": [
+                {
+                  "expression": "dateFormat({value},\"MMM. d, YYYY\") +\" at \"+ dateFormat({value},\"hh:mm a\")",
+                  "type": "expression"
+                }
+              ],
+              "type": "expr"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "Icon": "material/description",
+            "Title": "Case Note"
+          },
+          "path": "Participants/Activity/ActivityHeader"
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "EmbeddedView_1"
+        },
+        "position": {
+          "basis": "64px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.HMIS": {
+            "binding": {
+              "config": {
+                "path": "view.custom.Data[0].HMIS"
+              },
+              "type": "property"
+            }
+          },
+          "props.params.Services": {
+            "binding": {
+              "config": {
+                "path": "view.custom.Data[0].Services"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "path": "Participants/Activity/CaseNote/InformationTop",
+          "style": {
+            "borderBottomColor": "#e6e6e6",
+            "borderBottomStyle": "solid",
+            "borderBottomWidth": 1,
+            "borderTopColor": "#e6e6e6",
+            "borderTopStyle": "solid",
+            "borderTopWidth": 1,
+            "marginLeft": "50px",
+            "marginRight": "50px",
+            "paddingTop": "5px"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "EmbeddedView_3"
+        },
+        "position": {
+          "basis": "45px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.Text": {
+            "binding": {
+              "config": {
+                "path": "view.custom.Data[0].Note"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "path": "Participants/Activity/CaseNote/Comment"
+        },
+        "type": "ia.display.view"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column",
+      "style": {
+        "classes": "Background/Default",
+        "overflow": "hidden"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

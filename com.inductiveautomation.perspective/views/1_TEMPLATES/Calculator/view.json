@@ -1,0 +1,900 @@
+{
+  "custom": {
+    "finalResult": null,
+    "result": null
+  },
+  "params": {
+    "calcStrInitial": "",
+    "forcePositive": false,
+    "messageHandler": null,
+    "popupId": ""
+  },
+  "propConfig": {
+    "custom.finalResult": {
+      "persistent": true
+    },
+    "custom.result": {
+      "persistent": true
+    },
+    "params.calcStrInitial": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.forcePositive": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.messageHandler": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.popupId": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.result": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 400,
+      "width": 300
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "events": {
+          "system": {
+            "onStartup": {
+              "config": {
+                "script": "\t\n\tcalcStr \u003d str(self.view.params.calcStrInitial)\n\tif(self.view.params.calcStrInitial is not None and len(calcStr) \u003e 0 and calcStr) !\u003d \"0\":\n\t\tself.props.text \u003d calcStr\n\telse:\n\t\tself.props.text \u003d \"\""
+              },
+              "scope": "G",
+              "type": "script"
+            }
+          }
+        },
+        "meta": {
+          "name": "TextField"
+        },
+        "position": {
+          "basis": "32px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.text": {
+            "onChange": {
+              "enabled": null,
+              "script": "\tresult \u003d calculate.evalExpression(currentValue.value)\n\tif result is not None:\n\t\tself.view.custom.result \u003d round(result, 3)\n\telse:\n\t\tself.view.custom.result \u003d result\n"
+            }
+          }
+        },
+        "props": {
+          "style": {
+            "classes": "Dropdowns/DD_Default",
+            "margin": "5px 10px",
+            "text-align": "right"
+          }
+        },
+        "type": "ia.input.text-field"
+      },
+      {
+        "children": [
+          {
+            "meta": {
+              "name": "errorMsg"
+            },
+            "position": {
+              "basis": ""
+            },
+            "props": {
+              "style": {
+                "color": "red",
+                "font-size": "10px"
+              }
+            },
+            "scripts": {
+              "customMethods": [
+                {
+                  "name": "showMessage",
+                  "params": [
+                    "msg"
+                  ],
+                  "script": "\timport time\n\tself.props.text \u003d msg\n\ttime.sleep(3)\n\tself.props.text \u003d \"\""
+                }
+              ],
+              "extensionFunctions": null,
+              "messageHandlers": []
+            },
+            "type": "ia.display.label"
+          },
+          {
+            "meta": {
+              "name": "eqSign"
+            },
+            "position": {
+              "basis": "",
+              "grow": 1,
+              "shrink": 0
+            },
+            "props": {
+              "style": {
+                "color": "#555555",
+                "font-size": "15px",
+                "margin-right": "5px",
+                "text-align": "right"
+              },
+              "text": "\u003d"
+            },
+            "type": "ia.display.label"
+          },
+          {
+            "meta": {
+              "name": "Result"
+            },
+            "position": {
+              "basis": "",
+              "shrink": 0
+            },
+            "propConfig": {
+              "custom.valError": {
+                "binding": {
+                  "config": {
+                    "expression": "len({.../TextField.props.text})\u003e0 \u0026\u0026 isNull({view.custom.result})"
+                  },
+                  "type": "expr"
+                }
+              },
+              "props.style.color": {
+                "binding": {
+                  "config": {
+                    "path": "this.custom.valError"
+                  },
+                  "transforms": [
+                    {
+                      "fallback": "#333333",
+                      "inputType": "scalar",
+                      "mappings": [
+                        {
+                          "input": true,
+                          "output": "red"
+                        }
+                      ],
+                      "outputType": "scalar",
+                      "type": "map"
+                    }
+                  ],
+                  "type": "property"
+                }
+              },
+              "props.text": {
+                "binding": {
+                  "config": {
+                    "expression": "if({this.custom.valError},\n\t\"Input Error\",\n\tif(isNull({view.custom.result}),\n\t\t\"\",\n\t\t{view.custom.result}))"
+                  },
+                  "type": "expr"
+                }
+              }
+            },
+            "props": {
+              "alignVertical": "top",
+              "style": {
+                "font-size": "15px",
+                "text-align": "right"
+              }
+            },
+            "type": "ia.display.label"
+          }
+        ],
+        "meta": {
+          "name": "Output"
+        },
+        "position": {
+          "basis": "",
+          "shrink": 0
+        },
+        "props": {
+          "style": {
+            "margin": "0 10px"
+          }
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "events": {
+                  "component": {
+                    "onActionPerformed": {
+                      "config": {
+                        "script": "\tself.parent.parent.parent.getChild(\"TextField\").props.text \u003d \"\""
+                      },
+                      "scope": "G",
+                      "type": "script"
+                    }
+                  }
+                },
+                "meta": {
+                  "name": "BtnClear"
+                },
+                "position": {
+                  "basis": "20%",
+                  "grow": 1
+                },
+                "props": {
+                  "style": {
+                    "classes": "Buttons/Btn_Calculator"
+                  },
+                  "text": "CE"
+                },
+                "type": "ia.input.button"
+              },
+              {
+                "events": {
+                  "component": {
+                    "onActionPerformed": {
+                      "config": {
+                        "script": "\tself.parent.parent.parent.getChild(\"TextField\").props.text +\u003d \"7\""
+                      },
+                      "scope": "G",
+                      "type": "script"
+                    }
+                  }
+                },
+                "meta": {
+                  "name": "Btn7"
+                },
+                "position": {
+                  "basis": "20%",
+                  "grow": 1
+                },
+                "props": {
+                  "style": {
+                    "classes": "Buttons/Btn_Calculator"
+                  },
+                  "text": 7
+                },
+                "type": "ia.input.button"
+              },
+              {
+                "events": {
+                  "component": {
+                    "onActionPerformed": {
+                      "config": {
+                        "script": "\tself.parent.parent.parent.getChild(\"TextField\").props.text +\u003d \"4\""
+                      },
+                      "scope": "G",
+                      "type": "script"
+                    }
+                  }
+                },
+                "meta": {
+                  "name": "Btn4"
+                },
+                "position": {
+                  "basis": "20%",
+                  "grow": 1
+                },
+                "props": {
+                  "style": {
+                    "classes": "Buttons/Btn_Calculator"
+                  },
+                  "text": 4
+                },
+                "type": "ia.input.button"
+              },
+              {
+                "events": {
+                  "component": {
+                    "onActionPerformed": {
+                      "config": {
+                        "script": "\tself.parent.parent.parent.getChild(\"TextField\").props.text +\u003d \"1\""
+                      },
+                      "scope": "G",
+                      "type": "script"
+                    }
+                  }
+                },
+                "meta": {
+                  "name": "Btn1"
+                },
+                "position": {
+                  "basis": "20%",
+                  "grow": 1
+                },
+                "props": {
+                  "style": {
+                    "classes": "Buttons/Btn_Calculator"
+                  },
+                  "text": 1
+                },
+                "type": "ia.input.button"
+              },
+              {
+                "events": {
+                  "component": {
+                    "onActionPerformed": {
+                      "config": {
+                        "script": "\tself.parent.parent.parent.getChild(\"TextField\").props.text +\u003d \"0\""
+                      },
+                      "scope": "G",
+                      "type": "script"
+                    }
+                  }
+                },
+                "meta": {
+                  "name": "Btn0"
+                },
+                "position": {
+                  "basis": "20%",
+                  "grow": 1
+                },
+                "props": {
+                  "style": {
+                    "classes": "Buttons/Btn_Calculator"
+                  },
+                  "text": 0
+                },
+                "type": "ia.input.button"
+              }
+            ],
+            "meta": {
+              "name": "Col1"
+            },
+            "position": {
+              "basis": "25%",
+              "grow": 1,
+              "shrink": 0
+            },
+            "props": {
+              "direction": "column"
+            },
+            "type": "ia.container.flex"
+          },
+          {
+            "children": [
+              {
+                "events": {
+                  "component": {
+                    "onActionPerformed": {
+                      "config": {
+                        "script": "\tself.parent.parent.parent.getChild(\"TextField\").props.text +\u003d \"(\""
+                      },
+                      "scope": "G",
+                      "type": "script"
+                    }
+                  }
+                },
+                "meta": {
+                  "name": "BtnPOpen"
+                },
+                "position": {
+                  "basis": "20%",
+                  "grow": 1
+                },
+                "props": {
+                  "style": {
+                    "classes": "Buttons/Btn_Calculator"
+                  },
+                  "text": "("
+                },
+                "type": "ia.input.button"
+              },
+              {
+                "events": {
+                  "component": {
+                    "onActionPerformed": {
+                      "config": {
+                        "script": "\tself.parent.parent.parent.getChild(\"TextField\").props.text +\u003d \"8\""
+                      },
+                      "scope": "G",
+                      "type": "script"
+                    }
+                  }
+                },
+                "meta": {
+                  "name": "Btn8"
+                },
+                "position": {
+                  "basis": "20%",
+                  "grow": 1
+                },
+                "props": {
+                  "style": {
+                    "classes": "Buttons/Btn_Calculator"
+                  },
+                  "text": 8
+                },
+                "type": "ia.input.button"
+              },
+              {
+                "events": {
+                  "component": {
+                    "onActionPerformed": {
+                      "config": {
+                        "script": "\tself.parent.parent.parent.getChild(\"TextField\").props.text +\u003d \"5\""
+                      },
+                      "scope": "G",
+                      "type": "script"
+                    }
+                  }
+                },
+                "meta": {
+                  "name": "Btn5"
+                },
+                "position": {
+                  "basis": "20%",
+                  "grow": 1
+                },
+                "props": {
+                  "style": {
+                    "classes": "Buttons/Btn_Calculator"
+                  },
+                  "text": 5
+                },
+                "type": "ia.input.button"
+              },
+              {
+                "events": {
+                  "component": {
+                    "onActionPerformed": {
+                      "config": {
+                        "script": "\tself.parent.parent.parent.getChild(\"TextField\").props.text +\u003d \"2\""
+                      },
+                      "scope": "G",
+                      "type": "script"
+                    }
+                  }
+                },
+                "meta": {
+                  "name": "Btn2"
+                },
+                "position": {
+                  "basis": "20%",
+                  "grow": 1
+                },
+                "props": {
+                  "style": {
+                    "classes": "Buttons/Btn_Calculator"
+                  },
+                  "text": 2
+                },
+                "type": "ia.input.button"
+              },
+              {
+                "events": {
+                  "component": {
+                    "onActionPerformed": {
+                      "config": {
+                        "script": "\tself.parent.parent.parent.getChild(\"TextField\").props.text +\u003d \".\""
+                      },
+                      "scope": "G",
+                      "type": "script"
+                    }
+                  }
+                },
+                "meta": {
+                  "name": "BtnDot"
+                },
+                "position": {
+                  "basis": "20%",
+                  "grow": 1
+                },
+                "props": {
+                  "style": {
+                    "classes": "Buttons/Btn_Calculator"
+                  },
+                  "text": "."
+                },
+                "type": "ia.input.button"
+              }
+            ],
+            "meta": {
+              "name": "Col2"
+            },
+            "position": {
+              "basis": "25%",
+              "grow": 1,
+              "shrink": 0
+            },
+            "props": {
+              "direction": "column"
+            },
+            "type": "ia.container.flex"
+          },
+          {
+            "children": [
+              {
+                "events": {
+                  "component": {
+                    "onActionPerformed": {
+                      "config": {
+                        "script": "\tself.parent.parent.parent.getChild(\"TextField\").props.text +\u003d \")\""
+                      },
+                      "scope": "G",
+                      "type": "script"
+                    }
+                  }
+                },
+                "meta": {
+                  "name": "BtnPClose"
+                },
+                "position": {
+                  "basis": "20%",
+                  "grow": 1
+                },
+                "props": {
+                  "style": {
+                    "classes": "Buttons/Btn_Calculator"
+                  },
+                  "text": ")"
+                },
+                "type": "ia.input.button"
+              },
+              {
+                "events": {
+                  "component": {
+                    "onActionPerformed": {
+                      "config": {
+                        "script": "\tself.parent.parent.parent.getChild(\"TextField\").props.text +\u003d \"9\""
+                      },
+                      "scope": "G",
+                      "type": "script"
+                    }
+                  }
+                },
+                "meta": {
+                  "name": "Btn9"
+                },
+                "position": {
+                  "basis": "20%",
+                  "grow": 1
+                },
+                "props": {
+                  "style": {
+                    "classes": "Buttons/Btn_Calculator"
+                  },
+                  "text": 9
+                },
+                "type": "ia.input.button"
+              },
+              {
+                "events": {
+                  "component": {
+                    "onActionPerformed": {
+                      "config": {
+                        "script": "\tself.parent.parent.parent.getChild(\"TextField\").props.text +\u003d \"6\""
+                      },
+                      "scope": "G",
+                      "type": "script"
+                    }
+                  }
+                },
+                "meta": {
+                  "name": "Btn6"
+                },
+                "position": {
+                  "basis": "20%",
+                  "grow": 1
+                },
+                "props": {
+                  "style": {
+                    "classes": "Buttons/Btn_Calculator"
+                  },
+                  "text": 6
+                },
+                "type": "ia.input.button"
+              },
+              {
+                "events": {
+                  "component": {
+                    "onActionPerformed": {
+                      "config": {
+                        "script": "\tself.parent.parent.parent.getChild(\"TextField\").props.text +\u003d \"3\""
+                      },
+                      "scope": "G",
+                      "type": "script"
+                    }
+                  }
+                },
+                "meta": {
+                  "name": "Btn3"
+                },
+                "position": {
+                  "basis": "20%",
+                  "grow": 1
+                },
+                "props": {
+                  "style": {
+                    "classes": "Buttons/Btn_Calculator"
+                  },
+                  "text": 3
+                },
+                "type": "ia.input.button"
+              },
+              {
+                "events": {
+                  "component": {
+                    "onActionPerformed": {
+                      "config": {
+                        "script": "\tself.parent.parent.parent.getChild(\"TextField\").props.text \u003d (\n\t\t\"(\" + self.parent.parent.parent.getChild(\"TextField\").props.text + \")^(\")"
+                      },
+                      "scope": "G",
+                      "type": "script"
+                    }
+                  }
+                },
+                "meta": {
+                  "name": "BtnPow"
+                },
+                "position": {
+                  "basis": "20%",
+                  "grow": 1
+                },
+                "props": {
+                  "style": {
+                    "classes": "Buttons/Btn_Calculator"
+                  },
+                  "text": "xⁿ"
+                },
+                "type": "ia.input.button"
+              }
+            ],
+            "meta": {
+              "name": "Col3"
+            },
+            "position": {
+              "basis": "25%",
+              "grow": 1,
+              "shrink": 0
+            },
+            "props": {
+              "direction": "column"
+            },
+            "type": "ia.container.flex"
+          },
+          {
+            "children": [
+              {
+                "events": {
+                  "component": {
+                    "onActionPerformed": {
+                      "config": {
+                        "script": "\tself.parent.parent.parent.getChild(\"TextField\").props.text \u003d (\n\t\tself.parent.parent.parent.getChild(\"TextField\").props.text[:-1])"
+                      },
+                      "scope": "G",
+                      "type": "script"
+                    }
+                  }
+                },
+                "meta": {
+                  "name": "BtnDel"
+                },
+                "position": {
+                  "basis": "20%",
+                  "grow": 1
+                },
+                "props": {
+                  "style": {
+                    "classes": "Buttons/Btn_Calculator",
+                    "font-size": "30px"
+                  },
+                  "text": "←"
+                },
+                "type": "ia.input.button"
+              },
+              {
+                "events": {
+                  "component": {
+                    "onActionPerformed": {
+                      "config": {
+                        "script": "\tself.parent.parent.parent.getChild(\"TextField\").props.text +\u003d \"/\""
+                      },
+                      "scope": "G",
+                      "type": "script"
+                    }
+                  }
+                },
+                "meta": {
+                  "name": "BtnDivide"
+                },
+                "position": {
+                  "basis": "20%",
+                  "grow": 1
+                },
+                "props": {
+                  "style": {
+                    "classes": "Buttons/Btn_Calculator"
+                  },
+                  "text": "÷"
+                },
+                "type": "ia.input.button"
+              },
+              {
+                "events": {
+                  "component": {
+                    "onActionPerformed": {
+                      "config": {
+                        "script": "\tself.parent.parent.parent.getChild(\"TextField\").props.text +\u003d \"*\""
+                      },
+                      "scope": "G",
+                      "type": "script"
+                    }
+                  }
+                },
+                "meta": {
+                  "name": "BtnMultiply"
+                },
+                "position": {
+                  "basis": "20%",
+                  "grow": 1
+                },
+                "props": {
+                  "style": {
+                    "classes": "Buttons/Btn_Calculator"
+                  },
+                  "text": "×"
+                },
+                "type": "ia.input.button"
+              },
+              {
+                "events": {
+                  "component": {
+                    "onActionPerformed": {
+                      "config": {
+                        "script": "\tself.parent.parent.parent.getChild(\"TextField\").props.text +\u003d \"+\""
+                      },
+                      "scope": "G",
+                      "type": "script"
+                    }
+                  }
+                },
+                "meta": {
+                  "name": "BtnPlus"
+                },
+                "position": {
+                  "basis": "20%",
+                  "grow": 1
+                },
+                "props": {
+                  "style": {
+                    "classes": "Buttons/Btn_Calculator"
+                  },
+                  "text": "+"
+                },
+                "type": "ia.input.button"
+              },
+              {
+                "events": {
+                  "component": {
+                    "onActionPerformed": {
+                      "config": {
+                        "script": "\tself.parent.parent.parent.getChild(\"TextField\").props.text +\u003d \"-\""
+                      },
+                      "scope": "G",
+                      "type": "script"
+                    }
+                  }
+                },
+                "meta": {
+                  "name": "BtnMinus"
+                },
+                "position": {
+                  "basis": "20%",
+                  "grow": 1
+                },
+                "props": {
+                  "style": {
+                    "classes": "Buttons/Btn_Calculator"
+                  },
+                  "text": "−"
+                },
+                "type": "ia.input.button"
+              }
+            ],
+            "meta": {
+              "name": "Col4"
+            },
+            "position": {
+              "basis": "25%",
+              "grow": 1,
+              "shrink": 0
+            },
+            "props": {
+              "direction": "column"
+            },
+            "type": "ia.container.flex"
+          }
+        ],
+        "meta": {
+          "name": "Keypad"
+        },
+        "position": {
+          "basis": "",
+          "grow": 1,
+          "shrink": 0
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "children": [
+          {
+            "events": {
+              "component": {
+                "onActionPerformed": {
+                  "config": {
+                    "script": "\tlogger \u003d system.util.getLogger(\"View.Calculator\")\n\t\n\t# If the messageHandler parameter was given\n\tif self.view.params.messageHandler is not None:\n\t\t# Ensure result is positive if required\n\t\tif self.view.params.forcePositive and self.view.custom.result \u003c 0:\n\t\t\tlogger.info(\"Negative result not permitted\")\n\t\t\tself.parent.parent.getChild(\"Output\").getChild(\"errorMsg\").showMessage(\n\t\t\t\t\t\"Result must be positive\")\n\t\t\treturn\n\t\t\t\t\t\t\t\n\t\t# Try to send the result to the given message handler\n\t\ttry:\n\t\t\tsystem.perspective.sendMessage(\n\t\t\t\tstr(self.view.params.messageHandler),\n\t\t\t\tpayload\u003d{\u0027result\u0027:self.view.custom.result},\n\t\t\t\tscope\u003d\"page\")\n\t\texcept:\n\t\t\tlogger.error(\"Invalid submission message handler provided\")\n\telse:\n\t\tlogger.info(\"No submission message handler given\")\n\t\n\t# Close the calculator\n\ttry:\n\t\tif(self.view.params.popupId is None or len(self.view.params.popupId) \u003c\u003d 0):\n\t\t\traise AttributeError(name\u003d\"popupId\", obj\u003dself.view.params.popupId)\n\t\tsystem.perspective.closePopup(self.view.params.popupId)\n\texcept:\n\t\tlogger.error(\"Invalid popupId view parameter given, unable to close popup by ID. Closing last focused popup.\")\n\t\tsystem.perspective.closePopup(\"\")"
+                  },
+                  "scope": "G",
+                  "type": "script"
+                }
+              }
+            },
+            "meta": {
+              "name": "Submit"
+            },
+            "position": {
+              "basis": "100px"
+            },
+            "propConfig": {
+              "props.text": {
+                "binding": {
+                  "config": {
+                    "expression": "if({view.params.messageHandler} !\u003d None, \"Submit\", \"Close\")"
+                  },
+                  "type": "expr"
+                }
+              }
+            },
+            "props": {
+              "primary": false,
+              "style": {
+                "margin": "5px"
+              }
+            },
+            "type": "ia.input.button"
+          }
+        ],
+        "meta": {
+          "name": "BtnPane"
+        },
+        "position": {
+          "basis": "",
+          "shrink": 0
+        },
+        "props": {
+          "justify": "center"
+        },
+        "type": "ia.container.flex"
+      }
+    ],
+    "events": {
+      "system": {
+        "onStartup": {
+          "config": {
+            "script": "\tself.view.custom.finalResult \u003d None"
+          },
+          "scope": "G",
+          "type": "script"
+        }
+      }
+    },
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column",
+      "style": {
+        "background-color": "white",
+        "overflow": "hidden",
+        "padding": "10px"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

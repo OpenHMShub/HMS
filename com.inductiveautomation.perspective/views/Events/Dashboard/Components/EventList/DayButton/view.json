@@ -1,0 +1,170 @@
+{
+  "custom": {},
+  "params": {
+    "CurrentDay": false,
+    "Date": {
+      "$": [
+        "ts",
+        192,
+        1613748447845
+      ],
+      "$ts": 1613748447845
+    },
+    "Selected": false
+  },
+  "propConfig": {
+    "params.CurrentDay": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.Date": {
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.Selected": {
+      "paramDirection": "inout",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 80,
+      "width": 50
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "Month"
+        },
+        "position": {
+          "basis": "50px",
+          "grow": 1
+        },
+        "propConfig": {
+          "props.style.color": {
+            "binding": {
+              "config": {
+                "expression": "if({view.params.Selected},\"#FFFFFF\",\"#9db8d1\")"
+              },
+              "type": "expr"
+            }
+          },
+          "props.text": {
+            "binding": {
+              "config": {
+                "expression": "upper(substring(dateFormat({view.params.Date},\"MMM\"),0,3))"
+              },
+              "type": "expr"
+            }
+          }
+        },
+        "props": {
+          "style": {
+            "fontSize": 12,
+            "textAlign": "center"
+          }
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "meta": {
+          "name": "DayNumber"
+        },
+        "position": {
+          "basis": "50px",
+          "grow": 1
+        },
+        "propConfig": {
+          "props.text": {
+            "binding": {
+              "config": {
+                "expression": "dateFormat({view.params.Date},\"d\")"
+              },
+              "type": "expr"
+            }
+          }
+        },
+        "props": {
+          "style": {
+            "fontSize": 30,
+            "paddingRight": 2,
+            "textAlign": "center"
+          }
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "meta": {
+          "name": "DayName"
+        },
+        "position": {
+          "basis": "50px",
+          "grow": 1
+        },
+        "propConfig": {
+          "props.text": {
+            "binding": {
+              "config": {
+                "expression": "dateFormat({view.params.Date},\"EEE\") "
+              },
+              "type": "expr"
+            }
+          }
+        },
+        "props": {
+          "style": {
+            "fontSize": 12,
+            "textAlign": "center"
+          }
+        },
+        "type": "ia.display.label"
+      }
+    ],
+    "events": {
+      "dom": {
+        "onClick": {
+          "config": {
+            "script": "\tself.view.params.Selected \u003d not self.view.params.Selected"
+          },
+          "scope": "G",
+          "type": "script"
+        }
+      }
+    },
+    "meta": {
+      "name": "root"
+    },
+    "propConfig": {
+      "props.style.backgroundColor": {
+        "binding": {
+          "config": {
+            "expression": "if({view.params.Selected},\"#FF7A59\",if({view.params.CurrentDay},\"#f3f4f8\",\"#FFFFFF\"))"
+          },
+          "type": "expr"
+        }
+      },
+      "props.style.color": {
+        "binding": {
+          "config": {
+            "expression": "if({view.params.Selected},\"#FFFFFF\",\"#0c4e8b\")"
+          },
+          "type": "expr"
+        }
+      }
+    },
+    "props": {
+      "alignContent": "flex-start",
+      "direction": "column",
+      "style": {
+        "borderBottomLeftRadius": 15,
+        "borderBottomRightRadius": 15,
+        "borderTopLeftRadius": 15,
+        "borderTopRightRadius": 15,
+        "cursor": "pointer"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

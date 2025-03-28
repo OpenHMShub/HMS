@@ -1,0 +1,138 @@
+{
+  "custom": {},
+  "params": {},
+  "props": {
+    "defaultSize": {
+      "width": 1292
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "KPI"
+        },
+        "position": {
+          "basis": "175px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.CalendarId": {
+            "binding": {
+              "config": {
+                "path": "../Filter.props.params.CalenderId"
+              },
+              "type": "property"
+            }
+          },
+          "props.params.CalenderBreezeId": {
+            "binding": {
+              "config": {
+                "path": "../Filter.props.params.CalenderId"
+              },
+              "transforms": [
+                {
+                  "code": "\tif value !\u003d \u0027\u0027 and value !\u003d None:\n\t\tresult \u003d system.db.runPrepQuery(\"SELECT BreezeId FROM calendar.calendars Where id \u003d ?\", [value])\n\t\tCalenderBreezeId \u003d result[0][0]\n\telse:\n\t\tCalenderBreezeId \u003d None\n\treturn CalenderBreezeId",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          },
+          "props.params.DaysToAdd": {
+            "binding": {
+              "config": {
+                "path": "../Filter.props.params.ActivityRange"
+              },
+              "transforms": [
+                {
+                  "code": "\tif value !\u003d None and value !\u003d \u0027\u0027:\n\t\tEventDate \u003d system.date.format(value, \"yyyy-MM-dd hh:mm:ss\")\n\telse:\n\t\tEventDate \u003d system.date.format(system.date.addDays(system.date.now(), -365), \"yyyy-MM-dd hh:mm:ss\")\n\treturn EventDate",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          },
+          "props.params.EventName": {
+            "binding": {
+              "config": {
+                "path": "../Filter.props.params.EventName"
+              },
+              "type": "property"
+            }
+          },
+          "props.params.checkIO": {
+            "binding": {
+              "config": {
+                "path": "../Filter.props.params.checkIO"
+              },
+              "type": "property"
+            }
+          },
+          "props.params.search": {
+            "binding": {
+              "config": {
+                "path": "../Filter.props.params.search"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "path": "Events/StaffAttendance/Cards/KPI_Header"
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Filter"
+        },
+        "position": {
+          "basis": "40px",
+          "shrink": 0
+        },
+        "props": {
+          "params": {
+            "ActivityRange": null,
+            "CalenderId": null,
+            "EventName": null,
+            "checkIO": null,
+            "search": ""
+          },
+          "path": "Events/StaffAttendance/Components/Filters/AttendanceHistory_ConditionsFilters",
+          "style": {
+            "classes": "Table/Filter_Header_Container"
+          },
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Table"
+        },
+        "position": {
+          "basis": "200px",
+          "grow": 1
+        },
+        "props": {
+          "params": {
+            "resultRowCount": 5
+          },
+          "path": "Events/StaffAttendance/Components/Tables/AttendanceHistory_Table"
+        },
+        "type": "ia.display.view"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column",
+      "style": {
+        "classes": "Background/Default"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

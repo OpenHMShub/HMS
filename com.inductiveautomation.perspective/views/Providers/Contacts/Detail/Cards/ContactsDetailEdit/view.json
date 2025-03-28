@@ -1,0 +1,339 @@
+{
+  "custom": {
+    "toUpdateDelete": false
+  },
+  "events": {
+    "system": {
+      "onStartup": {
+        "config": {
+          "script": "\troot \u003d self.view.getChild(\"root\")\n\t#root.clearInputs()"
+        },
+        "scope": "G",
+        "type": "script"
+      }
+    }
+  },
+  "params": {
+    "contactId": null,
+    "providerId": -1
+  },
+  "propConfig": {
+    "custom.toUpdateDelete": {
+      "persistent": true
+    },
+    "params.contactId": {
+      "onChange": {
+        "enabled": null,
+        "script": "\troot \u003d self.getChild(\"root\")\n\t#btnSave \u003d root.getChild(\"root Actions\").getChild(\"button_save\")\n\t#btnDelete \u003d self.getChild(\"root\").getChild(\"root Actions\").getChild(\"button_delete\")\n\t#btnNew \u003d self.getChild(\"root\").getChild(\"root Actions\").getChild(\"button_new\")\n\t\n\t\n\troot.setComponentsDb(currentValue.value)\n\n\n"
+      },
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.providerId": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 135,
+      "width": 873
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "EmbeddedView Header"
+        },
+        "position": {
+          "basis": "25px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.Text": {
+            "binding": {
+              "config": {
+                "path": "view.params.contactId"
+              },
+              "transforms": [
+                {
+                  "expression": "if({value} \u003d -1,\u0027New Contact\u0027,\u0027Edit Contact\u0027)",
+                  "type": "expression"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "path": "Providers/Templates/Header"
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "EmbeddedView_Row1"
+        },
+        "position": {
+          "basis": "50px"
+        },
+        "props": {
+          "params": {
+            "email": "",
+            "firstName": "",
+            "lastName": "",
+            "notes": "",
+            "phone": ""
+          },
+          "path": "Providers/Contacts/Detail/Cards/Row1",
+          "style": {
+            "marginLeft": 5,
+            "marginRight": 5
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "children": [
+          {
+            "events": {
+              "component": {
+                "onActionPerformed": {
+                  "config": {
+                    "script": "\troot \u003d self.view.getChild(\"root\")\n\troot.clearInputs()\n\tself.view.custom.toUpdateDelete \u003d False"
+                  },
+                  "scope": "G",
+                  "type": "script"
+                }
+              }
+            },
+            "meta": {
+              "name": "button_new"
+            },
+            "position": {
+              "basis": "120px"
+            },
+            "propConfig": {
+              "position.display": {
+                "binding": {
+                  "config": {
+                    "expression": "{session.custom.isWSManager} || {session.custom.isManager} || {session.custom.isAdministrator} || {session.custom.isSupportCoordinator} || {session.custom.isWSSupportCoordinator}"
+                  },
+                  "type": "expr"
+                }
+              }
+            },
+            "props": {
+              "style": {
+                "classes": "Buttons/Secondary",
+                "marginBottom": "5px",
+                "marginLeft": "20px",
+                "marginTop": "5px"
+              },
+              "text": "New Contact"
+            },
+            "type": "ia.input.button"
+          },
+          {
+            "events": {
+              "component": {
+                "onActionPerformed": {
+                  "config": {
+                    "script": "\t\n\troot \u003d self.parent.parent\n\n\tcontactId \u003d self.view.params.contactId\n\tproviderId \u003d self.view.params.providerId\n\t\n\tvalidationMsg \u003d root.getValidationMessage()\n\t\n\tif validationMsg:\n\t\tself.getSibling(\"Label\").showMessage(validationMsg)\n\t\treturn\n\t\n\ttry:\n\t\tif self.view.custom.toUpdateDelete is True:\n\t\t\troot.updateContactDb()\n\t\telse:\n\t\t\troot.insertContactDb()\n\texcept:\n\t\tself.getSibling(\"Label\").showMessage(\"Something went wrong while saving data. Please try again.\")\t\n\t\traise\n\t\n\telse:\n\t\troot.clearInputs()\n\t\tpayload\u003d{}\n\t\tpayload[\u0027providerId\u0027] \u003d self.view.params.providerId\n\t\tsystem.perspective.sendMessage(messageType\u003d\u0027mhByCondition\u0027,payload\u003d payload, scope\u003d\u0027page\u0027,\n\t\t\tsessionId\u003dself.session.props.id,pageId\u003dself.page.props.pageId)\n\t\t"
+                  },
+                  "scope": "G",
+                  "type": "script"
+                }
+              }
+            },
+            "meta": {
+              "name": "button_save"
+            },
+            "position": {
+              "basis": "120px"
+            },
+            "propConfig": {
+              "position.display": {
+                "binding": {
+                  "config": {
+                    "expression": "{session.custom.isWSManager} || {session.custom.isManager} || {session.custom.isAdministrator} || {session.custom.isSupportCoordinator} || {session.custom.isWSSupportCoordinator}"
+                  },
+                  "type": "expr"
+                }
+              },
+              "props.text": {
+                "binding": {
+                  "config": {
+                    "expression": "{view.custom.toUpdateDelete}"
+                  },
+                  "transforms": [
+                    {
+                      "code": "\tif value is True:\n\t\treturn \u0027UPDATE CONTACT\u0027\n\telse:\n\t\treturn \u0027SAVE CONTACT\u0027\n",
+                      "type": "script"
+                    }
+                  ],
+                  "type": "expr"
+                }
+              }
+            },
+            "props": {
+              "style": {
+                "classes": "Buttons/Main",
+                "marginBottom": "5px",
+                "marginLeft": "10px",
+                "marginTop": "5px"
+              }
+            },
+            "type": "ia.input.button"
+          },
+          {
+            "events": {
+              "component": {
+                "onActionPerformed": {
+                  "config": {
+                    "script": "\troot \u003d self.parent.parent\n\ttry:\n\t\troot.retireContactDb()\n\texcept:\n\t\tself.getSibling(\"Label\").showMessage(\"Something went wrong while deletition. Please try again.\")\t\n\t\traise\t\n\t\n\troot.clearInputs()\n\t\n\tpayload\u003d{}\n\tpayload[\u0027providerId\u0027] \u003d self.view.params.providerId\n\tsystem.perspective.sendMessage(messageType\u003d\u0027mhByCondition\u0027,payload\u003dpayload,scope\u003d\u0027page\u0027,\n\t\tsessionId\u003dself.session.props.id,pageId\u003dself.page.props.pageId)\n\t\t\n\t\t\n"
+                  },
+                  "scope": "G",
+                  "type": "script"
+                }
+              }
+            },
+            "meta": {
+              "name": "button_delete"
+            },
+            "position": {
+              "basis": "120px"
+            },
+            "propConfig": {
+              "meta.visible": {
+                "binding": {
+                  "config": {
+                    "expression": "{view.custom.toUpdateDelete} \u0026\u0026 {session.custom.isAdministrator}"
+                  },
+                  "type": "expr"
+                }
+              }
+            },
+            "props": {
+              "style": {
+                "classes": "Buttons/Delete",
+                "marginBottom": "5px",
+                "marginLeft": "10px",
+                "marginTop": "5px"
+              },
+              "text": "Delete Contact"
+            },
+            "type": "ia.input.button"
+          },
+          {
+            "meta": {
+              "name": "Label",
+              "visible": false
+            },
+            "position": {
+              "basis": "50px",
+              "grow": 1
+            },
+            "props": {
+              "style": {
+                "classes": "Text/Error_Message"
+              },
+              "text": "First name is mandatory!"
+            },
+            "scripts": {
+              "customMethods": [
+                {
+                  "name": "showMessage",
+                  "params": [
+                    "message"
+                  ],
+                  "script": "\timport time\n\tself.props.text \u003d message\n\tself.meta.visible \u003d True\n\ttime.sleep(5)\n\tself.meta.visible \u003d False\n\t"
+                }
+              ],
+              "extensionFunctions": null,
+              "messageHandlers": []
+            },
+            "type": "ia.display.label"
+          }
+        ],
+        "meta": {
+          "name": "root Actions"
+        },
+        "position": {
+          "basis": "50px",
+          "grow": 1
+        },
+        "props": {
+          "style": {
+            "borderTopColor": "#9db8d1",
+            "borderTopStyle": "solid",
+            "borderTopWidth": "1px",
+            "classes": "Background/Default",
+            "marginTop": "5px",
+            "paddingTop": "5px"
+          }
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "meta": {
+          "name": "FlexContainer"
+        },
+        "position": {
+          "basis": "50px",
+          "grow": 1
+        },
+        "type": "ia.container.flex"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column",
+      "style": {
+        "classes": "Background/Default"
+      }
+    },
+    "scripts": {
+      "customMethods": [
+        {
+          "name": "insertContactDb",
+          "params": [],
+          "script": "\tquery \u003d \"\"\"\nINSERT INTO [organization].[ProviderContacts]\n\t           ([providerId]\n\t           ,[firstName]\n\t           ,[lastName]\n\t           ,[phone]\n\t           ,[email]\n\t           ,[notes]\n\t           ,[username]\n\t           ,[timeCreated]\t\n\t                      \n\t           )\n\t     VALUES\n\t           (?,?,?,?,?,?,?,?)\n\t\"\"\"\n\n\temvRow1 \u003d self.getChild(\"EmbeddedView_Row1\")\n\t\n\tproviderId \u003d self.view.params.providerId\n\t\n\tfirstName \u003d emvRow1.props.params.firstName\n\tlastName \u003d emvRow1.props.params.lastName\n\tphone \u003d emvRow1.props.params.phone\n\temail \u003d emvRow1.props.params.email\n\tnotes \u003d emvRow1.props.params.notes\n\tuserName \u003d self.session.props.auth.user.userName\n\ttimeCreated \u003d system.date.now()\n\t\n\targs \u003d [providerId, firstName, lastName, phone, email, notes, userName, timeCreated ]\n\tcontactId \u003d system.db.runPrepUpdate(query, args, \u0027RITIOps\u0027)\n\t\n\treturn contactId\n\t\n"
+        },
+        {
+          "name": "updateContactDb",
+          "params": [],
+          "script": "\tquery \u003d \"\"\"\nUPDATE [organization].[ProviderContacts]\nSET \n\t [firstName] \u003d ?\n\t,[lastName] \u003d ?\n\t,[username] \u003d ?\n\t,[phone] \u003d ?\n\t,[email] \u003d ?\n\t,[notes] \u003d ?\n WHERE [id] \u003d ?\n\t\"\"\"\n\t\n\temvRow1 \u003d self.getChild(\"EmbeddedView_Row1\")\n\tfirstName \u003d emvRow1.props.params.firstName\n\tlastName \u003d emvRow1.props.params.lastName\n\tuserName \u003d self.session.props.auth.user.userName\n\tphone \u003d emvRow1.props.params.phone\n\temail \u003d emvRow1.props.params.email\n\tnotes \u003d emvRow1.props.params.notes\n\t\n\tcontactId \u003d self.view.params.contactId\n\t\n\targs \u003d [firstName, lastName, userName, phone, email, notes, contactId]\n\tsystem.db.runPrepUpdate(query, args, \u0027RITIOps\u0027)\n\t\n\treturn contactId"
+        },
+        {
+          "name": "setComponentsDb",
+          "params": [
+            "contactId"
+          ],
+          "script": "\temvRow1 \u003d self.getChild(\"EmbeddedView_Row1\")\n\n\tif isinstance(contactId, (int, long)) and contactId \u003e\u003d 0:\n\t\t\n\t\tquery \u003d \"\"\"\n\t\tDECLARE \n\t\t\t @contact_id AS INT \u003d ?\n\t\t\n\t\tSELECT\n\t\t\t [id]\n\t\t\t,[providerId]\n\t\t\t,[firstName]\n\t\t\t,[lastName]\n\t\t\t,[username]\n\t\t\t,[phone]\n\t\t\t,[email]\n\t\t\t,[timeCreated]\n\t\t\t,[timeRetired]\n\t\t\t,[notes]\n\t\tFROM [organization].[ProviderContacts]\n\t\tWHERE [id] \u003d  @contact_id\n\t\n\t\t\"\"\"\n\t\tresult \u003d system.db.runPrepQuery(query, [contactId], \u0027RITIOps\u0027)\n\n\t\temvRow1.props.params.firstName \u003d result.getValueAt(0, \u0027firstName\u0027)\n\t\temvRow1.props.params.lastName \u003d result.getValueAt(0, \u0027lastName\u0027)\n\t\temvRow1.props.params.phone \u003d result.getValueAt(0, \u0027phone\u0027)\n\t\temvRow1.props.params.email \u003d result.getValueAt(0, \u0027email\u0027)\n\t\temvRow1.props.params.notes \u003d result.getValueAt(0, \u0027notes\u0027)\n\t\tself.view.custom.toUpdateDelete \u003d True\n\telse:\n\t\temvRow1.props.params.firstName \u003d \u0027\u0027\n\t\temvRow1.props.params.lastName \u003d \u0027\u0027\n\t\temvRow1.props.params.phone \u003d \u0027\u0027\n\t\temvRow1.props.params.email \u003d \u0027\u0027\n\t\temvRow1.props.params.notes \u003d \u0027\u0027\n\t\tself.view.custom.toUpdateDelete \u003d False\n\n\t"
+        },
+        {
+          "name": "retireContactDb",
+          "params": [],
+          "script": "\tquery \u003d \"\"\"\nUPDATE [organization].[ProviderContacts]\n   SET [timeRetired] \u003d ?\n WHERE [id] \u003d ?\n\"\"\"\n\n\ttimeRetired \u003d system.date.now()\n\tcontactId \u003d self.view.params.contactId\n\t\n\targs \u003d [timeRetired, contactId]\n\t\n\tsystem.db.runPrepUpdate(query, args, \u0027RITIOps\u0027)\n\t"
+        },
+        {
+          "name": "getValidationMessage",
+          "params": [],
+          "script": "\timport re\n\tsystem.perspective.print((\u0027aaa\u0027))\n\temvRow1 \u003d self.getChild(\"EmbeddedView_Row1\")\n\t\n\t_firstName \u003d emvRow1.props.params.firstName\n\t\n\tsystem.perspective.print((_firstName, not(_firstName),str(_firstName).strip \u003d\u003d \u0027\u0027))\n\t\n\t_lastName \u003d emvRow1.props.params.lastName\n\t_phone \u003d emvRow1.props.params.phone\n\t_email \u003d emvRow1.props.params.email\n\t_notes \u003d emvRow1.props.params.notes\n\n\t\n\t_patternPhone \u003d re.compile(\"^[0-9]{3}-[0-9]{3}-[0-9]{4}$\", re.IGNORECASE)\n\t\n\n\tif not(_firstName):\n\t\tvalidationMsg \u003d \"First name is mandatory!\"\n\telif not(_lastName):\n\t\tvalidationMsg \u003d \"Last name is mandatory!\"\n\telif _phone and _patternPhone.match(_phone) is None:\n\t\tvalidationMsg \u003d \"Phone must be in the format ***-***-**** \"\t\n\telse:\n\t\tvalidationMsg \u003d \u0027\u0027\n\t\t\n\treturn validationMsg\t\t\n\t\t\n\n"
+        },
+        {
+          "name": "clearInputs",
+          "params": [],
+          "script": "\temvRow1 \u003d self.getChild(\"EmbeddedView_Row1\")\n\temvRow1.props.params.firstName \u003d \u0027\u0027\n\temvRow1.props.params.lastName \u003d \u0027\u0027\n\temvRow1.props.params.phone \u003d \u0027\u0027\n\temvRow1.props.params.email \u003d \u0027\u0027\n\temvRow1.props.params.notes \u003d \u0027\u0027\n\n\t\n\t\n\t"
+        }
+      ],
+      "extensionFunctions": null,
+      "messageHandlers": []
+    },
+    "type": "ia.container.flex"
+  }
+}

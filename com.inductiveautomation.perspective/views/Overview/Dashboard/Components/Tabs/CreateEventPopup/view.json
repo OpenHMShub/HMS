@@ -1,0 +1,155 @@
+{
+  "custom": {},
+  "params": {
+    "Date": "value"
+  },
+  "propConfig": {
+    "params.Date": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 202,
+      "width": 300
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "children": [
+          {
+            "meta": {
+              "name": "TextField"
+            },
+            "position": {
+              "height": 30,
+              "width": 200,
+              "x": 55,
+              "y": 46
+            },
+            "propConfig": {
+              "props.placeholder": {
+                "binding": {
+                  "config": {
+                    "path": "view.params.Date"
+                  },
+                  "type": "property"
+                }
+              }
+            },
+            "props": {
+              "style": {
+                "borderColor": "#000000",
+                "borderStyle": "solid",
+                "borderWidth": 2,
+                "textAlign": "center"
+              },
+              "text": "TEST"
+            },
+            "type": "ia.input.text-field"
+          },
+          {
+            "events": {
+              "component": {
+                "onActionPerformed": {
+                  "config": {
+                    "script": "\ttitle \u003d self.getSibling(\"TextField\").props.text\n\tif title \u003d\u003d \"\":\n\t\treturn\n\t \n\t# Create a payload to be passed with the message\n\tpayload \u003d {\u0027date\u0027:self.view.params.Date, \u0027title\u0027: title}\n\t \n\t# Send the message, pass the payload, limit the scope to the view\n\tsystem.perspective.sendMessage(\u0027CreateCalendarEvent\u0027, payload, scope \u003d \u0027session\u0027 )\n\tsystem.perspective.closePopup(\"AAaaAA\")"
+                  },
+                  "scope": "G",
+                  "type": "script"
+                }
+              }
+            },
+            "meta": {
+              "name": "Create"
+            },
+            "position": {
+              "height": 34,
+              "width": 80,
+              "x": 170,
+              "y": 121
+            },
+            "propConfig": {
+              "props.enabled": {
+                "binding": {
+                  "config": {
+                    "expression": "{../TextField.props.text} !\u003d \"\""
+                  },
+                  "type": "expr"
+                }
+              }
+            },
+            "props": {
+              "style": {
+                "classes": "Buttons/New_Item"
+              },
+              "text": "Create"
+            },
+            "type": "ia.input.button"
+          },
+          {
+            "events": {
+              "component": {
+                "onActionPerformed": {
+                  "config": {
+                    "draggable": true,
+                    "id": "AAaaAA",
+                    "modal": false,
+                    "overlayDismiss": false,
+                    "resizable": true,
+                    "showCloseIcon": true,
+                    "type": "close",
+                    "viewPath": "Overview/Dashboard/Components/Tabs/CreateEventPopup"
+                  },
+                  "scope": "C",
+                  "type": "popup"
+                }
+              }
+            },
+            "meta": {
+              "name": "Cancel"
+            },
+            "position": {
+              "height": 34,
+              "width": 80,
+              "x": 50,
+              "y": 121
+            },
+            "props": {
+              "style": {
+                "classes": "Buttons/Delete"
+              },
+              "text": "Cancel"
+            },
+            "type": "ia.input.button"
+          }
+        ],
+        "meta": {
+          "name": "CoordinateContainer"
+        },
+        "position": {
+          "height": 200,
+          "width": 300,
+          "y": 1
+        },
+        "props": {
+          "style": {
+            "backgroundColor": "#C8C8C8"
+          }
+        },
+        "type": "ia.container.coord"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "style": {
+        "backgroundColor": "#EBEBEB"
+      }
+    },
+    "type": "ia.container.coord"
+  }
+}

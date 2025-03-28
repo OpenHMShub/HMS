@@ -1,0 +1,137 @@
+{
+  "custom": {},
+  "params": {
+    "Gender": "F",
+    "Handicapped": false,
+    "RoomID": 50,
+    "gender": "F",
+    "isHandicapAccess": false,
+    "roomName": "Women\u0027s Respite Dorm"
+  },
+  "propConfig": {
+    "params.RoomID": {
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.gender": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "RoomID": "{view.params.RoomID}"
+          },
+          "queryPath": "Shelter/Room Layout/qryRmGender",
+          "returnFormat": "scalar"
+        },
+        "type": "query"
+      },
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.isHandicapAccess": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "RoomID": "{view.params.RoomID}"
+          },
+          "queryPath": "Shelter/Room Layout/qryHandiRoom",
+          "returnFormat": "scalar"
+        },
+        "type": "query"
+      },
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.roomName": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "RoomID": "{view.params.RoomID}"
+          },
+          "queryPath": "Shelter/Room Layout/qryRoomName",
+          "returnFormat": "scalar"
+        },
+        "type": "query"
+      },
+      "paramDirection": "inout",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 399,
+      "width": 394
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "Label"
+        },
+        "position": {
+          "basis": "32px"
+        },
+        "propConfig": {
+          "props.text": {
+            "binding": {
+              "config": {
+                "path": "view.params.roomName"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "style": {
+            "classes": "ActivityCards/Card_Title ActivityCards/Header_Card",
+            "fontFamily": "inherit",
+            "fontSize": 24,
+            "textAlign": "center"
+          }
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "meta": {
+          "name": "FlexRepeater"
+        },
+        "position": {
+          "basis": "300px",
+          "grow": 1
+        },
+        "propConfig": {
+          "props.instances": {
+            "binding": {
+              "config": {
+                "parameters": {
+                  "roomID": "{view.params.RoomID}"
+                },
+                "queryPath": "Shelter/Room Layout/qryBedHRDetails",
+                "returnFormat": "json"
+              },
+              "type": "query"
+            }
+          }
+        },
+        "props": {
+          "alignContent": "flex-start",
+          "alignItems": "flex-start",
+          "direction": "column",
+          "elementPosition": {
+            "basis": 300
+          },
+          "path": "Shelter/Room Layout/Templates/RoomViews/RoomSquare"
+        },
+        "type": "ia.display.flex-repeater"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column",
+      "wrap": "wrap"
+    },
+    "type": "ia.container.flex"
+  }
+}

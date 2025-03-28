@@ -1,0 +1,147 @@
+{
+  "custom": {},
+  "params": {
+    "endDate": "2020-07-21 5:02:04",
+    "participantName": "Aa Bb",
+    "startDate": "2020-05-02"
+  },
+  "propConfig": {
+    "params.endDate": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.participantName": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.startDate": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 45,
+      "width": 600
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "StartDate_EmbeddedView"
+        },
+        "position": {
+          "basis": "50%",
+          "grow": 1,
+          "shrink": 2
+        },
+        "propConfig": {
+          "props.params.Info": {
+            "binding": {
+              "config": {
+                "path": "view.params.startDate"
+              },
+              "transforms": [
+                {
+                  "code": "\troot \u003d self.parent\n\treturn root.changeDateFormat(value)\n",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "Description": "From"
+          },
+          "path": "Shelter/Schedule/Preview/Cards/AboutLabel"
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "EndDate_EmbeddedView"
+        },
+        "position": {
+          "basis": "50%",
+          "grow": 1,
+          "shrink": 2
+        },
+        "propConfig": {
+          "props.params.Info": {
+            "binding": {
+              "config": {
+                "path": "view.params.endDate"
+              },
+              "transforms": [
+                {
+                  "code": "\troot \u003d self.parent\n\treturn root.changeDateFormat(value)",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "Description": "To"
+          },
+          "path": "Shelter/Schedule/Preview/Cards/AboutLabel"
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "ParticipantName_EmbeddedView"
+        },
+        "position": {
+          "basis": "50%",
+          "grow": 2
+        },
+        "propConfig": {
+          "props.params.Info": {
+            "binding": {
+              "config": {
+                "path": "view.params.participantName"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "Description": "Participant"
+          },
+          "path": "Shelter/Schedule/Preview/Cards/AboutLabel"
+        },
+        "type": "ia.display.view"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "style": {
+        "classes": "Text/Personal_Header",
+        "overflow": "hidden"
+      }
+    },
+    "scripts": {
+      "customMethods": [
+        {
+          "name": "changeDateFormat",
+          "params": [
+            "strDate"
+          ],
+          "script": "\ttry:\n\t\tif len(strDate) \u003c\u003d12:\n\t\t\tparsedValue \u003d system.date.parse(strDate,\"yyyy-MM-dd\")\n\t\t\tformattedValue \u003d system.date.format(parsedValue,\"MMM d, yyyy\")\t\t\n\t\telse:\n\t\t\tparsedValue \u003d system.date.parse(strDate) # \"yyyy-MM-dd HH:mm:ss\")\n\t\t\tformattedValue \u003d system.date.format(parsedValue,\"MMM d, yyyy h:mm a\")\t\t\t\n\texcept:\n\t\tformattedValue \u003d \u0027-\u0027\n\t\n\treturn formattedValue"
+        }
+      ],
+      "extensionFunctions": null,
+      "messageHandlers": []
+    },
+    "type": "ia.container.flex"
+  }
+}

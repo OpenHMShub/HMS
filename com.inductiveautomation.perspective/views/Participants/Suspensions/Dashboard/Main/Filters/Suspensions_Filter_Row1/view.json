@@ -1,0 +1,301 @@
+{
+  "custom": {},
+  "params": {
+    "ActiveSelect": [
+      {
+        "label": "Active Only",
+        "value": 1
+      }
+    ],
+    "active": 1,
+    "activity_range": 365,
+    "yesNo": [
+      {
+        "label": "Yes",
+        "value": 1
+      },
+      {
+        "label": "No",
+        "value": 0
+      }
+    ]
+  },
+  "propConfig": {
+    "params.ActiveSelect": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.active": {
+      "binding": {
+        "config": {
+          "path": "/root/Active.props.params.selection"
+        },
+        "transforms": [
+          {
+            "code": "\tif value \u003d\u003d None:\n\t\treturn 1\n\telse:\n\t\treturn value",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.activity_range": {
+      "binding": {
+        "config": {
+          "path": "/root/ActivityRange.props.params.selection"
+        },
+        "transforms": [
+          {
+            "code": "\tif value \u003d\u003d 0 or value \u003d\u003d None:\n\t\treturn 36500\n\telse:\n\t\treturn value",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.yesNo": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 30,
+      "width": 1817
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "ActivityRange"
+        },
+        "position": {
+          "basis": "150px",
+          "shrink": 0
+        },
+        "props": {
+          "params": {
+            "placeholder": "Activity Range",
+            "selection": 365,
+            "selection_in": 365
+          },
+          "path": "1_TEMPLATES/Filtering/Conditionals/Conditional_SingleDropDown_NoClear_ActivityRange",
+          "style": {
+            "classes": "Filter/Filter_Container"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Active"
+        },
+        "position": {
+          "basis": "240px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.options": {
+            "binding": {
+              "config": {
+                "path": "../Placeholder_1.props.text"
+              },
+              "transforms": [
+                {
+                  "code": "\theaders \u003d [\"value\", \"label\"]\n\tdata \u003d []\n\t#val \u003d system.date.format(system.date.now(), \"YYYY-MM-dd hh:mm:ss\")\n\tval \u003d \u0027isNull\u0027\n\tlabel \u003d \u0027Active Suspensions Only\u0027\n\tlist \u003d [val,label]\n\tdata.append(list)\n\t#val \u003d system.date.format(system.date.now(), \"YYYY-MM-dd hh:mm:ss\")\n\tval \u003d \u0027isNotNull\u0027\n\tlabel \u003d \u0027Previous Suspensions Only\u0027\n\tlist \u003d [val,label]\n\tdata.append(list)\n\t\n\tdataset \u003d system.dataset.toDataSet(headers, data)\n\treturn dataset",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "column_name": "dateReinstated",
+            "filter": "suspensionDashboard",
+            "key": "suspensionActive",
+            "placeholder": "(All Suspensions)",
+            "searchType": "nullOrNotNull"
+          },
+          "path": "1_TEMPLATES/Filtering/Session/SingleDropDown",
+          "style": {
+            "marginBottom": "2px",
+            "marginLeft": "5px",
+            "marginTop": "2px"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "BeginDate"
+        },
+        "position": {
+          "basis": "240px",
+          "shrink": 0
+        },
+        "props": {
+          "params": {
+            "column_name": "dateBegin",
+            "filter": "suspensionDashboard",
+            "key": "dateBegin",
+            "placeholder": "Begin Date",
+            "searchType": "dateRange"
+          },
+          "path": "1_TEMPLATES/Filtering/Session/DateRangePicker",
+          "style": {
+            "classes": "Filter/Filter_Container"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "EndDate"
+        },
+        "position": {
+          "basis": "240px",
+          "shrink": 0
+        },
+        "props": {
+          "params": {
+            "column_name": "dateEnd",
+            "filter": "suspensionDashboard",
+            "key": "dateEnd",
+            "placeholder": "End Date",
+            "searchType": "dateRange"
+          },
+          "path": "1_TEMPLATES/Filtering/Session/DateRangePicker",
+          "style": {
+            "classes": "Filter/Filter_Container"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "ReinstateDate"
+        },
+        "position": {
+          "basis": "240px",
+          "shrink": 0
+        },
+        "props": {
+          "params": {
+            "column_name": "dateReinstated",
+            "filter": "suspensionDashboard",
+            "key": "dateReinstated",
+            "placeholder": "Reinstate Date",
+            "searchType": "dateRange"
+          },
+          "path": "1_TEMPLATES/Filtering/Session/DateRangePicker",
+          "style": {
+            "classes": "Filter/Filter_Container"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Duration"
+        },
+        "position": {
+          "basis": "600px",
+          "grow": 1
+        },
+        "props": {
+          "params": {
+            "column_name": "suspensionDuration",
+            "filter": "suspensionDashboard",
+            "key": "duration",
+            "options": {
+              "$": [
+                "ds",
+                192,
+                1627247869249
+              ],
+              "$columns": [
+                {
+                  "data": [
+                    0,
+                    1,
+                    7,
+                    14,
+                    30,
+                    60,
+                    90,
+                    365,
+                    3650
+                  ],
+                  "name": "id",
+                  "type": "Integer"
+                },
+                {
+                  "data": [
+                    "Other",
+                    "1 Day",
+                    "1 Week",
+                    "2 Weeks",
+                    "30 Days",
+                    "60 Days",
+                    "90 Days",
+                    "1 Year",
+                    "Indefinite"
+                  ],
+                  "name": "duration",
+                  "type": "String"
+                }
+              ]
+            },
+            "placeholder": "Duration",
+            "searchType": "equals"
+          },
+          "path": "1_TEMPLATES/Filtering/Session/MultiDropDown",
+          "style": {
+            "classes": "Filter/Filter_Container"
+          }
+        },
+        "type": "ia.display.view"
+      }
+    ],
+    "events": {
+      "system": {
+        "onStartup": {
+          "config": {
+            "script": "\tself.session.custom.filters.suspensionDashboard.suspensionActive.value \u003d \u0027isNull\u0027\n\tself.session.custom.filters.suspensionDashboard.suspensionActive.where \u003d \u0027dateReinstated is Null\u0027"
+          },
+          "scope": "G",
+          "type": "script"
+        }
+      }
+    },
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "style": {
+        "classes": "Filter/Header_Text"
+      }
+    },
+    "scripts": {
+      "customMethods": [],
+      "extensionFunctions": null,
+      "messageHandlers": [
+        {
+          "messageType": "ParticipantDashboardAgeRange",
+          "pageScope": true,
+          "script": "\timport traceback\n\ttry:\n\t\t#Get the min and max age from the message payload\n\t\tself.view.params.min_age \u003d payload[\u0027min\u0027]\n\t\tself.view.params.max_age \u003d payload[\u0027max\u0027]\n\t\t#Calculate the date of birth range\n\t\ttoday \u003d system.date.now()\n\t\tdob_min \u003d -1 * int(self.view.params.max_age)\n\t\tdob_max \u003d -1 * int(self.view.params.min_age )\n\t\tself.view.params.dob_start \u003d system.date.addYears(today,dob_min)\n\t\tself.view.params.dob_end \u003d system.date.addYears(today,dob_max)\n\texcept:\n\t\tlogger \u003d system.util.getLogger(\"Participants_Filter ParticipantDashboardAgeRange Message\")\n\t\tmsg \u003d traceback.format_exc()\n\t\tlogger.error(msg)",
+          "sessionScope": true,
+          "viewScope": true
+        }
+      ]
+    },
+    "type": "ia.container.flex"
+  }
+}

@@ -1,0 +1,474 @@
+{
+  "custom": {
+    "IsHadicap": false,
+    "RmGender": "M",
+    "RoomData": {
+      "$": [
+        "ds",
+        192,
+        1609643330174
+      ],
+      "$columns": [
+        {
+          "data": [
+            49
+          ],
+          "name": "RoomID",
+          "type": "Integer"
+        },
+        {
+          "data": [
+            6
+          ],
+          "name": "facilityID",
+          "type": "Integer"
+        },
+        {
+          "data": [
+            "Men\u0027s Respite Dorm"
+          ],
+          "name": "roomName",
+          "type": "String"
+        },
+        {
+          "data": [
+            false
+          ],
+          "name": "isHandicapAccess",
+          "type": "Boolean"
+        },
+        {
+          "data": [
+            "M"
+          ],
+          "name": "gender",
+          "type": "String"
+        }
+      ]
+    },
+    "RoomTabs": {
+      "$": [
+        "ds",
+        192,
+        1609643223198
+      ],
+      "$columns": [
+        {
+          "data": [
+            "Men\u0027s Respite Dorm"
+          ],
+          "name": "roomName",
+          "type": "String"
+        }
+      ]
+    },
+    "TabClick": false,
+    "defaultRoomID": 49,
+    "defaultRoomName": "Men\u0027s Respite Dorm",
+    "facName": "Respite Dorm (Men)",
+    "selRoomName": "Next Steps Dorm",
+    "selectedRoomID": 47,
+    "tabCount": "value",
+    "tabSelect": 0
+  },
+  "events": {
+    "system": {
+      "onStartup": {
+        "config": {
+          "script": "\tself.custom.selectedRoomID\u003dself.custom.defaultRoomID"
+        },
+        "enabled": false,
+        "scope": "G",
+        "type": "script"
+      }
+    }
+  },
+  "params": {
+    "FacID": 6,
+    "RoomID": "value"
+  },
+  "propConfig": {
+    "custom.IsHadicap": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "RoomID": "{view.custom.selectedRoomID}"
+          },
+          "queryPath": "Shelter/Room Layout/qryHandiRoom",
+          "returnFormat": "scalar"
+        },
+        "type": "query"
+      },
+      "persistent": true
+    },
+    "custom.RmGender": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "RoomID": "{view.custom.selectedRoomID}"
+          },
+          "queryPath": "Shelter/Room Layout/qryRmGender",
+          "returnFormat": "scalar"
+        },
+        "type": "query"
+      },
+      "persistent": true
+    },
+    "custom.RoomData": {
+      "binding": {
+        "config": {
+          "bypassCache": true,
+          "parameters": {
+            "FacID": "{view.params.FacID}"
+          },
+          "polling": {
+            "enabled": true,
+            "rate": "1"
+          },
+          "queryPath": "Shelter/Room Layout/qryRoomList"
+        },
+        "type": "query"
+      },
+      "persistent": true
+    },
+    "custom.RoomTabs": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "FacID": "{view.params.FacID}"
+          },
+          "queryPath": "Shelter/Room Layout/qryTabbedRooms"
+        },
+        "type": "query"
+      },
+      "persistent": true
+    },
+    "custom.TabClick": {
+      "binding": {
+        "config": {
+          "expression": "if({/root/TabContainer.props.currentTabIndex} \u003e0, true, false)"
+        },
+        "type": "expr"
+      },
+      "persistent": true
+    },
+    "custom.defaultRoomID": {
+      "binding": {
+        "config": {
+          "expression": "{view.custom.RoomData}[0][0]"
+        },
+        "type": "expr"
+      },
+      "persistent": true
+    },
+    "custom.defaultRoomName": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "RoomID": "{view.custom.defaultRoomID}"
+          },
+          "queryPath": "Shelter/Room Layout/qryRoomName",
+          "returnFormat": "scalar"
+        },
+        "type": "query"
+      },
+      "persistent": true
+    },
+    "custom.facName": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "FacID": "{view.params.FacID}"
+          },
+          "queryPath": "Shelter/Room Layout/qryFacName",
+          "returnFormat": "scalar"
+        },
+        "type": "query"
+      },
+      "persistent": true
+    },
+    "custom.selRoomName": {
+      "binding": {
+        "config": {
+          "expression": "{view.custom.tabSelect}"
+        },
+        "transforms": [
+          {
+            "code": "\ttabName \u003dself.getChild(\"root\").getChild(\"TabContainer\").props.tabs[value]\n\treturn tabName",
+            "type": "script"
+          }
+        ],
+        "type": "expr"
+      },
+      "persistent": true
+    },
+    "custom.selectedRoomID": {
+      "binding": {
+        "config": {
+          "bypassCache": true,
+          "parameters": {
+            "selectedTab": "{view.custom.selRoomName}"
+          },
+          "queryPath": "Shelter/Room Layout/qrySelectedRoomByName",
+          "returnFormat": "scalar"
+        },
+        "type": "query"
+      },
+      "persistent": true
+    },
+    "custom.tabCount": {
+      "persistent": true
+    },
+    "custom.tabSelect": {
+      "binding": {
+        "config": {
+          "path": "/root/TabContainer.props.currentTabIndex"
+        },
+        "transforms": [
+          {
+            "code": "\tvalue \u003d self.getChild(\"root\").getChild(\"TabContainer\").props.currentTabIndex\n\treturn value",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      },
+      "persistent": true
+    },
+    "params.FacID": {
+      "binding": {
+        "config": {
+          "fallbackDelay": 2.5,
+          "mode": "direct",
+          "tagPath": "[default]RITI/Facilities/ShelterFacID"
+        },
+        "type": "tag"
+      },
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.RoomID": {
+      "paramDirection": "inout",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 986,
+      "width": 1199
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "custom": {
+          "selectedR": "value"
+        },
+        "meta": {
+          "name": "TabContainer"
+        },
+        "position": {
+          "height": 0.0365,
+          "width": 0.9933,
+          "x": 0.0017,
+          "y": 0.0531
+        },
+        "propConfig": {
+          "props.tabs": {
+            "binding": {
+              "config": {
+                "path": "view.custom.RoomTabs"
+              },
+              "transforms": [
+                {
+                  "code": "\tnewTabs \u003d []\n\tfor row in range(value.rowCount):\n\t\tfor col in range(value.columnCount):\n\t\t\ttabName \u003d value.getValueAt(row, col)\n\t\tnewTabs.append(tabName)\n\treturn newTabs",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "contentStyle": {
+            "classes": "Tabs/Tab_Selected Tabs/Tab_UnSelected"
+          },
+          "tabSize": {
+            "width": 250
+          }
+        },
+        "type": "ia.container.tab"
+      },
+      {
+        "meta": {
+          "name": "RoomMap"
+        },
+        "position": {
+          "height": 0.8083,
+          "width": 0.9883,
+          "x": 0.005,
+          "y": 0.1735
+        },
+        "propConfig": {
+          "props.path": {
+            "binding": {
+              "config": {
+                "expression": "if({view.custom.TabClick},\u0027Shelter/Room Layout/Components/RmMap/F\u0027+{view.params.FacID}+\u0027R\u0027+{view.custom.selectedRoomID},\r\n\u0027Shelter/Room Layout/Components/RmMap/F\u0027+{view.params.FacID}+\u0027R\u0027+{view.custom.defaultRoomID})"
+              },
+              "type": "expr"
+            }
+          }
+        },
+        "props": {
+          "style": {
+            "classes": "ActivityCards/Card_TextDark"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Handicapped"
+        },
+        "position": {
+          "height": 0.0357,
+          "width": 0.0417,
+          "x": 0.0092,
+          "y": 0.0988
+        },
+        "propConfig": {
+          "meta.visible": {
+            "binding": {
+              "config": {
+                "path": "view.custom.IsHadicap"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "elements": [
+            {
+              "d": "M188,390 l4,67 -24,12 -23,16 -21,20 -20,25 -17,30 -12,34 -8,39 -2,44 2,34 7,32 11,31 15,30 19,28 22,24 24,22 28,19 30,15 31,11 31,7 33,2 37,-2 35,-5 34,-9 33,-12 30,-16 29,-19 35,-29 31,-34 27,-39 12,-21 30,88 -13,17 -29,31 -34,29 -38,27 -31,18 -33,15 -36,12 -37,9 -39,5 -13,1 -14,1 -14,0 -33,-2 -31,-4 -31,-8 -29,-11 -29,-15 -27,-16 -33,-26 -29,-30 -25,-34 -16,-27 -14,-29 -11,-30 -7,-30 -5,-32 0,-10 0,-11 0,-11 1,-41 5,-37 9,-35 13,-31 15,-28 18,-25 19,-21 31,-26 33,-20 33,-15 11,-4z",
+              "fill": {
+                "paint": "#00f"
+              },
+              "name": "path",
+              "stroke": {
+                "paint": "#4c4c4c",
+                "width": "2"
+              },
+              "style": {},
+              "type": "path"
+            },
+            {
+              "d": "M316,375 l252,0 4,67 -253,0 3,66 349,0 100,304 116,-45 23,73 -192,70 -112,-335 -371,0 -14,-408 -7,-28 -9,-25 -5,-22 -1,-5 0,-4 6,-32 18,-27 30,-19 19,-4 10,-1 11,0 33,2 28,10 23,17 16,24 7,32 -2,30 -10,26 -18,23 -22,18 -30,11 -7,0 5,182z",
+              "fill": {
+                "paint": "#00f"
+              },
+              "name": "path",
+              "stroke": {
+                "paint": "#4c4c4c",
+                "width": "2"
+              },
+              "style": {},
+              "type": "path"
+            }
+          ],
+          "viewBox": "0 0 910 999"
+        },
+        "type": "ia.shapes.svg"
+      },
+      {
+        "meta": {
+          "name": "Women"
+        },
+        "position": {
+          "height": 0.0357,
+          "width": 0.0417,
+          "x": 0.1009,
+          "y": 0.0988
+        },
+        "propConfig": {
+          "meta.visible": {
+            "binding": {
+              "config": {
+                "expression": "if(left({view.custom.RmGender},1) !\u003d upper(\u0027m\u0027), true, false)"
+              },
+              "type": "expr"
+            }
+          }
+        },
+        "props": {
+          "elements": [
+            {
+              "d": "M257,999 l0,-396 -147,0 119,-253 -229,0 0,-88 283,0 0,-56 -22,-18 -18,-25 -11,-28 -3,-29 7,-33 4,-14 21,-27 24,-20 28,-11 8,-1 9,0 8,0 31,3 27,13 20,17 18,26 10,26 3,35 -6,31 -15,25 -22,24 -10,8 0,54 285,0 0,88 -232,0 120,253 -146,0 0,396 -69,0 0,-396 -23,0 0,396 -72,0z",
+              "fill": {
+                "paint": "#00f"
+              },
+              "name": "path",
+              "stroke": {
+                "paint": "#4c4c4c",
+                "width": "2"
+              },
+              "style": {},
+              "type": "path"
+            }
+          ],
+          "viewBox": "0 0 679 999"
+        },
+        "type": "ia.shapes.svg"
+      },
+      {
+        "meta": {
+          "name": "Men"
+        },
+        "position": {
+          "height": 0.0357,
+          "width": 0.0417,
+          "x": 0.055,
+          "y": 0.0988
+        },
+        "propConfig": {
+          "meta.visible": {
+            "binding": {
+              "config": {
+                "expression": "if(left({view.custom.RmGender},1) !\u003d upper(\u0027f\u0027), true, false)"
+              },
+              "type": "expr"
+            }
+          }
+        },
+        "props": {
+          "elements": [
+            {
+              "d": "M255,999 l0,-396 -34,0 0,-253 -221,0 0,-87 281,0 0,-50 -23,-19 -17,-26 -11,-31 -2,-34 7,-30 16,-27 25,-26 30,-16 23,-4 12,0 12,0 33,8 28,20 22,27 13,28 4,30 -4,34 -14,29 -20,24 -16,13 0,50 285,0 0,87 -225,0 0,253 -32,0 0,396 -70,0 0,-398 -30,0 0,398 -72,0z",
+              "fill": {
+                "paint": "#00f"
+              },
+              "name": "path",
+              "stroke": {
+                "paint": "#4c4c4c",
+                "width": "2"
+              },
+              "style": {},
+              "type": "path"
+            }
+          ],
+          "viewBox": "0 0 684 999"
+        },
+        "type": "ia.shapes.svg"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "position": {
+      "x": -375.0014190673828,
+      "y": -319
+    },
+    "props": {
+      "mode": "percent"
+    },
+    "type": "ia.container.coord"
+  }
+}

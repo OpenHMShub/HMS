@@ -1,0 +1,260 @@
+{
+  "custom": {},
+  "events": {
+    "system": {
+      "onStartup": {
+        "config": {
+          "script": "\tsystem.perspective.print(\"On Input_new Startup setting From and To date\")\n\tself.session.custom.dateRangeFromDate \u003d system.date.format(system.date.now(),\u0027MM/dd/yyyy\u0027)\n\tself.session.custom.dateRangeToDate \u003d system.date.format(system.date.now(),\u0027MM/dd/yyyy\u0027)\n#\tself.session.custom.dateRangeFromDate \u003d system.date.now()\n#\tself.session.custom.dateRangeToDate \u003d system.date.now()"
+        },
+        "enabled": false,
+        "scope": "G",
+        "type": "script"
+      }
+    }
+  },
+  "params": {
+    "beginDate": "02/01/2021 00:49",
+    "participantId": "value",
+    "participantName": "value",
+    "selectedBeginDate": "01/12/2023 00:00",
+    "selectedEndDate": "01/12/2023 03:29"
+  },
+  "propConfig": {
+    "params.beginDate": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.participantId": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.participantName": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.selectedBeginDate": {
+      "binding": {
+        "config": {
+          "path": "session.custom.dateRangeFromDate"
+        },
+        "transforms": [
+          {
+            "formatType": "datetime",
+            "formatValue": "MM/dd/YYYY HH:mm",
+            "type": "format"
+          }
+        ],
+        "type": "property"
+      },
+      "onChange": {
+        "enabled": null,
+        "script": "\tsystem.perspective.print(\"selected from \u003d \"+currentValue.value)"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.selectedEndDate": {
+      "binding": {
+        "config": {
+          "path": "session.custom.dateRangeMoveToBed"
+        },
+        "transforms": [
+          {
+            "formatType": "datetime",
+            "formatValue": "MM/dd/YYYY HH:mm",
+            "type": "format"
+          }
+        ],
+        "type": "property"
+      },
+      "onChange": {
+        "enabled": null,
+        "script": "\tsystem.perspective.print(\"selected to \u003d \"+currentValue.value)"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 60
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "Participant"
+        },
+        "position": {
+          "basis": "320px"
+        },
+        "propConfig": {
+          "props.params.participantId": {
+            "binding": {
+              "config": {
+                "path": "view.params.participantId"
+              },
+              "type": "property"
+            }
+          },
+          "props.params.participantName": {
+            "binding": {
+              "config": {
+                "path": "view.params.participantName"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "text": "Participant"
+          },
+          "path": "Shelter/Current Residents/Cards/Edit Checkin/ParticipantDisplay",
+          "style": {
+            "classes": "InputCards/InputCard"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "OriginalCheckInDate"
+        },
+        "position": {
+          "basis": "320px"
+        },
+        "propConfig": {
+          "props.params.date": {
+            "binding": {
+              "config": {
+                "path": "view.params.beginDate"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "text": "Original Check-in"
+          },
+          "path": "Shelter/Current Residents/Cards/Edit Checkin/CheckoutDateSelectionReadOnly",
+          "style": {
+            "classes": "InputCards/InputCard"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "MoveBedRoom"
+        },
+        "position": {
+          "basis": "320px"
+        },
+        "propConfig": {
+          "props.params.date": {
+            "binding": {
+              "config": {
+                "expression": " //dateArithmetic(toDate(now()), 630, \"minute\")\r\n//now(0)\r\n//{session.custom.dateRangeFromDate}\r\n{session.custom.dateRangeMoveToBed}"
+              },
+              "transforms": [
+                {
+                  "formatType": "datetime",
+                  "formatValue": {
+                    "date": "medium",
+                    "time": "short"
+                  },
+                  "type": "format"
+                }
+              ],
+              "type": "expr"
+            }
+          },
+          "props.params.date1": {
+            "binding": {
+              "config": {
+                "path": "session.custom.dateRangeFromDate"
+              },
+              "transforms": [
+                {
+                  "formatType": "datetime",
+                  "formatValue": {
+                    "date": "medium",
+                    "time": "short"
+                  },
+                  "type": "format"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "text": "Move Room / Bed"
+          },
+          "path": "Shelter/Current Residents/Cards/Edit Checkin/CheckoutDateSelection",
+          "style": {
+            "classes": "InputCards/InputCard"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Placeholder"
+        },
+        "position": {
+          "basis": "320px",
+          "display": false,
+          "grow": 1
+        },
+        "props": {
+          "path": "Shelter/Reservation/Cards/New Reservation/Placeholder",
+          "style": {
+            "classes": "InputCards/InputCard"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Label"
+        },
+        "position": {
+          "basis": "150px",
+          "display": false
+        },
+        "propConfig": {
+          "props.text": {
+            "binding": {
+              "config": {
+                "expression": "now(0)\r\n"
+              },
+              "transforms": [
+                {
+                  "code": "\tUTCOffset \u003d self.session.props.device.timezone.utcOffset\n\td \u003d system.date.addMinutes(value,int(UTCOffset*60))\n#\tb \u003d system.date.addHours(value,int(UTCOffset))\n\tc \u003d system.date.format(d, \u0027MM/dd/yyyy hh:mm\u0027)\n\t\n\treturn c",
+                  "type": "script"
+                }
+              ],
+              "type": "expr"
+            }
+          }
+        },
+        "props": {
+          "textStyle": {
+            "backgroundColor": "#FFFFFF",
+            "color": "#2B2B2B"
+          }
+        },
+        "type": "ia.display.label"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "type": "ia.container.flex"
+  }
+}

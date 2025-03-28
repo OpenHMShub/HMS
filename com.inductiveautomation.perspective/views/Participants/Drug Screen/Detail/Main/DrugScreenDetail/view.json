@@ -1,0 +1,268 @@
+{
+  "custom": {
+    "participant_id": 11,
+    "row_data": {
+      "grade_level": null,
+      "score": null,
+      "test_reason": -1
+    },
+    "selection_data": []
+  },
+  "params": {
+    "participantID": 11
+  },
+  "propConfig": {
+    "custom.participant_id": {
+      "binding": {
+        "config": {
+          "path": "view.params.participantID"
+        },
+        "type": "property"
+      },
+      "persistent": true
+    },
+    "custom.row_data": {
+      "persistent": true
+    },
+    "custom.row_data.comments": {
+      "binding": {
+        "config": {
+          "path": "view.custom.selection_data"
+        },
+        "transforms": [
+          {
+            "code": "\tif len(value) and \"comments\" in value[0]:\n\t\treturn value[0].comments\n\telse:\n\t\treturn \"\"",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      }
+    },
+    "custom.row_data.drug_screen_type_id": {
+      "binding": {
+        "config": {
+          "path": "view.custom.selection_data"
+        },
+        "transforms": [
+          {
+            "code": "\tif len(value) and \"drug_screen_type_id\" in value[0]:\n\t\treturn value[0].drug_screen_type_id\n\telse:\n\t\treturn -1",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      }
+    },
+    "custom.row_data.employee_id": {
+      "binding": {
+        "config": {
+          "path": "view.custom.selection_data"
+        },
+        "transforms": [
+          {
+            "code": "\tif len(value) and \"employee_id\" in value[0]:\n\t\treturn value[0].employee_id\n\telse:\n\t\treturn self.session.custom.loggedInStaffEmployeeID",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      }
+    },
+    "custom.row_data.id": {
+      "binding": {
+        "config": {
+          "path": "view.custom.selection_data"
+        },
+        "transforms": [
+          {
+            "code": "\tif len(value) and \"id\" in value[0]:\n\t\treturn value[0].id\n\telse:\n\t\treturn -1",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      }
+    },
+    "custom.row_data.participant_id": {
+      "binding": {
+        "config": {
+          "path": "view.custom.selection_data"
+        },
+        "transforms": [
+          {
+            "code": "\tif len(value) and \"participant_id\" in value[0]:\n\t\treturn value[0].participant_id\n\telse:\n\t\treturn self.custom.participant_id",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      }
+    },
+    "custom.row_data.passed": {
+      "binding": {
+        "config": {
+          "path": "view.custom.selection_data"
+        },
+        "transforms": [
+          {
+            "code": "\tif len(value) and \"passed\" in value[0]:\n\t\treturn value[0].passed\n\telse:\n\t\treturn -1",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      }
+    },
+    "custom.row_data.provider_id": {
+      "binding": {
+        "config": {
+          "path": "view.custom.selection_data"
+        },
+        "transforms": [
+          {
+            "code": "\tif len(value) and \"provider_id\" in value[0]:\n\t\treturn value[0].provider_id\n\telse:\n\t\treturn -1",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      }
+    },
+    "custom.row_data.test_date": {
+      "binding": {
+        "config": {
+          "path": "view.custom.selection_data"
+        },
+        "transforms": [
+          {
+            "code": "\tif len(value) and \"test_date\" in value[0]:\n\t\treturn value[0].test_date\n\telse:\n\t\treturn -1",
+            "type": "script"
+          },
+          {
+            "expression": "if({value}\u003e0,fromMillis({value}),now(0))",
+            "type": "expression"
+          }
+        ],
+        "type": "property"
+      }
+    },
+    "custom.row_data.test_reason_id": {
+      "binding": {
+        "config": {
+          "path": "view.custom.selection_data"
+        },
+        "transforms": [
+          {
+            "code": "\tif len(value) and \"test_reason_id\" in value[0]:\n\t\treturn value[0].test_reason_id\n\telse:\n\t\treturn -1",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      }
+    },
+    "custom.row_data.time_created": {
+      "binding": {
+        "config": {
+          "path": "view.custom.selection_data"
+        },
+        "transforms": [
+          {
+            "code": "\tif len(value) and \"time_created\" in value[0]:\n\t\treturn value[0].time_created\n\telse:\n\t\treturn -1",
+            "type": "script"
+          },
+          {
+            "expression": "if({value}\u003e0,fromMillis({value}),now(0))",
+            "type": "expression"
+          }
+        ],
+        "type": "property"
+      }
+    },
+    "custom.selection_data": {
+      "binding": {
+        "config": {
+          "path": "/root/Table.props.params.selection_data"
+        },
+        "type": "property"
+      },
+      "persistent": true
+    },
+    "params.participantID": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "width": 1031
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "Edit"
+        },
+        "position": {
+          "basis": "205px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.row_data": {
+            "binding": {
+              "config": {
+                "path": "view.custom.row_data"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "path": "Participants/Drug Screen/Detail/Main/Edit/DrugScreenDetailEdit",
+          "style": {
+            "backgroundColor": "#D5D5D5",
+            "classes": "ActivityCards/Card",
+            "marginLeft": 40,
+            "marginRight": 40
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Table"
+        },
+        "position": {
+          "basis": "320px",
+          "grow": 1
+        },
+        "propConfig": {
+          "props.params.participantID": {
+            "binding": {
+              "config": {
+                "path": "view.params.participantID"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "selected_row": -1,
+            "selection_data": []
+          },
+          "path": "Participants/Drug Screen/Detail/Main/Table/DrugScreenTableDetail",
+          "style": {
+            "marginLeft": 40,
+            "marginRight": 40
+          }
+        },
+        "type": "ia.display.view"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column",
+      "style": {
+        "classes": "Background/Alternative"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

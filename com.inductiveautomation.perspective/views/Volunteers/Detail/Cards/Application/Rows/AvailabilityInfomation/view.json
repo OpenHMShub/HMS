@@ -1,0 +1,383 @@
+{
+  "custom": {
+    "ProfileData": {
+      "profile": {
+        "availability_daily_afternoon": null,
+        "availability_daily_evening": [],
+        "availability_daily_morning": [],
+        "availability_daily_selection": null,
+        "availability_seasonal_availablity_type": 2,
+        "availability_seasonal_end_date": {
+          "$": [
+            "ts",
+            201,
+            1619381899091
+          ],
+          "$ts": 1617814800000
+        },
+        "availability_seasonal_start_date": {
+          "$": [
+            "ts",
+            201,
+            1619381899091
+          ],
+          "$ts": 1617296400000
+        },
+        "availability_seasonal_type": null,
+        "availability_upto_hours": "",
+        "availability_upto_type": "",
+        "availability_weekly_selection": null
+      }
+    },
+    "events": null,
+    "func_refresh": true,
+    "skills": null
+  },
+  "params": {
+    "availabilityData": {
+      "availability_daily_afternoon": null,
+      "availability_daily_evening": [],
+      "availability_daily_morning": [],
+      "availability_daily_selection": null,
+      "availability_seasonal_availablity_type": 2,
+      "availability_seasonal_end_date": {
+        "$": [
+          "ts",
+          201,
+          1619381899091
+        ],
+        "$ts": 1617814800000
+      },
+      "availability_seasonal_start_date": {
+        "$": [
+          "ts",
+          201,
+          1619381899091
+        ],
+        "$ts": 1617296400000
+      },
+      "availability_seasonal_type": null,
+      "availability_upto_hours": "",
+      "availability_upto_type": "",
+      "availability_weekly_selection": null
+    },
+    "events": null,
+    "key": null,
+    "skills": null
+  },
+  "propConfig": {
+    "custom.ProfileData": {
+      "persistent": true
+    },
+    "custom.events": {
+      "persistent": true
+    },
+    "custom.func_refresh": {
+      "onChange": {
+        "enabled": null,
+        "script": "\timport traceback\n\ttry:\n\t\tif self.custom.func_refresh:\n\t\t\tdata \u003d self.custom.sql_data\n\t\t\t#ID\n\t\t\tself.custom.RegistrationData.human_id \u003d data.getValueAt(0,\u0027human_id\u0027)\n\t\t\tself.custom.RegistrationData.participant_id \u003d self.params.participant_id\n\t\t\t#Name\n\t\t\t#Set values to empty string as default\n\t\t\tself.custom.RegistrationData.first_name \u003d \u0027\u0027\n\t\t\tself.custom.RegistrationData.middle_name \u003d \u0027\u0027\n\t\t\tself.custom.RegistrationData.last_name \u003d \u0027\u0027\n\t\t\tself.custom.RegistrationData.suffix_name \u003d \u0027\u0027\n\t\t\tself.custom.RegistrationData.nick_name \u003d \u0027\u0027\n\t\t\t#Only load the data if not null\n\t\t\tif data.getValueAt(0,\u0027first_name\u0027) !\u003d None:\n\t\t\t\tself.custom.RegistrationData.first_name \u003d data.getValueAt(0,\u0027first_name\u0027)\n\t\t\tif data.getValueAt(0,\u0027middle_name\u0027) !\u003d None:\n\t\t\t\tself.custom.RegistrationData.middle_name \u003d data.getValueAt(0,\u0027middle_name\u0027)\n\t\t\tif data.getValueAt(0,\u0027last_name\u0027) !\u003d None:\n\t\t\t\tself.custom.RegistrationData.last_name \u003d data.getValueAt(0,\u0027last_name\u0027)\n\t\t\tif data.getValueAt(0,\u0027suffix_name\u0027) !\u003d None:\n\t\t\t\tself.custom.RegistrationData.suffix_name \u003d data.getValueAt(0,\u0027suffix_name\u0027)\n\t\t\tif data.getValueAt(0,\u0027nick_name\u0027) !\u003d None:\n\t\t\t\tself.custom.RegistrationData.nick_name \u003d data.getValueAt(0,\u0027nick_name\u0027)\n\t\t\tself.custom.RegistrationData.gender_id \u003d data.getValueAt(0,\u0027gender_id\u0027)\n\t\t\t#Numbers\n\t\t\tactive \u003d data.getValueAt(0,\u0027time_retired\u0027)\n\t\t\tif active !\u003d None: #Participant is not active if time retired has a date\n\t\t\t\tself.custom.RegistrationData.active \u003d 0\n\t\t\telse:\n\t\t\t\tself.custom.RegistrationData.active \u003d 1\n\t\t\tself.custom.RegistrationData.case_manager_id \u003d data.getValueAt(0,\u0027case_manager_id\u0027)\n\t\t\tssn \u003d data.getValueAt(0,\u0027ssn\u0027)[:3] + \u0027-\u0027 + data.getValueAt(0,\u0027ssn\u0027)[3:5] + \u0027-\u0027 + data.getValueAt(0,\u0027ssn\u0027)[5:]\n\t\t\tself.custom.RegistrationData.ssn \u003d ssn\n\t\t\tself.custom.RegistrationData.ssn_quality_id \u003d data.getValueAt(0,\u0027ssn_quality_id\u0027)\n\t\t\tdob \u003d data.getValueAt(0,\u0027dob\u0027)\n\t\t\tif dob \u003d\u003d None:\n\t\t\t\tself.custom.RegistrationData.dob \u003d None\n\t\t\telse:\n\t\t\t\tself.custom.RegistrationData.dob \u003d system.date.fromMillis(system.date.toMillis(dob))\n\t\t\t\n\t\t\tself.custom.RegistrationData.dob_quality \u003d data.getValueAt(0,\u0027dob_quality_id\u0027)\n\n\t\t\t#Status\t\n\t\t\tself.custom.RegistrationData.race_id \u003d data.getValueAt(0,\u0027race_id\u0027)\n\t\t\tself.custom.RegistrationData.ethnicity_id \u003d data.getValueAt(0,\u0027ethnicity_id\u0027)\n\t\t\tself.custom.RegistrationData.veteran_id \u003d data.getValueAt(0,\u0027veteran_id\u0027)\n\t\t\tself.custom.RegistrationData.disability_id \u003d data.getValueAt(0,\u0027disability_id\u0027)\n\t\t\ttime_deceased \u003d data.getValueAt(0,\u0027time_deceased\u0027)\n\t\t\tif time_deceased \u003d\u003d None:\n\t\t\t\tself.custom.RegistrationData.time_deceased \u003d None\n\t\t\telse:\n\t\t\t\tself.custom.RegistrationData.time_deceased \u003d system.date.toMillis(time_deceased)\n\t\t\t#Address\n\t\t\t#Set values to empty string as default\n\t\t\tself.custom.RegistrationData.street \u003d \u0027\u0027\n\t\t\tself.custom.RegistrationData.city \u003d \u0027\u0027\n\t\t\tself.custom.RegistrationData.state \u003d \u0027\u0027\n\t\t\tself.custom.RegistrationData.zip_code \u003d \u0027\u0027\n\t\t\t#Only load the data if not null\n\t\t\tif data.getValueAt(0,\u0027street\u0027) !\u003d None:\n\t\t\t\tself.custom.RegistrationData.street \u003d data.getValueAt(0,\u0027street\u0027)\n\t\t\tif data.getValueAt(0,\u0027city\u0027) !\u003d None:\n\t\t\t\tself.custom.RegistrationData.city \u003d data.getValueAt(0,\u0027city\u0027)\n\t\t\tif data.getValueAt(0,\u0027state\u0027) !\u003d None:\n\t\t\t\tself.custom.RegistrationData.state \u003d data.getValueAt(0,\u0027state\u0027)\n\t\t\tif data.getValueAt(0,\u0027zip_code\u0027) !\u003d None:\n\t\t\t\tif int(data.getValueAt(0,\u0027zip_code\u0027)) \u003e 0:\n\t\t\t\t\tself.custom.RegistrationData.zip_code \u003d data.getValueAt(0,\u0027zip_code\u0027)\n\t\t\t#Contact info\n\t\t\t#Set values to empty string as default\n\t\t\tself.custom.RegistrationData.phone \u003d \u0027\u0027\n\t\t\tself.custom.RegistrationData.alt_phone \u003d \u0027\u0027\n\t\t\tself.custom.RegistrationData.email \u003d \u0027\u0027\n\t\t\t#Only load the data if not null\n\t\t\tif data.getValueAt(0,\u0027phone\u0027) !\u003d None:\n\t\t\t\tphone \u003d data.getValueAt(0,\u0027phone\u0027)[:3] + \u0027-\u0027 + data.getValueAt(0,\u0027phone\u0027)[3:6] + \u0027-\u0027 + data.getValueAt(0,\u0027phone\u0027)[6:]\n\t\t\t\tself.custom.RegistrationData.phone \u003d phone\n\t\t\tif data.getValueAt(0,\u0027alt_phone\u0027) !\u003d None:\n\t\t\t\talt_phone \u003d data.getValueAt(0,\u0027alt_phone\u0027)[:3] + \u0027-\u0027 + data.getValueAt(0,\u0027alt_phone\u0027)[3:6] + \u0027-\u0027 + data.getValueAt(0,\u0027alt_phone\u0027)[6:]\n\t\t\t\tself.custom.RegistrationData.alt_phone \u003d alt_phone\n\t\t\tif data.getValueAt(0,\u0027email\u0027) !\u003d None:\n\t\t\t\tself.custom.RegistrationData.email \u003d data.getValueAt(0,\u0027email\u0027)\n\t\t\tself.custom.RegistrationData.communication_type_id \u003d data.getValueAt(0,\u0027communication_type_id\u0027)\n\t\t\tself.custom.RegistrationData.insurance_type_id \u003d data.getValueAt(0,\u0027insurance_type_id\u0027)\n\t\t\t#Emergency Contact info\n\t\t\t#Set values to empty string as default\n\t\t\tself.custom.RegistrationData.emergency_contact_name \u003d \u0027\u0027\n\t\t\tself.custom.RegistrationData.emergency_contact_phone \u003d \u0027\u0027\n\t\t\tself.custom.RegistrationData.emergency_contact_email \u003d \u0027\u0027\n\t\t\t#Only load the data if not null\n\t\t\tif data.getValueAt(0,\u0027emergency_contact_name\u0027) !\u003d None:\n\t\t\t\tself.custom.RegistrationData.emergency_contact_name \u003d data.getValueAt(0,\u0027emergency_contact_name\u0027)\n\t\t\tif data.getValueAt(0,\u0027emergency_contact_phone\u0027) !\u003d None:\n\t\t\t\tec_phone \u003d data.getValueAt(0,\u0027emergency_contact_phone\u0027)[:3] + \u0027-\u0027 + data.getValueAt(0,\u0027emergency_contact_phone\u0027)[3:6] + \u0027-\u0027 + data.getValueAt(0,\u0027emergency_contact_phone\u0027)[6:]\n\t\t\t\tself.custom.RegistrationData.emergency_contact_phone \u003d ec_phone\n\t\t\tif data.getValueAt(0,\u0027emergency_contact_email\u0027) !\u003d None:\n\t\t\t\tself.custom.RegistrationData.emergency_contact_email \u003d data.getValueAt(0,\u0027emergency_contact_email\u0027)\n\t\t\tself.custom.RegistrationData.emergency_contact_type_id \u003d data.getValueAt(0,\u0027emergency_contact_type_id\u0027)\n\t\t\t#Misc info\t\t\t\n\t\t\tself.custom.RegistrationData.family_id \u003d data.getValueAt(0,\u0027family_id\u0027)\n\t\t\tself.custom.RegistrationData.hoh_relationship_id \u003d data.getValueAt(0,\u0027hoh_relationship_id\u0027)\n\t\t\t#Set values to empty string as default\n\t\t\tself.custom.RegistrationData.employer \u003d \u0027\u0027\n\t\t\tself.custom.RegistrationData.school \u003d \u0027\u0027\n\t\t\tself.custom.RegistrationData.congregation \u003d \u0027\u0027\n\t\t\t#Only load the data if not null\n\t\t\tif data.getValueAt(0,\u0027employer\u0027) !\u003d None:\n\t\t\t\tself.custom.RegistrationData.employer \u003d data.getValueAt(0,\u0027employer\u0027)\n\t\t\tif data.getValueAt(0,\u0027school\u0027) !\u003d None:\n\t\t\t\tself.custom.RegistrationData.school \u003d data.getValueAt(0,\u0027school\u0027)\n\t\t\tif data.getValueAt(0,\u0027congregation\u0027) !\u003d None:\n\t\t\t\tself.custom.RegistrationData.congregation \u003d data.getValueAt(0,\u0027congregation\u0027)\n\t\t\n\t\t\n\t\t\n\t\t#set the refresh trigger to false when finished\n\t\tself.custom.func_refresh \u003d False\n\t\n\texcept:\n\t\tlogger \u003d system.util.getLogger(\"Participants Personal Detail Edit view.custom.func_refresh\")\n\t\tmsg \u003d traceback.format_exc()\n\t\tlogger.error(msg)"
+      },
+      "persistent": true
+    },
+    "custom.skills": {
+      "persistent": true
+    },
+    "params.availabilityData": {
+      "binding": {
+        "config": {
+          "bidirectional": true,
+          "path": "view.custom.ProfileData.profile"
+        },
+        "type": "property"
+      },
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.events": {
+      "binding": {
+        "config": {
+          "bidirectional": true,
+          "path": "view.custom.events"
+        },
+        "type": "property"
+      },
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.skills": {
+      "binding": {
+        "config": {
+          "bidirectional": true,
+          "path": "view.custom.skills"
+        },
+        "type": "property"
+      },
+      "paramDirection": "inout",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 461
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "Header"
+        },
+        "position": {
+          "shrink": 0
+        },
+        "props": {
+          "params": {
+            "Text": "Availability Information"
+          },
+          "path": "Volunteers/Templates/Header",
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Row_Availability"
+        },
+        "position": {
+          "basis": "120px"
+        },
+        "propConfig": {
+          "props.params.availability_seasonal_availablity_type": {
+            "binding": {
+              "config": {
+                "bidirectional": true,
+                "path": "view.custom.ProfileData.profile.availability_seasonal_availablity_type"
+              },
+              "type": "property"
+            }
+          },
+          "props.params.availability_seasonal_end_date": {
+            "binding": {
+              "config": {
+                "bidirectional": true,
+                "path": "view.custom.ProfileData.profile.availability_seasonal_end_date"
+              },
+              "type": "property"
+            }
+          },
+          "props.params.availability_seasonal_start_date": {
+            "binding": {
+              "config": {
+                "bidirectional": true,
+                "path": "view.custom.ProfileData.profile.availability_seasonal_start_date"
+              },
+              "type": "property"
+            }
+          },
+          "props.params.availability_upto_hours": {
+            "binding": {
+              "config": {
+                "bidirectional": true,
+                "path": "view.custom.ProfileData.profile.availability_upto_hours"
+              },
+              "type": "property"
+            }
+          },
+          "props.params.availability_upto_type": {
+            "binding": {
+              "config": {
+                "bidirectional": true,
+                "path": "view.custom.ProfileData.profile.availability_upto_type"
+              },
+              "type": "property"
+            }
+          },
+          "props.params.availability_weekly_selection": {
+            "binding": {
+              "config": {
+                "bidirectional": true,
+                "path": "view.custom.ProfileData.profile.availability_weekly_selection"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "path": "Volunteers/Detail/Cards/Application/Rows/Row_Availability",
+          "style": {
+            "marginLeft": "25px",
+            "marginRight": "25px"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Row_Daily_Availability_Monring"
+        },
+        "position": {
+          "basis": "60px"
+        },
+        "propConfig": {
+          "props.params.availability_daily_selection": {
+            "binding": {
+              "config": {
+                "bidirectional": true,
+                "path": "view.custom.ProfileData.profile.availability_daily_morning"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "text": "Monring Availabliity"
+          },
+          "path": "Volunteers/Detail/Cards/Application/Rows/Row_Daily_Availablity",
+          "style": {
+            "marginLeft": "25px",
+            "marginRight": "25px"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Row_Daily_Availability_Afternoon"
+        },
+        "position": {
+          "basis": "60px"
+        },
+        "propConfig": {
+          "props.params.availability_daily_selection": {
+            "binding": {
+              "config": {
+                "bidirectional": true,
+                "path": "view.custom.ProfileData.profile.availability_daily_afternoon"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "text": "Afternoon Availability"
+          },
+          "path": "Volunteers/Detail/Cards/Application/Rows/Row_Daily_Availablity",
+          "style": {
+            "marginLeft": "25px",
+            "marginRight": "25px"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Row_Daily_Availability_Evening"
+        },
+        "position": {
+          "basis": "60px"
+        },
+        "propConfig": {
+          "props.params.availability_daily_selection": {
+            "binding": {
+              "config": {
+                "bidirectional": true,
+                "path": "view.custom.ProfileData.profile.availability_daily_evening"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "text": "Evining Avablability"
+          },
+          "path": "Volunteers/Detail/Cards/Application/Rows/Row_Daily_Availablity",
+          "style": {
+            "marginLeft": "25px",
+            "marginRight": "25px"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Row_Events"
+        },
+        "position": {
+          "basis": "60px"
+        },
+        "propConfig": {
+          "props.params.events_selections": {
+            "binding": {
+              "config": {
+                "bidirectional": true,
+                "path": "view.custom.events"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "path": "Volunteers/Detail/Cards/Application/Rows/Row_Events",
+          "style": {
+            "marginLeft": "25px",
+            "marginRight": "25px"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Row_Skills"
+        },
+        "position": {
+          "basis": "60px"
+        },
+        "propConfig": {
+          "props.params.skills_selection": {
+            "binding": {
+              "config": {
+                "bidirectional": true,
+                "path": "view.custom.skills"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "path": "Volunteers/Detail/Cards/Application/Rows/Row_Skills",
+          "style": {
+            "marginLeft": "25px",
+            "marginRight": "25px"
+          }
+        },
+        "type": "ia.display.view"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column",
+      "style": {
+        "classes": "Background/Default"
+      }
+    },
+    "scripts": {
+      "customMethods": [],
+      "extensionFunctions": null,
+      "messageHandlers": [
+        {
+          "messageType": "refreshPersonalData",
+          "pageScope": true,
+          "script": "\tview \u003d self.view\n\tview.refreshBinding(\"custom.sql_data\")",
+          "sessionScope": true,
+          "viewScope": true
+        }
+      ]
+    },
+    "type": "ia.container.flex"
+  }
+}

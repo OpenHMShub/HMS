@@ -1,0 +1,115 @@
+{
+  "custom": {
+    "mode": 4
+  },
+  "params": {
+    "row": "value",
+    "rowData": {
+      "isEmployee": true,
+      "isParticipant": true,
+      "isParticipantActive": false,
+      "isVolunteer": true
+    },
+    "rowIndex": "value",
+    "valueOf": 3
+  },
+  "propConfig": {
+    "custom.mode": {
+      "binding": {
+        "config": {
+          "expression": "case({view.params.valueOf},\r\n//\tParticipant\r\n\t1,if({view.params.rowData.isParticipant},\r\n\t\tif({view.params.rowData.isParticipantActive}\u003d1,1,2),\r\n\t\t0),\r\n//\tEmployee\r\n\t2,if({view.params.rowData.isEmployee},\r\n\t\t\t3,\r\n\t\t\t0),\r\n//\tVolunteer\r\n\t3,if({view.params.rowData.isVolunteer},\r\n\t\t\t4,\r\n\t\t\t0),\r\n\t0\r\n\t)"
+        },
+        "type": "expr"
+      },
+      "persistent": true
+    },
+    "params.row": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.rowData": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.rowIndex": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.valueOf": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 24,
+      "width": 24
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "Icon"
+        },
+        "position": {
+          "basis": "24px",
+          "grow": 1
+        },
+        "propConfig": {
+          "props.path": {
+            "binding": {
+              "config": {
+                "path": "view.custom.mode"
+              },
+              "transforms": [
+                {
+                  "fallback": "",
+                  "inputType": "scalar",
+                  "mappings": [
+                    {
+                      "input": 0,
+                      "output": ""
+                    },
+                    {
+                      "input": 1,
+                      "output": "material/done"
+                    },
+                    {
+                      "input": 2,
+                      "output": "material/cancel"
+                    },
+                    {
+                      "input": 3,
+                      "output": "material/work_outline"
+                    },
+                    {
+                      "input": 4,
+                      "output": "material/person"
+                    }
+                  ],
+                  "outputType": "scalar",
+                  "type": "map"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "color": "#0C4E85"
+        },
+        "type": "ia.display.icon"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "alignItems": "center",
+      "direction": "column",
+      "justify": "center"
+    },
+    "type": "ia.container.flex"
+  }
+}

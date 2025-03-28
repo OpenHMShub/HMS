@@ -1,0 +1,1 @@
+select id as RoomID, facilityID, roomName, isHandicapAccess, gender from lodging.room where facilityID =  :FacID 

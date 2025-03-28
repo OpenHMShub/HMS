@@ -1,0 +1,223 @@
+{
+  "custom": {},
+  "events": {
+    "system": {
+      "onStartup": {
+        "config": {
+          "script": "\troot \u003d self.getChild(\"root\")\n\troot.setByExpo()\n\troot.setByWherePlusIn()\n"
+        },
+        "scope": "G",
+        "type": "script"
+      }
+    }
+  },
+  "params": {
+    "base": {
+      "cnd": "[Facility].[id] \u003d ?"
+    },
+    "expo": {
+      "Label_props_text": "Facility"
+    },
+    "query": {
+      "orderby": "[facilityName]",
+      "queryCore": "SELECT [id] AS [facilityID], [facilityName] AS [Facility] FROM [RITIOps].[lodging].[Facility] WHERE (timeRetired IS NULL)"
+    },
+    "useCndIn": true,
+    "wherePlusIn": [
+      {
+        "arg": [
+          3,
+          5
+        ],
+        "cnd": "[id] in (?)"
+      }
+    ],
+    "wherePlusOut": [
+      {
+        "arg": -1,
+        "cnd": "-1 \u003d ?"
+      }
+    ]
+  },
+  "propConfig": {
+    "params.base": {
+      "access": "PROTECTED",
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.base.cnd": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.expo": {
+      "access": "PROTECTED",
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.expo.Label_props_text": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.query": {
+      "access": "PROTECTED",
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.query.orderby": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.query.queryCore": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.useCndIn": {
+      "access": "PROTECTED",
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.wherePlusIn": {
+      "access": "PROTECTED",
+      "onChange": {
+        "enabled": null,
+        "script": "\troot \u003d self.getChild(\"root\")\n\troot.setByWherePlusIn()"
+      },
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.wherePlusIn[0]": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.wherePlusIn[0].arg": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.wherePlusIn[0].arg[0]": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.wherePlusIn[0].arg[1]": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.wherePlusIn[0].cnd": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.wherePlusOut": {
+      "access": "PROTECTED",
+      "paramDirection": "output",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 50,
+      "width": 175
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "Label"
+        },
+        "position": {
+          "basis": "50px"
+        },
+        "props": {
+          "style": {
+            "classes": "Text/Add_HeaderText"
+          },
+          "text": "Facility"
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "meta": {
+          "name": "Dropdown"
+        },
+        "position": {
+          "basis": "50px"
+        },
+        "propConfig": {
+          "props.value": {
+            "onChange": {
+              "enabled": null,
+              "script": "\n\n\t# Add to wherePlusOut condition \u0027cnd\u0027 which is specified in props base\n\t# \u0027cnd\u0027 is condition with full column name: \"[table].[column] \u003d ?\"\n\t# or if nothing is selected - special case \"always True\" like -1 \u003d ? (and arg is -1). \n\t# For example: \"cnd\":\"[Room].[id] \u003d ?\"\n\t# example for wherePlusOut: [{\"arg\":7,\"cnd\":\"[lodging].[Room].[id] \u003d ?\"}]\n\t# example for wherePlusOut: [{\"arg\": -1,\"cnd\":\"-1 \u003d ?\"}]\n\n\t\n\ttry:\n\t\tbase \u003d self.view.params.base\n\t\tcondition \u003d base[\u0027cnd\u0027]\n\texcept:\n\t\tcondition \u003d None\n\n\tif currentValue.value and currentValue.value \u003e 0:\n\t\tlistWherePlusOut \u003d [{\u0027arg\u0027: currentValue.value, \u0027cnd\u0027: condition}] if condition is not None else [{\u0027arg\u0027: currentValue.value}]\n\telse:\n\t\tlistWherePlusOut \u003d [ {\u0027arg\u0027: -1, \u0027cnd\u0027: \u0027-1 \u003d ?\u0027}]\n\t\t\t\n\tself.view.params.wherePlusOut \u003d listWherePlusOut\n"
+            },
+            "persistent": true
+          }
+        },
+        "props": {
+          "dropdownOptionStyle": {
+            "classes": "Text/Add_InfoText"
+          },
+          "options": {
+            "$": [
+              "ds",
+              192,
+              1610104070362
+            ],
+            "$columns": [
+              {
+                "data": [
+                  3,
+                  5
+                ],
+                "name": "facilityID",
+                "type": "Integer"
+              },
+              {
+                "data": [
+                  "Hallway",
+                  "Night Shift Dorm"
+                ],
+                "name": "Facility",
+                "type": "String"
+              }
+            ]
+          },
+          "placeholder": {
+            "icon": {
+              "color": "#0d80e3"
+            },
+            "text": "Select"
+          },
+          "style": {
+            "classes": "Text/Add_InfoText"
+          },
+          "value": -1
+        },
+        "type": "ia.input.dropdown"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column",
+      "style": {
+        "overflow": "hidden"
+      }
+    },
+    "scripts": {
+      "customMethods": [
+        {
+          "name": "setByWherePlusIn",
+          "params": [],
+          "script": "\tdrp \u003d self.getChild(\"Dropdown\")\n\t\n\twherePlusIn \u003d self.view.params.wherePlusIn\n\tquery \u003d self.view.params.query\n\tuseCndIn \u003d self.view.params.useCndIn\n\t\t\n\ttry:\n\t\tqueryCore \u003d query.get(\u0027queryCore\u0027)\n\texcept:\n\t\tqueryCore \u003d None\n\n\tif queryCore is None:\n\t\tdrp.props.options \u003d None\n\t\treturn\n\n\t# wherePlusIn value null could be used if embeded view is dependent (wait for some wherePlusIn) but we want \n\t# to avoid prepQuery execution on start up. If we want to execute on start up then wherePlusIn is empty array (like [])\n\tif wherePlusIn is None:\n\t\tdrp.props.options \u003d None\n\t\treturn\n\t\n\ttry:\t\n\t\torderby  \u003d query.get(\u0027orderby\u0027) \t\n\texcept:\n\t\torderBy \u003d None\t\t\n\t\n\t\n\tif isinstance(wherePlusIn, list) or type(wherePlusIn).__name__ \u003d\u003d \"PropertyTreeScriptWrapper$ArrayWrapper\":\n\t\timport extend.query \n\t\tprepQuery, args \u003d extend.query.getPrepQueryArgs(queryCore, wherePlus\u003dwherePlusIn, orderby\u003dorderby, useCnd \u003d useCndIn)\n\telse:\n\t\traise TypeError(\"wherePlusIn type is not correct -\u003e type(wherePlusIn).__name__: {}\".format(type(wherePlusIn).__name__))\n\n\t# Check if useCndIn  is False and args[0] \u003d\u003d -1 (usually it is id column in db table) to avoid query execution, list of option is None\n\tif not(useCndIn) and isinstance(args,list) and len(args) \u003d\u003d 1 and args[0] \u003d\u003d -1:\n\t\tdrp.props.options \u003d None\n\telif prepQuery is None:\n\t\tdrp.props.options \u003d None\n\telse:\n\t\t#ystem.perspective.print((\u0027\\n ##before exec###\u0027,prepQuery, args))\n\t\tdrp.props.options \u003d system.db.runPrepQuery(prepQuery,args,\u0027RITIOps\u0027) \n\t\t\n\tdrp.props.value \u003d -1\n"
+        },
+        {
+          "name": "setByExpo",
+          "params": [],
+          "script": "\t# For example: expo \u003d \u0027{\"Label_props_text\":\"Participants\"}\u0027\n\texpo \u003d self.view.params.expo\n\n\t#ystem.perspective.print((\u0027expo:\u0027,expo,expo.get(\u0027Dropdown_props_showClearIcon\u0027, \u0027nothing\u0027)))\n\t\n\tlbl \u003d self.getChild(\"Label\")\n\tdrp \u003d self.getChild(\"Dropdown\")\n\n\tlbl.props.text \u003d expo.get(\u0027Label_props_text\u0027,\u0027x\u0027)\n\n\tdrp.props.showClearIcon \u003d expo.get(\u0027Dropdown_props_showClearIcon\u0027, False)\n\tdrp.props.multiSelect \u003d expo.get(\u0027Dropdown_props_multiSelect\u0027, False)\n\n\t"
+        }
+      ],
+      "extensionFunctions": null,
+      "messageHandlers": []
+    },
+    "type": "ia.container.flex"
+  }
+}

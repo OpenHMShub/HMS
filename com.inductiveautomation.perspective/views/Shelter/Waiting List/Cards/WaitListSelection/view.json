@@ -1,0 +1,181 @@
+{
+  "custom": {
+    "selectedparticipant": -1
+  },
+  "params": {
+    "dateadded": {
+      "$": [
+        "ts",
+        192,
+        1601851476552
+      ],
+      "$ts": 1601739364000
+    },
+    "selecteddate": null,
+    "selectedparticipant": -1,
+    "selectedprogram": -1,
+    "wlid": -1
+  },
+  "propConfig": {
+    "custom.selectedparticipant": {
+      "persistent": true
+    },
+    "params.dateadded": {
+      "paramDirection": "inout"
+    },
+    "params.selecteddate": {
+      "paramDirection": "inout"
+    },
+    "params.selectedparticipant": {
+      "paramDirection": "inout"
+    },
+    "params.selectedprogram": {
+      "paramDirection": "inout"
+    },
+    "params.wlid": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 56,
+      "width": 881
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "EmbeddedParticipant"
+        },
+        "position": {
+          "basis": "320px"
+        },
+        "propConfig": {
+          "props.params.Options": {
+            "binding": {
+              "config": {
+                "queryPath": "Participants/ParticipantDropdownList"
+              },
+              "type": "query"
+            }
+          },
+          "props.params.SelectedValue": {
+            "binding": {
+              "config": {
+                "bidirectional": true,
+                "path": "view.params.selectedparticipant"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "Text": "Participant"
+          },
+          "path": "Shelter/Reservation/Cards/New Reservation/SelectionInput"
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "EmbeddedProgram"
+        },
+        "position": {
+          "basis": "320px"
+        },
+        "propConfig": {
+          "props.params.Options": {
+            "binding": {
+              "config": {
+                "queryPath": "Participants/ProgramDropdownList"
+              },
+              "type": "query"
+            }
+          },
+          "props.params.SelectedValue": {
+            "binding": {
+              "config": {
+                "bidirectional": true,
+                "path": "view.params.selectedprogram"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "Text": "Program"
+          },
+          "path": "Shelter/Reservation/Cards/New Reservation/SelectionInput"
+        },
+        "type": "ia.display.view"
+      }
+    ],
+    "custom": {
+      "dateadded": {
+        "$": [
+          "ts",
+          201,
+          1592902180067
+        ],
+        "$ts": 1592902180067
+      },
+      "selected": "value",
+      "selectedparticipant": -1,
+      "selectedprogram": -1
+    },
+    "meta": {
+      "name": "root"
+    },
+    "propConfig": {
+      "custom.dateadded": {
+        "binding": {
+          "config": {
+            "bidirectional": true,
+            "path": "./EmbeddedAddTime.props.params.date"
+          },
+          "enabled": false,
+          "type": "property"
+        }
+      },
+      "custom.selecteddata": {
+        "binding": {
+          "config": {
+            "parameters": {
+              "wlid": "{view.params.wlid}"
+            },
+            "queryPath": "Shelter/WaitList/WaitListSelection"
+          },
+          "type": "query"
+        },
+        "onChange": {
+          "enabled": null,
+          "script": "\tdata \u003d system.dataset.toPyDataSet(self.custom.selecteddata)\n\tif(len(data) \u003d\u003d 1):\n\t\tself.getChild(\"EmbeddedProgram\").props.params.SelectedValue \u003d data[0][\"programid\"]\n\t\tself.getChild(\"EmbeddedParticipant\").props.params.SelectedValue \u003d data[0][\"participantid\"] \n\t\tself.getChild(\"EmbeddedAddTime\").props.params.date \u003d data[0][\"dateadded\"]\n\t"
+        }
+      },
+      "custom.selectedparticipant": {
+        "binding": {
+          "config": {
+            "path": "./EmbeddedParticipant.props.params.SelectedValue"
+          },
+          "enabled": false,
+          "type": "property"
+        }
+      },
+      "custom.selectedprogram": {
+        "binding": {
+          "config": {
+            "bidirectional": true,
+            "path": "./EmbeddedProgram.props.params.SelectedValue"
+          },
+          "enabled": false,
+          "type": "property"
+        }
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

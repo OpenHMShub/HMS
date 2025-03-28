@@ -1,0 +1,293 @@
+{
+  "custom": {},
+  "params": {},
+  "props": {
+    "defaultSize": {
+      "width": 1292
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "KPI"
+        },
+        "position": {
+          "basis": "175px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.ActivityRange": {
+            "binding": {
+              "config": {
+                "path": "../Filter.props.params.ActivityRange"
+              },
+              "type": "property"
+            }
+          },
+          "props.params.CalenderBreezeId": {
+            "binding": {
+              "config": {
+                "path": "../Filter.props.params.CalenderId"
+              },
+              "transforms": [
+                {
+                  "code": "\tif value !\u003d \u0027\u0027 and value !\u003d None:\n\t\tresult \u003d system.db.runPrepQuery(\"SELECT BreezeId FROM calendar.calendars Where id \u003d ?\", [value])\n\t\tCalenderBreezeId \u003d result[0][0]\n\telse:\n\t\tCalenderBreezeId \u003d None\n\treturn CalenderBreezeId",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          },
+          "props.params.CalenderId": {
+            "binding": {
+              "config": {
+                "path": "../Filter.props.params.CalenderId"
+              },
+              "type": "property"
+            }
+          },
+          "props.params.DaysToAdd": {
+            "binding": {
+              "config": {
+                "path": "../Filter.props.params.ActivityRange"
+              },
+              "transforms": [
+                {
+                  "code": "\tif value !\u003d None and value !\u003d \u0027\u0027:\n\t\tEventDate \u003d system.date.format(value, \"yyyy-MM-dd hh:mm:ss\")\n\telse:\n\t\tEventDate \u003d system.date.format(system.date.addDays(system.date.now(), -365), \"yyyy-MM-dd hh:mm:ss\")\n\treturn EventDate",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          },
+          "props.params.EventName": {
+            "binding": {
+              "config": {
+                "path": "../Filter.props.params.EventName"
+              },
+              "type": "property"
+            }
+          },
+          "props.params.beginDate": {
+            "binding": {
+              "config": {
+                "path": "../Filter.props.params.beginDate"
+              },
+              "type": "property"
+            }
+          },
+          "props.params.checkIO": {
+            "binding": {
+              "config": {
+                "path": "../Filter.props.params.checkIO"
+              },
+              "type": "property"
+            }
+          },
+          "props.params.endDate": {
+            "binding": {
+              "config": {
+                "path": "../Filter.props.params.endDate"
+              },
+              "type": "property"
+            }
+          },
+          "props.params.gender": {
+            "binding": {
+              "config": {
+                "path": "../Filter.props.params.gender"
+              },
+              "type": "property"
+            }
+          },
+          "props.params.maxAge": {
+            "binding": {
+              "config": {
+                "path": "../Filter.props.params.maxAge"
+              },
+              "type": "property"
+            }
+          },
+          "props.params.minAge": {
+            "binding": {
+              "config": {
+                "path": "../Filter.props.params.minAge"
+              },
+              "type": "property"
+            }
+          },
+          "props.params.search": {
+            "binding": {
+              "config": {
+                "path": "../Filter.props.params.search"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "path": "Events/AttendanceHistory/Cards/KPI_Header"
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Filter"
+        },
+        "position": {
+          "basis": "40px",
+          "shrink": 0
+        },
+        "props": {
+          "params": {
+            "ActivityRange": null,
+            "CalenderId": null,
+            "EventName": null,
+            "beginDate": null,
+            "checkIO": null,
+            "endDate": null,
+            "gender": null,
+            "maxAge": null,
+            "minAge": null,
+            "search": ""
+          },
+          "path": "Events/AttendanceHistory/Components/Filters/AttendanceHistory_ConditionsFilters",
+          "style": {
+            "classes": "Table/Filter_Header_Container"
+          },
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Label"
+        },
+        "position": {
+          "basis": "32px"
+        },
+        "propConfig": {
+          "props.text": {
+            "binding": {
+              "config": {
+                "path": "../Table.props.params.resultRowCount"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "meta": {
+          "name": "Table"
+        },
+        "position": {
+          "basis": "200px",
+          "grow": 1
+        },
+        "propConfig": {
+          "props.params.ActivityRange": {
+            "binding": {
+              "config": {
+                "path": "../Filter.props.params.ActivityRange"
+              },
+              "type": "property"
+            }
+          },
+          "props.params.CalenderId": {
+            "binding": {
+              "config": {
+                "path": "../Filter.props.params.CalenderId"
+              },
+              "type": "property"
+            }
+          },
+          "props.params.EventName": {
+            "binding": {
+              "config": {
+                "path": "../Filter.props.params.EventName"
+              },
+              "type": "property"
+            }
+          },
+          "props.params.beginDate": {
+            "binding": {
+              "config": {
+                "path": "../Filter.props.params.beginDate"
+              },
+              "type": "property"
+            }
+          },
+          "props.params.checkIO": {
+            "binding": {
+              "config": {
+                "path": "../Filter.props.params.checkIO"
+              },
+              "type": "property"
+            }
+          },
+          "props.params.endDate": {
+            "binding": {
+              "config": {
+                "path": "../Filter.props.params.endDate"
+              },
+              "type": "property"
+            }
+          },
+          "props.params.gender": {
+            "binding": {
+              "config": {
+                "path": "../Filter.props.params.gender"
+              },
+              "type": "property"
+            }
+          },
+          "props.params.maxAge": {
+            "binding": {
+              "config": {
+                "path": "../Filter.props.params.maxAge"
+              },
+              "type": "property"
+            }
+          },
+          "props.params.minAge": {
+            "binding": {
+              "config": {
+                "path": "../Filter.props.params.minAge"
+              },
+              "type": "property"
+            }
+          },
+          "props.params.search": {
+            "binding": {
+              "config": {
+                "path": "../Filter.props.params.search"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "fetch": null,
+            "resultRowCount": 17287
+          },
+          "path": "Events/AttendanceHistory/Components/Tables/AttendanceHistory_Table"
+        },
+        "type": "ia.display.view"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column",
+      "style": {
+        "classes": "Background/Default"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

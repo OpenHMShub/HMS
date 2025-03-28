@@ -1,0 +1,355 @@
+{
+  "custom": {},
+  "params": {
+    "dateBefore12Months": null,
+    "dateToday": null,
+    "lastMonth": null,
+    "month": null,
+    "selectedDate": null,
+    "year": null
+  },
+  "propConfig": {
+    "params.dateBefore12Months": {
+      "binding": {
+        "config": {
+          "path": "/root/Year.props.params.selectedValue"
+        },
+        "transforms": [
+          {
+            "code": "\tmonth \u003d  self.getChild(\"root\").getChild(\"Month\").props.params.selectedValue\n\tyear \u003d value\n#\tyearIndex \u003d value\n#\toptions \u003d self.getChild(\"root\").getChild(\"Year\").props.params.options\n#\tif yearIndex !\u003d None:\n#\t\tyear \u003d options.getValueAt(yearIndex,1)\n#\telse:\n#\t\tyear \u003d yearIndex\n\tif month !\u003d None and year!\u003dNone:\n\t\tdate \u003d system.date.getDate(int(year), month-1, 1)\n\t\tlastDate \u003d system.date.addMonths(date, -11)\n\telse:\n\t\tlastDate \u003d None\n\treturn lastDate",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.dateToday": {
+      "onChange": {
+        "enabled": null,
+        "script": "\tself.getChild(\"root\").getChild(\"Month\").props.params.selectedValue \u003d int(system.date.format(system.date.now(),\u0027M\u0027))\n\tself.getChild(\"root\").getChild(\"Year\").props.params.selectedValue \u003d int(system.date.format(system.date.now(),\u0027yyyy\u0027))\n#\tyear_option \u003d self.getChild(\"root\").getChild(\"Year\").props.params.options\n#\tcurrent_year \u003d system.date.format(system.date.now(),\u0027yyyy\u0027)\n#\t\n#\tfor i in range(0,year_option.getRowCount()):\n#\t\tyear \u003d year_option.getValueAt(i,1)\n#\t\tif int(year) \u003d\u003d int(current_year):\n#\t\t\tself.getChild(\"root\").getChild(\"Year\").props.params.selectedValue \u003d i\n\tsystem.perspective.print(self.getChild(\"root\").getChild(\"Month\").props.params.selectedValue)\n\tsystem.perspective.print(self.getChild(\"root\").getChild(\"Year\").props.params.selectedValue)"
+      },
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.lastMonth": {
+      "binding": {
+        "config": {
+          "path": "/root/Month.props.params.selectedValue"
+        },
+        "transforms": [
+          {
+            "code": "\toptions \u003d self.getChild(\"root\").getChild(\"Month\").props.params.options\n\tif value !\u003d None:\n\t\tif value \u003d\u003d 1:\n\t\t\treturn options.getValueAt(options.getRowCount()-1,1)\n\t\telse:\n\t\t\treturn options.getValueAt((value-2),1)\n\telse:\n\t\treturn value",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.month": {
+      "binding": {
+        "config": {
+          "path": "/root/Month.props.params.selectedValue"
+        },
+        "transforms": [
+          {
+            "code": "\toptions \u003d self.getChild(\"root\").getChild(\"Month\").props.params.options\n\tif value !\u003d None:\n\t\treturn options.getValueAt((value-1),1)\n\telse:\n\t\treturn value",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.selectedDate": {
+      "binding": {
+        "config": {
+          "path": "/root/Year.props.params.selectedValue"
+        },
+        "transforms": [
+          {
+            "code": "\tmonth \u003d  self.getChild(\"root\").getChild(\"Month\").props.params.selectedValue\n\tyear \u003d value\n#\tyearIndex \u003d value\n#\toptions \u003d self.getChild(\"root\").getChild(\"Year\").props.params.options\n#\tif yearIndex !\u003d None:\n#\t\tyear \u003d options.getValueAt(yearIndex,1)\n#\telse:\n#\t\tyear \u003d yearIndex\n\tif month !\u003d None and year!\u003dNone:\n\t\tdate \u003d system.date.addDays(system.date.getDate(int(year), month, 1),-1)\n\telse:\n\t\tdate \u003d None\n\treturn date",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.year": {
+      "binding": {
+        "config": {
+          "path": "/root/Year.props.params.selectedValue"
+        },
+        "transforms": [
+          {
+            "code": "#\toptions \u003d self.getChild(\"root\").getChild(\"Year\").props.params.options\n#\tif value !\u003d None:\n#\t\treturn options.getValueAt(value,1)\n#\telse:\n\treturn value",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 30,
+      "width": 1817
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "Month"
+        },
+        "position": {
+          "basis": "180px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.selectedValue": {
+            "onChange": {
+              "enabled": null,
+              "script": "\tself.view.refreshBinding(\u0027params.dateBefore12Months\u0027)\n\tself.view.refreshBinding(\u0027params.selectedDate\u0027)"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "options": {
+              "$": [
+                "ds",
+                192,
+                1677132025093
+              ],
+              "$columns": [
+                {
+                  "data": [
+                    1,
+                    2,
+                    3,
+                    4,
+                    5,
+                    6,
+                    7,
+                    8,
+                    9,
+                    10,
+                    11,
+                    12
+                  ],
+                  "name": "id",
+                  "type": "Integer"
+                },
+                {
+                  "data": [
+                    "January",
+                    "February",
+                    "March",
+                    "April",
+                    "May",
+                    "June",
+                    "July",
+                    "August",
+                    "September",
+                    "October",
+                    "November",
+                    "December"
+                  ],
+                  "name": "month",
+                  "type": "String"
+                }
+              ]
+            },
+            "placeholder": "Month",
+            "selectedValue": null
+          },
+          "path": "Overview/Dashboard/Templates/SingleDropDown"
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Year"
+        },
+        "position": {
+          "basis": "180px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.options": {
+            "binding": {
+              "config": {
+                "queryPath": "WinterShelterGlobal/Filters/getSeasons"
+              },
+              "transforms": [
+                {
+                  "code": "\theader \u003d [\u0027ID\u0027,\u0027Year\u0027]\n\tYearList \u003d []\n\tdataset \u003d value\n\tfor i in range(0,dataset.getRowCount()):\n\t\tseason \u003d dataset.getValueAt(i,\u0027season\u0027)\n\t\tif i \u003d\u003d 0:\n#\t\t\tYearList.append([i,season.split(\u0027-\u0027)[0]])\n#\t\t\tYearList.append([i+1,season.split(\u0027-\u0027)[1]])\n\t\t\tYearList.append([int(season.split(\u0027-\u0027)[0]),season.split(\u0027-\u0027)[0]])\n\t\t\tYearList.append([int(season.split(\u0027-\u0027)[1]),season.split(\u0027-\u0027)[1]])\n\t\telse:\n\t\t\tcurrentYear \u003d system.date.getYear(system.date.now())\n\t\t\tif int(season.split(\u0027-\u0027)[1]) \u003c\u003d int(currentYear):\n#\t\t\t\tYearList.append([i+1,season.split(\u0027-\u0027)[1]])\n\t\t\t\tYearList.append([int(season.split(\u0027-\u0027)[1]),season.split(\u0027-\u0027)[1]])\n\tFinalDataset \u003d system.dataset.toDataSet(header, YearList)\n\treturn FinalDataset",
+                  "type": "script"
+                }
+              ],
+              "type": "query"
+            }
+          },
+          "props.params.selectedValue": {
+            "onChange": {
+              "enabled": null,
+              "script": "\tself.view.refreshBinding(\u0027params.dateBefore12Months\u0027)\n\tself.view.refreshBinding(\u0027params.selectedDate\u0027)"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "placeholder": "Year",
+            "selectedValue": null
+          },
+          "path": "Overview/Dashboard/Templates/SingleDropDown",
+          "style": {
+            "marginLeft": "15px"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "toExcel"
+        },
+        "position": {
+          "basis": "30px",
+          "shrink": 0
+        },
+        "props": {
+          "params": {
+            "dataset": {
+              "$": [
+                "ds",
+                192,
+                1676353315991
+              ],
+              "$columns": [
+                {
+                  "data": [],
+                  "name": "id",
+                  "type": "Integer"
+                }
+              ]
+            },
+            "defaultFilePrefix": "toExcel"
+          },
+          "path": "1_TEMPLATES/Tables/TableToExcel",
+          "style": {
+            "marginLeft": "10px"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "toPDF"
+        },
+        "position": {
+          "basis": "30px",
+          "shrink": 0
+        },
+        "props": {
+          "params": {
+            "dataset": {
+              "$": [
+                "ds",
+                192,
+                1676352706357
+              ],
+              "$columns": [
+                {
+                  "data": [],
+                  "name": "id",
+                  "type": "Integer"
+                }
+              ]
+            },
+            "defaultFilePrefix": "Participants"
+          },
+          "path": "1_TEMPLATES/Tables/TableToPDF"
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "DateTimeInput"
+        },
+        "position": {
+          "basis": "189px",
+          "display": false
+        },
+        "props": {
+          "formattedValue": "Feb 28, 2023 12:00 AM",
+          "modalStyle": {
+            "classes": "DateTime/Date_Purple"
+          },
+          "placeholder": "Select last date of month",
+          "style": {
+            "classes": "DateTime/Add_Date",
+            "marginLeft": "60px"
+          },
+          "value": {
+            "$": [
+              "ts",
+              0,
+              1679987946353
+            ],
+            "$ts": 1677564000000
+          }
+        },
+        "type": "ia.input.date-time-input"
+      },
+      {
+        "events": {
+          "dom": {
+            "onClick": {
+              "config": {
+                "script": "\t## insert record for next month\n\tdateToday \u003d self.getSibling(\"DateTimeInput\").props.value\n\tHopeU_monthAdd.insertData_forNextMonth(dateToday)\n\t\n\t## update calculation of hopeU table daily\n#\ttoday \u003d self.getSibling(\"DateTimeInput\").props.value\n#\tsystem.db.runNamedQuery(path\u003d\u0027Overview/Update_HopeUTable\u0027,parameters\u003d{\u0027dateToday\u0027:today})\n\n\t## update calculation of HopeU monthly table daily\n#\ttoday \u003d self.getSibling(\"DateTimeInput\").props.value\n#\tyear \u003d system.date.getYear(today)\n#\tmonth \u003d system.date.format(today,\u0027MMMM\u0027)\n#\tstartDate \u003d system.date.getDate(year, system.date.getMonth(today), 1)\n#\tendDate \u003d system.date.addDays(system.date.getDate(year,system.date.getMonth(today)+1, 1), -1)\n#\tparameters \u003d {\u0027year\u0027:year,\u0027month\u0027:month,\u0027startDate\u0027:startDate,\u0027endDate\u0027:endDate}\n#\tsystem.perspective.print(parameters)\n#\tsystem.db.runNamedQuery(path\u003d\u0027Overview/Update_HopeUMonthly\u0027,parameters \u003d parameters)"
+              },
+              "scope": "G",
+              "type": "script"
+            }
+          }
+        },
+        "meta": {
+          "name": "Button"
+        },
+        "position": {
+          "basis": "100px",
+          "display": false
+        },
+        "props": {
+          "image": {
+            "position": "center"
+          },
+          "style": {
+            "classes": "Buttons/Btn_Orange_Active",
+            "marginLeft": "20px"
+          },
+          "text": "Add month"
+        },
+        "type": "ia.input.button"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "style": {
+        "classes": "Filter/Header_Text"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

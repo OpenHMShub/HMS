@@ -1,0 +1,363 @@
+{
+  "custom": {
+    "loggedInStaff": "Yogini Test StaffStaff",
+    "participantData": {
+      "$": [
+        "ds",
+        192,
+        1730205746654
+      ],
+      "$columns": [
+        {
+          "data": [
+            2
+          ],
+          "name": "ID",
+          "type": "Integer"
+        },
+        {
+          "data": [
+            false
+          ],
+          "name": "Suspension",
+          "type": "Boolean"
+        },
+        {
+          "data": [
+            true
+          ],
+          "name": "fullRegistration",
+          "type": "Boolean"
+        },
+        {
+          "data": [
+            "Donnie"
+          ],
+          "name": "FirstName",
+          "type": "String"
+        },
+        {
+          "data": [
+            "E"
+          ],
+          "name": "MiddleName",
+          "type": "String"
+        },
+        {
+          "data": [
+            "Akins"
+          ],
+          "name": "LastName",
+          "type": "String"
+        },
+        {
+          "data": [
+            ""
+          ],
+          "name": "NickName",
+          "type": "String"
+        },
+        {
+          "data": [
+            -27453600000
+          ],
+          "name": "BirthDate",
+          "type": "Date"
+        },
+        {
+          "data": [
+            55
+          ],
+          "name": "Age",
+          "type": "Integer"
+        },
+        {
+          "data": [
+            3
+          ],
+          "name": "RaceId",
+          "type": "Integer"
+        },
+        {
+          "data": [
+            "Black, African American or African"
+          ],
+          "name": "Race",
+          "type": "String"
+        },
+        {
+          "data": [
+            0
+          ],
+          "name": "GenderId",
+          "type": "Integer"
+        },
+        {
+          "data": [
+            "Male"
+          ],
+          "name": "Gender",
+          "type": "String"
+        },
+        {
+          "data": [
+            1
+          ],
+          "name": "VeteranId",
+          "type": "Integer"
+        },
+        {
+          "data": [
+            "No"
+          ],
+          "name": "Veteran",
+          "type": "String"
+        },
+        {
+          "data": [
+            1413470632583
+          ],
+          "name": "timeCreated",
+          "type": "Date"
+        },
+        {
+          "data": [
+            1
+          ],
+          "name": "isActive",
+          "type": "Integer"
+        },
+        {
+          "data": [
+            1728883195457
+          ],
+          "name": "LastRegistration",
+          "type": "Date"
+        },
+        {
+          "data": [
+            1729602000000
+          ],
+          "name": "LastAction",
+          "type": "Date"
+        },
+        {
+          "data": [
+            null
+          ],
+          "name": "shelterId",
+          "type": "Integer"
+        },
+        {
+          "data": [
+            ""
+          ],
+          "name": "shelter",
+          "type": "String"
+        },
+        {
+          "data": [
+            0
+          ],
+          "name": "reservation",
+          "type": "Integer"
+        }
+      ]
+    }
+  },
+  "params": {
+    "ParticipantId": 2
+  },
+  "propConfig": {
+    "custom.loggedInStaff": {
+      "binding": {
+        "config": {
+          "path": "session.props.auth.user.email"
+        },
+        "transforms": [
+          {
+            "code": "\tloggedInEmployeeData \u003d system.db.runPrepQuery(\"SELECT [staff].[Employee].id, [humans].[Human].firstname, [humans].[Human].middlename, [humans].[Human].lastname FROM [staff].[Employee] INNER JOIN [humans].[Human] on [staff].[Employee].humanId \u003d [humans].[Human].id WHERE \u0027\"+value+\"\u0027 !\u003d \u0027\u0027 AND [humans].[Human].email \u003d \u0027\"+value+\"\u0027\")\n\tloggedInEmployee \u003d \"\"\n\tif loggedInEmployeeData !\u003d None and loggedInEmployeeData.getRowCount()\u003e0:\n\t\tloggedInEmployee \u003d loggedInEmployeeData.getValueAt(0,\u0027firstName\u0027) + \" \" + loggedInEmployeeData.getValueAt(0,\u0027middleName\u0027) + \" \" + loggedInEmployeeData.getValueAt(0,\u0027lastName\u0027)\n\treturn loggedInEmployee",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      },
+      "persistent": true
+    },
+    "custom.participantData": {
+      "binding": {
+        "config": {
+          "path": "view.params.ParticipantId"
+        },
+        "transforms": [
+          {
+            "code": "\tparticipantData \u003d system.db.runPrepQuery(\"select * from participant.Dashboard where id \u003d \"+str(value))\n\treturn participantData",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      },
+      "persistent": true
+    },
+    "params.ParticipantId": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 974,
+      "width": 1247
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "children": [
+          {
+            "meta": {
+              "name": "Header"
+            },
+            "position": {
+              "basis": "25px",
+              "grow": 1,
+              "shrink": 0
+            },
+            "props": {
+              "style": {
+                "background": "linear-gradient(90deg, rgba(22,165,189,1) 0%, rgba(13,185,165,1) 100%)",
+                "classes": "Text/Add_Header"
+              },
+              "text": "Homeless Letter Report",
+              "textStyle": {
+                "fontSize": 20
+              }
+            },
+            "type": "ia.display.label"
+          },
+          {
+            "events": {
+              "dom": {
+                "onClick": {
+                  "config": {
+                    "draggable": true,
+                    "id": "HomelessReportReport",
+                    "modal": false,
+                    "overlayDismiss": false,
+                    "resizable": true,
+                    "showCloseIcon": true,
+                    "type": "close",
+                    "viewPath": "Participants/Activity/Report/HomelessReportReport",
+                    "viewportBound": false
+                  },
+                  "scope": "C",
+                  "type": "popup"
+                }
+              }
+            },
+            "meta": {
+              "name": "Label"
+            },
+            "position": {
+              "basis": "40px"
+            },
+            "props": {
+              "style": {
+                "background": "linear-gradient(90deg, rgba(22,165,189,1) 0%, rgba(13,185,165,1) 100%)"
+              },
+              "text": "⨯",
+              "textStyle": {
+                "fontSize": "20px",
+                "textAlign": "center"
+              }
+            },
+            "type": "ia.display.label"
+          }
+        ],
+        "meta": {
+          "name": "Header"
+        },
+        "position": {
+          "basis": "40px"
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "meta": {
+          "name": "ReportViewer"
+        },
+        "position": {
+          "basis": "70%",
+          "grow": 1,
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.participantDOB": {
+            "binding": {
+              "config": {
+                "path": "view.custom.participantData"
+              },
+              "transforms": [
+                {
+                  "code": "\tparticipantDOB \u003d \"\"\n\tif value !\u003d None and value.getRowCount()\u003e0:\n\t\tparticipantDOB \u003d value.getValueAt(0,\u0027BirthDate\u0027)\n\t\tparticipantDOB \u003d \"(\" + system.date.format(participantDOB, \u0027MM/dd/yyyy\u0027) + \")\"\n\treturn participantDOB",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          },
+          "props.params.participantName": {
+            "binding": {
+              "config": {
+                "path": "view.custom.participantData"
+              },
+              "transforms": [
+                {
+                  "code": "\tparticipantName \u003d \"\"\n\tif value !\u003d None and value.getRowCount()\u003e0:\n\t\tparticipantName \u003d value.getValueAt(0,\u0027firstName\u0027) + \" \" + value.getValueAt(0,\u0027middleName\u0027) + \" \" + value.getValueAt(0,\u0027lastName\u0027)\n \n\treturn participantName",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          },
+          "props.params.staffMember": {
+            "binding": {
+              "config": {
+                "path": "view.custom.loggedInStaff"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "controlStyle": {
+            "color": "#0d80e3"
+          },
+          "page": 1,
+          "pageCount": 1,
+          "source": "Participant/Participant_HomelessLetter",
+          "style": {
+            "backgroundColor": "#FFFFFF",
+            "margin": "20px",
+            "marginBottom": "20px",
+            "marginLeft": "20px",
+            "marginRight": "20px"
+          }
+        },
+        "type": "ia.reporting.report-viewer"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column",
+      "justify": "space-around",
+      "style": {
+        "classes": "Background/Alternative",
+        "overflow": "hidden"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

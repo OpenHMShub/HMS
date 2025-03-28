@@ -1,0 +1,179 @@
+{
+  "custom": {
+    "data": [],
+    "function": 0
+  },
+  "params": {
+    "bedId": 0,
+    "eventStart": "value",
+    "participantId": 0,
+    "programId": -1,
+    "reservationId": -1
+  },
+  "propConfig": {
+    "custom.data": {
+      "persistent": true
+    },
+    "custom.function": {
+      "persistent": true
+    },
+    "params.bedId": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.eventStart": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.participantId": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.programId": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.reservationId": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 170,
+      "width": 300
+    },
+    "loading": {
+      "mode": "blocking"
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "EmbeddedView Header"
+        },
+        "position": {
+          "basis": "25px",
+          "shrink": 0
+        },
+        "props": {
+          "params": {
+            "Text": "Warning"
+          },
+          "path": "Shelter/Reservation/Cards/New Reservation/ReservationHeader"
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "children": [
+          {
+            "meta": {
+              "name": "Label"
+            },
+            "position": {
+              "basis": "50px",
+              "grow": 1
+            },
+            "props": {
+              "style": {
+                "classes": "Text/Error_Message"
+              },
+              "text": "Expected to Arrive with Controlled Substance(s)"
+            },
+            "type": "ia.display.label"
+          }
+        ],
+        "custom": {
+          "ReservationSaved": false
+        },
+        "meta": {
+          "name": "Message"
+        },
+        "position": {
+          "basis": "70px",
+          "shrink": 0
+        },
+        "props": {
+          "style": {
+            "borderTopColor": "#9db8d1",
+            "borderTopStyle": "solid",
+            "borderTopWidth": "1px",
+            "classes": "Background/Default",
+            "marginLeft": "10px",
+            "marginRight": "10px",
+            "marginTop": "5px",
+            "paddingTop": "5px"
+          }
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "children": [
+          {
+            "events": {
+              "component": {
+                "onActionPerformed": {
+                  "config": {
+                    "script": "\tproject \u003d \u0027RITI\u0027\n\tpath \u003d \"Shelter/Reservations/CheckIn\"\n\tparameters \u003d {\"bedId\": int(self.view.params.bedId),\"participantId\": int(self.view.params.participantId),\"eventStart\":self.view.params.eventStart, \"reservationId\":int(self.view.params.reservationId)}\n\tretVal \u003d system.db.runNamedQuery(project\u003dproject,path\u003dpath,parameters\u003dparameters)\n\t## add program enrollment as per Ticket #147\n\tprogramId \u003d self.view.params.programId\n\tif programId is not None and programId !\u003d -1:\n\t\tpath \u003d \"Participants/Enrollments/ParticipantAddSelectedEnrollments\"\n\t\tparams \u003d {\"participantId\":int(self.view.params.participantId),\"programId\":programId}\n\t\tsystem.db.runNamedQuery(project\u003dproject,path\u003dpath,parameters\u003dparams)\n\t## End Addition\n\t## add audit log entry\n\tpath \u003d \"Shelter/AuditLog/AddAuditLogEntry\"\n\tparams \u003d {\"bedLogId\":-1,\"reservationId\":int(self.view.params.reservationId), \"bedId\": int(self.view.params.bedId),\"participantId\": int(self.view.params.participantId), \"action\":\u0027Check-in\u0027, \"employeeId\":self.session.custom.loggedInStaffEmployeeID, \"userName\" : self.session.props.auth.user.userName}\n\tsystem.db.runNamedQuery(project\u003dproject,path\u003dpath,parameters\u003dparams)\n\n\tsystem.perspective.sendMessage(messageType\u003d\"refreshReservations\", payload\u003d{}, scope\u003d\"session\")\n\tsystem.perspective.closePopup(\"ControlledSubstanceWarning\")"
+                  },
+                  "scope": "G",
+                  "type": "script"
+                }
+              }
+            },
+            "meta": {
+              "name": "Button"
+            },
+            "position": {
+              "basis": "120px"
+            },
+            "props": {
+              "style": {
+                "classes": "Buttons/Main",
+                "marginBottom": "5px",
+                "marginLeft": "5px",
+                "marginTop": "5px"
+              },
+              "text": "Acknowledged"
+            },
+            "type": "ia.input.button"
+          }
+        ],
+        "custom": {
+          "ReservationSaved": false
+        },
+        "meta": {
+          "name": "root Actions"
+        },
+        "position": {
+          "basis": "51px"
+        },
+        "props": {
+          "justify": "center",
+          "style": {
+            "borderTopColor": "#9db8d1",
+            "borderTopStyle": "solid",
+            "borderTopWidth": "1px",
+            "classes": "Background/Default",
+            "marginLeft": "10px",
+            "marginRight": "10px",
+            "marginTop": "5px",
+            "paddingTop": "5px"
+          }
+        },
+        "type": "ia.container.flex"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column",
+      "style": {
+        "classes": "Background/Default"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

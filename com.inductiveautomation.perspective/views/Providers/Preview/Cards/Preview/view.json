@@ -1,0 +1,324 @@
+{
+  "custom": {},
+  "params": {
+    "trackID": -1
+  },
+  "propConfig": {
+    "params.trackID": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 822,
+      "width": 600
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "headerEmbeddedView"
+        },
+        "position": {
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.Text": {
+            "binding": {
+              "config": {
+                "parameters": {
+                  "trackID": "{view.params.trackID}"
+                },
+                "queryPath": "Provider/Detail/Provider_HumanSingleFieldEntry",
+                "returnFormat": "scalar"
+              },
+              "type": "query"
+            }
+          },
+          "props.params.trackID": {
+            "binding": {
+              "config": {
+                "path": "view.params.trackID"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "path": "Providers/Preview/Cards/Personal/Header",
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Provider Label"
+        },
+        "position": {
+          "basis": "32px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "custom.providerType": {
+            "binding": {
+              "config": {
+                "parameters": {
+                  "trackID": "{view.params.trackID}"
+                },
+                "queryPath": "Provider/Detail/Provider_NationalProviderIdentifier_Query",
+                "returnFormat": "scalar"
+              },
+              "type": "query"
+            }
+          },
+          "props.text": {
+            "binding": {
+              "config": {
+                "expression": "concat(\u0027Provider Type - \u0027,{this.custom.providerType})"
+              },
+              "type": "expr"
+            }
+          }
+        },
+        "props": {
+          "style": {
+            "classes": "Text/About_info",
+            "paddingLeft": "0px",
+            "textAlign": "center"
+          }
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "meta": {
+          "name": "LastNoteHeaderEmbeddedView"
+        },
+        "position": {
+          "shrink": 0
+        },
+        "props": {
+          "params": {
+            "Text": "Last Note"
+          },
+          "path": "Providers/Preview/Cards/Personal/PreviewHeader",
+          "style": {
+            "borderTopColor": "#e6e6e6",
+            "borderTopStyle": "solid",
+            "borderTopWidth": 1
+          },
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "LastNoteInfoEmbeddedView"
+        },
+        "position": {
+          "shrink": 0
+        },
+        "propConfig": {
+          "position.basis": {
+            "binding": {
+              "config": {
+                "expression": "if({this.props.params.More}, \u0027218px\u0027, \u0027118px\u0027)"
+              },
+              "type": "expr"
+            }
+          },
+          "props.params.trackID": {
+            "binding": {
+              "config": {
+                "path": "view.params.trackID"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "More": false
+          },
+          "path": "Providers/Preview/Cards/LastCaseNote",
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "LastReferralHeaderEmbeddedView"
+        },
+        "position": {
+          "shrink": 0
+        },
+        "props": {
+          "params": {
+            "Info": null,
+            "Text": "Last Referral"
+          },
+          "path": "Providers/Detail/Cards/Personal/AboutHeader",
+          "style": {
+            "borderTopColor": "#e6e6e6",
+            "borderTopStyle": "solid",
+            "borderTopWidth": 1
+          },
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "LastReferral"
+        },
+        "position": {
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.Participant": {
+            "binding": {
+              "config": {
+                "parameters": {
+                  "trackID": "{view.params.trackID}"
+                },
+                "queryPath": "Provider/Preview/ProvidersPreview_ReferralParticipant",
+                "returnFormat": "json"
+              },
+              "transforms": [
+                {
+                  "code": "\tif len(value) \u003d\u003d 0:\n\t\treturn \"\"\n\t\t\n\tFullName \u003d \"\"\n\tfor f in (\"FirstName\", \"MiddleName\", \"LastName\"):\n\t\tif value[0][f] is not \u0027\u0027:\n\t\t\tif FullName is not \u0027\u0027:\n\t\t\t\tFullName +\u003d \u0027 \u0027\n\t\t\tFullName +\u003d value[0][f]\n\treturn FullName",
+                  "type": "script"
+                }
+              ],
+              "type": "query"
+            }
+          },
+          "props.params.Status": {
+            "binding": {
+              "config": {
+                "parameters": {
+                  "trackID": "{view.params.trackID}"
+                },
+                "queryPath": "Provider/Preview/ProvidersPreview_ReferralStatus",
+                "returnFormat": "scalar"
+              },
+              "transforms": [
+                {
+                  "code": "\tif value:\n\t\treturn value\n\telse:\n\t\treturn \"\"",
+                  "type": "script"
+                }
+              ],
+              "type": "query"
+            }
+          },
+          "props.params.Type": {
+            "binding": {
+              "config": {
+                "parameters": {
+                  "trackID": "{view.params.trackID}"
+                },
+                "queryPath": "Provider/Preview/ProvidersPreview_ReferralType",
+                "returnFormat": "scalar"
+              },
+              "transforms": [
+                {
+                  "code": "\tif value:\n\t\treturn value\n\telse:\n\t\treturn \"\"",
+                  "type": "script"
+                }
+              ],
+              "type": "query"
+            }
+          },
+          "props.params.Updated": {
+            "binding": {
+              "config": {
+                "parameters": {
+                  "trackID": "{view.params.trackID}"
+                },
+                "queryPath": "Provider/Preview/ProvidersPreview_ReferralUpdated",
+                "returnFormat": "scalar"
+              },
+              "transforms": [
+                {
+                  "code": "\t#Convert object to string\n\tstring \u003d str(value)\n\t\n\tif string \u003d\u003d \"None\":\n\t\treturn \"\"\n\t\n\t#Format Date\n\tyear \u003d string[0:4]\n\tday \u003d string[5:7]\n\tmonth \u003d string[8:10]\n\tdate \u003d day + \u0027/\u0027 + month + \u0027/\u0027 + year\n\t\n\treturn date",
+                  "type": "script"
+                }
+              ],
+              "type": "query"
+            }
+          }
+        },
+        "props": {
+          "path": "Providers/Preview/Cards/LastReferral",
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "LocationsLabelEmbeddedView"
+        },
+        "position": {
+          "shrink": 0
+        },
+        "props": {
+          "params": {
+            "Info": null,
+            "Text": "Contacts"
+          },
+          "path": "Providers/Detail/Cards/Personal/AboutHeader",
+          "style": {
+            "borderTopColor": "#e6e6e6",
+            "borderTopStyle": "solid",
+            "borderTopWidth": 1
+          },
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "ContactsTable"
+        },
+        "position": {
+          "basis": "412px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.providerId": {
+            "binding": {
+              "config": {
+                "path": "view.params.trackID"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "contactId": null,
+            "fetch": null,
+            "resultRowCount": 0
+          },
+          "path": "Providers/Contacts/Detail/Table/ContactsTableDetail",
+          "style": {
+            "marginLeft": 40,
+            "marginRight": 0
+          }
+        },
+        "type": "ia.display.view"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column",
+      "style": {
+        "classes": "Background/Default"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

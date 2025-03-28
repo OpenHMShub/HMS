@@ -1,0 +1,199 @@
+{
+  "custom": {
+    "deleteMode": false,
+    "editMode": {
+      "enabled": true
+    },
+    "selected": false
+  },
+  "params": {
+    "rowData": {
+      "id": "value",
+      "name": "value"
+    }
+  },
+  "propConfig": {
+    "custom.deleteMode": {
+      "persistent": true
+    },
+    "custom.editMode": {
+      "persistent": true
+    },
+    "custom.selected": {
+      "persistent": true
+    },
+    "params.rowData": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 30,
+      "width": 250
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "GHBedsLabel"
+        },
+        "position": {
+          "basis": "110px",
+          "shrink": 0
+        },
+        "props": {
+          "text": "Edit GH Beds Value",
+          "textStyle": {
+            "classes": "ActivityCards/Card_TextDark",
+            "marginLeft": 2,
+            "textAlign": "left"
+          }
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "meta": {
+          "name": "GHBedsValue"
+        },
+        "position": {
+          "basis": "50px"
+        },
+        "propConfig": {
+          "props.value": {
+            "binding": {
+              "config": {
+                "queryPath": "WinterShelter/ColdWeatherReport/GetGHBedSetting"
+              },
+              "type": "query"
+            }
+          }
+        },
+        "props": {
+          "containerStyle": {
+            "classes": "ActivityCards/Card_TextDark",
+            "paddingTop": "15px"
+          },
+          "spinner": {
+            "enabled": false
+          },
+          "style": {
+            "classes": "ActivityCards/Card_TextDark"
+          }
+        },
+        "type": "ia.input.numeric-entry-field"
+      },
+      {
+        "children": [
+          {
+            "events": {
+              "dom": {
+                "onClick": {
+                  "config": {
+                    "script": "\timport traceback\n\tlogger \u003d system.util.getLogger(\"WinterShelter_EditGHBeds\")\n\tmsg \u003d \"\"\t\n\ttry:\n\t\tsystem.perspective.print(\u0027accept\u0027)\n\t\tghBedsValue \u003d self.parent.parent.getChild(\"GHBedsValue\").props.value\n\t\tqueryPath \u003d \u0027WinterShelter/ColdWeatherReport/UpdateGHBedSetting\u0027\n\t\tparams \u003d {\u0027ghBeds\u0027:ghBedsValue}\n\t\tsystem.db.runNamedQuery(path\u003dqueryPath,parameters\u003dparams)\n\t\t\n\t\tqueryPath \u003d \u0027WinterShelter/ColdWeatherReport/Update_ColdWeatherReportForADate\u0027\n\t\tdate \u003d system.date.now()\n\t\tdayOfYear \u003d system.date.getDayOfYear(date)\n\t\tparams \u003d {\u0027dateToday\u0027:date, \u0027dayOfYear\u0027:dayOfYear}\n\t\tsystem.db.runNamedQuery(path\u003dqueryPath,parameters\u003dparams)\n\t\t\n\t\tsystem.perspective.sendMessage(\"ColdWeatherDay_updated\",payload\u003d{}, scope\u003d\"page\")\n\texcept:\n#\t\tlogger \u003d system.util.getLogger(\"ParticipantsMedicationEditAccept\")\n\t\tmsg \u003d traceback.format_exc()\n\t\tlogger.error(msg)"
+                  },
+                  "scope": "G",
+                  "type": "script"
+                }
+              }
+            },
+            "meta": {
+              "name": "accept"
+            },
+            "position": {
+              "basis": "30px",
+              "shrink": 0
+            },
+            "props": {
+              "path": "material/check",
+              "style": {
+                "classes": "Buttons/Icon",
+                "width": "30px"
+              }
+            },
+            "type": "ia.display.icon"
+          },
+          {
+            "events": {
+              "dom": {
+                "onClick": {
+                  "config": {
+                    "script": "\tself.parent.parent.getChild(\"GHBedsValue\").refreshBinding(\"props.value\")"
+                  },
+                  "scope": "G",
+                  "type": "script"
+                }
+              }
+            },
+            "meta": {
+              "name": "reject"
+            },
+            "position": {
+              "basis": "30px",
+              "shrink": 0
+            },
+            "props": {
+              "path": "material/close",
+              "style": {
+                "classes": "Buttons/Icon",
+                "width": "30px"
+              }
+            },
+            "type": "ia.display.icon"
+          }
+        ],
+        "meta": {
+          "name": "editModeActions"
+        },
+        "position": {
+          "basis": "60px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "position.display": {
+            "persistent": true
+          }
+        },
+        "props": {
+          "style": {
+            "backgroundColor": "#0C4E85",
+            "borderBottomLeftRadius": "20px",
+            "borderBottomRightRadius": "20px",
+            "borderTopLeftRadius": "20px",
+            "borderTopRightRadius": "20px",
+            "marginBottom": 8,
+            "marginLeft": 5,
+            "marginTop": 8,
+            "overflow": "hidden"
+          }
+        },
+        "type": "ia.container.flex"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "style": {
+        "classes": "Background/Default",
+        "gap": 5,
+        "overflow": "hidden"
+      }
+    },
+    "scripts": {
+      "customMethods": [],
+      "extensionFunctions": null,
+      "messageHandlers": [
+        {
+          "messageType": "table-update-selected",
+          "pageScope": true,
+          "script": "#\tsystem.perspective.print(\u0027msg-rec {}\u0027.format(self.view.params.rowData.name))\n\tif len(payload[\u0027selection\u0027]) \u003e 0 and \u0027label\u0027 in payload[\u0027selection\u0027][0]:\n\t\tif payload[\u0027selection\u0027][0][\u0027label\u0027] \u003d\u003d self.view.params.rowData.name:\n\t\t\tself.view.custom.selected \u003d True\n\t\telse:\n\t\t\tself.view.custom.selected \u003d False\n\telse:\n\t\tself.view.custom.selected \u003d False",
+          "sessionScope": false,
+          "viewScope": false
+        }
+      ]
+    },
+    "type": "ia.container.flex"
+  }
+}

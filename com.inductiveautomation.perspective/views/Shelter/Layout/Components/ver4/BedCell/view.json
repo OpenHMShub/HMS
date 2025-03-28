@@ -1,0 +1,128 @@
+{
+  "custom": {
+    "key": [
+      {
+        "l0": "aa",
+        "l1": "bb",
+        "l2": "cc",
+        "l3": "dd"
+      },
+      {
+        "l0": "xx",
+        "l1": "yy",
+        "l2": "cc",
+        "l3": "rr"
+      }
+    ],
+    "sample2": [
+      {
+        "l0": "aa",
+        "l1": "rr",
+        "l2": "dd",
+        "l3": "dd"
+      },
+      {
+        "l0": "xx",
+        "l1": "yy",
+        "l2": "cc",
+        "l3": "rr"
+      }
+    ]
+  },
+  "params": {
+    "value": {
+      "info": [
+        {
+          "l0": 6,
+          "l1": "reserved",
+          "l2": "2021-04-14",
+          "l3": "Abc Def"
+        },
+        {
+          "l0": 7,
+          "l1": "occupied",
+          "l2": "2021-04-14",
+          "l3": "Eeee Beee"
+        }
+      ],
+      "type": "h"
+    }
+  },
+  "propConfig": {
+    "custom.key": {
+      "persistent": true
+    },
+    "custom.sample2": {
+      "persistent": true
+    },
+    "params.value": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 160,
+      "width": 160
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "EmbeddedView"
+        },
+        "position": {
+          "basis": "160px",
+          "grow": 1
+        },
+        "propConfig": {
+          "props.params.info": {
+            "binding": {
+              "config": {
+                "path": "view.params.value.info"
+              },
+              "type": "property"
+            }
+          },
+          "props.params.type": {
+            "binding": {
+              "config": {
+                "path": "view.params.value.type"
+              },
+              "type": "property"
+            }
+          },
+          "props.path": {
+            "binding": {
+              "config": {
+                "struct": {
+                  "key": {
+                    "info": "{view.params.value.info}",
+                    "type": "{view.params.value.type}"
+                  }
+                },
+                "waitOnAll": true
+              },
+              "transforms": [
+                {
+                  "code": "\t\n\ttry:\n\t\tif len(value[\u0027key\u0027][\u0027info\u0027]) \u003d\u003d 2:\n\t\t\tif value[\u0027key\u0027][\u0027type\u0027] \u003d\u003d \u0027v\u0027:\n\t\t\t\treturn \u0027Shelter/Layout/Components/ver4/BedV2x\u0027\n\t\t\telif value[\u0027key\u0027][\u0027type\u0027] \u003d\u003d \u0027h\u0027:\n\t\t\t\treturn \u0027Shelter/Layout/Components/ver4/BedH2x\u0027\n\t\telif len(value[\u0027key\u0027][\u0027info\u0027]) \u003d\u003d 1:\n\t\t\tif value[\u0027key\u0027][\u0027type\u0027] \u003d\u003d \u0027v\u0027:\n\t\t\t\treturn \u0027Shelter/Layout/Components/ver4/BedV1x\u0027\n\t\t\telif value[\u0027key\u0027][\u0027type\u0027] \u003d\u003d \u0027h\u0027:\n\t\t\t\treturn \u0027Shelter/Layout/Components/ver4/BedH1x\u0027\n\t\telse:\n\t\t\treturn \u0027Shelter/Layout/Components/ver4/Bed0\u0027\n\texcept:\n\t\treturn \u0027Shelter/Layout/Components/ver4/Bed0\u0027\n",
+                  "type": "script"
+                }
+              ],
+              "type": "expr-struct"
+            }
+          }
+        },
+        "type": "ia.display.view"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column"
+    },
+    "type": "ia.container.flex"
+  }
+}

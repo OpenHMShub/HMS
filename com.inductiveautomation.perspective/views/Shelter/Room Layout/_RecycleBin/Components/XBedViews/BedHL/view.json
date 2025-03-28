@@ -1,0 +1,540 @@
+{
+  "custom": {
+    "Active": true,
+    "BedData": {
+      "$": [
+        "ds",
+        192,
+        1630702439016
+      ],
+      "$columns": [
+        {
+          "data": [],
+          "name": "bedId",
+          "type": "Integer"
+        },
+        {
+          "data": [],
+          "name": "participantId",
+          "type": "Integer"
+        },
+        {
+          "data": [],
+          "name": "bedState",
+          "type": "Integer"
+        },
+        {
+          "data": [],
+          "name": "dateStart",
+          "type": "Date"
+        },
+        {
+          "data": [],
+          "name": "facilityId",
+          "type": "Integer"
+        },
+        {
+          "data": [],
+          "name": "roomId",
+          "type": "Integer"
+        },
+        {
+          "data": [],
+          "name": "facilityName",
+          "type": "String"
+        },
+        {
+          "data": [],
+          "name": "roomName",
+          "type": "String"
+        },
+        {
+          "data": [],
+          "name": "bedName",
+          "type": "String"
+        },
+        {
+          "data": [],
+          "name": "bedNameNo",
+          "type": "Integer"
+        },
+        {
+          "data": [],
+          "name": "participantName",
+          "type": "String"
+        }
+      ]
+    },
+    "BedID": null,
+    "BedName": " 1",
+    "CheckIn": "2021-09-03",
+    "Empty": null,
+    "FacID": null,
+    "OccupantID": null,
+    "OccupantName": null,
+    "Occupied": null,
+    "Reserved": null,
+    "RoomID": null,
+    "gender": null
+  },
+  "params": {
+    "Active": true,
+    "BedID_1": "",
+    "FacilityId": 7,
+    "Occupied": null,
+    "RoomId": null,
+    "bedName": 2,
+    "height": "value",
+    "selectedBed": 88,
+    "selectedPartic": "value",
+    "selectedRes": "value"
+  },
+  "propConfig": {
+    "custom.Active": {
+      "persistent": true
+    },
+    "custom.BedData": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "BedId": "{view.params.BedID_1}"
+          },
+          "queryPath": "Shelter/Room Layout/qryBedData_Sync"
+        },
+        "type": "query"
+      },
+      "persistent": true
+    },
+    "custom.BedID": {
+      "binding": {
+        "config": {
+          "expression": "{view.custom.BedData}[0]"
+        },
+        "type": "expr"
+      },
+      "persistent": true
+    },
+    "custom.BedName": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "BedId": "{view.params.BedID_1}"
+          },
+          "queryPath": "Shelter/Room Layout/qryBedNameById",
+          "returnFormat": "scalar"
+        },
+        "transforms": [
+          {
+            "expression": "right({value},(len({value}) - lastIndexOf({value},\" \")))",
+            "type": "expression"
+          }
+        ],
+        "type": "query"
+      },
+      "persistent": true
+    },
+    "custom.CheckIn": {
+      "binding": {
+        "config": {
+          "expression": "{view.custom.BedData}[3]"
+        },
+        "transforms": [
+          {
+            "formatType": "datetime",
+            "formatValue": {
+              "date": "short"
+            },
+            "type": "format"
+          }
+        ],
+        "type": "expr"
+      },
+      "persistent": true
+    },
+    "custom.Empty": {
+      "binding": {
+        "config": {
+          "expression": "if({view.custom.BedData}[2]\u003d0,true,false)"
+        },
+        "type": "expr"
+      },
+      "persistent": true
+    },
+    "custom.FacID": {
+      "binding": {
+        "config": {
+          "expression": "{view.custom.BedData}[4]"
+        },
+        "type": "expr"
+      },
+      "persistent": true
+    },
+    "custom.OccupantID": {
+      "binding": {
+        "config": {
+          "expression": "{view.custom.BedData}[1]"
+        },
+        "type": "expr"
+      },
+      "persistent": true
+    },
+    "custom.OccupantName": {
+      "binding": {
+        "config": {
+          "expression": "{view.custom.BedData}[10]"
+        },
+        "type": "expr"
+      },
+      "persistent": true
+    },
+    "custom.Occupied": {
+      "binding": {
+        "config": {
+          "expression": "if({view.custom.BedData}[2]\u003d2,true,false)"
+        },
+        "type": "expr"
+      },
+      "persistent": true
+    },
+    "custom.Reserved": {
+      "binding": {
+        "config": {
+          "expression": "if({view.custom.BedData}[2]\u003d1,true,false)"
+        },
+        "type": "expr"
+      },
+      "persistent": true
+    },
+    "custom.RoomID": {
+      "binding": {
+        "config": {
+          "expression": "{view.custom.BedData}[5]"
+        },
+        "type": "expr"
+      },
+      "persistent": true
+    },
+    "custom.gender": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "UserID": "{view.custom.OccupantID}"
+          },
+          "queryPath": "Shelter/BedView/BedUserGender",
+          "returnFormat": "scalar"
+        },
+        "type": "query"
+      },
+      "persistent": true
+    },
+    "params.Active": {
+      "binding": {
+        "config": {
+          "bidirectional": true,
+          "path": "view.custom.Active"
+        },
+        "type": "property"
+      },
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.BedID_1": {
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.FacilityId": {
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.Occupied": {
+      "binding": {
+        "config": {
+          "expression": "{view.custom.Occupied}"
+        },
+        "type": "expr"
+      },
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.RoomId": {
+      "binding": {
+        "config": {
+          "path": "view.custom.RoomID"
+        },
+        "type": "property"
+      },
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.bedName": {
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.height": {
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.selectedBed": {
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.selectedPartic": {
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.selectedRes": {
+      "paramDirection": "inout",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 258,
+      "width": 280
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "events": {
+          "dom": {
+            "onClick": {
+              "config": {
+                "script": "\tself.view.params.selectedPartic \u003d self.view.custom.OccupantID\n\tid \u003d \"PreviewParticipant\" \n\tparams \u003d {\"participantID\":self.view.custom.OccupantID}\n\tsystem.perspective.openDock(id,params \u003d params)"
+              },
+              "scope": "G",
+              "type": "script"
+            }
+          }
+        },
+        "meta": {
+          "name": "lblOccupant"
+        },
+        "position": {
+          "height": 0.1008,
+          "width": 0.8143,
+          "x": 0.0908,
+          "y": 0.4542
+        },
+        "propConfig": {
+          "meta.visible": {
+            "binding": {
+              "config": {
+                "expression": "if({view.custom.Empty}, false, true)"
+              },
+              "type": "expr"
+            }
+          },
+          "props.style.classes": {
+            "binding": {
+              "config": {
+                "expression": "if({view.custom.Occupied},\"Labels/Label_Text_Occ\",\"Labels/Label_Text_Res\")"
+              },
+              "type": "expr"
+            }
+          },
+          "props.text": {
+            "binding": {
+              "config": {
+                "expression": "{view.custom.OccupantName}"
+              },
+              "type": "expr"
+            }
+          }
+        },
+        "props": {
+          "style": {
+            "textAlign": "right"
+          }
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "meta": {
+          "name": "lblDate"
+        },
+        "position": {
+          "height": 0.093,
+          "width": 0.5821,
+          "x": 0.3236,
+          "y": 0.532
+        },
+        "propConfig": {
+          "meta.visible": {
+            "binding": {
+              "config": {
+                "expression": "if({view.custom.Empty}, false, true)"
+              },
+              "type": "expr"
+            }
+          },
+          "props.style.classes": {
+            "binding": {
+              "config": {
+                "expression": "if({view.custom.Occupied},\"Labels/Label_Text_Occ\",\"Labels/Label_Text_Res\")"
+              },
+              "type": "expr"
+            }
+          },
+          "props.text": {
+            "binding": {
+              "config": {
+                "expression": "{view.custom.CheckIn}"
+              },
+              "type": "expr"
+            }
+          }
+        },
+        "props": {
+          "style": {
+            "textAlign": "right"
+          }
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "meta": {
+          "name": "Horizontal (left open)"
+        },
+        "position": {
+          "height": 0.407,
+          "width": 0.6071,
+          "x": 0.3309,
+          "y": 0.3162
+        },
+        "props": {
+          "fit": {
+            "mode": "percent"
+          },
+          "source": "/system/images/SVGs/BedIcons/Horizontal (left open).svg"
+        },
+        "type": "ia.display.image"
+      },
+      {
+        "meta": {
+          "name": "lblBedStatus"
+        },
+        "position": {
+          "height": 0.1241,
+          "width": 0.2786,
+          "x": 0.654,
+          "y": 0.3263
+        },
+        "propConfig": {
+          "props.style.classes": {
+            "binding": {
+              "config": {
+                "path": "this.props.text"
+              },
+              "transforms": [
+                {
+                  "fallback": "Labels/Label_Clear_Empty",
+                  "inputType": "scalar",
+                  "mappings": [
+                    {
+                      "input": "Reserved",
+                      "output": "Labels/Label_Grey_Reserved"
+                    },
+                    {
+                      "input": "Occupied",
+                      "output": "Labels/Label_Teal_Occupied"
+                    }
+                  ],
+                  "outputType": "style-list",
+                  "type": "map"
+                }
+              ],
+              "type": "property"
+            }
+          },
+          "props.text": {
+            "binding": {
+              "config": {
+                "expression": "if({view.custom.Occupied},\"Occupied\",\r\nif({view.custom.Reserved}, \"Reserved\",\"Empty\"))\r\n"
+              },
+              "type": "expr"
+            }
+          }
+        },
+        "props": {
+          "style": {}
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "meta": {
+          "name": "lblBedNo"
+        },
+        "position": {
+          "height": 0.1241,
+          "width": 0.1036,
+          "x": 0.3554,
+          "y": 0.3305
+        },
+        "propConfig": {
+          "props.text": {
+            "binding": {
+              "config": {
+                "path": "view.custom.BedName"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "style": {
+            "classes": "Labels/Label_BedNbr"
+          }
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "meta": {
+          "name": "Horizontal (right open)"
+        },
+        "position": {
+          "height": -0.0853,
+          "width": 0.072,
+          "x": 0.1215,
+          "y": 0.3565
+        },
+        "props": {
+          "fit": {
+            "height": 125,
+            "width": 200
+          },
+          "source": "/system/images/SVGs/BedIcons/Horizontal (right open).svg",
+          "style": {
+            "classes": "Background/Default InputCards/InputCard_NoBorder"
+          }
+        },
+        "type": "ia.display.image"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "position": {
+      "x": 0,
+      "y": 0
+    },
+    "propConfig": {
+      "meta.visible": {
+        "binding": {
+          "config": {
+            "path": "view.custom.Active"
+          },
+          "type": "property"
+        }
+      }
+    },
+    "props": {
+      "aspectRatio": "280:255",
+      "mode": "percent",
+      "style": {
+        "classes": "Background/Default"
+      }
+    },
+    "type": "ia.container.coord"
+  }
+}

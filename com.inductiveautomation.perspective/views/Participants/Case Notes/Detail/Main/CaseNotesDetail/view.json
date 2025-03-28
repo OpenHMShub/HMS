@@ -1,0 +1,348 @@
+{
+  "custom": {
+    "participant_id": -1,
+    "row_data": {
+      "time_created": {
+        "$": [
+          "ts",
+          192,
+          1600010577314
+        ],
+        "$ts": 1600010577314
+      }
+    },
+    "selection_data": [],
+    "table_data": []
+  },
+  "params": {
+    "participantID": -1
+  },
+  "propConfig": {
+    "custom.participant_id": {
+      "binding": {
+        "config": {
+          "path": "view.params.participantID"
+        },
+        "type": "property"
+      },
+      "persistent": true
+    },
+    "custom.row_data": {
+      "persistent": true
+    },
+    "custom.row_data.employee_id": {
+      "binding": {
+        "config": {
+          "path": "view.custom.selection_data"
+        },
+        "transforms": [
+          {
+            "code": "\tif len(value) and \"employee_id\" in value[0]:\n\t\treturn value[0].employee_id\n\telse:\n\t\treturn self.session.custom.loggedInStaffEmployeeID",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      }
+    },
+    "custom.row_data.employee_name": {
+      "binding": {
+        "config": {
+          "path": "view.custom.selection_data"
+        },
+        "transforms": [
+          {
+            "code": "\tif len(value) and \"employee_name\" in value[0]:\n\t\treturn value[0].employee_name\n\telse:\n\t\treturn \"\"",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      }
+    },
+    "custom.row_data.endTime": {
+      "binding": {
+        "config": {
+          "path": "view.custom.selection_data"
+        },
+        "transforms": [
+          {
+            "code": "#\tif len(value) and \"endTime\" in value[0]:\n#\t\treturn system.date.parse(str(value[0].endTime)[:24], \u0027EEE MMMM dd yyyy HH:mm:ss\u0027)\n##\t\treturn value[0].endTime\n#\telse:\n#\t\treturn None\n\tif len(value) and \"endTimeMilliseconds\" in value[0] and value[0].endTimeMilliseconds is not None:\n\t\treturn system.date.fromMillis(value[0].endTimeMilliseconds)\n\telse:\n\t\t## change as per ticket 301\n\t\treturn system.date.addMinutes(system.date.now(), 15)",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      }
+    },
+    "custom.row_data.hmis": {
+      "binding": {
+        "config": {
+          "path": "view.custom.selection_data"
+        },
+        "transforms": [
+          {
+            "code": "\tif len(value) and \"hmis\" in value[0]:\n\t\tif value[0].hmis \u003d\u003d False:\n\t\t\treturn 0\n\t\telse:\n\t\t\treturn 1\n\telse:\n\t\treturn 0\n#\t\treturn -1",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      }
+    },
+    "custom.row_data.note": {
+      "binding": {
+        "config": {
+          "path": "view.custom.selection_data"
+        },
+        "transforms": [
+          {
+            "code": "\tif len(value) and \"note\" in value[0]:\n\t\treturn value[0].note\n\telse:\n\t\treturn \"\"",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      }
+    },
+    "custom.row_data.note_id": {
+      "binding": {
+        "config": {
+          "path": "view.custom.selection_data"
+        },
+        "transforms": [
+          {
+            "code": "\tif len(value) and \"note_id\" in value[0]:\n\t\treturn value[0].note_id\n\telse:\n\t\treturn -1",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      }
+    },
+    "custom.row_data.note_type": {
+      "binding": {
+        "config": {
+          "path": "view.custom.selection_data"
+        },
+        "transforms": [
+          {
+            "code": "\tif len(value) and \"note_type\" in value[0]:\n\t\treturn value[0].note_type\n\telse:\n\t\treturn \u0027\u0027",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      }
+    },
+    "custom.row_data.note_type_id": {
+      "binding": {
+        "config": {
+          "path": "view.custom.selection_data"
+        },
+        "transforms": [
+          {
+            "code": "\tselectedNoteTypes \u003d []\n\tif len(value) and \"note_type_id\" in value[0]:\n\t\tselectedNoteTypesStr \u003d value[0].note_type_id.split(\",\")\n\t\tselectedNoteTypes \u003d [int(x) for x in selectedNoteTypesStr]\n\treturn selectedNoteTypes",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      }
+    },
+    "custom.row_data.notifyStaffId": {
+      "binding": {
+        "config": {
+          "path": "view.custom.selection_data"
+        },
+        "transforms": [
+          {
+            "code": "\treturnValue \u003d []\n\tif len(value) and \"notifyStaffId\" in value[0]:\n\t\t# notifyStaffId is , spearated list of multiple ids\n\t\tnotifyStaffId \u003d value[0].notifyStaffId\n\t\tif notifyStaffId is not None and notifyStaffId !\u003d \"\":\n\t\t\treturnValue \u003d map(int,notifyStaffId.split(\",\"))\n\t\t\n\t\t\t\n\treturn returnValue",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      }
+    },
+    "custom.row_data.participant_id": {
+      "binding": {
+        "config": {
+          "path": "view.params.participantID"
+        },
+        "type": "property"
+      }
+    },
+    "custom.row_data.services": {
+      "binding": {
+        "config": {
+          "path": "view.custom.selection_data"
+        },
+        "transforms": [
+          {
+            "code": "\timport traceback\n\ttry:\n\t\t#check if a note is selected\n\t\t#if (self.custom.row_data.note_id \u003e -1) AND len(value):\n\t\tif len(value):\n\t\t\t#Get the services from the table data that matches the selected row\n\t\t\tfor row in range(len(self.custom.table_data)):\n\t\t\t\tif int(self.custom.table_data[row].value.note_id) \u003d\u003d int(self.custom.selection_data[0].note_id):\n\t\t\t\t\tselected_services \u003d self.custom.table_data[row].services\n\t\t\t\t\treturn selected_services\n\t\t#No note selected\n\t\telse:\n\t\t\tinit \u003d []\n\t\t\treturn init\n\texcept:\n\t\tlogger \u003d system.util.getLogger(\"Participants Case Notes Detail\")\n\t\tmsg \u003d traceback.format_exc()\n\t\tlogger.error(msg)\n",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      }
+    },
+    "custom.row_data.startTime": {
+      "binding": {
+        "config": {
+          "path": "view.custom.selection_data"
+        },
+        "transforms": [
+          {
+            "code": "#\tif len(value) and \"startTime\" in value[0]:\n#\t\t# Tue May 16 2023 22:30:00 GMT+0530 (India Standard Time)\n#\t\treturn system.date.parse(str(value[0].startTime)[:24], \u0027EEE MMMM dd yyyy HH:mm:ss\u0027)\n##\t\treturn value[0].startTime\n#\telse:\n#\t\treturn None\n\tif len(value) and \"startTimeMilliseconds\" in value[0] and value[0].startTimeMilliseconds is not None:\n\t\treturn system.date.fromMillis(value[0].startTimeMilliseconds)\n\telse:\n\t\t## change as per ticket #301\n\t\treturn system.date.now()",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      }
+    },
+    "custom.selection_data": {
+      "binding": {
+        "config": {
+          "path": "/root/Table.props.params.selection_data"
+        },
+        "type": "property"
+      },
+      "persistent": true
+    },
+    "custom.table_data": {
+      "binding": {
+        "config": {
+          "path": "/root/Table.props.params.table_data"
+        },
+        "type": "property"
+      },
+      "persistent": true
+    },
+    "params.participantID": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "width": 1344
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "Edit"
+        },
+        "position": {
+          "basis": "470px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.row_data": {
+            "binding": {
+              "config": {
+                "path": "view.custom.row_data"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "path": "Participants/Case Notes/Detail/Main/Edit/CaseNotesDetailEdit",
+          "style": {
+            "classes": "ActivityCards/Card"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Label"
+        },
+        "position": {
+          "basis": "32px",
+          "display": false
+        },
+        "propConfig": {
+          "props.text": {
+            "binding": {
+              "config": {
+                "path": "session.custom.filters.caseNotesDetail.NoteDate.where"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "textStyle": {
+            "color": "#FF4747",
+            "textAlign": "left"
+          }
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "meta": {
+          "name": "Filter_Row1"
+        },
+        "position": {
+          "basis": "30px",
+          "shrink": 0
+        },
+        "props": {
+          "params": {
+            "activity_range": 365
+          },
+          "path": "Participants/Case Notes/Detail/Main/Filter/CaseNotes_Filter_Row1",
+          "style": {
+            "marginLeft": "40px",
+            "marginRight": "40px"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Table"
+        },
+        "position": {
+          "basis": "300px",
+          "grow": 1
+        },
+        "propConfig": {
+          "props.params.activity_range": {
+            "binding": {
+              "config": {
+                "path": "../Filter_Row1.props.params.activity_range"
+              },
+              "type": "property"
+            }
+          },
+          "props.params.participantID": {
+            "binding": {
+              "config": {
+                "path": "view.params.participantID"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "selection_data": [],
+            "table_data": []
+          },
+          "path": "Participants/Case Notes/Detail/Main/Table/CaseNotesTableDetail",
+          "style": {
+            "marginLeft": 40,
+            "marginRight": 40
+          }
+        },
+        "type": "ia.display.view"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column",
+      "style": {
+        "classes": "Background/Alternative"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

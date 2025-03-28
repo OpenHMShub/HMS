@@ -1,0 +1,326 @@
+{
+  "custom": {
+    "selection": "end_date"
+  },
+  "params": {
+    "reinstateRequired": 0,
+    "suspension_duration": null,
+    "suspension_notes": "text",
+    "suspension_type_id": -1,
+    "time_begin": {
+      "$": [
+        "ts",
+        201,
+        1592902180067
+      ],
+      "$ts": 1592902180067
+    },
+    "time_end": {
+      "$": [
+        "ts",
+        201,
+        1592902180067
+      ],
+      "$ts": 1592902180067
+    }
+  },
+  "propConfig": {
+    "custom.selection": {
+      "persistent": true
+    },
+    "params.reinstateRequired": {
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.suspension_duration": {
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.suspension_notes": {
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.suspension_type_id": {
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.time_begin": {
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.time_end": {
+      "paramDirection": "inout",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 60,
+      "width": 1158
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "Embed_Type"
+        },
+        "position": {
+          "basis": "275px"
+        },
+        "propConfig": {
+          "custom.suspension_type_list": {
+            "binding": {
+              "config": {
+                "queryPath": "Participants/Suspensions/SuspensionTypeSelect"
+              },
+              "type": "query"
+            }
+          },
+          "props.params.text": {
+            "binding": {
+              "config": {
+                "path": "view.params.suspension_type_id"
+              },
+              "transforms": [
+                {
+                  "code": "\tif self.view.params.suspension_type_id \u003e -1:\n\t\treturn self.custom.suspension_type_list.getValueAt(value,\u0027suspensionTypeName\u0027)\n\telse:\n\t\treturn \"\"",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "label": "Suspension Type"
+          },
+          "path": "Participants/Templates/60px/top/ReadOnly_Text",
+          "style": {
+            "classes": "InputCards/InputCard"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Embed_Duration"
+        },
+        "position": {
+          "basis": "165px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.text": {
+            "binding": {
+              "config": {
+                "path": "view.params.suspension_duration"
+              },
+              "transforms": [
+                {
+                  "fallback": "Not Set",
+                  "inputType": "scalar",
+                  "mappings": [
+                    {
+                      "input": 0,
+                      "output": "Other"
+                    },
+                    {
+                      "input": 1,
+                      "output": "1 Day"
+                    },
+                    {
+                      "input": 7,
+                      "output": "1 Week"
+                    },
+                    {
+                      "input": 14,
+                      "output": "2 Weeks"
+                    },
+                    {
+                      "input": 30,
+                      "output": "30 Days"
+                    },
+                    {
+                      "input": 60,
+                      "output": "60 Days"
+                    },
+                    {
+                      "input": 90,
+                      "output": "90 Days"
+                    },
+                    {
+                      "input": 365,
+                      "output": "1 Year"
+                    },
+                    {
+                      "input": 3650,
+                      "output": "Indefinte"
+                    }
+                  ],
+                  "outputType": "scalar",
+                  "type": "map"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "label": "Duration"
+          },
+          "path": "Participants/Templates/60px/top/ReadOnly_Text",
+          "style": {
+            "classes": "InputCards/InputCard"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Embed_Begin_Date"
+        },
+        "position": {
+          "basis": "165px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.text": {
+            "binding": {
+              "config": {
+                "path": "view.params.time_begin"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "label": "Suspension Begin"
+          },
+          "path": "Participants/Templates/60px/top/ReadOnly_Text",
+          "style": {
+            "classes": "InputCards/InputCard"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Embed_End_Date"
+        },
+        "position": {
+          "basis": "165px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.text": {
+            "binding": {
+              "config": {
+                "path": "view.params.time_end"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "label": "Suspension End"
+          },
+          "path": "Participants/Templates/60px/top/ReadOnly_Text",
+          "style": {
+            "classes": "InputCards/InputCard"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Embed_Reinstate"
+        },
+        "position": {
+          "basis": "165px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.text": {
+            "binding": {
+              "config": {
+                "path": "view.params.reinstateRequired"
+              },
+              "transforms": [
+                {
+                  "fallback": "Not Set",
+                  "inputType": "scalar",
+                  "mappings": [
+                    {
+                      "input": 0,
+                      "output": "No"
+                    },
+                    {
+                      "input": 1,
+                      "output": "Yes"
+                    }
+                  ],
+                  "outputType": "scalar",
+                  "type": "map"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "label": "Reinstatement Reqd?"
+          },
+          "path": "Participants/Templates/60px/top/ReadOnly_Text",
+          "style": {
+            "classes": "InputCards/InputCard"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Embed_Description"
+        },
+        "position": {
+          "basis": "660px",
+          "grow": 1
+        },
+        "propConfig": {
+          "props.params.text": {
+            "binding": {
+              "config": {
+                "path": "view.params.suspension_notes"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "label": "Suspension Notes:"
+          },
+          "path": "Participants/Templates/60px/top/ReadOnly_Text",
+          "style": {
+            "classes": "InputCards/InputCard"
+          }
+        },
+        "type": "ia.display.view"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "style": {
+        "classes": "Background/Default"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

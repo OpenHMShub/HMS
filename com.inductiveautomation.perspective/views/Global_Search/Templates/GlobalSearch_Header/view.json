@@ -1,0 +1,110 @@
+{
+  "custom": {},
+  "params": {
+    "searchText": ""
+  },
+  "propConfig": {
+    "params.searchText": {
+      "binding": {
+        "config": {
+          "path": "/root/TextField.props.text"
+        },
+        "type": "property"
+      },
+      "paramDirection": "inout",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 70
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "Label"
+        },
+        "position": {
+          "basis": "45%",
+          "shrink": 0
+        },
+        "props": {
+          "style": {
+            "classes": "Text/Page_Header",
+            "paddingLeft": 40,
+            "textAlign": "right"
+          },
+          "text": "Global Search"
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "custom": {
+          "searchText": "value"
+        },
+        "events": {
+          "system": {
+            "onStartup": {
+              "config": {
+                "script": "\tself.props.text \u003d \"\""
+              },
+              "scope": "G",
+              "type": "script"
+            }
+          }
+        },
+        "meta": {
+          "name": "TextField"
+        },
+        "position": {
+          "basis": "200px",
+          "grow": 1
+        },
+        "propConfig": {
+          "props.style.classes": {
+            "binding": {
+              "config": {
+                "path": "this.props.text"
+              },
+              "enabled": false,
+              "transforms": [
+                {
+                  "code": "\ttext \u003d \"Filter/Filter_Text_Default\"\n\tif value !\u003d \u0027\u0027 and value !\u003d None:\n\t\ttext \u003d \"Filter/Filter_Text_TeelBlue\"\n\treturn text",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          },
+          "props.text": {
+            "persistent": false
+          }
+        },
+        "props": {
+          "deferUpdates": false,
+          "placeholder": "Search",
+          "rejectUpdatesWhileFocused": false,
+          "style": {
+            "alignSelf": "center",
+            "classes": "Filter/Filter_Border_Default Filter/Filter_Text_Default",
+            "marginTop": 15,
+            "textAlign": "left"
+          }
+        },
+        "type": "ia.input.text-field"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "style": {
+        "classes": "Text/Page_Header"
+      },
+      "wrap": "wrap"
+    },
+    "type": "ia.container.flex"
+  }
+}

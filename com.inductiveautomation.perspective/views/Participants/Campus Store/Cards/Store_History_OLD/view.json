@@ -1,0 +1,1836 @@
+{
+  "custom": {
+    "participant": {},
+    "participantData": {
+      "$": [
+        "ds",
+        192,
+        1642771328488
+      ],
+      "$columns": [
+        {
+          "data": [
+            "Timothy"
+          ],
+          "name": "First Name",
+          "type": "String"
+        },
+        {
+          "data": [
+            "Alan"
+          ],
+          "name": "Middle Name",
+          "type": "String"
+        },
+        {
+          "data": [
+            "Lofton"
+          ],
+          "name": "Last Name",
+          "type": "String"
+        },
+        {
+          "data": [
+            "Timothy Alan Lofton"
+          ],
+          "name": "Name",
+          "type": "String"
+        },
+        {
+          "data": [
+            false
+          ],
+          "name": "Is Suspended",
+          "type": "Boolean"
+        },
+        {
+          "data": [
+            false
+          ],
+          "name": "Has Shelter",
+          "type": "Boolean"
+        }
+      ]
+    }
+  },
+  "params": {
+    "participantId": 4631
+  },
+  "propConfig": {
+    "custom.pHasShelter": {
+      "persistent": true
+    },
+    "custom.pIsSuspended": {
+      "persistent": true
+    },
+    "custom.pName": {
+      "persistent": true
+    },
+    "custom.participant": {
+      "persistent": true
+    },
+    "custom.participant.hasShelter": {
+      "binding": {
+        "config": {
+          "expression": "{view.custom.participantData}[\u0027Has Shelter\u0027]"
+        },
+        "transforms": [
+          {
+            "expression": "if(isNull({value}),false,{value})",
+            "type": "expression"
+          }
+        ],
+        "type": "expr"
+      }
+    },
+    "custom.participant.isSuspended": {
+      "binding": {
+        "config": {
+          "expression": "{view.custom.participantData}[\u0027Is Suspended\u0027]"
+        },
+        "transforms": [
+          {
+            "expression": "if(isNull({value}),False,{value})",
+            "type": "expression"
+          }
+        ],
+        "type": "expr"
+      }
+    },
+    "custom.participant.name": {
+      "binding": {
+        "config": {
+          "expression": "{view.custom.participantData}[\u0027Name\u0027]"
+        },
+        "transforms": [
+          {
+            "expression": "if(isNull({value}),\"Select a Participant\",{value})",
+            "type": "expression"
+          }
+        ],
+        "type": "expr"
+      }
+    },
+    "custom.participant.points": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "participantId": "{view.params.participantId}"
+          },
+          "queryPath": "Participants/CampusStore/GetPointTotal"
+        },
+        "transforms": [
+          {
+            "expression": "if(isNull({view.params.participantId}) || len(toStr({view.params.participantId})) \u003c\u003d 0,None, {value}[0][0])",
+            "type": "expression"
+          }
+        ],
+        "type": "query"
+      }
+    },
+    "custom.participantData": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "participantId": "{view.params.participantId}"
+          },
+          "queryPath": "Participants/CampusStore/GetParticipantData"
+        },
+        "transforms": [
+          {
+            "expression": "if(isNull({view.params.participantId}) || len(toStr({view.params.participantId}))\u003c\u003d0,None,{value})",
+            "type": "expression"
+          }
+        ],
+        "type": "query"
+      },
+      "persistent": true
+    },
+    "params.participantId": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "width": 887
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "Header"
+        },
+        "position": {
+          "basis": "25px"
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "meta": {
+                      "name": "Points"
+                    },
+                    "position": {
+                      "basis": "50px",
+                      "grow": 1
+                    },
+                    "propConfig": {
+                      "props.text": {
+                        "binding": {
+                          "config": {
+                            "path": "view.custom.participant.points"
+                          },
+                          "transforms": [
+                            {
+                              "expression": "if(isNull({value}), \"--\", numberFormat({value},\"#,##0\"))",
+                              "type": "expression"
+                            }
+                          ],
+                          "type": "property"
+                        }
+                      }
+                    },
+                    "props": {
+                      "style": {
+                        "classes": "KPIs/KPI_Value"
+                      }
+                    },
+                    "type": "ia.display.label"
+                  },
+                  {
+                    "meta": {
+                      "name": "PointsLbl"
+                    },
+                    "position": {
+                      "basis": "20px"
+                    },
+                    "props": {
+                      "alignVertical": "top",
+                      "style": {
+                        "classes": "KPIs/KPI_Title"
+                      },
+                      "text": "POints"
+                    },
+                    "type": "ia.display.label"
+                  }
+                ],
+                "meta": {
+                  "name": "PointContainer"
+                },
+                "position": {
+                  "basis": "80px"
+                },
+                "props": {
+                  "direction": "column",
+                  "style": {
+                    "margin": "5px 5px 0px 5px"
+                  }
+                },
+                "type": "ia.container.flex"
+              },
+              {
+                "children": [
+                  {
+                    "meta": {
+                      "name": "SuspendedIcon"
+                    },
+                    "position": {
+                      "basis": "24px",
+                      "shrink": 0
+                    },
+                    "propConfig": {
+                      "position.display": {
+                        "binding": {
+                          "config": {
+                            "path": "view.custom.participant.isSuspended"
+                          },
+                          "type": "property"
+                        }
+                      }
+                    },
+                    "props": {
+                      "color": "#E71D36",
+                      "path": "material/error"
+                    },
+                    "type": "ia.display.icon"
+                  },
+                  {
+                    "meta": {
+                      "name": "Shelter Icon"
+                    },
+                    "position": {
+                      "basis": "20px",
+                      "shrink": 0
+                    },
+                    "propConfig": {
+                      "position.display": {
+                        "binding": {
+                          "config": {
+                            "path": "view.custom.participant.hasShelter"
+                          },
+                          "type": "property"
+                        }
+                      }
+                    },
+                    "props": {
+                      "elements": [
+                        {
+                          "d": "M17.45,5.88,9.64.23a1.19,1.19,0,0,0-1.41,0L.5,5.89a1.22,1.22,0,0,0-.5,1v9.86H18V6.88A1.23,1.23,0,0,0,17.45,5.88Zm-10,9V9.48h2.95v5.41Zm8.73.09h-4V8.86a1.13,1.13,0,0,0-1.13-1.13H6.87A1.13,1.13,0,0,0,5.73,8.86V15h-4V7.14L3.2,6.08h0l.72-.53,5-3.67,7.27,5.26Z",
+                          "fill": {
+                            "paint": "#E71D36"
+                          },
+                          "name": "path",
+                          "style": {},
+                          "type": "path"
+                        }
+                      ],
+                      "style": {
+                        "margin": 3
+                      },
+                      "viewBox": "0 0 17.96 16.73"
+                    },
+                    "type": "ia.shapes.svg"
+                  },
+                  {
+                    "meta": {
+                      "name": "Name"
+                    },
+                    "position": {
+                      "basis": "",
+                      "grow": 1
+                    },
+                    "propConfig": {
+                      "props.text": {
+                        "binding": {
+                          "config": {
+                            "path": "view.custom.participant.name"
+                          },
+                          "type": "property"
+                        }
+                      }
+                    },
+                    "props": {
+                      "style": {
+                        "classes": "Text/Personal_Header",
+                        "fontSize": "22px"
+                      }
+                    },
+                    "type": "ia.display.label"
+                  }
+                ],
+                "meta": {
+                  "name": "NameContainer"
+                },
+                "position": {
+                  "basis": ""
+                },
+                "props": {
+                  "alignItems": "flex-start",
+                  "style": {
+                    "margin": "0px 5px"
+                  }
+                },
+                "type": "ia.container.flex"
+              }
+            ],
+            "meta": {
+              "name": "DetailsContainer"
+            },
+            "position": {
+              "basis": "50px",
+              "grow": 1
+            },
+            "props": {
+              "direction": "column"
+            },
+            "type": "ia.container.flex"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "meta": {
+                      "name": "Label"
+                    },
+                    "position": {
+                      "basis": "70px"
+                    },
+                    "props": {
+                      "style": {
+                        "classes": "ActivityCards/Card_TextDark",
+                        "paddingRight": "5px",
+                        "textAlign": "end"
+                      },
+                      "text": "Category"
+                    },
+                    "type": "ia.display.label"
+                  },
+                  {
+                    "meta": {
+                      "name": "Dropdown"
+                    },
+                    "position": {
+                      "basis": "200px"
+                    },
+                    "propConfig": {
+                      "props.options": {
+                        "binding": {
+                          "config": {
+                            "path": "..../InputContainer.custom.categoryData"
+                          },
+                          "transforms": [
+                            {
+                              "code": "\treturn [{\u0027value\u0027: i, \u0027label\u0027: value.getValueAt(i,\"name\")} for i in range(value.getRowCount())]",
+                              "type": "script"
+                            }
+                          ],
+                          "type": "property"
+                        }
+                      }
+                    },
+                    "props": {
+                      "dropdownOptionStyle": {
+                        "classes": "Filter/Filter_Text_Default"
+                      },
+                      "style": {
+                        "classes": "Dropdowns/DD_Default",
+                        "margin-right": "60px"
+                      }
+                    },
+                    "type": "ia.input.dropdown"
+                  },
+                  {
+                    "meta": {
+                      "name": "Label_0"
+                    },
+                    "position": {
+                      "basis": "70px"
+                    },
+                    "props": {
+                      "style": {
+                        "classes": "KPIs/KPI_Title",
+                        "paddingRight": "5px",
+                        "textAlign": "end"
+                      },
+                      "text": " "
+                    },
+                    "type": "ia.display.label"
+                  }
+                ],
+                "meta": {
+                  "name": "CategoryFlex"
+                },
+                "position": {
+                  "basis": "40px",
+                  "grow": 1,
+                  "shrink": 0
+                },
+                "props": {
+                  "style": {
+                    "marginBottom": "5px",
+                    "marginTop": "5px"
+                  }
+                },
+                "type": "ia.container.flex"
+              },
+              {
+                "children": [
+                  {
+                    "meta": {
+                      "name": "Label"
+                    },
+                    "position": {
+                      "basis": "70px"
+                    },
+                    "props": {
+                      "style": {
+                        "classes": "ActivityCards/Card_TextDark",
+                        "paddingRight": "5px",
+                        "textAlign": "end"
+                      },
+                      "text": "Add"
+                    },
+                    "type": "ia.display.label"
+                  },
+                  {
+                    "events": {
+                      "dom": {
+                        "onMouseOver": {
+                          "config": {
+                            "script": "\tself.props.style.color \u003d \"CCCCCC\""
+                          },
+                          "scope": "G",
+                          "type": "script"
+                        }
+                      }
+                    },
+                    "meta": {
+                      "name": "NumericEntryField"
+                    },
+                    "position": {
+                      "basis": "200px"
+                    },
+                    "propConfig": {
+                      "props.enabled": {
+                        "binding": {
+                          "config": {
+                            "path": "parent.custom.enabled"
+                          },
+                          "overlayOptOut": true,
+                          "transforms": [
+                            {
+                              "code": "\tif value is None:\n\t\treturn False\n\telif value \u003d\u003d False:\n\t\treturn False\n\telse:\n\t\treturn True",
+                              "type": "script"
+                            }
+                          ],
+                          "type": "property"
+                        },
+                        "onChange": {
+                          "enabled": null,
+                          "script": "\tself.props.value \u003d 0"
+                        }
+                      }
+                    },
+                    "props": {
+                      "align": "left",
+                      "style": {
+                        "classes": "Dropdowns/DD_Default",
+                        "color": "CCCCCC",
+                        "fontSize": "18px",
+                        "margin": "0px",
+                        "padding": "0 5px"
+                      },
+                      "value": 0
+                    },
+                    "scripts": {
+                      "customMethods": [],
+                      "extensionFunctions": null,
+                      "messageHandlers": [
+                        {
+                          "messageType": "storeTransactionAddResult",
+                          "pageScope": true,
+                          "script": "\t\n\tif(payload[\u0027result\u0027] is not None and len(str(payload[\u0027result\u0027])) \u003e 0):\n\t\tself.props.value \u003d round(float(payload[\u0027result\u0027]))",
+                          "sessionScope": false,
+                          "viewScope": false
+                        }
+                      ]
+                    },
+                    "type": "ia.input.numeric-entry-field"
+                  },
+                  {
+                    "events": {
+                      "dom": {
+                        "onMouseUp": {
+                          "config": {
+                            "script": "\t\n\tif self.parent.custom.enabled:\n\t\tsystem.perspective.openPopup(\n\t\t\t\t\"calc_store_add\",\n\t\t\t\t\"1_TEMPLATES/Calculator\",\n\t\t\t\t{\n\t\t\t\t\t\u0027calcStrInitial\u0027: str(self.getSibling(\"NumericEntryField\").props.value),\n\t\t\t\t\t\u0027messageHandler\u0027: \"storeTransactionAddResult\",\n\t\t\t\t\t\u0027popupId\u0027: \"calc_store_add\",\n\t\t\t\t\t\u0027forcePositive\u0027: True\n\t\t\t\t},\n\t\t\t\ttitle\u003d\"Add Transaction\")\n\t"
+                          },
+                          "scope": "G",
+                          "type": "script"
+                        }
+                      }
+                    },
+                    "meta": {
+                      "name": "CalcPopup"
+                    },
+                    "position": {
+                      "basis": "60px",
+                      "shrink": 0
+                    },
+                    "propConfig": {
+                      "props.color": {
+                        "binding": {
+                          "config": {
+                            "path": "parent.custom.enabled"
+                          },
+                          "overlayOptOut": true,
+                          "transforms": [
+                            {
+                              "fallback": "#DDDDDD",
+                              "inputType": "scalar",
+                              "mappings": [
+                                {
+                                  "input": true,
+                                  "output": "#0C4E85"
+                                }
+                              ],
+                              "outputType": "scalar",
+                              "type": "map"
+                            }
+                          ],
+                          "type": "property"
+                        }
+                      }
+                    },
+                    "props": {
+                      "path": "material/calculate",
+                      "style": {
+                        "padding": "0 15px"
+                      }
+                    },
+                    "type": "ia.display.icon"
+                  },
+                  {
+                    "meta": {
+                      "name": "Label_0"
+                    },
+                    "position": {
+                      "basis": "70px"
+                    },
+                    "props": {
+                      "style": {
+                        "classes": "KPIs/KPI_Title",
+                        "paddingRight": "5px",
+                        "textAlign": "end"
+                      },
+                      "text": " "
+                    },
+                    "type": "ia.display.label"
+                  }
+                ],
+                "meta": {
+                  "name": "AddFlex"
+                },
+                "position": {
+                  "basis": "40px",
+                  "grow": 1,
+                  "shrink": 0
+                },
+                "propConfig": {
+                  "custom.enabled": {
+                    "binding": {
+                      "config": {
+                        "path": "parent.custom.categorySelected.canAdd"
+                      },
+                      "type": "property"
+                    }
+                  }
+                },
+                "props": {
+                  "style": {
+                    "marginBottom": "5px",
+                    "marginTop": "5px"
+                  }
+                },
+                "type": "ia.container.flex"
+              },
+              {
+                "children": [
+                  {
+                    "meta": {
+                      "name": "Label"
+                    },
+                    "position": {
+                      "basis": "70px"
+                    },
+                    "props": {
+                      "style": {
+                        "classes": "ActivityCards/Card_TextDark",
+                        "paddingRight": "5px",
+                        "textAlign": "end"
+                      },
+                      "text": "Deduct"
+                    },
+                    "type": "ia.display.label"
+                  },
+                  {
+                    "events": {
+                      "dom": {
+                        "onMouseOver": {
+                          "config": {
+                            "script": "\tself.props.style.color \u003d \"CCCCCC\""
+                          },
+                          "scope": "G",
+                          "type": "script"
+                        }
+                      }
+                    },
+                    "meta": {
+                      "name": "NumericEntryField"
+                    },
+                    "position": {
+                      "basis": "200px"
+                    },
+                    "propConfig": {
+                      "props.enabled": {
+                        "binding": {
+                          "config": {
+                            "path": "parent.custom.enabled"
+                          },
+                          "overlayOptOut": true,
+                          "type": "property"
+                        },
+                        "onChange": {
+                          "enabled": null,
+                          "script": "\tself.props.value \u003d 0"
+                        }
+                      }
+                    },
+                    "props": {
+                      "align": "left",
+                      "style": {
+                        "classes": "Dropdowns/DD_Default",
+                        "color": "CCCCCC",
+                        "fontSize": "18px",
+                        "margin": "0px",
+                        "padding": "0px 5px"
+                      },
+                      "value": 0
+                    },
+                    "scripts": {
+                      "customMethods": [],
+                      "extensionFunctions": null,
+                      "messageHandlers": [
+                        {
+                          "messageType": "storeTransactionDeductResult",
+                          "pageScope": true,
+                          "script": "\tif(payload[\u0027result\u0027] is not None and len(str(payload[\u0027result\u0027])) \u003e 0):\n\t\tself.props.value \u003d round(float(payload[\u0027result\u0027]))",
+                          "sessionScope": false,
+                          "viewScope": false
+                        }
+                      ]
+                    },
+                    "type": "ia.input.numeric-entry-field"
+                  },
+                  {
+                    "events": {
+                      "dom": {
+                        "onMouseUp": {
+                          "config": {
+                            "script": "\tif self.parent.custom.enabled:\n\t\t\tsystem.perspective.openPopup(\n\t\t\t\t\t\"calc_store_deduct\",\n\t\t\t\t\t\"1_TEMPLATES/Calculator\",\n\t\t\t\t\t{\n\t\t\t\t\t\t\u0027calcStrInitial\u0027: str(self.getSibling(\"NumericEntryField\").props.value),\n\t\t\t\t\t\t\u0027messageHandler\u0027: \"storeTransactionDeductResult\",\n\t\t\t\t\t\t\u0027popupId\u0027: \"calc_store_deduct\",\n\t\t\t\t\t\t\u0027forcePositive\u0027: True\n\t\t\t\t\t},\n\t\t\t\t\ttitle\u003d\"Deduct Transaction\")"
+                          },
+                          "scope": "G",
+                          "type": "script"
+                        }
+                      }
+                    },
+                    "meta": {
+                      "name": "CalcPopup"
+                    },
+                    "position": {
+                      "basis": "60px",
+                      "shrink": 0
+                    },
+                    "propConfig": {
+                      "props.color": {
+                        "binding": {
+                          "config": {
+                            "path": "parent.custom.enabled"
+                          },
+                          "overlayOptOut": true,
+                          "transforms": [
+                            {
+                              "fallback": "#DDDDDD",
+                              "inputType": "scalar",
+                              "mappings": [
+                                {
+                                  "input": true,
+                                  "output": "#0C4E85"
+                                }
+                              ],
+                              "outputType": "scalar",
+                              "type": "map"
+                            }
+                          ],
+                          "type": "property"
+                        }
+                      }
+                    },
+                    "props": {
+                      "path": "material/calculate",
+                      "style": {
+                        "padding": "0 15px"
+                      }
+                    },
+                    "type": "ia.display.icon"
+                  },
+                  {
+                    "meta": {
+                      "name": "Label_0"
+                    },
+                    "position": {
+                      "basis": "70px",
+                      "grow": 1
+                    },
+                    "props": {
+                      "style": {
+                        "classes": "KPIs/KPI_Title",
+                        "paddingRight": "5px",
+                        "textAlign": "end"
+                      },
+                      "text": " "
+                    },
+                    "type": "ia.display.label"
+                  }
+                ],
+                "meta": {
+                  "name": "DeductFlex"
+                },
+                "position": {
+                  "basis": "40px",
+                  "grow": 1,
+                  "shrink": 0
+                },
+                "propConfig": {
+                  "custom.enabled": {
+                    "binding": {
+                      "config": {
+                        "path": "parent.custom.categorySelected.canDeduct"
+                      },
+                      "type": "property"
+                    }
+                  }
+                },
+                "props": {
+                  "style": {
+                    "marginBottom": "5px",
+                    "marginTop": "5px"
+                  }
+                },
+                "type": "ia.container.flex"
+              },
+              {
+                "children": [
+                  {
+                    "events": {
+                      "dom": {
+                        "onClick": {
+                          "config": {
+                            "script": "\tlogger \u003d system.util.getLogger(\"CampusStore.AddTransaction\")\n\t\t\t\t\n\tcategory \u003d self.parent.parent.parent.getChild(\"InputContainer\").custom.categorySelected\n\taddVal \u003d self.parent.parent.getChild(\"AddFlex\").getChild(\"NumericEntryField\").props.value\n\tdeductVal \u003d self.parent.parent.getChild(\"DeductFlex\").getChild(\"NumericEntryField\").props.value\n\tparticipantId \u003d self.view.params.participantId\n\t\t\t\t\n\t\t\t\t# Ensure a participant is selected\n\tif(participantId is None or len(str(participantId)) \u003c\u003d 0):\n\t\tlogger.warning(\"Transaction can not be added as no participant is selected\")\n\t\treturn\n\t\t\t\t\n\t\t\t\t# Ensure a category is selected\n\tif(category.id is None):\n\t\tlogger.warning(\"Transaction can not be added as no category is selected\")\n\t\treturn\n\t\t\t\t\n\t\t\t\t# calculate delta and ensure it is allowed for selected category\n\tlogger.info(\"%s %s\" % (addVal, deductVal))\n\tdelta \u003d int(addVal) - int(deductVal)\n\tif((delta \u003e 0 and not category.canAdd) or (delta \u003c 0 and not category.canDeduct)):\n\t\t\t\tlogger.warning(\"Transaction of category %s doesn\u0027t permit a transaction value of %d.\" % (category.name, delta))\n\t\t\t\treturn\n\t\t\t\t\t\n\t\t\t\t# Insert transaction\n\tsystem.db.runNamedQuery(\n\t\t\"Participants/CampusStore/InsertTransaction\",\n\t\t{\n\t\t\t\u0027participantId\u0027: participantId,\n\t\t\t\u0027transactionPoints\u0027: delta,\n\t\t\t\u0027categoryId\u0027: category.id\n\t\t})\n\t\t\t\t\n\tself.parent.parent.parent.parent.getChild(\"TransactionHistory\").refreshBinding(\"props.data\")\n\tself.view.refreshBinding(\"custom.participant.points\")"
+                          },
+                          "scope": "G",
+                          "type": "script"
+                        }
+                      }
+                    },
+                    "meta": {
+                      "name": "BtnAdd"
+                    },
+                    "position": {
+                      "basis": "140px"
+                    },
+                    "propConfig": {
+                      "props.enabled": {
+                        "binding": {
+                          "config": {
+                            "expression": "!(isNull({view.params.participantId}) || len(toStr({view.params.participantId})) \u003c\u003d 0) \u0026\u0026 !isNull({..../InputContainer.custom.categorySelected.id}) \u0026\u0026 ({.../AddFlex/NumericEntryField.props.value} !\u003d 0 || {.../DeductFlex/NumericEntryField.props.value} !\u003d 0)"
+                          },
+                          "type": "expr"
+                        }
+                      }
+                    },
+                    "props": {
+                      "style": {
+                        "backgroundColor": "#8ABAFF",
+                        "classes": "Buttons/Main",
+                        "margin": "5px"
+                      },
+                      "text": "SAVE"
+                    },
+                    "type": "ia.input.button"
+                  },
+                  {
+                    "meta": {
+                      "name": "Label_0"
+                    },
+                    "position": {
+                      "basis": "60px"
+                    },
+                    "props": {
+                      "style": {
+                        "classes": "KPIs/KPI_Title",
+                        "paddingRight": "5px",
+                        "textAlign": "end"
+                      },
+                      "text": " "
+                    },
+                    "type": "ia.display.label"
+                  }
+                ],
+                "meta": {
+                  "name": "SaveFlex"
+                },
+                "position": {
+                  "basis": "50px",
+                  "shrink": 0
+                },
+                "props": {
+                  "justify": "space-evenly",
+                  "style": {
+                    "margin": "5px",
+                    "marginLeft": 45
+                  }
+                },
+                "type": "ia.container.flex"
+              }
+            ],
+            "meta": {
+              "name": "InputContainer"
+            },
+            "position": {
+              "basis": "200px",
+              "grow": 1
+            },
+            "propConfig": {
+              "custom.categoryData": {
+                "binding": {
+                  "config": {
+                    "queryPath": "Participants/CampusStore/GetCategoryList"
+                  },
+                  "type": "query"
+                }
+              },
+              "custom.categorySelected": {
+                "binding": {
+                  "config": {
+                    "path": "./CategoryFlex/Dropdown.props.value"
+                  },
+                  "transforms": [
+                    {
+                      "code": "\tdata \u003d self.custom.categoryData\n\ttry:\n\t\tid \u003d data.getValueAt(value, \u0027id\u0027)\n\t\tname \u003d data.getValueAt(value, \u0027name\u0027)\n\t\tcanAdd \u003d data.getValueAt(value, \u0027canAdd\u0027)\n\t\tcanDeduct \u003d data.getValueAt(value, \u0027canDeduct\u0027)\n\texcept:\n\t\treturn {\u0027id\u0027:None, \n\t\t\t\t\u0027name\u0027: None,\n\t\t\t\t\u0027canAdd\u0027: False,\n\t\t\t\t\u0027canDeduct\u0027: False}\n\t\t\n\treturn {\u0027id\u0027:id, \n\t\t\t\u0027name\u0027: name,\n\t\t\t\u0027canAdd\u0027: canAdd,\n\t\t\t\u0027canDeduct\u0027: canDeduct}",
+                      "type": "script"
+                    }
+                  ],
+                  "type": "property"
+                }
+              }
+            },
+            "props": {
+              "direction": "column",
+              "style": {
+                "margin": "5px"
+              }
+            },
+            "type": "ia.container.flex"
+          }
+        ],
+        "meta": {
+          "name": "TransactionContainer"
+        },
+        "position": {
+          "basis": "",
+          "shrink": 0
+        },
+        "props": {
+          "style": {
+            "marginLeft": 25
+          }
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "custom": {
+          "sql_data": [
+            {
+              "style": {
+                "classes": "Table/Cell_Detail"
+              },
+              "value": {
+                "dob": "03/12/2001",
+                "employee": 0,
+                "first_name": "Christopher",
+                "human_id": 19,
+                "last_name": "McPhee",
+                "middle_name": "Darren",
+                "nick_name": "Chris",
+                "participant": 1,
+                "participant_id": 14,
+                "race": "Asian",
+                "race_id": 2,
+                "ssn": "***-**-0792",
+                "volunteer": 0
+              }
+            },
+            {
+              "style": {
+                "classes": "Table/Cell_Detail"
+              },
+              "value": {
+                "dob": "01/01/1900",
+                "employee": 0,
+                "first_name": "Chris",
+                "human_id": 77,
+                "last_name": "Chaney",
+                "middle_name": null,
+                "nick_name": null,
+                "participant": 0,
+                "participant_id": null,
+                "race": "Data not collected",
+                "race_id": 8,
+                "ssn": "***-**-0000",
+                "volunteer": 0
+              }
+            },
+            {
+              "style": {
+                "classes": "Table/Cell_Detail"
+              },
+              "value": {
+                "dob": "01/01/1900",
+                "employee": 0,
+                "first_name": "Chris",
+                "human_id": 153,
+                "last_name": "Buford",
+                "middle_name": null,
+                "nick_name": null,
+                "participant": 0,
+                "participant_id": null,
+                "race": "Data not collected",
+                "race_id": 8,
+                "ssn": "***-**-0000",
+                "volunteer": 0
+              }
+            },
+            {
+              "style": {
+                "classes": "Table/Cell_Detail"
+              },
+              "value": {
+                "dob": "01/01/1900",
+                "employee": 0,
+                "first_name": "Christie",
+                "human_id": 186,
+                "last_name": "Hollaway",
+                "middle_name": null,
+                "nick_name": null,
+                "participant": 0,
+                "participant_id": null,
+                "race": "Data not collected",
+                "race_id": 8,
+                "ssn": "***-**-0000",
+                "volunteer": 0
+              }
+            },
+            {
+              "style": {
+                "classes": "Table/Cell_Detail"
+              },
+              "value": {
+                "dob": "01/01/1900",
+                "employee": 0,
+                "first_name": "Christy",
+                "human_id": 224,
+                "last_name": "Holt",
+                "middle_name": null,
+                "nick_name": null,
+                "participant": 0,
+                "participant_id": null,
+                "race": "Data not collected",
+                "race_id": 8,
+                "ssn": "***-**-0000",
+                "volunteer": 0
+              }
+            },
+            {
+              "style": {
+                "classes": "Table/Cell_Detail"
+              },
+              "value": {
+                "dob": "01/01/1900",
+                "employee": 0,
+                "first_name": "Chris",
+                "human_id": 294,
+                "last_name": "Holt",
+                "middle_name": null,
+                "nick_name": null,
+                "participant": 0,
+                "participant_id": null,
+                "race": "Data not collected",
+                "race_id": 8,
+                "ssn": "***-**-0000",
+                "volunteer": 0
+              }
+            },
+            {
+              "style": {
+                "classes": "Table/Cell_Detail"
+              },
+              "value": {
+                "dob": "10/26/1979",
+                "employee": 0,
+                "first_name": "Christopher",
+                "human_id": 349,
+                "last_name": "Hagan",
+                "middle_name": null,
+                "nick_name": "Hagan, Christopher",
+                "participant": 1,
+                "participant_id": 62,
+                "race": "White",
+                "race_id": 5,
+                "ssn": "***-**-9665",
+                "volunteer": 0
+              }
+            },
+            {
+              "style": {
+                "classes": "Table/Cell_Detail"
+              },
+              "value": {
+                "dob": "01/27/1960",
+                "employee": 0,
+                "first_name": "Chris",
+                "human_id": 556,
+                "last_name": "Dingman",
+                "middle_name": null,
+                "nick_name": "Dingman, Chris",
+                "participant": 0,
+                "participant_id": null,
+                "race": "Data not collected",
+                "race_id": 8,
+                "ssn": "***-**-9428",
+                "volunteer": 0
+              }
+            },
+            {
+              "style": {
+                "classes": "Table/Cell_Detail"
+              },
+              "value": {
+                "dob": "09/09/1963",
+                "employee": 0,
+                "first_name": "Christopher",
+                "human_id": 684,
+                "last_name": "Mitchell",
+                "middle_name": "Rene",
+                "nick_name": "Mitchell, Christopher Rene",
+                "participant": 0,
+                "participant_id": null,
+                "race": "Client refused",
+                "race_id": 7,
+                "ssn": "***-**-6807",
+                "volunteer": 0
+              }
+            },
+            {
+              "style": {
+                "classes": "Table/Cell_Detail"
+              },
+              "value": {
+                "dob": "07/09/1980",
+                "employee": 0,
+                "first_name": "Christina",
+                "human_id": 797,
+                "last_name": "Willette",
+                "middle_name": null,
+                "nick_name": "Willette, Christina",
+                "participant": 0,
+                "participant_id": null,
+                "race": "Client refused",
+                "race_id": 7,
+                "ssn": "***-**-8477",
+                "volunteer": 0
+              }
+            },
+            {
+              "style": {
+                "classes": "Table/Cell_Detail"
+              },
+              "value": {
+                "dob": "01/11/1947",
+                "employee": 0,
+                "first_name": "Christopher",
+                "human_id": 825,
+                "last_name": "Carr",
+                "middle_name": "P",
+                "nick_name": "Carr, Christopher P",
+                "participant": 0,
+                "participant_id": null,
+                "race": "Data not collected",
+                "race_id": 8,
+                "ssn": "***-**-5179",
+                "volunteer": 0
+              }
+            },
+            {
+              "style": {
+                "classes": "Table/Cell_Detail"
+              },
+              "value": {
+                "dob": "01/20/1951",
+                "employee": 0,
+                "first_name": "Christopher",
+                "human_id": 849,
+                "last_name": "Burney",
+                "middle_name": null,
+                "nick_name": "Burney, Christopher",
+                "participant": 0,
+                "participant_id": null,
+                "race": "Client refused",
+                "race_id": 7,
+                "ssn": "***-**-0847",
+                "volunteer": 0
+              }
+            },
+            {
+              "style": {
+                "classes": "Table/Cell_Detail"
+              },
+              "value": {
+                "dob": "01/12/1991",
+                "employee": 0,
+                "first_name": "Christopher",
+                "human_id": 980,
+                "last_name": "Baker",
+                "middle_name": "Lamont",
+                "nick_name": "Baker, Christopher Lamont",
+                "participant": 0,
+                "participant_id": null,
+                "race": "Client refused",
+                "race_id": 7,
+                "ssn": "***-**-6657",
+                "volunteer": 0
+              }
+            },
+            {
+              "style": {
+                "classes": "Table/Cell_Detail"
+              },
+              "value": {
+                "dob": "05/07/1969",
+                "employee": 0,
+                "first_name": "Christopher",
+                "human_id": 1095,
+                "last_name": "Owen",
+                "middle_name": "Shane",
+                "nick_name": "Owen, Christopher Shane",
+                "participant": 1,
+                "participant_id": 324,
+                "race": "Native Hawaiian or Other Pacific Island",
+                "race_id": 4,
+                "ssn": "***-**-2774",
+                "volunteer": 0
+              }
+            },
+            {
+              "style": {
+                "classes": "Table/Cell_Detail"
+              },
+              "value": {
+                "dob": "10/04/1984",
+                "employee": 0,
+                "first_name": "Chris",
+                "human_id": 1105,
+                "last_name": "Thompson",
+                "middle_name": "Antonio",
+                "nick_name": "Thompson, Chris Antonio CAT",
+                "participant": 1,
+                "participant_id": 330,
+                "race": "Client doesn\u0027t know",
+                "race_id": 6,
+                "ssn": "***-**-5056",
+                "volunteer": 0
+              }
+            },
+            {
+              "style": {
+                "classes": "Table/Cell_Detail"
+              },
+              "value": {
+                "dob": "07/21/1964",
+                "employee": 0,
+                "first_name": "Christopher",
+                "human_id": 1141,
+                "last_name": "Hill",
+                "middle_name": null,
+                "nick_name": "Hill, Christopher",
+                "participant": 0,
+                "participant_id": null,
+                "race": "Data not collected",
+                "race_id": 8,
+                "ssn": "***-**-9139",
+                "volunteer": 0
+              }
+            },
+            {
+              "style": {
+                "classes": "Table/Cell_Detail"
+              },
+              "value": {
+                "dob": "08/27/1971",
+                "employee": 0,
+                "first_name": "Christine",
+                "human_id": 1155,
+                "last_name": "Conrad",
+                "middle_name": "Ann",
+                "nick_name": "Conrad, Christine Ann",
+                "participant": 0,
+                "participant_id": null,
+                "race": "Client doesn\u0027t know",
+                "race_id": 6,
+                "ssn": "***-**-4516",
+                "volunteer": 0
+              }
+            },
+            {
+              "style": {
+                "classes": "Table/Cell_Detail"
+              },
+              "value": {
+                "dob": "08/18/1994",
+                "employee": 0,
+                "first_name": "Chris",
+                "human_id": 1165,
+                "last_name": "Kitchens",
+                "middle_name": null,
+                "nick_name": "Kitchens, Chris",
+                "participant": 0,
+                "participant_id": null,
+                "race": "American Indian or Alaska Native",
+                "race_id": 1,
+                "ssn": "***-**-2751",
+                "volunteer": 0
+              }
+            },
+            {
+              "style": {
+                "classes": "Table/Cell_Detail"
+              },
+              "value": {
+                "dob": "08/08/1992",
+                "employee": 0,
+                "first_name": "Chris",
+                "human_id": 1198,
+                "last_name": "Schulte",
+                "middle_name": "J",
+                "nick_name": "Schulte, Chris J",
+                "participant": 0,
+                "participant_id": null,
+                "race": "Data not collected",
+                "race_id": 8,
+                "ssn": "***-**-0610",
+                "volunteer": 0
+              }
+            },
+            {
+              "style": {
+                "classes": "Table/Cell_Detail"
+              },
+              "value": {
+                "dob": "10/02/1974",
+                "employee": 0,
+                "first_name": "Chris",
+                "human_id": 1213,
+                "last_name": "Parrott",
+                "middle_name": "Lee",
+                "nick_name": "Parrott, Chris Lee",
+                "participant": 0,
+                "participant_id": null,
+                "race": "Black or African American",
+                "race_id": 3,
+                "ssn": "***-**-9383",
+                "volunteer": 0
+              }
+            },
+            {
+              "style": {
+                "classes": "Table/Cell_Detail"
+              },
+              "value": {
+                "dob": "06/03/1960",
+                "employee": 0,
+                "first_name": "Christian",
+                "human_id": 1221,
+                "last_name": "Botts",
+                "middle_name": "Eugene",
+                "nick_name": "Botts, Christian Eugene",
+                "participant": 0,
+                "participant_id": null,
+                "race": "Black or African American",
+                "race_id": 3,
+                "ssn": "***-**-5803",
+                "volunteer": 0
+              }
+            },
+            {
+              "style": {
+                "classes": "Table/Cell_Detail"
+              },
+              "value": {
+                "dob": "08/17/1961",
+                "employee": 0,
+                "first_name": "Christopher",
+                "human_id": 1283,
+                "last_name": "Poole",
+                "middle_name": "Allen",
+                "nick_name": "Poole, Christopher Allen",
+                "participant": 0,
+                "participant_id": null,
+                "race": "Client refused",
+                "race_id": 7,
+                "ssn": "***-**-9797",
+                "volunteer": 0
+              }
+            },
+            {
+              "style": {
+                "classes": "Table/Cell_Detail"
+              },
+              "value": {
+                "dob": "04/21/1992",
+                "employee": 0,
+                "first_name": "Christopher",
+                "human_id": 1339,
+                "last_name": "Pankratz",
+                "middle_name": null,
+                "nick_name": "Pankratz, Christopher",
+                "participant": 0,
+                "participant_id": null,
+                "race": "White",
+                "race_id": 5,
+                "ssn": "***-**-4685",
+                "volunteer": 0
+              }
+            },
+            {
+              "style": {
+                "classes": "Table/Cell_Detail"
+              },
+              "value": {
+                "dob": "01/27/1960",
+                "employee": 0,
+                "first_name": "Christopher",
+                "human_id": 1384,
+                "last_name": "Dingman",
+                "middle_name": "Wayne",
+                "nick_name": "Dingman, Christopher Wayne",
+                "participant": 1,
+                "participant_id": 445,
+                "race": "Data not collected",
+                "race_id": 8,
+                "ssn": "***-**-9428",
+                "volunteer": 0
+              }
+            },
+            {
+              "style": {
+                "classes": "Table/Cell_Detail"
+              },
+              "value": {
+                "dob": "01/08/1981",
+                "employee": 0,
+                "first_name": "Chris",
+                "human_id": 1426,
+                "last_name": "Pleticha",
+                "middle_name": null,
+                "nick_name": "Pleticha, Chris",
+                "participant": 0,
+                "participant_id": null,
+                "race": "Native Hawaiian or Other Pacific Island",
+                "race_id": 4,
+                "ssn": "***-**-8524",
+                "volunteer": 0
+              }
+            }
+          ]
+        },
+        "meta": {
+          "name": "TransactionHistory"
+        },
+        "position": {
+          "basis": "300px",
+          "grow": 1
+        },
+        "propConfig": {
+          "props.data": {
+            "binding": {
+              "config": {
+                "parameters": {
+                  "participantId": "{view.params.participantId}"
+                },
+                "queryPath": "Participants/CampusStore/GetTransactionHistory"
+              },
+              "transforms": [
+                {
+                  "code": "\ttableData \u003d []\n\t\n\tfor iRow in range(value.getRowCount()):\n\t\t\n\t\tcol_category \u003d value.getValueAt(iRow, \u0027Category\u0027)\n\t\tcol_t_stamp \u003d value.getValueAt(iRow, \u0027timeCreated\u0027)\n\t\t\n\t\tdelta \u003d value.getValueAt(iRow, \u0027TransactionPoints\u0027)\n\t\tcol_add \u003d delta if delta \u003e 0 else None\n\t\tcol_deduct \u003d abs(delta) if delta \u003c 0 else None\n\t\t\n\t\tcol_total \u003d value.getValueAt(iRow, \u0027TotalPoints\u0027)\n\t\t\n\t\trow \u003d [col_category, col_t_stamp, col_add, col_deduct, col_total]\n\t\ttableData.append(row)\n\t\n\theaders \u003d [\"category\", \"t_stamp\", \"add\", \"deduct\", \"total\"]\n\treturn system.dataset.toDataSet(headers, tableData)",
+                  "type": "script"
+                }
+              ],
+              "type": "query"
+            }
+          }
+        },
+        "props": {
+          "bodyStyle": {
+            "classes": "Table/Column_Normal_Detail"
+          },
+          "cells": {
+            "style": {
+              "margin": "0 5px"
+            }
+          },
+          "columns": [
+            {
+              "align": "center",
+              "boolean": "value",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "category",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header_Line"
+                },
+                "title": "Category"
+              },
+              "justify": "left",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "string",
+              "resizable": false,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Header_Line"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": "20%"
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "t_stamp",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "right",
+                "style": {
+                  "classes": ""
+                },
+                "title": "Date"
+              },
+              "justify": "right",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "date",
+              "resizable": false,
+              "sort": "descending",
+              "sortable": true,
+              "strictWidth": true,
+              "style": {
+                "classes": ""
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "Participants/Templates/Table/TableBooleanRetired",
+              "visible": true,
+              "width": "20%"
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "add",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "right",
+                "style": {
+                  "classes": ""
+                },
+                "title": "Add"
+              },
+              "justify": "right",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "number",
+              "resizable": false,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": true,
+              "style": {
+                "classes": ""
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": "20%"
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY hh:mm a",
+              "editable": false,
+              "field": "deduct",
+              "footer": {
+                "align": "center",
+                "justify": "center",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "right",
+                "style": {
+                  "classes": ""
+                },
+                "title": "Deduct"
+              },
+              "justify": "right",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "number",
+              "resizable": false,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": true,
+              "style": {
+                "classes": ""
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": "20%"
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "total",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "right",
+                "style": {
+                  "classes": "\n"
+                },
+                "title": "Total"
+              },
+              "justify": "right",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "number",
+              "resizable": false,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": true,
+              "style": {
+                "classes": ""
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": "20%"
+            }
+          ],
+          "emptyMessage": {
+            "noData": {
+              "text": "No Transactions",
+              "textStyle": {
+                "color": "#808080"
+              }
+            }
+          },
+          "headerStyle": {
+            "background-color": "#FFFFFF00",
+            "classes": "Table/Column_Header_Detail",
+            "color": "#AAAAAA",
+            "font-size": "12px"
+          },
+          "rows": {
+            "striped": {
+              "enabled": false
+            },
+            "style": {
+              "classes": "Table/Cell_Detail",
+              "cursor": "pointer"
+            }
+          }
+        },
+        "type": "ia.display.table"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column",
+      "style": {
+        "classes": "Background/Default",
+        "marginBottom": 0,
+        "marginLeft": 0,
+        "marginRight": 0
+      }
+    },
+    "scripts": {
+      "customMethods": [],
+      "extensionFunctions": null,
+      "messageHandlers": [
+        {
+          "messageType": "storeParticipantSelected",
+          "pageScope": true,
+          "script": "\tif(payload[\u0027participantId\u0027] is not None):\n\t\tself.view.params.participantId \u003d payload[\u0027participantId\u0027]",
+          "sessionScope": false,
+          "viewScope": false
+        }
+      ]
+    },
+    "type": "ia.container.flex"
+  }
+}

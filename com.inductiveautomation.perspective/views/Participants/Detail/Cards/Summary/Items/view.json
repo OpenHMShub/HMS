@@ -1,0 +1,182 @@
+{
+  "custom": {},
+  "params": {
+    "Text": "",
+    "participantId": -1,
+    "show": false
+  },
+  "propConfig": {
+    "params.Text": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.participantId": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.show": {
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "props.defaultSize.height": {
+      "binding": {
+        "config": {
+          "expression": "if({view.params.show} \u003d True, 285,35)"
+        },
+        "type": "expr"
+      }
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "width": 390
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "children": [
+          {
+            "events": {
+              "dom": {
+                "onClick": {
+                  "config": {
+                    "script": "\tif self.view.params.show \u003d\u003d True:\n\t\tself.view.params.show \u003d False\n\telse:\n\t\tself.view.params.show \u003d True"
+                  },
+                  "scope": "G",
+                  "type": "script"
+                }
+              }
+            },
+            "meta": {
+              "name": "Icon"
+            },
+            "position": {
+              "basis": "20px"
+            },
+            "propConfig": {
+              "props.path": {
+                "binding": {
+                  "config": {
+                    "expression": "if({view.params.show} \u003d True, \"material/keyboard_arrow_up\",\"material/keyboard_arrow_down\")"
+                  },
+                  "type": "expr"
+                }
+              }
+            },
+            "props": {
+              "color": "#0C4E8B",
+              "style": {
+                "marginLeft": "15px",
+                "marginTop": "2px"
+              }
+            },
+            "type": "ia.display.icon"
+          },
+          {
+            "meta": {
+              "name": "Label"
+            },
+            "position": {
+              "basis": "50%",
+              "grow": 1
+            },
+            "propConfig": {
+              "props.text": {
+                "binding": {
+                  "config": {
+                    "path": "view.params.Text"
+                  },
+                  "type": "property"
+                }
+              }
+            },
+            "props": {
+              "style": {
+                "classes": "Text/Summary_Title"
+              }
+            },
+            "type": "ia.display.label"
+          }
+        ],
+        "meta": {
+          "name": "Header"
+        },
+        "position": {
+          "basis": "35px"
+        },
+        "props": {
+          "style": {
+            "classes": "Background/Default"
+          }
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "children": [
+          {
+            "meta": {
+              "name": "EmbeddedView"
+            },
+            "position": {
+              "basis": "390px"
+            },
+            "propConfig": {
+              "props.params.participantId": {
+                "binding": {
+                  "config": {
+                    "path": "view.params.participantId"
+                  },
+                  "type": "property"
+                }
+              },
+              "props.path": {
+                "binding": {
+                  "config": {
+                    "path": "view.params.Text"
+                  },
+                  "transforms": [
+                    {
+                      "code": "\tif value \u003d\u003d \"Shelter\":\n\t\treturn \"Participants/Detail/Cards/Summary/ShelterNights\"\n\telif value \u003d\u003d \"Winter Shelter\":\n\t\treturn \"Participants/Detail/Cards/Summary/WinterShelterNights\"\n\telif value \u003d\u003d \"Events\":\n\t\treturn \"Participants/Detail/Cards/Summary/Events\"\n\telse:\n\t\treturn \"\"",
+                      "type": "script"
+                    }
+                  ],
+                  "type": "property"
+                }
+              }
+            },
+            "type": "ia.display.view"
+          }
+        ],
+        "meta": {
+          "name": "Details"
+        },
+        "position": {
+          "basis": "200px",
+          "grow": 1
+        },
+        "propConfig": {
+          "position.display": {
+            "binding": {
+              "config": {
+                "path": "view.params.show"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "type": "ia.container.flex"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column",
+      "style": {
+        "classes": "Background/Default"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

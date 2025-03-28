@@ -1,0 +1,266 @@
+{
+  "custom": {
+    "data": [],
+    "function": 0,
+    "selectedServiceName": "",
+    "winterShelterProgramId": 40
+  },
+  "params": {
+    "HMIS": "value",
+    "comment": "value",
+    "employee_id": "value",
+    "enrollment_id": "value",
+    "participant_id": "value",
+    "quantity": "value",
+    "service_id": -1,
+    "service_location_id": -1,
+    "time_created": "value",
+    "user_name": "value"
+  },
+  "propConfig": {
+    "custom.data": {
+      "persistent": true
+    },
+    "custom.function": {
+      "persistent": true
+    },
+    "custom.selectedServiceName": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "serviceId": "{view.params.service_id}"
+          },
+          "queryPath": "Participants/Services/GetServiceNameFromId"
+        },
+        "transforms": [
+          {
+            "code": "\tif value is not None and value.getRowCount() \u003e 0 and value.getValueAt(0,\u0027serviceName\u0027) is not None:\n\t\treturn value.getValueAt(0,\u0027serviceName\u0027)\n\telse:\n\t\treturn \u0027\u0027",
+            "type": "script"
+          }
+        ],
+        "type": "query"
+      },
+      "persistent": true
+    },
+    "custom.winterShelterProgramId": {
+      "binding": {
+        "config": {
+          "expression": "True"
+        },
+        "transforms": [
+          {
+            "code": "\tquery \u003d \"SELECT id from interaction.program WHERE programName \u003d \u0027Winter Shelter\u0027\"\n\tresult \u003d system.db.runQuery(query)\n\tif result is not None and result.getRowCount() \u003e0 and result.getValueAt(0,\u0027id\u0027) is not None:\n\t\treturn result.getValueAt(0,\u0027id\u0027)\n\telse:\n\t\treturn -1",
+            "type": "script"
+          }
+        ],
+        "type": "expr"
+      },
+      "persistent": true
+    },
+    "params.HMIS": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.comment": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.employee_id": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.enrollment_id": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.participant_id": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.quantity": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.service_id": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.service_location_id": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.time_created": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.user_name": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 170,
+      "width": 300
+    },
+    "loading": {
+      "mode": "blocking"
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "EmbeddedView Header"
+        },
+        "position": {
+          "basis": "25px",
+          "shrink": 0
+        },
+        "props": {
+          "params": {
+            "Text": "Warning"
+          },
+          "path": "Shelter/Reservation/Cards/New Reservation/ReservationHeader"
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "children": [
+          {
+            "meta": {
+              "name": "Label"
+            },
+            "position": {
+              "basis": "50px",
+              "grow": 1
+            },
+            "props": {
+              "style": {
+                "classes": "Text/Error_Message"
+              },
+              "text": "Participant is suspended. Do you want to proceed with the service creation?"
+            },
+            "type": "ia.display.label"
+          }
+        ],
+        "custom": {
+          "ReservationSaved": false
+        },
+        "meta": {
+          "name": "Message"
+        },
+        "position": {
+          "basis": "70px",
+          "shrink": 0
+        },
+        "props": {
+          "style": {
+            "borderTopColor": "#9db8d1",
+            "borderTopStyle": "solid",
+            "borderTopWidth": "1px",
+            "classes": "Background/Default",
+            "marginLeft": "10px",
+            "marginRight": "10px",
+            "marginTop": "5px",
+            "paddingTop": "5px"
+          }
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "children": [
+          {
+            "events": {
+              "component": {
+                "onActionPerformed": {
+                  "config": {
+                    "script": "\tproject \u003d \u0027RITI\u0027\n\tpath \u003d \"Participants/Services/ServicesDetailInsert\"\n\tparameters \u003d {\"time_created\":self.view.params.time_created,\"participant_id\":self.view.params.participant_id,\n\t\t\t\t\"employee_id\":self.view.params.employee_id,\"enrollment_id\":self.view.params.enrollment_id, \n\t\t\t\t\"service_id\":self.view.params.service_id,\"user_name\":self.view.params.user_name,\n\t\t\t\t\"HMIS\":self.view.params.HMIS,\"quantity\":self.view.params.quantity,\n\t\t\t\t\"comment\":self.view.params.comment, \"service_location_id\":self.view.params.service_location_id}\n\tRefresh \u003d system.db.runNamedQuery(project\u003dproject,path\u003dpath,parameters\u003dparameters, getKey\u003dTrue)\t\t\n\t#system.perspective.print(\"Insert data\")\n\t\n\t## also add a program if service selected is Winter Shelter Orientation\n\tif self.view.custom.selectedServiceName \u003d\u003d \"Winter Shelter Orientation\":\n\t\t## add a program to the participant\n\t\tpath \u003d \"Participants/Enrollments/ParticipantAddSelectedEnrollments\"\n\t\tparameters \u003d {\"participantId\": self.view.params.participant_id, \"programId\":self.view.custom.winterShelterProgramId}\n\t\tsystem.db.runNamedQuery(project\u003dproject,path\u003dpath,parameters\u003dparameters)\t\n\t###################################\n\t# Increment Yearly Services\n\ttotal_services \u003d system.tag.readBlocking([\"[default]RITI/Participants/long_TotalServices\"])[0].value\n\ttotal_services +\u003d 1\n\tsystem.tag.writeBlocking([\"[default]RITI/Participants/long_TotalServices\"], [total_services])\n\t\n\tsystem.perspective.sendMessage(messageType\u003d\"refreshServicesDetail\", payload\u003d{}, scope\u003d\"session\")\n\tsystem.perspective.closePopup(\"SaveServiceWarning\")"
+                  },
+                  "scope": "G",
+                  "type": "script"
+                }
+              }
+            },
+            "meta": {
+              "name": "Yes"
+            },
+            "position": {
+              "basis": "100px"
+            },
+            "props": {
+              "style": {
+                "classes": "Buttons/Main",
+                "marginBottom": "5px",
+                "marginLeft": "5px",
+                "marginTop": "5px"
+              },
+              "text": "Yes"
+            },
+            "type": "ia.input.button"
+          },
+          {
+            "events": {
+              "component": {
+                "onActionPerformed": {
+                  "config": {
+                    "script": "\tsystem.perspective.closePopup(\"SaveServiceWarning\")"
+                  },
+                  "scope": "G",
+                  "type": "script"
+                }
+              }
+            },
+            "meta": {
+              "name": "No"
+            },
+            "position": {
+              "basis": "100px"
+            },
+            "props": {
+              "style": {
+                "classes": "Buttons/Secondary",
+                "margin": "5px"
+              },
+              "text": "No"
+            },
+            "type": "ia.input.button"
+          }
+        ],
+        "custom": {
+          "ReservationSaved": false
+        },
+        "meta": {
+          "name": "root Actions"
+        },
+        "position": {
+          "basis": "51px"
+        },
+        "props": {
+          "justify": "center",
+          "style": {
+            "borderTopColor": "#9db8d1",
+            "borderTopStyle": "solid",
+            "borderTopWidth": "1px",
+            "classes": "Background/Default",
+            "marginLeft": "10px",
+            "marginRight": "10px",
+            "marginTop": "5px",
+            "paddingTop": "5px"
+          }
+        },
+        "type": "ia.container.flex"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column",
+      "style": {
+        "classes": "Background/Default"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

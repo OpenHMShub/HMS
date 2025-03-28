@@ -1,0 +1,754 @@
+{
+  "custom": {
+    "CareCoordinatorPrograms": {
+      "$": [
+        "ds",
+        192,
+        1677481466387
+      ],
+      "$columns": [
+        {
+          "data": [
+            47
+          ],
+          "name": "id",
+          "type": "Integer"
+        },
+        {
+          "data": [
+            "Guest House"
+          ],
+          "name": "programName",
+          "type": "String"
+        }
+      ]
+    },
+    "SupportAndWSSupportCoordinatorPrograms": {
+      "$": [
+        "ds",
+        192,
+        1677481466387
+      ],
+      "$columns": [
+        {
+          "data": [
+            24,
+            44,
+            47,
+            48,
+            29,
+            81,
+            32,
+            80,
+            61,
+            62,
+            49,
+            50,
+            51,
+            82,
+            52,
+            53,
+            83,
+            55,
+            56,
+            57,
+            58,
+            59,
+            40
+          ],
+          "name": "id",
+          "type": "Integer"
+        },
+        {
+          "data": [
+            "Campus Store",
+            "Extended Recuperative Care",
+            "Guest House",
+            "Guest House Recovery Program",
+            "Hope University",
+            "Metro",
+            "Navigation",
+            "Next Steps Residential",
+            "Paticipant Escrow",
+            "Paticipant Mail Service",
+            "Post-Treatment Supportive Shelter",
+            "Recuperative Care",
+            "RHP/TDOC",
+            "Search Program",
+            "Seeking/Pending Treatment",
+            "Special Shelter",
+            "Test program1",
+            "Transitional Housing Program",
+            "Veterans Hospital to Housing",
+            "Veterans Low Demand",
+            "Veterans Service Intensive",
+            "Vine Hill Residential",
+            "Winter Shelter"
+          ],
+          "name": "programName",
+          "type": "String"
+        }
+      ]
+    },
+    "allPrograms": {
+      "$": [
+        "ds",
+        192,
+        1677481466387
+      ],
+      "$columns": [
+        {
+          "data": [
+            24,
+            44,
+            47,
+            48,
+            29,
+            81,
+            32,
+            80,
+            61,
+            62,
+            1,
+            49,
+            50,
+            51,
+            82,
+            52,
+            53,
+            83,
+            55,
+            56,
+            57,
+            58,
+            59,
+            40
+          ],
+          "name": "id",
+          "type": "Integer"
+        },
+        {
+          "data": [
+            "Campus Store",
+            "Extended Recuperative Care",
+            "Guest House",
+            "Guest House Recovery Program",
+            "Hope University",
+            "Metro",
+            "Navigation",
+            "Next Steps Residential",
+            "Paticipant Escrow",
+            "Paticipant Mail Service",
+            "Permanent Supportive Housing",
+            "Post-Treatment Supportive Shelter",
+            "Recuperative Care",
+            "RHP/TDOC",
+            "Search Program",
+            "Seeking/Pending Treatment",
+            "Special Shelter",
+            "Test program1",
+            "Transitional Housing Program",
+            "Veterans Hospital to Housing",
+            "Veterans Low Demand",
+            "Veterans Service Intensive",
+            "Vine Hill Residential",
+            "Winter Shelter"
+          ],
+          "name": "programName",
+          "type": "String"
+        }
+      ]
+    },
+    "programFilter": "1\u003d1",
+    "selection": "end_date"
+  },
+  "params": {
+    "ReasonForEntry": "abs",
+    "program_id": -1,
+    "program_name": "",
+    "provider_id": null,
+    "provider_name": "",
+    "provider_type_id": -1,
+    "reasonForEntryId": -1,
+    "referral_id": -1,
+    "referral_type": "",
+    "status_id": 2,
+    "type_id": null
+  },
+  "propConfig": {
+    "custom.CareCoordinatorPrograms": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "provider": "{view.custom.programFilter}"
+          },
+          "queryPath": "Participants/Referrals/ReferralProgramDropdownList_CareCoordinator"
+        },
+        "type": "query"
+      },
+      "persistent": true
+    },
+    "custom.SupportAndWSSupportCoordinatorPrograms": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "provider": "{view.custom.programFilter}"
+          },
+          "queryPath": "Participants/Referrals/ReferralProgramDropdownList_Support_WSSupport_Coordinator"
+        },
+        "type": "query"
+      },
+      "persistent": true
+    },
+    "custom.allPrograms": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "provider": "{view.custom.programFilter}"
+          },
+          "queryPath": "Participants/Referrals/ReferralProgramDropdownList"
+        },
+        "type": "query"
+      },
+      "persistent": true
+    },
+    "custom.programFilter": {
+      "binding": {
+        "config": {
+          "expression": "hasChanged({/root/Embed_ProviderType.props.params.selection}) || hasChanged({/root/Embed_AllPrograms.props.params.checked})"
+        },
+        "transforms": [
+          {
+            "code": "\tselection \u003d self.params.provider_type_id\n\tallPrograms \u003d self.getChild(\"root\").getChild(\"Embed_AllPrograms\").props.params.checked\n\tif selection \u003d\u003d -1 or allPrograms:\n\t\treturn \u00271\u003d1\u0027\n\telse:\n\t\treturn \u0027pt.providerTypeId \u003d \u0027 + str(selection)",
+            "type": "script"
+          }
+        ],
+        "type": "expr"
+      },
+      "persistent": true
+    },
+    "custom.selection": {
+      "persistent": true
+    },
+    "params.ReasonForEntry": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.program_id": {
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.program_name": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.provider_id": {
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.provider_name": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.provider_type_id": {
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.reasonForEntryId": {
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.referral_id": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.referral_type": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.status_id": {
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.type_id": {
+      "paramDirection": "inout",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 60,
+      "width": 1158
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "Embed_ReferralType_ReadOnly"
+        },
+        "position": {
+          "basis": "165px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.text": {
+            "binding": {
+              "config": {
+                "path": "view.params.referral_type"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "label": "Referral Type"
+          },
+          "path": "Participants/Templates/60px/top/ReadOnly_Text",
+          "style": {
+            "classes": "InputCards/InputCard InputCards/InputCard_NoBorder",
+            "overflow": "hidden"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Embed_ReferralType"
+        },
+        "position": {
+          "basis": "200px",
+          "display": false,
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.options": {
+            "binding": {
+              "config": {
+                "queryPath": "Participants/Referrals/ReferralTypeSelect"
+              },
+              "type": "query"
+            }
+          },
+          "props.params.selection": {
+            "binding": {
+              "config": {
+                "bidirectional": true,
+                "path": "view.params.type_id"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "text": "Referral Type"
+          },
+          "path": "Participants/Templates/60px/top/Input_DropDownSingle",
+          "style": {
+            "classes": "InputCards/InputCard"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Embed_ProviderType"
+        },
+        "position": {
+          "basis": "200px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "position.display": {
+            "binding": {
+              "config": {
+                "expression": "if({view.params.referral_id} \u003d -1,True,False)"
+              },
+              "type": "expr"
+            }
+          },
+          "props.params.options": {
+            "binding": {
+              "config": {
+                "path": "view.params.type_id"
+              },
+              "transforms": [
+                {
+                  "code": "\tproject \u003d \"RITI\"\n\tif value \u003d\u003d 2:\n\t\tpath \u003d \u0027Participants/Referrals/ReferralProviderQuickTypeSelect\u0027\n\telse:\n\t\tpath \u003d \u0027Participants/Referrals/ReferralProviderTypeSelect\u0027\n\titems \u003d system.db.runNamedQuery(project\u003dproject,path\u003dpath, getKey\u003dTrue)\n\treturn items",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          },
+          "props.params.selection": {
+            "binding": {
+              "config": {
+                "bidirectional": true,
+                "path": "view.params.provider_type_id"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "text": "Provider Type"
+          },
+          "path": "Participants/Templates/60px/top/Input_DropDownSingle",
+          "style": {
+            "classes": "InputCards/InputCard"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Embed_Provider"
+        },
+        "position": {
+          "basis": "280px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "position.display": {
+            "binding": {
+              "config": {
+                "expression": "if({view.params.referral_id} \u003d -1,True,False)"
+              },
+              "type": "expr"
+            }
+          },
+          "props.params.options": {
+            "binding": {
+              "config": {
+                "parameters": {
+                  "provider_type_id": "{../Embed_ProviderType.props.params.selection}"
+                },
+                "queryPath": "Participants/ProviderListByTypeSelect"
+              },
+              "type": "query"
+            }
+          },
+          "props.params.selection": {
+            "binding": {
+              "config": {
+                "bidirectional": true,
+                "path": "view.params.provider_id"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "text": "Provider"
+          },
+          "path": "Participants/Templates/60px/top/Input_DropDownSingle",
+          "style": {
+            "classes": "InputCards/InputCard"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Embed_Provider_ReadOnly"
+        },
+        "position": {
+          "basis": "200px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "position.display": {
+            "binding": {
+              "config": {
+                "expression": "if({view.params.referral_id} \u003d -1,False,True)"
+              },
+              "type": "expr"
+            }
+          },
+          "props.params.text": {
+            "binding": {
+              "config": {
+                "path": "view.params.provider_name"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "label": "Provider"
+          },
+          "path": "Participants/Templates/60px/top/ReadOnly_Text",
+          "style": {
+            "classes": "InputCards/InputCard",
+            "overflow": "hidden"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Embed_ResonForEntry"
+        },
+        "position": {
+          "basis": "200px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "position.display": {
+            "binding": {
+              "config": {
+                "expression": "if({view.params.referral_id} \u003d -1,True,False)"
+              },
+              "type": "expr"
+            }
+          },
+          "props.params.editable": {
+            "binding": {
+              "config": {
+                "path": "../Embed_ProviderType.props.params.selection"
+              },
+              "transforms": [
+                {
+                  "code": "\tif value \u003d\u003d 7:\n\t\treturn True\n\telse:\n\t\treturn False",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          },
+          "props.params.options": {
+            "binding": {
+              "config": {
+                "queryPath": "Participants/Referrals/Get_ReferralReasonForEntry"
+              },
+              "type": "query"
+            }
+          },
+          "props.params.selection": {
+            "binding": {
+              "config": {
+                "bidirectional": true,
+                "path": "view.params.reasonForEntryId"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "text": "Reason for Entry"
+          },
+          "path": "Participants/Templates/60px/top/Input_ConditionalDropDownSingle",
+          "style": {
+            "classes": "InputCards/InputCard"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Embed_ReasonForEntry_ReadOnly_0",
+          "tooltip": {
+            "enabled": true
+          }
+        },
+        "position": {
+          "basis": "150px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "position.display": {
+            "binding": {
+              "config": {
+                "expression": "if({view.params.referral_id} \u003d -1,False,True)"
+              },
+              "type": "expr"
+            }
+          },
+          "props.params.text": {
+            "binding": {
+              "config": {
+                "path": "view.params.ReasonForEntry"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "label": "Reason for Entry"
+          },
+          "path": "Participants/Templates/60px/top/ReadOnly_Text",
+          "style": {
+            "classes": "InputCards/InputCard",
+            "overflow": "hidden"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Embed_Program_ReadOnly"
+        },
+        "position": {
+          "basis": "330px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "position.display": {
+            "binding": {
+              "config": {
+                "expression": "hasChanged({view.params.type_id}) || hasChanged({view.params.referral_id})"
+              },
+              "transforms": [
+                {
+                  "code": "\tif  self.view.params.type_id !\u003d 2 and self.view.params.referral_id !\u003d -1:\n\t\treturn True\n\telse:\n\t\treturn False",
+                  "type": "script"
+                }
+              ],
+              "type": "expr"
+            }
+          },
+          "props.params.text": {
+            "binding": {
+              "config": {
+                "path": "view.params.program_name"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "label": "Program"
+          },
+          "path": "Participants/Templates/60px/top/ReadOnly_Text",
+          "style": {
+            "classes": "InputCards/InputCard",
+            "overflow": "hidden"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Embed_Program"
+        },
+        "position": {
+          "basis": "230px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "position.display": {
+            "binding": {
+              "config": {
+                "expression": "hasChanged({view.params.type_id}) || hasChanged({view.params.referral_id})"
+              },
+              "transforms": [
+                {
+                  "code": "\tif  self.view.params.type_id \u003d\u003d 2 or self.view.params.referral_id !\u003d -1:\n\t\treturn False\n\telse:\n\t\treturn True",
+                  "type": "script"
+                }
+              ],
+              "type": "expr"
+            }
+          },
+          "props.params.options": {
+            "binding": {
+              "config": {
+                "expression": "if({session.custom.isCareCoordinator}, {view.custom.CareCoordinatorPrograms}, if({session.custom.isSupportCoordinator} || {session.custom.isWSSupportCoordinator}, {view.custom.SupportAndWSSupportCoordinatorPrograms}, {view.custom.allPrograms}))"
+              },
+              "type": "expr"
+            }
+          },
+          "props.params.selection": {
+            "binding": {
+              "config": {
+                "bidirectional": true,
+                "path": "view.params.program_id"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "text": "Program"
+          },
+          "path": "Participants/Templates/60px/top/Input_DropDownSingle",
+          "style": {
+            "classes": "InputCards/InputCard"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Embed_AllPrograms"
+        },
+        "position": {
+          "basis": "160px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "position.display": {
+            "binding": {
+              "config": {
+                "expression": "hasChanged({view.params.type_id}) || hasChanged({view.params.referral_id})"
+              },
+              "transforms": [
+                {
+                  "code": "\tif  self.view.params.type_id \u003d\u003d 2 or self.view.params.referral_id !\u003d -1:\n\t\treturn False\n\telse:\n\t\treturn True",
+                  "type": "script"
+                }
+              ],
+              "type": "expr"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "checked": false,
+            "text": "View All Programs"
+          },
+          "path": "Participants/Templates/60px/top/Input_Checkbox_Horizontal",
+          "style": {
+            "classes": "InputCards/InputCard"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Embed_Placeholder"
+        },
+        "position": {
+          "basis": "1px",
+          "grow": 1
+        },
+        "props": {
+          "path": "Participants/Templates/Placeholder",
+          "style": {
+            "classes": "InputCards/InputCard"
+          }
+        },
+        "type": "ia.display.view"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "style": {
+        "classes": "Background/Default"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

@@ -1,0 +1,104 @@
+{
+  "custom": {},
+  "params": {
+    "participantID": 4739
+  },
+  "propConfig": {
+    "params.participantID": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {},
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "Embed_Filter"
+        },
+        "position": {
+          "basis": "30px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.participant_id": {
+            "binding": {
+              "config": {
+                "path": "view.params.participantID"
+              },
+              "type": "property"
+            }
+          },
+          "props.params.selection": {
+            "onChange": {
+              "enabled": null,
+              "script": "\tif origin \u003d\u003d \u0027Browser\u0027:\n\t\tsystem.perspective.print(\u0027Filter Changed\u0027)\n\t\tbinding_location \u003d \"FlexRepeater_Activity.props.instances\"\n\t\tview \u003d self.view\n\t\tview.refreshBinding(binding_location)"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "selection": [
+              "ParticipantAdded"
+            ]
+          },
+          "path": "Participants/Activity/Filter/ActivityFilter"
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "FlexRepeater_Activity"
+        },
+        "position": {
+          "grow": 1
+        },
+        "propConfig": {
+          "props.instances": {
+            "binding": {
+              "config": {
+                "parameters": {
+                  "participantId": "{view.params.participantID}"
+                },
+                "queryPath": "Participants/Activities/ActivityFeed",
+                "returnFormat": "dataset"
+              },
+              "transforms": [
+                {
+                  "code": "\timport traceback\n\ttry:\n\t\tsystem.perspective.print(\u0027Participants Activity Feed Refresh\u0027)\n\t\t#table_data is the data object to return\n\t\tinstances \u003d []\n\t\t\t\n\t\t#Iterate over the results of the query\n\t\tfor row in range(value.getRowCount()):\n\t\t\tobject \u003d {}\n\t\t\t\n\t\t\t#object[\u0027instanceStyle\u0027] \u003d {\"classes\":\"\"}\n\t\t\t#object[\u0027instancePosition\u0027] \u003d {\"grow\":0, \"shrink\":1,\"basis\":\"50px\"}\n\t\t\tobject[\u0027ID\u0027] \u003d value.getValueAt(row, \"ID\")\n\t\t\tobject[\u0027CardType\u0027] \u003d value.getValueAt(row, \"CardType\")\n\t\t\tobject[\u0027Date\u0027] \u003d system.date.toMillis(value.getValueAt(row, \"Date\"))\n\t\t\tobject[\u0027Size\u0027] \u003d \"\"\n\t\t\tinstances.append(object)\n\t\t\n\t\treturn instances\n\t\n\t\n\texcept:\n\t\tlogger \u003d system.util.getLogger(\"Participants ActivityFeed FlexRepeater_Activity.props.instances\")\n\t\tmsg \u003d traceback.format_exc()\n\t\tlogger.error(msg)",
+                  "type": "script"
+                }
+              ],
+              "type": "query"
+            }
+          }
+        },
+        "props": {
+          "alignContent": "flex-start",
+          "direction": "column",
+          "elementPosition": {
+            "basis": "auto",
+            "grow": 0,
+            "shrink": 0
+          },
+          "elementStyle": {
+            "classes": "ActivityCards/Card"
+          },
+          "path": "Participants/Activity/ActivityCard",
+          "useDefaultViewWidth": false
+        },
+        "type": "ia.display.flex-repeater"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column",
+      "style": {
+        "classes": "Background/Alternative"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

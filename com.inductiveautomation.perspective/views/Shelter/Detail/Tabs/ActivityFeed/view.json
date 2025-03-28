@@ -1,0 +1,151 @@
+{
+  "custom": {},
+  "params": {
+    "facilityId": 0
+  },
+  "propConfig": {
+    "params.facilityId": {
+      "onChange": {
+        "enabled": null,
+        "script": "\ttry:\n\t\tfacilityId \u003d long(self.params.facilityId)\n\texcept:\n\t\tsystem.perspective.print(\u0027facility id is not number!\u0027)\n\telse:\n\t\troot \u003d self.getChild(\"root\")\n\t\troot.setJoined()\n\t"
+      },
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {},
+  "root": {
+    "children": [
+      {
+        "children": [
+          {
+            "meta": {
+              "name": "Filter_EmbeddedView"
+            },
+            "position": {
+              "basis": "40%"
+            },
+            "propConfig": {
+              "props.params.selection": {
+                "onChange": {
+                  "enabled": null,
+                  "script": "\ttry:\n\t\tfacilityId \u003d long(self.view.params.facilityId)\n\texcept:\n\t\tsystem.perspective.print(\u0027facility id is not number!\u0027)\n\telse:\n\t\troot \u003d self.view.getChild(\"root\")\n\t\troot.setJoined()\n"
+                }
+              }
+            },
+            "props": {
+              "params": {
+                "selection": null
+              },
+              "path": "Shelter/Detail/Cards/Activity/ActivityFilter",
+              "useDefaultViewHeight": true
+            },
+            "type": "ia.display.view"
+          }
+        ],
+        "meta": {
+          "name": "FlexContainer"
+        },
+        "position": {
+          "basis": "40px",
+          "shrink": 0
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "meta": {
+          "name": "FlexRepeater"
+        },
+        "position": {
+          "grow": 1
+        },
+        "props": {
+          "alignContent": "flex-start",
+          "direction": "column",
+          "elementPosition": {
+            "basis": "auto",
+            "grow": 0,
+            "shrink": 0
+          },
+          "elementStyle": {
+            "classes": "ActivityCards/Card"
+          },
+          "path": "Shelter/Detail/Cards/Activity/ActivityCard",
+          "useDefaultViewWidth": false
+        },
+        "type": "ia.display.flex-repeater"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column",
+      "style": {
+        "classes": "Background/Alternative"
+      }
+    },
+    "scripts": {
+      "customMethods": [
+        {
+          "name": "getReservationActivity",
+          "params": [
+            "facilityId"
+          ],
+          "script": "\t\n\t# Comment: ORDER BY ISNULL([Reservation].[timeRetired], [Reservation].[timeCreated]) desc means that \n\t# activities should be ordered chronologicaly by 2 columns timeRetired and timeCreated\n\t\n\tquery \u003d \"\"\"\t\t\t\t\nSELECT TOP(50)\n\tCONCAT_WS(\u0027 \u0027,[Human].[firstName],[Human].[middleName],[Human].[lastName]) AS participantName\n\t,[Reservation].[timeCreated]\n\t,[Reservation].[timeRetired]\n\t,[Reservation].[reservationStart]\n\t,[Reservation].[reservationEnd]\n\t,[Room].[roomName]\n\t,[Bed].[bedName]\n\t,[Reservation].[notes]\n\t,[Program].[programName]\nFROM [lodging].[Reservation] \n\tLEFT JOIN [shelter].[WaitList] ON [Reservation].[participantId] \u003d [WaitList].[participantid] AND [Reservation].[timeCreated] \u003e\u003d [WaitList].[dateadded] AND [Reservation].[timeCreated] \u003c\u003d [WaitList].[dateremoved]\n\tINNER JOIN [shelter].[WaitListPrograms] ON [WaitListPrograms].[id] \u003d [WaitList].[WaitListProgramId]\n\tINNER JOIN [interaction].[Program] ON [Program].[id] \u003d [WaitListPrograms].[programId]\n\tINNER JOIN [participant].[Participant] ON [Participant].[id] \u003d [Reservation].[participantId] \n\tINNER JOIN [humans].[Human] ON [Participant].[humanId] \u003d [Human].[id] \n\tINNER JOIN [lodging].[Bed] ON [Reservation].[bedId] \u003d [Bed].[id]\n\tINNER JOIN [lodging].[Room] ON [Bed].[roomId] \u003d [Room].[id]\nWHERE [Room].[facilityId] \u003d ?\n\nORDER BY ISNULL([Reservation].[timeRetired], [Reservation].[timeCreated]) desc\"\"\"\n\t\n\tresult \u003d system.db.runPrepQuery(query,[facilityId],\u0027RITIOps\u0027)\n\t\n\tpyds \u003d system.dataset.toPyDataSet(result)\n\t\n\tcaseList \u003d []\n\tfor item in pyds:\n\t\tcaseDict \u003d {}\n\t\t\n\t\tif item[\u0027timeRetired\u0027] is None:\n\t\t\t_title \u003d \u0027New Reservation\u0027\n\t\t\t_date \u003d item[\u0027timeCreated\u0027] \n\t\telse:\n\t\t\t_title \u003d \u0027Deleted Reservation\u0027\n\t\t\t_date \u003d item[\u0027timeRetired\u0027]\n\t\t# convert date from utc to client timezone\n#\t\tUTCOffset \u003d self.session.props.device.timezone.utcOffset\n#\t\t_date \u003d system.date.addMinutes(_date,int(UTCOffset*60))\n\t\t\n\t\tcaseDict[\u0027Title\u0027] \u003d _title\n\t\tcaseDict[\u0027Date\u0027] \u003d system.date.format(_date)\n\t\tcaseDict[\u0027CardType\u0027] \u003d \u0027Reservation\u0027\n\t\t\n\t\tcaseDict[\u0027InfoList\u0027] \u003d []\n\t\tcaseDict[\u0027InfoList\u0027].append({\u0027Label\u0027: \u0027Participant\u0027, \u0027Value\u0027: item[\u0027participantName\u0027]})\n\t\tcaseDict[\u0027InfoList\u0027].append({\u0027Label\u0027: \u0027Waiting List\u0027, \u0027Value\u0027: item[\u0027programName\u0027]})\n\t\tcaseDict[\u0027InfoList\u0027].append({\u0027Label\u0027: \u0027Created Date\u0027, \u0027Value\u0027: system.date.format(item[\u0027reservationStart\u0027],\u0027MMM. d, YYYY\u0027)})\n\n\t\t_date \u003d system.date.format(item[\u0027reservationEnd\u0027],\u0027MMM. d, YYYY\u0027) if item[\u0027reservationEnd\u0027] is not None else \u0027\u0027\n\t\tcaseDict[\u0027InfoList\u0027].append({\u0027Label\u0027: \u0027Expiration Date\u0027, \u0027Value\u0027: _date})\n\t\tcaseDict[\u0027InfoList\u0027].append({\u0027Label\u0027: \u0027Room\u0027, \u0027Value\u0027: item[\u0027roomName\u0027]})\n\t\tcaseDict[\u0027InfoList\u0027].append({\u0027Label\u0027: \u0027Bed\u0027, \u0027Value\u0027: item[\u0027bedName\u0027]})\n\t\t#caseDict[\u0027InfoList\u0027].append({\u0027Label\u0027: \u0027Notes\u0027, \u0027Value\u0027: item[\u0027notes\u0027]})\n\t\t\n\t\tcaseList.append(caseDict)\n\t\t\n\treturn caseList\n\t\t"
+        },
+        {
+          "name": "XgetReservationActivity",
+          "params": [
+            "facilityId"
+          ],
+          "script": "\t\n\t# Comment: ORDER BY ISNULL([Reservation].[timeRetired], [Reservation].[timeCreated]) desc means that \n\t# activities should be ordered chronologicaly by 2 columns timeRetired and timeCreated\n\t\n\tquery \u003d \"\"\"\t\t\t\t\nSELECT TOP(50)\nCONCAT_WS(\u0027 \u0027,[Human].[firstName],[Human].[middleName],[Human].[lastName]) AS participantName\n\t,[Reservation].[timeCreated]\n\t,[Reservation].[timeRetired]\n\t,[Reservation].[reservationStart]\n\t,[Reservation].[reservationEnd]\n\t,[Room].[roomName]\n\t,[Bed].[bedName]\n\t,[Reservation].[notes]\n\nFROM [lodging].[Reservation] \n\tINNER JOIN [participant].[Participant] ON [Participant].[id] \u003d [Reservation].[participantId] \n\tINNER JOIN [humans].[Human] ON [Participant].[humanId] \u003d [Human].[id] \n\tINNER JOIN [lodging].[Bed] ON [Reservation].[bedId] \u003d [Bed].[id]\n\tINNER JOIN [lodging].[Room] ON [Bed].[roomId] \u003d [Room].[id]\n\t\t\t\t\nWHERE [Room].[facilityId] \u003d ?\n\nORDER BY ISNULL([Reservation].[timeRetired], [Reservation].[timeCreated]) desc\"\"\"\n\t\n\tresult \u003d system.db.runPrepQuery(query,[facilityId],\u0027RITIOps\u0027)\n\t\n\tpyds \u003d system.dataset.toPyDataSet(result)\n\t\n\tcaseList \u003d []\n\tfor item in pyds:\n\t\tcaseDict \u003d {}\n\t\t\n\t\tif item[\u0027timeRetired\u0027] is None:\n\t\t\t_title \u003d \u0027New Reservation\u0027\n\t\t\t_date \u003d item[\u0027timeCreated\u0027] \n\t\telse:\n\t\t\t_title \u003d \u0027Deleted Reservation\u0027\n\t\t\t_date \u003d item[\u0027timeRetired\u0027]\n\t\t\n\t\tcaseDict[\u0027Title\u0027] \u003d _title\n\t\tcaseDict[\u0027Date\u0027] \u003d system.date.format(_date)\n\t\tcaseDict[\u0027CardType\u0027] \u003d \u0027Reservation\u0027\n\t\t\n\t\tcaseDict[\u0027InfoList\u0027] \u003d []\n\t\tcaseDict[\u0027InfoList\u0027].append({\u0027Label\u0027: \u0027Participant\u0027, \u0027Value\u0027: item[\u0027participantName\u0027]})\n\t\tcaseDict[\u0027InfoList\u0027].append({\u0027Label\u0027: \u0027Blank\u0027, \u0027Value\u0027: \u0027Blank\u0027})\n\t\tcaseDict[\u0027InfoList\u0027].append({\u0027Label\u0027: \u0027Created Date\u0027, \u0027Value\u0027: system.date.format(item[\u0027reservationStart\u0027],\u0027MMM. d, YYYY\u0027)})\n\n\t\t_date \u003d system.date.format(item[\u0027reservationEnd\u0027],\u0027MMM. d, YYYY\u0027) if item[\u0027reservationEnd\u0027] is not None else \u0027\u0027\n\t\tcaseDict[\u0027InfoList\u0027].append({\u0027Label\u0027: \u0027Expiration Date\u0027, \u0027Value\u0027: _date})\n\t\tcaseDict[\u0027InfoList\u0027].append({\u0027Label\u0027: \u0027Room\u0027, \u0027Value\u0027: item[\u0027roomName\u0027]})\n\t\tcaseDict[\u0027InfoList\u0027].append({\u0027Label\u0027: \u0027Bed\u0027, \u0027Value\u0027: item[\u0027bedName\u0027]})\n\t\t#caseDict[\u0027InfoList\u0027].append({\u0027Label\u0027: \u0027Notes\u0027, \u0027Value\u0027: item[\u0027notes\u0027]})\n\t\t\n\t\tcaseList.append(caseDict)\n\t\t\n\treturn caseList\n\t\t"
+        },
+        {
+          "name": "XgetOccupationActivity",
+          "params": [
+            "facilityId"
+          ],
+          "script": "\tquery \u003d \"\"\"\t\t\nSELECT TOP(5) \nCONCAT_WS(\u0027 \u0027,[Human].[firstName],[Human].[middleName],[Human].[lastName]) AS participantName\n\t,[BedLog].[eventStart]\n\t,[BedLog].[eventEnd]\n\t,[Room].[roomName]\n\t,[Bed].[bedName]\n\nFROM [lodging].[BedLog]  \n\tINNER JOIN [participant].[Participant] ON [Participant].[id] \u003d [BedLog].[participantId] \n\tINNER JOIN [humans].[Human] ON [Participant].[humanId] \u003d [Human].[id]\n\tINNER JOIN [lodging].[Bed] ON [BedLog].[bedId] \u003d [Bed].[id]\n\tINNER JOIN [lodging].[Room] ON [Bed].[roomId] \u003d [Room].[id] \nWHERE [Room].[facilityId] \u003d ?\nORDER BY [BedLog].[id] desc\"\"\"\n\t\n\tresult \u003d system.db.runPrepQuery(query,[facilityId],\u0027RITIOps\u0027)\n\t\n\tpyds \u003d system.dataset.toPyDataSet(result)\n\t\n\tcaseList \u003d []\n\tfor item in pyds:\n\t\tcaseDict \u003d {}\n\t\t\n\t\tif item[\u0027eventEnd\u0027] is None:\n\t\t\t_title \u003d \u0027Check-in\u0027\n\t\t\t_date \u003d item[\u0027eventStart\u0027]\n\t\t\t_dateHeader \u003d \u0027Start Date\u0027\n\t\telse:\n\t\t\t_title \u003d \u0027Check-out\u0027\n\t\t\t_date \u003d item[\u0027eventEnd\u0027]\n\t\t\t_dateHeader \u003d \u0027Check Out Date\u0027\n\t\t\n\t\tcaseDict[\u0027Title\u0027] \u003d _title\n\t\tcaseDict[\u0027Date\u0027] \u003d _date\n\t\tcaseDict[\u0027CardType\u0027] \u003d \u0027Occupation\u0027\n\t\t\n\t\tcaseDict[\u0027InfoList\u0027] \u003d []\n\t\tcaseDict[\u0027InfoList\u0027].append({\u0027Label\u0027: \u0027Participant\u0027, \u0027Value\u0027: item[\u0027participantName\u0027]})\n\t\tcaseDict[\u0027InfoList\u0027].append({\u0027Label\u0027: _dateHeader, \u0027Value\u0027:system.date.format(_date,\u0027MMM. d, YYYY\u0027) })\n\t\tcaseDict[\u0027InfoList\u0027].append({\u0027Label\u0027: \u0027Room\u0027, \u0027Value\u0027: item[\u0027roomName\u0027]})\n\t\tcaseDict[\u0027InfoList\u0027].append({\u0027Label\u0027: \u0027Bed\u0027, \u0027Value\u0027: item[\u0027bedName\u0027]})\n\t\t\n\t\t\n\t\tcaseList.append(caseDict)\n\t\t\n\treturn caseList\n\t\t"
+        },
+        {
+          "name": "getCheckInActivity",
+          "params": [
+            "facilityId"
+          ],
+          "script": "\tquery \u003d \"\"\"\t\t\nSELECT TOP(50)\nCONCAT_WS(\u0027 \u0027,[Human].[firstName],[Human].[middleName],[Human].[lastName]) AS participantName\n\t,[BedLog].[eventStart]\n\t,[BedLog].[eventEnd]\n\t,[Room].[roomName]\n\t,[Bed].[bedName]\n\nFROM [lodging].[BedLog]  \n\tINNER JOIN [participant].[Participant] ON [Participant].[id] \u003d [BedLog].[participantId] \n\tINNER JOIN [humans].[Human] ON [Participant].[humanId] \u003d [Human].[id]\n\tINNER JOIN [lodging].[Bed] ON [BedLog].[bedId] \u003d [Bed].[id]\n\tINNER JOIN [lodging].[Room] ON [Bed].[roomId] \u003d [Room].[id] \nWHERE [Room].[facilityId] \u003d ?\nORDER BY [BedLog].[eventStart] desc\"\"\"\n\t\n\tresult \u003d system.db.runPrepQuery(query,[facilityId],\u0027RITIOps\u0027)\n\t\n\tpyds \u003d system.dataset.toPyDataSet(result)\n\t\n\tcaseList \u003d []\n\tfor item in pyds:\n\t\t_date \u003d item[\u0027eventStart\u0027]\n\t\t# convert date from utc to client timezone\n#\t\tUTCOffset \u003d self.session.props.device.timezone.utcOffset\n#\t\t_date \u003d system.date.addMinutes(_date,int(UTCOffset*60))\n\t\t\n\t\tcaseDict \u003d {}\n\t\tcaseDict[\u0027Title\u0027] \u003d \u0027Check-in\u0027\n\t\tcaseDict[\u0027Date\u0027] \u003d system.date.format(_date)\n\t\tcaseDict[\u0027CardType\u0027] \u003d \u0027Occupation\u0027\n\t\t\n\t\tcaseDict[\u0027InfoList\u0027] \u003d []\n\t\tcaseDict[\u0027InfoList\u0027].append({\u0027Label\u0027: \u0027Participant\u0027, \u0027Value\u0027: item[\u0027participantName\u0027]})\n\t\tcaseDict[\u0027InfoList\u0027].append({\u0027Label\u0027: \u0027Start Date\u0027, \u0027Value\u0027:system.date.format(_date,\u0027MMM. d, YYYY\u0027) })\n\t\tcaseDict[\u0027InfoList\u0027].append({\u0027Label\u0027: \u0027Room\u0027, \u0027Value\u0027: item[\u0027roomName\u0027]})\n\t\tcaseDict[\u0027InfoList\u0027].append({\u0027Label\u0027: \u0027Bed\u0027, \u0027Value\u0027: item[\u0027bedName\u0027]})\n\n\t\tcaseList.append(caseDict)\n\t\t\n\treturn caseList\n\t\t"
+        },
+        {
+          "name": "getCheckOutActivity",
+          "params": [
+            "facilityId"
+          ],
+          "script": "\tquery \u003d \"\"\"\t\t\nSELECT TOP(50)\nCONCAT_WS(\u0027 \u0027,[Human].[firstName],[Human].[middleName],[Human].[lastName]) AS participantName\n\t,[BedLog].[eventStart]\n\t,[BedLog].[eventEnd]\n\t,[Room].[roomName]\n\t,[Bed].[bedName]\n\nFROM [lodging].[BedLog]  \n\tINNER JOIN [participant].[Participant] ON [Participant].[id] \u003d [BedLog].[participantId] \n\tINNER JOIN [humans].[Human] ON [Participant].[humanId] \u003d [Human].[id]\n\tINNER JOIN [lodging].[Bed] ON [BedLog].[bedId] \u003d [Bed].[id]\n\tINNER JOIN [lodging].[Room] ON [Bed].[roomId] \u003d [Room].[id] \nWHERE [BedLog].[eventEnd] IS NOT NULL AND [Room].[facilityId] \u003d ?\nORDER BY [BedLog].[eventEnd] desc\"\"\"\n\t\n\tresult \u003d system.db.runPrepQuery(query,[facilityId],\u0027RITIOps\u0027)\n\t\n\tpyds \u003d system.dataset.toPyDataSet(result)\n\t\n\tcaseList \u003d []\n\tfor item in pyds:\n\t\t_date \u003d item[\u0027eventEnd\u0027]\n\t\t# convert date from utc to client timezone\n#\t\tUTCOffset \u003d self.session.props.device.timezone.utcOffset\n#\t\t_date \u003d system.date.addMinutes(_date,int(UTCOffset*60))\n\t\t\n\t\tcaseDict \u003d {}\n\t\tcaseDict[\u0027Title\u0027] \u003d \u0027Check-out\u0027\n\t\tcaseDict[\u0027Date\u0027] \u003d system.date.format(_date)\n\t\tcaseDict[\u0027CardType\u0027] \u003d \u0027Occupation\u0027\n\t\t\n\t\tcaseDict[\u0027InfoList\u0027] \u003d []\n\t\tcaseDict[\u0027InfoList\u0027].append({\u0027Label\u0027: \u0027Participant\u0027, \u0027Value\u0027: item[\u0027participantName\u0027]})\n\t\tcaseDict[\u0027InfoList\u0027].append({\u0027Label\u0027: \u0027Check Out Date\u0027, \u0027Value\u0027:system.date.format(_date,\u0027MMM. d, YYYY\u0027) })\n\t\tcaseDict[\u0027InfoList\u0027].append({\u0027Label\u0027: \u0027Room\u0027, \u0027Value\u0027: item[\u0027roomName\u0027]})\n\t\tcaseDict[\u0027InfoList\u0027].append({\u0027Label\u0027: \u0027Bed\u0027, \u0027Value\u0027: item[\u0027bedName\u0027]})\n\t\t\n\t\t\n\t\tcaseList.append(caseDict)\n\t\t\n\treturn caseList\n\t\t"
+        },
+        {
+          "name": "getAsClientTime",
+          "params": [
+            "datetimeInput"
+          ],
+          "script": "\ttimeClientOffset \u003d self.session.props.device.timezone.utcOffset - system.date.getTimezoneOffset()\n\ttimeClient \u003d system.date.addMinutes(datetimeInput,int(timeClientOffset*60))\n\t\n\treturn timeClient"
+        },
+        {
+          "name": "setJoined",
+          "params": [],
+          "script": "\temvFilter \u003d self.getChild(\"FlexContainer\").getChild(\"Filter_EmbeddedView\")\n\tflex \u003d self.getChild(\"FlexRepeater\")\n\t\n\ttry:\n\t\tfacilityId \u003d long(self.view.params.facilityId)\n\texcept:\n\t\tsystem.perspective.print((\u0027facilityId is not number!\u0027))\n\t\tfacilityId \u003d -1\n\n\n\tif facilityId \u003c\u003d 0:\n\t\tflex.props.instances \u003d []\n\t\treturn\n\t\t\n\tinstanceList \u003d []\n\tjsonBase \u003d \u0027\u0027\u0027{\n\t\t\t\"instanceStyle\": {\n\t\t\t  \"classes\": \"ActivityCards/Card\"\n\t\t\t},\n\t\t\t\"instancePosition\": {\n\t\t\t  \"grow\": 0,\n\t\t\t  \"shrink\": 0\n\t\t\t}\n\t}\u0027\u0027\u0027\n\t\n\tselection \u003d emvFilter.props.params.selection\n\t\n\tif not(selection):\n\t\tselection \u003d [\u0027All\u0027]\n\t\n\tflex.props.instances \u003d []\n\tjoined \u003d []\n\t\n\tif \u0027All\u0027 in selection or \u0027Reservation\u0027 in selection:\n\t\tjoined \u003d joined + self.getReservationActivity(facilityId)\n\t\t\n\tif \u0027All\u0027 in selection or \u0027Check-In\u0027 in selection:\n\t\tjoined \u003d joined + self.getCheckInActivity(facilityId)\n\t\n\tif \u0027All\u0027 in selection or \u0027Check-Out\u0027 in selection: \n\t\tjoined \u003d joined + self.getCheckOutActivity(facilityId)\n\t\n\t# sort descending by Date value in dictionary \n\tjoinedSorted \u003d sorted(joined, key \u003d lambda i: i[\u0027Date\u0027],reverse\u003dTrue)\n\n\t#ystem.perspective.print((\u0027joinedSorted1:\u0027,joinedSorted))\n\t\n\t# Leave only last 50 activities to display inside views.\n\tjoinedSorted \u003d joinedSorted[:50]\n\t\n\tln \u003d len(joinedSorted)\n\t\n\tauxList \u003d []\n\tfor i in range(ln):\n\t\tmonth \u003d system.date.format(system.date.parse(joinedSorted[i-1][\u0027Date\u0027]), \u0027yyyyMM\u0027) if i\u003e0 else \u0027000000\u0027\n\t\tmonthNext \u003d system.date.format(system.date.parse(joinedSorted[i][\u0027Date\u0027]), \u0027yyyyMM\u0027)\n\t\t\n\t\t#ystem.perspective.print((i,month, monthNext))\n\t\tif i \u003d\u003d 0 or month !\u003d monthNext:\n\t\t\tauxList.append({\u0027Date\u0027: joinedSorted[i][\u0027Date\u0027], \u0027CardType\u0027: \u0027MonthYear\u0027, \"Title\": \"\",\"InfoList\": []}) # pass \n\t\tauxList.append(joinedSorted[i])\t\t\n\n\t#system.perspective.print((\u0027joinedSorted2:\u0027,auxList))\n\t\n\tfor activity in auxList: #joinedSorted:\n\t\tauxDict\u003d system.util.jsonDecode(jsonBase)\n\t\tauxDict[\u0027OneCase\u0027] \u003d activity\n\t\tauxDict[\u0027Size\u0027] \u003d \u0027\u0027\n\t\tinstanceList.append(auxDict)\n\t\n\tflex.props.instances \u003d instanceList\n\t\n\t#system.perspective.print((\u0027self.getReservationActivity(facilityId):\u0027,self.getReservationActivity(facilityId)))\n\t#system.perspective.print((\u0027self.getCheckInActivity(facilityId):\u0027,self.getCheckInActivity(facilityId)))\n\t#system.perspective.print((\u0027self.getCheckOutActivity(facilityId):\u0027,self.getCheckOutActivity(facilityId)))\n"
+        }
+      ],
+      "extensionFunctions": null,
+      "messageHandlers": [
+        {
+          "messageType": "mhSetActivities",
+          "pageScope": true,
+          "script": "\t\n\tsystem.perspective.print(\u0027mhSetActivities\u0027)\n\tself.setJoined()",
+          "sessionScope": false,
+          "viewScope": false
+        }
+      ]
+    },
+    "type": "ia.container.flex"
+  }
+}

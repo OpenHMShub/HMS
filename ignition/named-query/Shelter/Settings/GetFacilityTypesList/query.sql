@@ -1,0 +1,1 @@
+SELECT id, facilityTypeName FROM lodging.FacilityType WHERE timeRetired IS NULL ORDER BY facilityTypeName

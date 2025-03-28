@@ -1,0 +1,311 @@
+{
+  "custom": {},
+  "params": {
+    "bar_participant": 0,
+    "incident_date": "",
+    "physical_injury": "",
+    "property_damage": null,
+    "row_id": 0,
+    "suspension_type_id": 5
+  },
+  "propConfig": {
+    "params.bar_participant": {
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.incident_date": {
+      "paramDirection": "inout"
+    },
+    "params.physical_injury": {
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.property_damage": {
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.row_id": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.suspension_type_id": {
+      "paramDirection": "inout",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 60,
+      "width": 1049
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "Embed_Incident_Date"
+        },
+        "position": {
+          "basis": "330px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.text": {
+            "binding": {
+              "config": {
+                "path": "view.params.incident_date"
+              },
+              "transforms": [
+                {
+                  "formatType": "datetime",
+                  "formatValue": "MMM dd, yyyy hh:mm a",
+                  "type": "format"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "label": "Time of Incident"
+          },
+          "path": "Participants/Templates/60px/top/ReadOnly_Text",
+          "style": {
+            "classes": "InputCards/InputCard"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Embed_Injury"
+        },
+        "position": {
+          "basis": "165px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.text": {
+            "binding": {
+              "config": {
+                "path": "view.params.physical_injury"
+              },
+              "transforms": [
+                {
+                  "fallback": "No",
+                  "inputType": "scalar",
+                  "mappings": [
+                    {
+                      "input": 0,
+                      "output": "No"
+                    },
+                    {
+                      "input": 1,
+                      "output": "Yes"
+                    }
+                  ],
+                  "outputType": "scalar",
+                  "type": "map"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "label": "Physical Injury?*",
+            "options": {
+              "$": [
+                "ds",
+                192,
+                1598406256017
+              ],
+              "$columns": [
+                {
+                  "data": [
+                    0,
+                    1
+                  ],
+                  "name": "id",
+                  "type": "Integer"
+                },
+                {
+                  "data": [
+                    "No",
+                    "Yes"
+                  ],
+                  "name": "text",
+                  "type": "String"
+                }
+              ]
+            }
+          },
+          "path": "Participants/Templates/60px/top/ReadOnly_Text",
+          "style": {
+            "classes": "InputCards/InputCard"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Embed_Damage"
+        },
+        "position": {
+          "basis": "165px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.text": {
+            "binding": {
+              "config": {
+                "path": "view.params.property_damage"
+              },
+              "transforms": [
+                {
+                  "fallback": "",
+                  "inputType": "scalar",
+                  "mappings": [
+                    {
+                      "input": 0,
+                      "output": "No"
+                    },
+                    {
+                      "input": 1,
+                      "output": "Yes"
+                    }
+                  ],
+                  "outputType": "scalar",
+                  "type": "map"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "label": "Property Damage?*",
+            "options": {
+              "$": [
+                "ds",
+                192,
+                1598408843993
+              ],
+              "$columns": [
+                {
+                  "data": [
+                    0,
+                    1
+                  ],
+                  "name": "id",
+                  "type": "Integer"
+                },
+                {
+                  "data": [
+                    "No",
+                    "Yes"
+                  ],
+                  "name": "text",
+                  "type": "String"
+                }
+              ]
+            }
+          },
+          "path": "Participants/Templates/60px/top/ReadOnly_Text",
+          "style": {
+            "classes": "InputCards/InputCard"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Embed_Suspension"
+        },
+        "position": {
+          "basis": "165px"
+        },
+        "propConfig": {
+          "position.display": {
+            "binding": {
+              "config": {
+                "path": "view.params.row_id"
+              },
+              "transforms": [
+                {
+                  "code": "\tif (self.view.params.row_id \u003e -1 and not self.view.params.bar_participant) or self.view.params.row_id \u003d\u003d -1:\n\t\treturn True\n\telse:\n\t\treturn False",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          },
+          "props.params.text": {
+            "binding": {
+              "config": {
+                "path": "view.params.bar_participant"
+              },
+              "transforms": [
+                {
+                  "fallback": "",
+                  "inputType": "scalar",
+                  "mappings": [
+                    {
+                      "input": 0,
+                      "output": "No"
+                    },
+                    {
+                      "input": 1,
+                      "output": "Yes"
+                    }
+                  ],
+                  "outputType": "scalar",
+                  "type": "map"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "label": "Suspension?*"
+          },
+          "path": "Participants/Templates/60px/top/ReadOnly_Text",
+          "style": {
+            "classes": "InputCards/InputCard"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Embed_Placeholder"
+        },
+        "position": {
+          "basis": "1px",
+          "grow": 1
+        },
+        "props": {
+          "path": "Participants/Templates/Placeholder",
+          "style": {
+            "classes": "InputCards/InputCard"
+          }
+        },
+        "type": "ia.display.view"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "style": {
+        "classes": "Background/Default"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

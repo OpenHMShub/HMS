@@ -1,0 +1,198 @@
+{
+  "custom": {},
+  "events": {
+    "system": {
+      "onStartup": {
+        "config": {
+          "script": "\ttry:\n\t\troot \u003d self.getChild(\"root\")\n\t\troot.setPropsDropdowns()\n\t\t#emvSearch \u003d root.getChild(\"emvSearch\")\n\t\t#emvSearch.props.params.keyUpPulse \u003d False\n\texcept:\n\t\timport traceback\n\t\tlogger \u003d system.util.getLogger(\"Shelters\")\n\t\tmsg \u003d self.name + \u0027:\\n\u0027\n\t\tmsg +\u003d traceback.format_exc()\n\t\tlogger.error(msg)\t\t\t"
+        },
+        "scope": "G",
+        "type": "script"
+      }
+    }
+  },
+  "params": {
+    "facilityId": 0
+  },
+  "propConfig": {
+    "params.facilityId": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 30,
+      "width": 1820
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "emvRoom"
+        },
+        "position": {
+          "basis": "400px"
+        },
+        "propConfig": {
+          "props.params.actionPerformedPulse": {
+            "onChange": {
+              "enabled": null,
+              "script": "\troot \u003d self.parent\n\troot.sendMsgCondition()\n"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "actionPerformedPulse": false,
+            "clear": false,
+            "multiSelect": true,
+            "options": [],
+            "placeholder": "Select Room",
+            "selection": null
+          },
+          "path": "Providers/Dashboard/Components/Filters/Conditional_DropDown",
+          "style": {
+            "classes": "Filter/Filter_Container"
+          }
+        },
+        "scripts": {
+          "customMethods": [
+            {
+              "name": "setOptions",
+              "params": [
+                "facilityId"
+              ],
+              "script": "\tquery \u003d \"\"\"\nDECLARE @facilityId INT \u003d ?;\t\n\t\n\nSELECT \n\t [id] AS roomId\n\t,[roomName]\nFROM [RitiOps].[lodging].[Room]\nWHERE [timeRetired] is NULL\n\tAND [facilityId] \u003d @facilityId\nORDER BY [roomName]\n\t\"\"\"\n\t\n\tresult \u003d system.db.runPrepQuery(query,[facilityId],\u0027RITIOps\u0027)\n\t\n\t# Version 1 set options as list of dictionaries\n\tself.props.params.options \u003d [ dict(value \u003d x[0],label \u003d x[1]) for x in result]\n\t\n\t# Version 2 set options as dataset\n\t#self.props.params.options \u003d result\n\t\n\t"
+            }
+          ],
+          "extensionFunctions": null,
+          "messageHandlers": []
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "emvRoom_0"
+        },
+        "position": {
+          "basis": "400px"
+        },
+        "propConfig": {
+          "props.params.actionPerformedPulse": {
+            "onChange": {
+              "enabled": null,
+              "script": "\troot \u003d self.parent\n\troot.sendMsgCondition()\n"
+            }
+          },
+          "props.params.options": {
+            "binding": {
+              "config": {
+                "parameters": {
+                  "facilityId": "{view.params.facilityId}"
+                },
+                "queryPath": "Shelter/RoomAvailability/Rooms"
+              },
+              "type": "query"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "actionPerformedPulse": false,
+            "clear": false,
+            "multiSelect": true,
+            "placeholder": "Select Room",
+            "selection": null
+          },
+          "path": "Providers/Dashboard/Components/Filters/Conditional_DropDown",
+          "style": {
+            "classes": "Filter/Filter_Container"
+          }
+        },
+        "scripts": {
+          "customMethods": [
+            {
+              "name": "XsetOptions",
+              "params": [
+                "facilityId"
+              ],
+              "script": "\tquery \u003d \"\"\"\nDECLARE @facilityId INT \u003d ?;\t\n\t\n\nSELECT \n\t [id] AS roomId\n\t,[roomName]\nFROM [RitiOps].[lodging].[Room]\nWHERE [timeRetired] is NULL\n\tAND [facilityId] \u003d @facilityId\nORDER BY [roomName]\n\t\"\"\"\n\t\n\tresult \u003d system.db.runPrepQuery(query,[facilityId],\u0027RITIOps\u0027)\n\t\n\t# Version 1 set options as list of dictionaries\n\tself.props.params.options \u003d [ dict(value \u003d x[0],label \u003d x[1]) for x in result]\n\t\n\t# Version 2 set options as dataset\n\t#self.props.params.options \u003d result\n\t\n\t"
+            }
+          ],
+          "extensionFunctions": null,
+          "messageHandlers": []
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Placeholder"
+        },
+        "position": {
+          "basis": "200px",
+          "grow": 1
+        },
+        "props": {
+          "path": "1_TEMPLATES/Filtering/Filter_Placeholder"
+        },
+        "type": "ia.display.view"
+      }
+    ],
+    "custom": {
+      "_devClean": false,
+      "_devPulse": true,
+      "_isDev": true
+    },
+    "meta": {
+      "name": "root"
+    },
+    "propConfig": {
+      "custom._devClean": {
+        "onChange": {
+          "enabled": null,
+          "script": "\t\n\temvRoom \u003d self.getChild(\"emvRoom\")\n\t\n\temvRoom.props.params.clear \u003d True\n\n\t\n\tif self.custom._devClean:\n\t\tself.custom._devClean \u003d False"
+        }
+      },
+      "custom._devPulse": {
+        "onChange": {
+          "enabled": null,
+          "script": "\t\n\temvRoom \u003d self.getChild(\"emvRoom\")\n\t\n\tif self.custom._isDev:\n\t\tif currentValue.value is True:\n\t\t\tself.setPropsDropdowns()\n\t\telse:\n\t\t\temvRoom.props.params.options \u003d []\n\t\n\temvRoom.props.params.actionPerformedPulse \u003d False\n"
+        }
+      }
+    },
+    "props": {
+      "style": {
+        "classes": "Filter/Header_Text"
+      }
+    },
+    "scripts": {
+      "customMethods": [
+        {
+          "name": "setPropsDropdowns",
+          "params": [],
+          "script": "\temvRoom \u003d self.getChild(\"emvRoom\")\n\tfacilityId \u003d self.view.params.facilityId\n\temvRoom.setOptions(facilityId)\n"
+        },
+        {
+          "name": "sendMsgCondition",
+          "params": [
+            "payload\u003dNone"
+          ],
+          "script": "\t\n\temvRoom \u003d self.getChild(\"emvRoom\")\n\t\n\tif payload is None:\n\t\tpayload \u003d {}\n\t\tpayload[\u0027roomId\u0027] \u003d emvRoom.props.params.selection\n\n\tsystem.perspective.print((\u0027mhByCondition\u0027,payload)) \n\t\n\tsystem.perspective.sendMessage(\u0027mhByCondition\u0027, payload \u003d payload)\n\t\n"
+        }
+      ],
+      "extensionFunctions": null,
+      "messageHandlers": [
+        {
+          "messageType": "refreshProviderTableFromFilter",
+          "pageScope": true,
+          "script": "\tself.sendMsgCondition()",
+          "sessionScope": false,
+          "viewScope": false
+        }
+      ]
+    },
+    "type": "ia.container.flex"
+  }
+}

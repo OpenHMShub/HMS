@@ -1,0 +1,1741 @@
+{
+  "custom": {
+    "blankArray": [],
+    "eventFacilitators": [
+      {
+        "id": 0,
+        "text": "Martina Condron"
+      }
+    ],
+    "eventParams": {
+      "audienceMen": true,
+      "audienceMinors": false,
+      "audienceParticipants": false,
+      "audienceStaff": false,
+      "audienceVolunteers": false,
+      "audienceWomen": true,
+      "bymonth": null,
+      "bymonthday": 28,
+      "bysetpos": null,
+      "byweekday": [
+        "mo",
+        "tu",
+        "fr"
+      ],
+      "category": "Faith Meetings",
+      "description": "Eat well!",
+      "endDate": {
+        "$": [
+          "ts",
+          192,
+          1617013942900
+        ],
+        "$ts": 1614555022000
+      },
+      "frequency": "weekly",
+      "friday": true,
+      "interval": 1,
+      "monday": true,
+      "monthlyType": "monthlyday",
+      "room": "101",
+      "saturday": false,
+      "staffNeeded": 2,
+      "startDate": {
+        "$": [
+          "ts",
+          192,
+          1617013942900
+        ],
+        "$ts": 1611867622000
+      },
+      "subCategory": "Nutrition",
+      "sunday": false,
+      "thursday": false,
+      "title": "Nutrition Meeting",
+      "tuesday": true,
+      "venue": "Office",
+      "volunteersNeeded": 2,
+      "wednesday": false,
+      "yearlyType": "yearlyday"
+    },
+    "eventStaff": [],
+    "eventVolunteers": []
+  },
+  "params": {
+    "eventId": 48,
+    "isUpdateEvent": false
+  },
+  "propConfig": {
+    "custom.blankArray": {
+      "persistent": true
+    },
+    "custom.eventFacilitators": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "eventID": "{view.params.eventId}"
+          },
+          "queryPath": "Calendar/GetEventFacilitators"
+        },
+        "transforms": [
+          {
+            "code": "\tarray \u003d []\n\tfor row in range(value.getRowCount()):\n\t\tname \u003d value.getValueAt(row, \"name\")\n\t\tid \u003d value.getValueAt(row, \"id\")\n\t\tarray.append({\u0027text\u0027: name, \u0027id\u0027: id})\n\treturn array",
+            "type": "script"
+          }
+        ],
+        "type": "query"
+      },
+      "persistent": true
+    },
+    "custom.eventParams": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "eventID": "{view.params.eventId}"
+          },
+          "queryPath": "Calendar/GetEventByID"
+        },
+        "transforms": [
+          {
+            "code": "\tdef getByWeekDay(row):\n\t\tweekDayDict \u003d {\n\t\t\u0027mo\u0027: value.getValueAt(row, \"monday\"),\n\t\t\u0027tu\u0027: value.getValueAt(row, \"tuesday\"),\n\t\t\u0027we\u0027: value.getValueAt(row, \"wednesday\"),\n\t\t\u0027th\u0027: value.getValueAt(row, \"thursday\"),\n\t\t\u0027fr\u0027: value.getValueAt(row, \"friday\"),\n\t\t\u0027sa\u0027: value.getValueAt(row, \"saturday\"),\n\t\t\u0027su\u0027: value.getValueAt(row, \"sunday\")}\n\t\t\t\n\t\tbyweekday \u003d []\n\t\tfor key in [\u0027mo\u0027, \u0027tu\u0027, \u0027we\u0027, \u0027th\u0027, \u0027fr\u0027, \u0027sa\u0027, \u0027su\u0027,]:\n\t\t\tif weekDayDict[key]:\n\t\t\t\tbyweekday.append(key)\n\t\t\t\n\t\treturn byweekday\n\t\n\teventParams \u003d {}\n\tif value.getRowCount() \u003d\u003d 0:\n\t\treturn {\n\t\t\u0027category\u0027: None,\n\t\t\u0027subCategory\u0027: None,\n\t\t\u0027title\u0027: None,\n\t\t\u0027description\u0027: None,\n\t\t\u0027audienceMen\u0027: None,\n\t\t\u0027audienceMinors\u0027: None,\n\t\t\u0027audienceParticipants\u0027: None,\n\t\t\u0027audienceStaff\u0027: None,\n\t\t\u0027audienceVolunteers\u0027: None,\n\t\t\u0027audienceWomen\u0027: None,\n\t\t\u0027venue\u0027: None,\n\t\t\u0027room\u0027: None,\n\t\t\u0027volunteersNeeded\u0027: None,\n\t\t\u0027staffNeeded\u0027: None,\n\t\t\u0027frequency\u0027: None,\n\t\t\u0027monday\u0027: None,\n\t\t\u0027tuesday\u0027: None,\n\t\t\u0027wednesday\u0027: None,\n\t\t\u0027thursday\u0027: None,\n\t\t\u0027friday\u0027: None,\n\t\t\u0027saturday\u0027: None,\n\t\t\u0027sunday\u0027: None,\n\t\t\u0027bysetpos\u0027: None,\n\t\t\u0027startDate\u0027: None,\n\t\t\u0027endDate\u0027: None,\n\t\t\u0027byweekday\u0027: None,\n\t\t\u0027bymonthday\u0027: None,\n\t\t\u0027bymonth\u0027: None,\n\t\t\u0027interval\u0027: None,\n\t\t\u0027yearlyType\u0027: None,\n\t\t\u0027monthlyType\u0027: None\n\t\t}\n\t\n\teventParams[\u0027category\u0027] \u003d value.getValueAt(0, \u0027category\u0027)\n\teventParams[\u0027subCategory\u0027] \u003d value.getValueAt(0, \u0027subCategory\u0027)\n\teventParams[\u0027title\u0027] \u003d value.getValueAt(0, \u0027title\u0027)\n\teventParams[\u0027description\u0027] \u003d value.getValueAt(0, \u0027description\u0027)\n\teventParams[\u0027audienceMen\u0027] \u003d value.getValueAt(0, \u0027audienceMen\u0027)\n\teventParams[\u0027audienceMinors\u0027] \u003d value.getValueAt(0, \u0027audienceMinors\u0027)\n\teventParams[\u0027audienceParticipants\u0027] \u003d value.getValueAt(0, \u0027audienceParticipants\u0027)\n\teventParams[\u0027audienceStaff\u0027] \u003d value.getValueAt(0, \u0027audienceStaff\u0027)\n\teventParams[\u0027audienceVolunteers\u0027] \u003d value.getValueAt(0, \u0027audienceVolunteers\u0027)\n\teventParams[\u0027audienceWomen\u0027] \u003d value.getValueAt(0, \u0027audienceWomen\u0027)\n\teventParams[\u0027venue\u0027] \u003d value.getValueAt(0, \u0027venue\u0027)\n\teventParams[\u0027room\u0027] \u003d value.getValueAt(0, \u0027room\u0027)\n\teventParams[\u0027volunteersNeeded\u0027] \u003d value.getValueAt(0, \u0027volunteersNeeded\u0027)\n\teventParams[\u0027staffNeeded\u0027] \u003d value.getValueAt(0, \u0027staffNeeded\u0027)\n\teventParams[\u0027frequency\u0027] \u003d value.getValueAt(0, \u0027freq\u0027)\n\teventParams[\u0027monday\u0027] \u003d value.getValueAt(0, \u0027monday\u0027)\n\teventParams[\u0027tuesday\u0027] \u003d value.getValueAt(0, \u0027tuesday\u0027)\n\teventParams[\u0027wednesday\u0027] \u003d value.getValueAt(0, \u0027wednesday\u0027)\n\teventParams[\u0027thursday\u0027] \u003d value.getValueAt(0, \u0027thursday\u0027)\n\teventParams[\u0027friday\u0027] \u003d value.getValueAt(0, \u0027friday\u0027)\n\teventParams[\u0027saturday\u0027] \u003d value.getValueAt(0, \u0027saturday\u0027)\n\teventParams[\u0027sunday\u0027] \u003d value.getValueAt(0, \u0027sunday\u0027)\n\teventParams[\u0027bysetpos\u0027] \u003d value.getValueAt(0, \u0027bysetpos\u0027)\n\teventParams[\u0027startDate\u0027] \u003d startDate \u003d value.getValueAt(0, \u0027startDate\u0027)\n\teventParams[\u0027endDate\u0027] \u003d endDate \u003d value.getValueAt(0, \u0027endDate\u0027)\n\teventParams[\u0027byweekday\u0027] \u003d byweekday \u003d getByWeekDay(0)\n\teventParams[\u0027bymonthday\u0027] \u003d system.date.getDayOfMonth(startDate)\n\teventParams[\u0027bymonth\u0027] \u003d value.getValueAt(0, \u0027bymonth\u0027)\n\teventParams[\u0027interval\u0027] \u003d value.getValueAt(0, \u0027interval\u0027)\n\tif len(byweekday) \u003d\u003d 0:\n\t\teventParams[\u0027yearlyType\u0027] \u003d \u0027yearlydate\u0027\n\t\teventParams[\u0027monthlyType\u0027] \u003d \u0027monthlydate\u0027\n\telse:\n\t\teventParams[\u0027yearlyType\u0027] \u003d \u0027yearlyday\u0027\n\t\teventParams[\u0027monthlyType\u0027] \u003d \u0027monthlyday\u0027\n\t\n\t\n\treturn eventParams",
+            "type": "script"
+          }
+        ],
+        "type": "query"
+      },
+      "persistent": true
+    },
+    "custom.eventStaff": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "eventID": "{view.params.eventId}"
+          },
+          "queryPath": "Calendar/GetEventStaff"
+        },
+        "transforms": [
+          {
+            "code": "\tarray \u003d []\n\tfor row in range(value.getRowCount()):\n\t\tname \u003d value.getValueAt(row, \"name\")\n\t\tid \u003d value.getValueAt(row, \"id\")\n\t\tarray.append({\u0027text\u0027: name, \u0027id\u0027: id})\n\treturn array",
+            "type": "script"
+          }
+        ],
+        "type": "query"
+      },
+      "persistent": true
+    },
+    "custom.eventVolunteers": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "eventID": "{view.params.eventId}"
+          },
+          "queryPath": "Calendar/GetEventVolunteers"
+        },
+        "transforms": [
+          {
+            "code": "\tarray \u003d []\n\tfor row in range(value.getRowCount()):\n\t\tname \u003d value.getValueAt(row, \"name\")\n\t\tid \u003d value.getValueAt(row, \"id\")\n\t\tarray.append({\u0027text\u0027: name, \u0027id\u0027: id})\n\treturn array",
+            "type": "script"
+          }
+        ],
+        "type": "query"
+      },
+      "persistent": true
+    },
+    "params.eventId": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.isUpdateEvent": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 1673,
+      "width": 600
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "Header"
+        },
+        "position": {
+          "basis": "62px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.text": {
+            "binding": {
+              "config": {
+                "expression": "if({view.params.isUpdateEvent}, \"Update Event\", \"Add Event\") "
+              },
+              "type": "expr"
+            }
+          }
+        },
+        "props": {
+          "path": "Overview/Dashboard/EventPopupHeader",
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "EventCategory"
+        },
+        "position": {
+          "basis": "100px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.Category": {
+            "binding": {
+              "config": {
+                "expression": "if({view.params.isUpdateEvent}, {view.custom.eventParams.category}, \u0027Classes \u0026 Workshops\u0027)"
+              },
+              "type": "expr"
+            }
+          },
+          "props.style.marginBottom": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.bottom-margin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginLeft": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.left-margin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginRight": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.right-margin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginTop": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.top-margin"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "path": "Overview/Dashboard/CategoryInput",
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Subcategory"
+        },
+        "position": {
+          "basis": "50px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.Subcategory": {
+            "binding": {
+              "config": {
+                "expression": "if({view.params.isUpdateEvent}, {view.custom.eventParams.subCategory}, \"AA Meeting\")"
+              },
+              "type": "expr"
+            }
+          },
+          "props.style.marginBottom": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.bottom-margin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginLeft": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.left-margin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginRight": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.right-margin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginTop": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.top-margin"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "path": "Overview/Dashboard/SubcategoryInput"
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Title"
+        },
+        "position": {
+          "basis": "50px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.inputText": {
+            "binding": {
+              "config": {
+                "expression": "if({view.params.isUpdateEvent}, {view.custom.eventParams.title}, \"\")"
+              },
+              "type": "expr"
+            }
+          },
+          "props.style.marginBottom": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.bottom-margin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginLeft": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.left-margin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginRight": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.right-margin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginTop": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.top-margin"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "text": "Title*"
+          },
+          "path": "Overview/Dashboard/TextInput"
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Description"
+        },
+        "position": {
+          "basis": "100px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.inputText": {
+            "binding": {
+              "config": {
+                "expression": "if({view.params.isUpdateEvent}, {view.custom.eventParams.description}, \"\")"
+              },
+              "type": "expr"
+            }
+          },
+          "props.style.marginBottom": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.bottom-margin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginLeft": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.left-margin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginRight": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.right-margin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginTop": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.top-margin"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "text": "Description"
+          },
+          "path": "Overview/Dashboard/TextInput"
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Audience"
+        },
+        "position": {
+          "basis": "50px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.Men": {
+            "binding": {
+              "config": {
+                "expression": "if({view.params.isUpdateEvent}, {view.custom.eventParams.audienceMen}, False)"
+              },
+              "type": "expr"
+            }
+          },
+          "props.params.Minors": {
+            "binding": {
+              "config": {
+                "expression": "if({view.params.isUpdateEvent}, {view.custom.eventParams.audienceMinors}, False)"
+              },
+              "type": "expr"
+            }
+          },
+          "props.params.Participants": {
+            "binding": {
+              "config": {
+                "expression": "if({view.params.isUpdateEvent}, {view.custom.eventParams.audienceParticipants}, False)"
+              },
+              "type": "expr"
+            }
+          },
+          "props.params.Staff": {
+            "binding": {
+              "config": {
+                "expression": "if({view.params.isUpdateEvent}, {view.custom.eventParams.audienceStaff}, False)"
+              },
+              "type": "expr"
+            }
+          },
+          "props.params.Volunteers": {
+            "binding": {
+              "config": {
+                "expression": "if({view.params.isUpdateEvent}, {view.custom.eventParams.audienceVolunteers}, False)"
+              },
+              "type": "expr"
+            }
+          },
+          "props.params.Women": {
+            "binding": {
+              "config": {
+                "expression": "if({view.params.isUpdateEvent}, {view.custom.eventParams.audienceWomen}, False)"
+              },
+              "type": "expr"
+            }
+          },
+          "props.style.marginBottom": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.bottom-margin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginLeft": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.left-margin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginRight": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.right-margin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginTop": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.top-margin"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "text": "Audience"
+          },
+          "path": "Overview/Dashboard/AudienceInput"
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "children": [
+          {
+            "meta": {
+              "name": "Venue"
+            },
+            "position": {
+              "basis": "300px"
+            },
+            "propConfig": {
+              "props.params.inputText": {
+                "binding": {
+                  "config": {
+                    "expression": "if({view.params.isUpdateEvent}, {view.custom.eventParams.venue}, \"\")"
+                  },
+                  "type": "expr"
+                }
+              }
+            },
+            "props": {
+              "params": {
+                "text": "Venue*"
+              },
+              "path": "Overview/Dashboard/TextInput",
+              "style": {
+                "marginRight": "20px"
+              }
+            },
+            "type": "ia.display.view"
+          },
+          {
+            "meta": {
+              "name": "Room"
+            },
+            "position": {
+              "basis": "300px"
+            },
+            "propConfig": {
+              "props.params.inputText": {
+                "binding": {
+                  "config": {
+                    "expression": "if({view.params.isUpdateEvent}, {view.custom.eventParams.room}, \"\")"
+                  },
+                  "type": "expr"
+                }
+              }
+            },
+            "props": {
+              "params": {
+                "text": "Room*"
+              },
+              "path": "Overview/Dashboard/TextInput",
+              "style": {
+                "marginLeft": "20px"
+              }
+            },
+            "type": "ia.display.view"
+          }
+        ],
+        "meta": {
+          "name": "FlexContainer Location"
+        },
+        "position": {
+          "basis": "50px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.style.marginBottom": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.bottom-margin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginLeft": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.left-margin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginRight": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.right-margin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginTop": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.top-margin"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "justify": "space-between"
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "meta": {
+          "name": "Facilitators"
+        },
+        "position": {
+          "shrink": 0
+        },
+        "propConfig": {
+          "position.basis": {
+            "binding": {
+              "config": {
+                "path": "this.props.params.items"
+              },
+              "transforms": [
+                {
+                  "code": "\treturn str(60 + ( 30 * len(value) )) + \"px\"",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          },
+          "props.params.items": {
+            "binding": {
+              "config": {
+                "expression": "if({view.params.isUpdateEvent}, {view.custom.eventFacilitators}, {view.custom.blankArray})"
+              },
+              "type": "expr"
+            }
+          },
+          "props.params.options": {
+            "binding": {
+              "config": {
+                "queryPath": "Calendar/GetFacilitatorsOptions"
+              },
+              "type": "query"
+            }
+          },
+          "props.style.marginBottom": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.bottom-margin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginLeft": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.left-margin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginRight": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.right-margin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginTop": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.top-margin"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "text": "Facilitators"
+          },
+          "path": "Overview/Dashboard/TextRepeat"
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "children": [
+          {
+            "meta": {
+              "name": "VolunteersNeeded"
+            },
+            "position": {
+              "basis": "320px"
+            },
+            "propConfig": {
+              "props.params.inputValue": {
+                "binding": {
+                  "config": {
+                    "expression": "if({view.params.isUpdateEvent}, {view.custom.eventParams.volunteersNeeded}, 0)"
+                  },
+                  "type": "expr"
+                }
+              }
+            },
+            "props": {
+              "params": {
+                "subTitle": "Total Needed",
+                "title": "Volunteers*"
+              },
+              "path": "Overview/Dashboard/WholeNumberInput"
+            },
+            "type": "ia.display.view"
+          },
+          {
+            "meta": {
+              "name": "StaffNeeded"
+            },
+            "position": {
+              "basis": "320px"
+            },
+            "propConfig": {
+              "props.params.inputValue": {
+                "binding": {
+                  "config": {
+                    "expression": "if({view.params.isUpdateEvent}, {view.custom.eventParams.staffNeeded}, 0)"
+                  },
+                  "type": "expr"
+                }
+              }
+            },
+            "props": {
+              "params": {
+                "subTitle": "Total Needed",
+                "title": "Staff*"
+              },
+              "path": "Overview/Dashboard/WholeNumberInput"
+            },
+            "type": "ia.display.view"
+          }
+        ],
+        "meta": {
+          "name": "FlexContainer_Volunteers_Staff"
+        },
+        "position": {
+          "basis": "80px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.style.marginBottom": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.bottom-margin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginLeft": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.left-margin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginRight": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.right-margin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginTop": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.top-margin"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "justify": "space-between"
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "children": [
+          {
+            "meta": {
+              "name": "Volunteers"
+            },
+            "position": {
+              "basis": "300px"
+            },
+            "propConfig": {
+              "props.params.items": {
+                "binding": {
+                  "config": {
+                    "expression": "if({view.params.isUpdateEvent}, {view.custom.eventVolunteers}, {view.custom.blankArray})"
+                  },
+                  "type": "expr"
+                }
+              },
+              "props.params.options": {
+                "binding": {
+                  "config": {
+                    "queryPath": "Calendar/GetVolunteersOptions"
+                  },
+                  "type": "query"
+                }
+              }
+            },
+            "props": {
+              "params": {
+                "text": ""
+              },
+              "path": "Overview/Dashboard/TextRepeat",
+              "style": {
+                "overflow": "auto"
+              }
+            },
+            "type": "ia.display.view"
+          },
+          {
+            "meta": {
+              "name": "Staff"
+            },
+            "position": {
+              "basis": "300px"
+            },
+            "propConfig": {
+              "props.params.items": {
+                "binding": {
+                  "config": {
+                    "expression": "if({view.params.isUpdateEvent}, {view.custom.eventStaff}, {view.custom.blankArray})"
+                  },
+                  "type": "expr"
+                }
+              },
+              "props.params.options": {
+                "binding": {
+                  "config": {
+                    "queryPath": "Calendar/GetStaffOptions"
+                  },
+                  "type": "query"
+                }
+              }
+            },
+            "props": {
+              "params": {
+                "text": ""
+              },
+              "path": "Overview/Dashboard/TextRepeat"
+            },
+            "type": "ia.display.view"
+          }
+        ],
+        "meta": {
+          "name": "FlexContainer_Volunteers_Staff_Assigned"
+        },
+        "propConfig": {
+          "custom.staffAssignedNum": {
+            "binding": {
+              "config": {
+                "path": "./Staff.props.params.items"
+              },
+              "transforms": [
+                {
+                  "code": "\treturn len(value)",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          },
+          "custom.volunteersAssignedNum": {
+            "binding": {
+              "config": {
+                "path": "./Volunteers.props.params.items"
+              },
+              "transforms": [
+                {
+                  "code": "\treturn len(value)",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          },
+          "position.basis": {
+            "binding": {
+              "config": {
+                "expression": "If({this.custom.volunteersAssignedNum} \u003e {this.custom.staffAssignedNum},\r\nconcat(toStr(60 + ({this.custom.volunteersAssignedNum} * 30)), \"px\"),\r\nconcat(toStr(60 + ({this.custom.staffAssignedNum} * 30)), \"px\"))"
+              },
+              "type": "expr"
+            }
+          },
+          "props.style.marginBottom": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.bottom-margin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginLeft": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.left-margin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginRight": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.right-margin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginTop": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.top-margin"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "justify": "space-between"
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "meta": {
+          "name": "RepeatType"
+        },
+        "position": {
+          "basis": "120px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.SelectedValue": {
+            "binding": {
+              "config": {
+                "expression": "if({view.params.isUpdateEvent}, {view.custom.eventParams.frequency}, \"once\")"
+              },
+              "type": "expr"
+            },
+            "onChange": {
+              "enabled": null,
+              "script": "\tself.parent.getChild(\"DateRange\").getChild(\"StartDate\").updateDate()"
+            }
+          },
+          "props.params.interval": {
+            "binding": {
+              "config": {
+                "expression": "if({view.params.isUpdateEvent}, {view.custom.eventParams.interval}, 1)"
+              },
+              "type": "expr"
+            }
+          },
+          "props.style.marginBottom": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.bottom-margin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginLeft": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.left-margin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginRight": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.right-margin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginTop": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.top-margin"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "path": "Overview/Dashboard/FreqSelector",
+          "style": {
+            "overflow": "visible"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "DaysOfWeek"
+        },
+        "position": {
+          "basis": "80px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "position.display": {
+            "binding": {
+              "config": {
+                "path": "../RepeatType.props.params.SelectedValue"
+              },
+              "transforms": [
+                {
+                  "fallback": false,
+                  "inputType": "scalar",
+                  "mappings": [
+                    {
+                      "input": "weekly",
+                      "output": true
+                    }
+                  ],
+                  "outputType": "scalar",
+                  "type": "map"
+                }
+              ],
+              "type": "property"
+            }
+          },
+          "props.params.Friday": {
+            "binding": {
+              "config": {
+                "expression": "if({view.params.isUpdateEvent}, {view.custom.eventParams.friday}, False)"
+              },
+              "type": "expr"
+            }
+          },
+          "props.params.Monday": {
+            "binding": {
+              "config": {
+                "expression": "if({view.params.isUpdateEvent}, {view.custom.eventParams.monday}, False)"
+              },
+              "type": "expr"
+            }
+          },
+          "props.params.Saturday": {
+            "binding": {
+              "config": {
+                "expression": "if({view.params.isUpdateEvent}, {view.custom.eventParams.saturday}, False)"
+              },
+              "type": "expr"
+            }
+          },
+          "props.params.Sunday": {
+            "binding": {
+              "config": {
+                "expression": "if({view.params.isUpdateEvent}, {view.custom.eventParams.sunday}, False)"
+              },
+              "type": "expr"
+            }
+          },
+          "props.params.Thursday": {
+            "binding": {
+              "config": {
+                "expression": "if({view.params.isUpdateEvent}, {view.custom.eventParams.thursday}, False)"
+              },
+              "type": "expr"
+            }
+          },
+          "props.params.Tuesday": {
+            "binding": {
+              "config": {
+                "expression": "if({view.params.isUpdateEvent}, {view.custom.eventParams.tuesday}, False)"
+              },
+              "type": "expr"
+            }
+          },
+          "props.params.Wednesday": {
+            "binding": {
+              "config": {
+                "expression": "if({view.params.isUpdateEvent}, {view.custom.eventParams.wednesday}, False)"
+              },
+              "type": "expr"
+            }
+          },
+          "props.style.marginBottom": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.bottom-margin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginLeft": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.left-margin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginRight": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.right-margin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginTop": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.top-margin"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "text": "Every..."
+          },
+          "path": "Overview/Dashboard/DaysOfWeekInput",
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "YearlyRepeatInput"
+        },
+        "position": {
+          "basis": "100px"
+        },
+        "propConfig": {
+          "position.display": {
+            "binding": {
+              "config": {
+                "path": "../RepeatType.props.params.SelectedValue"
+              },
+              "transforms": [
+                {
+                  "fallback": false,
+                  "inputType": "scalar",
+                  "mappings": [
+                    {
+                      "input": "yearly",
+                      "output": true
+                    }
+                  ],
+                  "outputType": "scalar",
+                  "type": "map"
+                }
+              ],
+              "type": "property"
+            }
+          },
+          "props.params.bymonthday": {
+            "binding": {
+              "config": {
+                "expression": "if({view.params.isUpdateEvent}, {view.custom.eventParams.bymonthday}, 1)"
+              },
+              "type": "expr"
+            },
+            "onChange": {
+              "enabled": null,
+              "script": "\tself.parent.getChild(\"DateRange\").getChild(\"StartDate\").updateDate()"
+            }
+          },
+          "props.params.bysetpos": {
+            "binding": {
+              "config": {
+                "expression": "if({view.params.isUpdateEvent} \u0026 !isNull({view.custom.eventParams.bysetpos}), {view.custom.eventParams.bysetpos}, 1)"
+              },
+              "type": "expr"
+            }
+          },
+          "props.params.byweekday": {
+            "binding": {
+              "config": {
+                "path": "view.custom.eventParams.byweekday"
+              },
+              "transforms": [
+                {
+                  "code": "\tif self.view.params.isUpdateEvent and value is not None:\n\t\treturn value\n\treturn [\u0027mo\u0027]",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          },
+          "props.params.repeatType": {
+            "binding": {
+              "config": {
+                "expression": "if({view.params.isUpdateEvent}, {view.custom.eventParams.yearlyType}, \"yearlydate\")"
+              },
+              "type": "expr"
+            },
+            "onChange": {
+              "enabled": null,
+              "script": "\tself.parent.getChild(\"DateRange\").getChild(\"StartDate\").updateDate()"
+            }
+          },
+          "props.params.yearlyDate_bymonth": {
+            "binding": {
+              "config": {
+                "expression": "if({view.params.isUpdateEvent} \u0026 ! isNULL({view.custom.eventParams.bymonth}), {view.custom.eventParams.bymonth}, 1)"
+              },
+              "type": "expr"
+            },
+            "onChange": {
+              "enabled": null,
+              "script": "\tself.parent.getChild(\"DateRange\").getChild(\"StartDate\").updateDate()"
+            }
+          },
+          "props.params.yearlyDay_bymonth": {
+            "binding": {
+              "config": {
+                "expression": "if({view.params.isUpdateEvent} \u0026 ! isNULL({view.custom.eventParams.bymonth}), {view.custom.eventParams.bymonth}, 1)"
+              },
+              "type": "expr"
+            }
+          },
+          "props.style.marginBottom": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.bottom-margin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginLeft": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.left-margin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginRight": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.right-margin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginTop": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.top-margin"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "path": "Overview/Dashboard/YearlyRepeatInput"
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "MonthlyRepeatInput"
+        },
+        "position": {
+          "basis": "100px"
+        },
+        "propConfig": {
+          "position.display": {
+            "binding": {
+              "config": {
+                "path": "../RepeatType.props.params.SelectedValue"
+              },
+              "transforms": [
+                {
+                  "fallback": false,
+                  "inputType": "scalar",
+                  "mappings": [
+                    {
+                      "input": "monthly",
+                      "output": true
+                    }
+                  ],
+                  "outputType": "scalar",
+                  "type": "map"
+                }
+              ],
+              "type": "property"
+            }
+          },
+          "props.params.bymonthday": {
+            "binding": {
+              "config": {
+                "expression": "if({view.params.isUpdateEvent}, {view.custom.eventParams.bymonthday}, 1)"
+              },
+              "type": "expr"
+            },
+            "onChange": {
+              "enabled": null,
+              "script": "\tself.parent.getChild(\"DateRange\").getChild(\"StartDate\").updateDate()"
+            }
+          },
+          "props.params.bysetpos": {
+            "binding": {
+              "config": {
+                "expression": "if({view.params.isUpdateEvent} \u0026 !isNull({view.custom.eventParams.bysetpos}), {view.custom.eventParams.bysetpos}, 1)"
+              },
+              "type": "expr"
+            }
+          },
+          "props.params.byweekday": {
+            "binding": {
+              "config": {
+                "path": "view.custom.eventParams.byweekday"
+              },
+              "transforms": [
+                {
+                  "code": "\tif self.view.params.isUpdateEvent and value is not None:\n\t\treturn value\n\treturn [\u0027mo\u0027]",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          },
+          "props.params.repeatType": {
+            "binding": {
+              "config": {
+                "expression": "if({view.params.isUpdateEvent}, {view.custom.eventParams.monthlyType}, \"monthlydate\")"
+              },
+              "type": "expr"
+            },
+            "onChange": {
+              "enabled": null,
+              "script": "\tself.parent.getChild(\"DateRange\").getChild(\"StartDate\").updateDate()"
+            }
+          },
+          "props.style.marginBottom": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.bottom-margin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginLeft": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.left-margin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginRight": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.right-margin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginTop": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.top-margin"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "path": "Overview/Dashboard/MonthlyRepeatInput"
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "children": [
+          {
+            "meta": {
+              "name": "StartDate"
+            },
+            "position": {
+              "basis": "150px"
+            },
+            "propConfig": {
+              "props.params.inputDate": {
+                "binding": {
+                  "config": {
+                    "expression": "if({view.params.isUpdateEvent}, {view.custom.eventParams.startDate}, now(0))"
+                  },
+                  "type": "expr"
+                },
+                "onChange": {
+                  "enabled": null,
+                  "script": "\tendDate \u003d self.getSibling(\"EndDate\").props.params.inputDate\n\tstartDate \u003d currentValue.value\n\t\n\tif system.date.isAfter(startDate, endDate):\n\t\tself.getSibling(\"EndDate\").props.params.inputDate \u003d startDate"
+                }
+              }
+            },
+            "props": {
+              "params": {
+                "text": "Start Date"
+              },
+              "path": "Overview/Dashboard/DateInput"
+            },
+            "scripts": {
+              "customMethods": [
+                {
+                  "name": "updateDate",
+                  "params": [],
+                  "script": "\t#system.perspective.print(\"started\")\n\t\n\ttry:\n\t\t#initialize variables that determine flow\n\t\trepeatType \u003d self.parent.parent.getChild(\"RepeatType\").props.params.SelectedValue\n\t\tyearlyType \u003d self.parent.parent.getChild(\"YearlyRepeatInput\").props.params.repeatType\n\t\tmonthlyType \u003d self.parent.parent.getChild(\"MonthlyRepeatInput\").props.params.repeatType\n\t\n\t\t#initialize variables about current moment\n\t\tnow \u003d system.date.now()\n\t\tcurrentYear \u003d system.date.getYear(now)\n\texcept:\n\t\tpass\n\t\n\t#if the current repeat selection is yearlydate\n\tif repeatType \u003d\u003d \"yearly\" and yearlyType \u003d\u003d \u0027yearlydate\u0027:\n\t\t\n\t\t#initialize variables with new date info\n\t\tnewMonthNum \u003d self.parent.parent.getChild(\"YearlyRepeatInput\").props.params.yearlyDate_bymonth - 1\n\t\tnewDayNum \u003d self.parent.parent.getChild(\"YearlyRepeatInput\").props.params.bymonthday\n\t\t\n\t\t#make a new date. If the new date is before the current moment, add a year\n\t\tnewDate \u003d system.date.getDate(currentYear, newMonthNum, newDayNum)\n\t\tif system.date.isBefore(newDate, now):\n\t\t\tnewDate \u003d system.date.addYears(newDate, 1)\n\t\t\n\t\t#set new date to the start date selector object\n\t\tself.props.params.inputDate \u003d newDate\n\t\n\telif repeatType \u003d\u003d \u0027monthly\u0027 and monthlyType \u003d\u003d \u0027monthlydate\u0027:\n\t\n\t\t#initialize variables with new date info\n\t\tnewDayNum \u003d self.parent.parent.getChild(\"MonthlyRepeatInput\").props.params.bymonthday\n\t\t\n\t\t#make a new date. If the new date is before the current moment, add a month\n\t\tcurrentMonth \u003d system.date.getMonth(now)\n\t\tnewDate \u003d system.date.getDate(currentYear, currentMonth, newDayNum)\n\t\tif system.date.isBefore(newDate, now):\n\t\t\tnewDate \u003d system.date.addMonths(newDate, 1)\n\t\t\n\t\t#set new date to the start and end date selector objects\n\t\tself.props.params.inputDate \u003d self.getSibling(\"EndDate\").props.params.inputDate \u003d newDate"
+                }
+              ],
+              "extensionFunctions": null,
+              "messageHandlers": []
+            },
+            "type": "ia.display.view"
+          },
+          {
+            "meta": {
+              "name": "EndDate"
+            },
+            "position": {
+              "basis": "150px"
+            },
+            "propConfig": {
+              "props.params.inputDate": {
+                "binding": {
+                  "config": {
+                    "expression": "if({view.params.isUpdateEvent}, {view.custom.eventParams.endDate}, now(0))"
+                  },
+                  "type": "expr"
+                },
+                "onChange": {
+                  "enabled": null,
+                  "script": "\tstartDate \u003d self.getSibling(\"StartDate\").props.params.inputDate\n\tendDate \u003d currentValue.value\n\t\t\n\tif system.date.isAfter(startDate, endDate):\n\t\tself.getSibling(\"StartDate\").props.params.inputDate \u003d endDate"
+                }
+              }
+            },
+            "props": {
+              "params": {
+                "text": "End Date"
+              },
+              "path": "Overview/Dashboard/DateInput"
+            },
+            "type": "ia.display.view"
+          }
+        ],
+        "meta": {
+          "name": "DateRange"
+        },
+        "position": {
+          "basis": "100px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.style.marginBottom": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.bottom-margin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginLeft": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.left-margin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginRight": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.right-margin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginTop": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.top-margin"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "meta": {
+          "name": "TimeRange"
+        },
+        "position": {
+          "basis": "110px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.endTime": {
+            "binding": {
+              "config": {
+                "expression": "if({view.params.isUpdateEvent}, {view.custom.eventParams.endDate}, dateArithmetic(now(0), 1, \"hour\"))"
+              },
+              "type": "expr"
+            }
+          },
+          "props.params.startTime": {
+            "binding": {
+              "config": {
+                "expression": "if({view.params.isUpdateEvent}, {view.custom.eventParams.startDate}, now(0))"
+              },
+              "type": "expr"
+            },
+            "onChange": {
+              "enabled": null,
+              "script": "\t\"\"\"endTime \u003d self.props.params.endTime\n\tendHour \u003d system.date.getHour24(endTime)\n\tendMinute \u003d system.date.getMinute(endTime)\n\tendSecond \u003d system.date.getSecond(endTime)\n\t\n\tstartTime \u003d currentValue\n\tstartHour \u003d system.date.getHour24(startTime)\n\tstartMinute \u003d system.date.getMinute(startTime)\n\tstartSecond \u003d system.date.getSecond(startTime)\n\t\n\tcompareDate \u003d system.date.getDate(2020, 0, 1)\n\tsystem.date.setTime(date, endHour, endMinute, endSecond)\"\"\"\n\t\n\tendTime \u003d self.props.params.endTime\n\tstartTime \u003d currentValue.value\n\t\n\tendHour \u003d system.date.getHour24(endTime)\n\tstartHour \u003d system.date.getHour24(startTime)\n\t\n\tendMinute \u003d system.date.getMinute(endTime)\n\tstartMinute \u003d system.date.getMinute(startTime)\n\t\n\tendSecond \u003d system.date.getSecond(endTime)\n\tstartSecond \u003d system.date.getSecond(startTime)\n\t\n\tnow \u003d system.date.now()\n\tcompare_endDate \u003d system.date.setTime(now, endHour, endMinute, endSecond)\n\tcompare_startDate \u003d system.date.setTime(now, startHour, startMinute, startSecond)\n\t\n\tendDate \u003d self.parent.getChild(\"DateRange\").getChild(\"EndDate\").props.params.inputDate\n\tstartDate \u003d self.parent.getChild(\"DateRange\").getChild(\"StartDate\").props.params.inputDate\n\t\n\tsystem.perspective.print(system.date.daysBetween(endDate, startDate))\n\tif system.date.daysBetween(endDate, startDate) \u003e\u003d 0 and system.date.isAfter(compare_startDate, compare_endDate):\n\t\tself.props.params.endTime \u003d system.date.addHours(startTime, 1)"
+            }
+          },
+          "props.style.marginBottom": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.bottom-margin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginLeft": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.left-margin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginRight": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.right-margin"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.marginTop": {
+            "binding": {
+              "config": {
+                "path": "parent.custom.top-margin"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "text": "Time"
+          },
+          "path": "Overview/Dashboard/TimeRangeInput"
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "children": [
+          {
+            "events": {
+              "component": {
+                "onActionPerformed": [
+                  {
+                    "config": {
+                      "script": "\t\t\n\t#define variables that will be used for the start and end dateTime\n\tstartTime \u003d self.parent.parent.getChild(\"TimeRange\").props.params.startTime\n\tstartHour \u003d system.date.getHour24(startTime)\n\tstartMinute \u003d system.date.getMinute(startTime)\n\tstartSecond \u003d system.date.getSecond(startTime)\n\tstartDate \u003d self.parent.parent.getChild(\"DateRange\").getChild(\"StartDate\").props.params.inputDate\n\tstartYear \u003d system.date.getYear(startDate)\n\tstartMonth \u003d system.date.getMonth(startDate)\n\tendTime \u003d self.parent.parent.getChild(\"TimeRange\").props.params.endTime\n\tendHour \u003d system.date.getHour24(endTime)\n\tendMinute \u003d system.date.getMinute(endTime)\n\tendSecond \u003d system.date.getSecond(endTime)\n\tendDate \u003d self.parent.parent.getChild(\"DateRange\").getChild(\"EndDate\").props.params.inputDate\n\t\n\t#Initialize all of the event params\n\teventParams \u003d {\n\t\"allDay\": False,\n\t\"audienceMen\": self.parent.parent.getChild(\"Audience\").props.params.Men,\n\t\"audienceMinors\": self.parent.parent.getChild(\"Audience\").props.params.Minors,\n\t\"audienceParticipants\": self.parent.parent.getChild(\"Audience\").props.params.Participants,\n\t\"audienceStaff\": self.parent.parent.getChild(\"Audience\").props.params.Staff,\n\t\"audienceVolunteers\": self.parent.parent.getChild(\"Audience\").props.params.Volunteers,\n\t\"audienceWomen\": self.parent.parent.getChild(\"Audience\").props.params.Women,\n\t\"category\": self.parent.parent.getChild(\"EventCategory\").props.params.Category,\n\t\"description\": self.parent.parent.getChild(\"Description\").props.params.inputText,\n\t\"room\": self.parent.parent.getChild(\"FlexContainer Location\").getChild(\"Room\").props.params.inputText,\n\t\"staffNeeded\": self.parent.parent.getChild(\"FlexContainer_Volunteers_Staff\").getChild(\"StaffNeeded\").props.params.inputValue,\n\t\"subCategory\": self.parent.parent.getChild(\"Subcategory\").props.params.Subcategory,\n\t\"title\": self.parent.parent.getChild(\"Title\").props.params.inputText,\n\t\"venue\": self.parent.parent.getChild(\"FlexContainer Location\").getChild(\"Venue\").props.params.inputText,\n\t\"volunteersNeeded\": self.parent.parent.getChild(\"FlexContainer_Volunteers_Staff\").getChild(\"VolunteersNeeded\").props.params.inputValue,\n\t\"interval\": self.parent.parent.getChild(\"RepeatType\").props.params.interval,\n\t\"freq\": self.parent.parent.getChild(\"RepeatType\").props.params.SelectedValue,\n\t\n\t#Initialize the start and end dateTimes using the input dates and times. These dates will be updated for monthly and yearly repeating events\n\t\"startDate\": system.date.setTime(startDate, startHour, startMinute, startSecond),\n\t\"endDate\": system.date.setTime(endDate, endHour, endMinute, endSecond),\n\t\n\t#initialize other variables to default values. These values will be updated for some repeating events\n\t\"monday\": False,\n\t\"tuesday\": False,\n\t\"wednesday\": False,\n\t\"thursday\": False,\n\t\"friday\": False,\n\t\"saturday\": False,\n\t\"sunday\": False,\n\t\"bymonth\": None,\n\t\"bysetpos\": None\n\t}\n\t\n\t#weekly\n\tif eventParams[\u0027freq\u0027] \u003d\u003d \u0027weekly\u0027:\n\t\teventParams[\u0027monday\u0027] \u003d self.parent.parent.getChild(\"DaysOfWeek\").props.params.Monday\n\t\teventParams[\u0027tuesday\u0027] \u003d self.parent.parent.getChild(\"DaysOfWeek\").props.params.Tuesday\n\t\teventParams[\u0027wednesday\u0027] \u003d self.parent.parent.getChild(\"DaysOfWeek\").props.params.Wednesday\n\t\teventParams[\u0027thursday\u0027] \u003d self.parent.parent.getChild(\"DaysOfWeek\").props.params.Thursday\n\t\teventParams[\u0027friday\u0027] \u003d self.parent.parent.getChild(\"DaysOfWeek\").props.params.Friday\n\t\teventParams[\u0027saturday\u0027] \u003d self.parent.parent.getChild(\"DaysOfWeek\").props.params.Saturday\n\t\teventParams[\u0027sunday\u0027] \u003d self.parent.parent.getChild(\"DaysOfWeek\").props.params.Sunday\n\t\n\t#monthly\n\telif eventParams[\u0027freq\u0027] \u003d\u003d \u0027monthly\u0027:\n\t\trepeatType \u003d self.parent.parent.getChild(\"MonthlyRepeatInput\").props.params.repeatType\n\t\t\n\t\t#monthlydate\n\t\tif repeatType \u003d\u003d \u0027monthlydate\u0027:\n\t\t\t#Update the day of the START DATE they selected with the day they picked in the monthly section\n\t\t\tbymonthday \u003d self.parent.parent.getChild(\"MonthlyRepeatInput\").props.params.bymonthday\n\t\t\teventParams[\u0027startDate\u0027] \u003d system.date.setTime(system.date.getDate(startYear, startMonth, bymonthday), startHour, startMinute, startSecond)\n\t\t\n\t\t#monthlyday\n\t\telif repeatType \u003d\u003d \u0027monthlyday\u0027:\n\t\t\tbyweekday \u003d self.parent.parent.getChild(\"MonthlyRepeatInput\").props.params.byweekday\n\t\t\teventParams[\u0027monday\u0027] \u003d \u0027mo\u0027 in byweekday\n\t\t\teventParams[\u0027tuesday\u0027] \u003d \u0027tu\u0027 in byweekday\n\t\t\teventParams[\u0027wednesday\u0027] \u003d \u0027we\u0027 in byweekday\n\t\t\teventParams[\u0027thursday\u0027] \u003d \u0027th\u0027 in byweekday\n\t\t\teventParams[\u0027friday\u0027] \u003d \u0027fr\u0027 in byweekday\n\t\t\teventParams[\u0027saturday\u0027] \u003d \u0027sa\u0027 in byweekday\n\t\t\teventParams[\u0027sunday\u0027] \u003d \u0027su\u0027 in byweekday\n\t\t\teventParams[\u0027bysetpos\u0027] \u003d self.parent.parent.getChild(\"MonthlyRepeatInput\").props.params.bysetpos\t\t\t\n\t\t\n\t#yearly\n\telif eventParams[\u0027freq\u0027] \u003d\u003d \u0027yearly\u0027:\n\t\trepeatType \u003d self.parent.parent.getChild(\"YearlyRepeatInput\").props.params.repeatType\n\t\t\n\t\t#yearlydate\n\t\tif repeatType \u003d\u003d \u0027yearlydate\u0027:\n\t\t\t#Update the day of the START DATE they selected with the day they picked in the yearly section\n\t\t\tbymonthday \u003d self.parent.parent.getChild(\"YearlyRepeatInput\").props.params.bymonthday\n\t\t\tbymonth \u003d self.parent.parent.getChild(\"YearlyRepeatInput\").props.params.yearlyDate_bymonth\n\t\t\teventParams[\u0027startDate\u0027] \u003d system.date.setTime(system.date.getDate(startYear, bymonth - 1, bymonthday), startHour, startMinute, startSecond)\n\t\t\n\t\t#yearlyday\n\t\telif repeatType \u003d\u003d \u0027yearlyday\u0027:\n\t\t\tbyweekday \u003d self.parent.parent.getChild(\"YearlyRepeatInput\").props.params.byweekday\n\t\t\teventParams[\u0027monday\u0027] \u003d \u0027mo\u0027 in byweekday\n\t\t\teventParams[\u0027tuesday\u0027] \u003d \u0027tu\u0027 in byweekday\n\t\t\teventParams[\u0027wednesday\u0027] \u003d \u0027we\u0027 in byweekday\n\t\t\teventParams[\u0027thursday\u0027] \u003d \u0027th\u0027 in byweekday\n\t\t\teventParams[\u0027friday\u0027] \u003d \u0027fr\u0027 in byweekday\n\t\t\teventParams[\u0027saturday\u0027] \u003d \u0027sa\u0027 in byweekday\n\t\t\teventParams[\u0027sunday\u0027] \u003d \u0027su\u0027 in byweekday\n\t\t\teventParams[\u0027bysetpos\u0027] \u003d self.parent.parent.getChild(\"YearlyRepeatInput\").props.params.bysetpos\n\t\t\teventParams[\u0027bymonth\u0027] \u003d self.parent.parent.getChild(\"YearlyRepeatInput\").props.params.yearlyDay_bymonth\n\t\t\teventParams[\u0027startDate\u0027] \u003d system.date.setTime(system.date.getDate(startYear, startMonth, 1), startHour, startMinute, startSecond)\n\t\n\t#get the facilitators, volunteers, and staff\n\tfacilitators \u003d self.parent.parent.getChild(\"Facilitators\").props.params.items\n\tvolunteers \u003d self.parent.parent.getChild(\"FlexContainer_Volunteers_Staff_Assigned\").getChild(\"Volunteers\").props.params.items\n\tstaff \u003d self.parent.parent.getChild(\"FlexContainer_Volunteers_Staff_Assigned\").getChild(\"Staff\").props.params.items\n\t\n\t#if we are updating an existing event\n\tif self.view.params.isUpdateEvent:\n\t\t#get the event id\n\t\teventID \u003d eventParams[\u0027eventID\u0027] \u003d self.view.params.eventId\n\t\t\n\t\t#update the event\n\t\tsystem.db.runNamedQuery(\"Calendar/UpdateEvent\", eventParams)\n\t\t\n\t\t# delete the facilitators, volunteers, and staff\n\t\tsystem.db.runNamedQuery(\"Calendar/DeleteEventFacilitators\", {\u0027eventID\u0027: eventID})\n\t\tsystem.db.runNamedQuery(\"Calendar/DeleteEventStaff\", {\u0027eventID\u0027: eventID})\n\t\tsystem.db.runNamedQuery(\"Calendar/DeleteEventVolunteers\", {\u0027eventID\u0027: eventID})\n\t\t\n\t\t# add the facilitators, volunteers and staff by looping through the elements\n\t\tfor f in facilitators:\n\t\t\tfacilitatorID \u003d f[\u0027id\u0027]\n\t\t\tsystem.db.runNamedQuery(\"Calendar/AddFacilitator\", {\u0027eventID\u0027: eventID, \u0027facilitatorID\u0027: facilitatorID})\n\t\t\tsystem.perspective.print(\u0027facilitatorID: \u0027 + str(facilitatorID), \u0027eventID: \u0027 + str(eventID))\n\t\t\t\n\t\tfor v in volunteers:\n\t\t\tvolunteerID \u003d v[\u0027id\u0027]\n\t\t\tsystem.db.runNamedQuery(\"Calendar/AddVolunteer\", {\u0027eventID\u0027: eventID, \u0027volunteerID\u0027: volunteerID})\n\t\t\t\n\t\tfor s in staff:\n\t\t\tstaffID \u003d s[\u0027id\u0027]\n\t\t\tsystem.db.runNamedQuery(\"Calendar/AddStaff\", {\u0027eventID\u0027: eventID, \u0027staffID\u0027: staffID})\n\t\t\n\telse:\n\t\t#add the event\n\t\teventID \u003d system.db.runNamedQuery(\"Calendar/AddEvent\", eventParams)\n\t\tsystem.perspective.print(eventID)\n\t\t\t\n\t\t# add the facilitators, volunteers and staff by looping through the elements\n\t\tfor f in facilitators:\n\t\t\tfacilitatorID \u003d f[\u0027id\u0027]\n\t\t\tsystem.db.runNamedQuery(\"Calendar/AddFacilitator\", {\u0027eventID\u0027: eventID, \u0027facilitatorID\u0027: facilitatorID})\n\t\t\n\t\tfor v in volunteers:\n\t\t\tvolunteerID \u003d v[\u0027id\u0027]\n\t\t\tsystem.db.runNamedQuery(\"Calendar/AddVolunteer\", {\u0027eventID\u0027: eventID, \u0027volunteerID\u0027: volunteerID})\n\t\t\n\t\tfor s in staff:\n\t\t\tstaffID \u003d s[\u0027id\u0027]\n\t\t\tsystem.db.runNamedQuery(\"Calendar/AddStaff\", {\u0027eventID\u0027: eventID, \u0027staffID\u0027: staffID})\n\t\n\t#send a message that will reload the events in the calendar\n\tpayload \u003d None\n\tsystem.perspective.sendMessage(\u0027CreateCalendarEvent\u0027, payload, scope \u003d \u0027session\u0027)"
+                    },
+                    "scope": "G",
+                    "type": "script"
+                  },
+                  {
+                    "config": {
+                      "id": "AddEvent",
+                      "type": "close"
+                    },
+                    "scope": "C",
+                    "type": "dock"
+                  }
+                ]
+              }
+            },
+            "meta": {
+              "name": "Create_Btn"
+            },
+            "position": {
+              "basis": "150px"
+            },
+            "propConfig": {
+              "props.text": {
+                "binding": {
+                  "config": {
+                    "expression": "If({view.params.isUpdateEvent}, \"Update\", \"Create\")"
+                  },
+                  "type": "expr"
+                }
+              }
+            },
+            "props": {
+              "style": {
+                "classes": "Buttons/Main",
+                "marginLeft": 20,
+                "marginRight": 20
+              }
+            },
+            "type": "ia.input.button"
+          },
+          {
+            "events": {
+              "component": {
+                "onActionPerformed": {
+                  "config": {
+                    "id": "AddEvent",
+                    "type": "close"
+                  },
+                  "scope": "C",
+                  "type": "dock"
+                }
+              }
+            },
+            "meta": {
+              "name": "Cancel_Btn"
+            },
+            "position": {
+              "basis": "150px"
+            },
+            "props": {
+              "style": {
+                "classes": "Buttons/Btn_Orange_Smooth",
+                "marginLeft": 20,
+                "marginRight": 20
+              },
+              "text": "Cancel"
+            },
+            "type": "ia.input.button"
+          },
+          {
+            "events": {
+              "component": {
+                "onActionPerformed": [
+                  {
+                    "config": {
+                      "script": "\t\n\tsystem.db.runNamedQuery(\"Calendar/DeleteEvent\", {\u0027eventID\u0027: self.view.params.eventId})\n\t\n\t#send a message that will reload the events in the calendar\n\tpayload \u003d None\n\tsystem.perspective.sendMessage(\u0027CreateCalendarEvent\u0027, payload, scope \u003d \u0027session\u0027)"
+                    },
+                    "scope": "G",
+                    "type": "script"
+                  },
+                  {
+                    "config": {
+                      "id": "AddEvent",
+                      "type": "close"
+                    },
+                    "scope": "C",
+                    "type": "dock"
+                  }
+                ]
+              }
+            },
+            "meta": {
+              "name": "Delete_Btn"
+            },
+            "position": {
+              "basis": "150px"
+            },
+            "propConfig": {
+              "meta.visible": {
+                "binding": {
+                  "config": {
+                    "path": "view.params.isUpdateEvent"
+                  },
+                  "type": "property"
+                }
+              }
+            },
+            "props": {
+              "style": {
+                "classes": "Buttons/Delete",
+                "marginLeft": 20,
+                "marginRight": 20
+              },
+              "text": "Delete"
+            },
+            "type": "ia.input.button"
+          }
+        ],
+        "meta": {
+          "name": "FlexContainer Buttons"
+        },
+        "position": {
+          "basis": "60px",
+          "shrink": 0
+        },
+        "props": {
+          "alignContent": "center",
+          "style": {
+            "borderBottomColor": "#e6e6e6",
+            "borderBottomStyle": "solid",
+            "borderBottomWidth": 1,
+            "paddingBottom": "20px",
+            "paddingTop": "5px"
+          }
+        },
+        "type": "ia.container.flex"
+      }
+    ],
+    "custom": {
+      "bottom-margin": "5px",
+      "left-margin": "25px",
+      "right-margin": "25px",
+      "top-margin": "5px"
+    },
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column",
+      "style": {
+        "classes": "Background/Default"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

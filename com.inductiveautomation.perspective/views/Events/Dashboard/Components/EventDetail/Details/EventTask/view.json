@@ -1,0 +1,242 @@
+{
+  "custom": {
+    "dataset": {
+      "$": [
+        "ds",
+        192,
+        1620494431279
+      ],
+      "$columns": [
+        {
+          "data": [],
+          "name": "id",
+          "type": "Integer"
+        },
+        {
+          "data": [],
+          "name": "instanceID",
+          "type": "Integer"
+        },
+        {
+          "data": [],
+          "name": "task",
+          "type": "String"
+        },
+        {
+          "data": [],
+          "name": "completed",
+          "type": "Boolean"
+        }
+      ]
+    }
+  },
+  "params": {
+    "taskID": 39
+  },
+  "propConfig": {
+    "custom.dataset": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "taskID": "{view.params.taskID}"
+          },
+          "queryPath": "Calendar/EventInstanceTask/GetTaskByID"
+        },
+        "type": "query"
+      },
+      "persistent": true
+    },
+    "params.taskID": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 46,
+      "width": 314
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "events": {
+          "dom": {
+            "onClick": {
+              "config": {
+                "script": "\tsystem.db.runNamedQuery(\"Calendar/EventInstanceTask/UpdateTask\",{\u0027taskID\u0027 : self.view.params.taskID,\u0027task\u0027 : self.view.custom.dataset.getValueAt(0,\"task\") ,\u0027completed\u0027 : not self.view.custom.dataset.getValueAt(0,\"completed\") })\n\tself.view.refreshBinding(\"custom.dataset\")\n\t"
+              },
+              "scope": "G",
+              "type": "script"
+            }
+          }
+        },
+        "meta": {
+          "name": "Icon"
+        },
+        "position": {
+          "basis": "25px"
+        },
+        "propConfig": {
+          "custom.selected": {
+            "binding": {
+              "config": {
+                "path": "view.custom.dataset"
+              },
+              "transforms": [
+                {
+                  "code": "\treturn value.getValueAt(0,\"completed\")",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          },
+          "props.color": {
+            "binding": {
+              "config": {
+                "expression": "if({this.custom.selected},\"#0c4e8b\",\"#A1BAD2BF\")"
+              },
+              "type": "expr"
+            }
+          },
+          "props.path": {
+            "binding": {
+              "config": {
+                "path": "this.custom.selected"
+              },
+              "transforms": [
+                {
+                  "fallback": null,
+                  "inputType": "scalar",
+                  "mappings": [
+                    {
+                      "input": true,
+                      "output": "material/check_circle"
+                    },
+                    {
+                      "input": false,
+                      "output": "material/radio_button_unchecked"
+                    }
+                  ],
+                  "outputType": "scalar",
+                  "type": "map"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "type": "ia.display.icon"
+      },
+      {
+        "events": {
+          "dom": {
+            "onBlur": {
+              "config": {
+                "script": "\tsystem.db.runNamedQuery(\"Calendar/EventInstanceTask/UpdateTask\", {\u0027taskID\u0027 : self.view.params.taskID, \u0027task\u0027 : self.props.text, \u0027completed\u0027 : self.view.custom.dataset.getValueAt(0,\"completed\")})\n\tself.view.refreshBinding(\"custom.dataset\")"
+              },
+              "scope": "G",
+              "type": "script"
+            },
+            "onKeyDown": {
+              "config": {
+                "script": "\tif event.key \u003d\u003d \"Enter\" : \n\t\t#update text.\n\t\tsystem.db.runNamedQuery(\"Calendar/EventInstanceTask/UpdateTask\", {\u0027taskID\u0027 : self.view.params.taskID, \u0027task\u0027 : self.props.text, \u0027completed\u0027 : self.view.custom.dataset.getValueAt(0,\"completed\")})\n\t\tself.view.refreshBinding(\"custom.dataset\")"
+              },
+              "scope": "G",
+              "type": "script"
+            }
+          }
+        },
+        "meta": {
+          "name": "TextField"
+        },
+        "position": {
+          "basis": "150px",
+          "grow": 1
+        },
+        "propConfig": {
+          "props.text": {
+            "binding": {
+              "config": {
+                "path": "view.custom.dataset"
+              },
+              "transforms": [
+                {
+                  "code": "\treturn value.getValueAt(0,\"task\")",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "style": {
+            "classes": "Text/Add_TextArea",
+            "marginLeft": 10,
+            "marginRight": 10,
+            "marginTop": 15
+          }
+        },
+        "type": "ia.input.text-field"
+      },
+      {
+        "events": {
+          "dom": {
+            "onClick": {
+              "config": {
+                "script": "\tsystem.db.runNamedQuery(\"Calendar/EventInstanceTask/DeleteTask\",{\u0027id\u0027 : self.view.params.taskID })\n\tsystem.perspective.sendMessage(\"refreshTasks\", payload \u003d {}, scope \u003d \"session\")"
+              },
+              "scope": "G",
+              "type": "script"
+            }
+          }
+        },
+        "meta": {
+          "name": "Delete",
+          "visible": false
+        },
+        "position": {
+          "basis": "20px"
+        },
+        "props": {
+          "color": "#0C4E8B",
+          "path": "material/delete",
+          "style": {
+            "marginRight": 15
+          }
+        },
+        "type": "ia.display.icon"
+      }
+    ],
+    "events": {
+      "dom": {
+        "onMouseEnter": {
+          "config": {
+            "script": "\tself.getChild(\"Delete\").meta.visible \u003d True"
+          },
+          "scope": "G",
+          "type": "script"
+        },
+        "onMouseLeave": {
+          "config": {
+            "script": "\tself.getChild(\"Delete\").meta.visible \u003d False"
+          },
+          "scope": "G",
+          "type": "script"
+        }
+      }
+    },
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "alignItems": "center",
+      "style": {
+        "overflow": "hidden"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

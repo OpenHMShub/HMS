@@ -1,0 +1,371 @@
+{
+  "custom": {
+    "incident_type_id": [
+      "Physical Abuse"
+    ],
+    "participant_id": 847378,
+    "row_data": {},
+    "selection_data": [],
+    "staff_involved": [
+      "Amanda  Jones Fernandez"
+    ]
+  },
+  "params": {
+    "participantID": 847378
+  },
+  "propConfig": {
+    "custom.incident_type_id": {
+      "binding": {
+        "config": {
+          "path": "view.custom.row_data.row_id"
+        },
+        "transforms": [
+          {
+            "code": "\tproject \u003d \"RITI\"\n\tincident_type_id \u003d []\n\tif value \u003e -1:\n\t\trow_id\u003dself.custom.row_data.row_id\n\t\tpath \u003d \"Participants/Incidents/IncidentDetailTypeSelect\"\n\t\tparameters \u003d {\"incident_log_id\":row_id}\n\t\tresult \u003d system.db.runNamedQuery(project\u003dproject,path\u003dpath,parameters\u003dparameters, getKey\u003dTrue)\n\t\tfor row in range(result.getRowCount()):\n\t\t\tincident_type_id.append(result.getValueAt(row, \"incident_type\"))\n\n\treturn incident_type_id",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      },
+      "persistent": true
+    },
+    "custom.participant_id": {
+      "binding": {
+        "config": {
+          "path": "view.params.participantID"
+        },
+        "type": "property"
+      },
+      "persistent": true
+    },
+    "custom.row_data": {
+      "persistent": true
+    },
+    "custom.row_data.incident_date": {
+      "binding": {
+        "config": {
+          "path": "view.custom.selection_data"
+        },
+        "transforms": [
+          {
+            "code": "\tif len(value):\n\t\treturn value[0].incidentDate\n\telse:\n\t\treturn -1",
+            "type": "script"
+          },
+          {
+            "expression": "if({value}\u003d-1,now(0),{value})",
+            "type": "expression"
+          }
+        ],
+        "type": "property"
+      }
+    },
+    "custom.row_data.incident_description": {
+      "binding": {
+        "config": {
+          "path": "view.custom.selection_data"
+        },
+        "transforms": [
+          {
+            "code": "\tif len(value):\n\t\treturn value[0].incidentDescription\n\telse:\n\t\treturn \"\"",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      }
+    },
+    "custom.row_data.incident_location": {
+      "binding": {
+        "config": {
+          "path": "view.custom.selection_data"
+        },
+        "transforms": [
+          {
+            "code": "\tif len(value):\n\t\treturn value[0].incidentLocationTypeName\n\telse:\n\t\treturn \"\"",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      }
+    },
+    "custom.row_data.participant_id": {
+      "binding": {
+        "config": {
+          "path": "view.custom.selection_data"
+        },
+        "transforms": [
+          {
+            "code": "\tif len(value):\n\t\treturn value[0].participantId\n\telse:\n\t\treturn -1",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      }
+    },
+    "custom.row_data.participant_name": {
+      "binding": {
+        "config": {
+          "path": "view.custom.selection_data"
+        },
+        "transforms": [
+          {
+            "code": "\tif len(value):\n\t\treturn value[0].name\n\telse:\n\t\treturn \"\"",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      }
+    },
+    "custom.row_data.physical_injury": {
+      "binding": {
+        "config": {
+          "path": "view.custom.selection_data"
+        },
+        "transforms": [
+          {
+            "code": "\tif len(value):\n\t\tif value[0].physicalInjury:\n\t\t\treturn 1\n\t\telse:\n\t\t\treturn 0\n\telse:\n\t\treturn -1",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      }
+    },
+    "custom.row_data.property_damage": {
+      "binding": {
+        "config": {
+          "path": "view.custom.selection_data"
+        },
+        "transforms": [
+          {
+            "code": "\tif len(value):\n\t\tif value[0].propertyDamage:\n\t\t\treturn 1\n\t\telse:\n\t\t\treturn 0\n\telse:\n\t\treturn -1",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      }
+    },
+    "custom.row_data.row_id": {
+      "binding": {
+        "config": {
+          "path": "view.custom.selection_data"
+        },
+        "transforms": [
+          {
+            "code": "\tif len(value):\n\t\treturn value[0].id\n\telse:\n\t\treturn -1",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      }
+    },
+    "custom.row_data.suspension": {
+      "binding": {
+        "config": {
+          "path": "view.custom.selection_data"
+        },
+        "transforms": [
+          {
+            "code": "\tif len(value):\n\t\tif value[0].suspension:\n\t\t\treturn 1\n\t\telse:\n\t\t\treturn 0\n\telse:\n\t\treturn -1",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      }
+    },
+    "custom.selection_data": {
+      "binding": {
+        "config": {
+          "path": "/root/Table.props.params.selection_data"
+        },
+        "type": "property"
+      },
+      "persistent": true
+    },
+    "custom.staff_involved": {
+      "binding": {
+        "config": {
+          "path": "view.custom.row_data.row_id"
+        },
+        "transforms": [
+          {
+            "code": "\tproject \u003d \"RITI\"\n\tstaff_involved \u003d []\n\tif value \u003e -1:\n\t\trow_id\u003dvalue\n\t\tpath \u003d \"Participants/Incidents/IncidentDetailStaffSelect\"\n\t\tparameters \u003d {\"incident_log_id\":row_id}\n\t\tresult \u003d system.db.runNamedQuery(project\u003dproject,path\u003dpath,parameters\u003dparameters, getKey\u003dTrue)\n\t\tfor row in range(result.getRowCount()):\n\t\t\tstaff_involved.append(result.getValueAt(row, \"staff_involved_name\"))\n\n\treturn staff_involved",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      },
+      "persistent": true
+    },
+    "params.participantID": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "width": 1657
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "Display"
+        },
+        "position": {
+          "basis": "290px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.incident_type_id": {
+            "binding": {
+              "config": {
+                "path": "view.custom.incident_type_id"
+              },
+              "type": "property"
+            }
+          },
+          "props.params.row_data": {
+            "binding": {
+              "config": {
+                "path": "view.custom.row_data"
+              },
+              "type": "property"
+            }
+          },
+          "props.params.staff_involved": {
+            "binding": {
+              "config": {
+                "path": "view.custom.staff_involved"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "path": "Participants/Incidents/Dashboard/Main/Display/IncidentsDashboardDisplay",
+          "style": {
+            "classes": "ActivityCards/Card"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Label"
+        },
+        "position": {
+          "basis": "32px",
+          "display": false
+        },
+        "propConfig": {
+          "props.text": {
+            "binding": {
+              "config": {
+                "path": "session.custom.filters"
+              },
+              "transforms": [
+                {
+                  "code": "\toutput \u003d \"Incident Date: \" + str(self.session.custom.filters.incidentDashboard.incidentDate.where)\n\toutput +\u003d \", Injury: \" + str(self.session.custom.filters.incidentDashboard.injury.where)\n\toutput +\u003d \", Damage: \" + str(self.session.custom.filters.incidentDashboard.damage.where)\n\toutput +\u003d \", Suspension: \" + str(self.session.custom.filters.incidentDashboard.suspension.where)\n\t#output +\u003d \", Entered By: \" + str(self.session.custom.filters.caseNotesDashboard.EnteredBy.where)\n\t#output +\u003d \", Type: \" + str(self.session.custom.filters.caseNotesDashboard.NoteType.where)\n\toutput +\u003d \", First Name: \" + str(self.session.custom.filters.incidentDashboard.FirstName.where)\n\toutput +\u003d \", Middle Name: \" +str(self.session.custom.filters.incidentDashboard.MiddleName.where)\n\toutput +\u003d \", Last Name: \" +str(self.session.custom.filters.incidentDashboard.LastName.where)\n\toutput +\u003d \", Nick Name: \" +str(self.session.custom.filters.incidentDashboard.NickName.where)\n\n\treturn output",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "style": {
+            "classes": "Text/Error_Message"
+          }
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "meta": {
+          "name": "Filter_Row1"
+        },
+        "position": {
+          "basis": "30px",
+          "shrink": 0
+        },
+        "props": {
+          "params": {
+            "activity_range": 365
+          },
+          "path": "Participants/Incidents/Dashboard/Main/Filters/Incidents_Filter_Row1",
+          "style": {
+            "marginLeft": "40px",
+            "marginRight": "40px"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Filter_Row2"
+        },
+        "position": {
+          "basis": "30px",
+          "shrink": 0
+        },
+        "props": {
+          "path": "Participants/Incidents/Dashboard/Main/Filters/Incidents_Filter_Row2",
+          "style": {
+            "marginLeft": "40px",
+            "marginRight": "40px"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Table"
+        },
+        "position": {
+          "basis": "300px",
+          "grow": 1
+        },
+        "propConfig": {
+          "props.params.activity_range": {
+            "binding": {
+              "config": {
+                "path": "../Filter_Row1.props.params.activity_range"
+              },
+              "type": "property"
+            }
+          },
+          "props.params.participantID": {
+            "binding": {
+              "config": {
+                "path": "view.params.participantID"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "selected_row": -1,
+            "selection_data": []
+          },
+          "path": "Participants/Incidents/Dashboard/Main/Tables/IncidentTableDashboard",
+          "style": {
+            "marginLeft": 40,
+            "marginRight": 40
+          }
+        },
+        "type": "ia.display.view"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column",
+      "style": {
+        "classes": "Background/Alternative"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

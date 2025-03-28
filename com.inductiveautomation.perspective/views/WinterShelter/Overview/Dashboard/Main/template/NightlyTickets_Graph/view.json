@@ -1,0 +1,393 @@
+{
+  "custom": {},
+  "params": {
+    "seasonId": 13
+  },
+  "propConfig": {
+    "params.seasonId": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 495,
+      "width": 1600
+    },
+    "loading": {
+      "mode": "blocking"
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "children": [
+          {
+            "meta": {
+              "name": "Label"
+            },
+            "position": {
+              "basis": "99%"
+            },
+            "props": {
+              "style": {
+                "background": "linear-gradient(90deg, rgba(22,165,189,1) 0%, rgba(13,185,165,1) 100%)",
+                "classes": "Text/Add_Header"
+              },
+              "text": "Nightly Tickets",
+              "textStyle": {
+                "fontSize": 20
+              }
+            },
+            "type": "ia.display.label"
+          },
+          {
+            "events": {
+              "dom": {
+                "onClick": {
+                  "config": {
+                    "draggable": true,
+                    "id": "NightlyTickets_Graph",
+                    "modal": false,
+                    "overlayDismiss": false,
+                    "resizable": true,
+                    "showCloseIcon": true,
+                    "type": "close",
+                    "viewPath": "WinterShelter/Overview/Dashboard/Main/template/NightlyTickets_Graph",
+                    "viewportBound": false
+                  },
+                  "scope": "C",
+                  "type": "popup"
+                }
+              }
+            },
+            "meta": {
+              "name": "close"
+            },
+            "position": {
+              "basis": "40px"
+            },
+            "props": {
+              "style": {
+                "background": "linear-gradient(90deg, rgba(22,165,189,1) 0%, rgba(13,185,165,1) 100%)",
+                "cursor": "pointer",
+                "fontSize": "20px",
+                "textAlign": "center"
+              },
+              "text": "x"
+            },
+            "type": "ia.display.label"
+          }
+        ],
+        "meta": {
+          "name": "Header"
+        },
+        "position": {
+          "basis": "10%"
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "meta": {
+          "name": "FlexContainer"
+        },
+        "position": {
+          "basis": "3%"
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "children": [
+          {
+            "meta": {
+              "name": "Label"
+            },
+            "position": {
+              "basis": "32px",
+              "display": false
+            },
+            "props": {
+              "style": {
+                "classes": "KPIs/KPI_Title",
+                "paddingLeft": "10px"
+              },
+              "text": "NIGHTLY TICKETS"
+            },
+            "type": "ia.display.label"
+          },
+          {
+            "meta": {
+              "name": "LineChart_0"
+            },
+            "position": {
+              "basis": "100%",
+              "grow": 1,
+              "shrink": 0
+            },
+            "propConfig": {
+              "props.options.xaxis.group.groups": {
+                "binding": {
+                  "config": {
+                    "path": "view.params.seasonId"
+                  },
+                  "transforms": [
+                    {
+                      "code": "\tseasonId \u003d value\n\tGetYear_PerSeason \u003d system.db.runPrepQuery(\"SELECT s.id,s.Seasons  FROM shelter.Seasons s WHERE s.id \u003d \"+str(seasonId))\n\tstartYear \u003d str(GetYear_PerSeason.getValueAt(0,1)).split(\u0027-\u0027)[0]\n\tendYear \u003d str(GetYear_PerSeason.getValueAt(0,1)).split(\u0027-\u0027)[1]\n\tif(int(endYear)%4\u003d\u003d0 and int(endYear)%100!\u003d0 or int(endYear)%400\u003d\u003d0):\n\t    print(\"The year is a leap year!\")\n\t    febCol \u003d 29\n\telse:\n\t    print(\"The year isn\u0027t a leap year!\")\n\t    febCol \u003d 28\n\tgroups \u003d [{\"cols\": 30,\"title\": \"NOV\"},{\"cols\": 31,\"title\": \"DEC\"},{\"cols\": 31,\"title\": \"JAN\"},{\"cols\": febCol,\"title\": \"FEB\"},{\"cols\": 31,\"title\": \"MAR\"}]\n\treturn groups",
+                      "type": "script"
+                    }
+                  ],
+                  "type": "property"
+                }
+              },
+              "props.series": {
+                "binding": {
+                  "config": {
+                    "path": "view.params.seasonId"
+                  },
+                  "transforms": [
+                    {
+                      "code": "\tseasonId \u003d value\n\tGetYear_PerSeason \u003d system.db.runPrepQuery(\"SELECT s.id,s.Seasons  FROM shelter.Seasons s WHERE s.id \u003d \"+str(seasonId))\n\tstartYear \u003d str(GetYear_PerSeason.getValueAt(0,1)).split(\u0027-\u0027)[0]\n\tendYear \u003d str(GetYear_PerSeason.getValueAt(0,1)).split(\u0027-\u0027)[1]\n\tTicketTypes \u003d [\u0027Regular\u0027,\u0027Plus\u0027,\u0027Double Plus\u0027,\u0027If Room\u0027]\n\tseries \u003d []\n\tfor i in range(0,len(TicketTypes)):\n\t\tticketLable \u003d TicketTypes[i]\n\t\tdata \u003d []\n\t\tmonth_list \u003d {\u002711\u0027:\u0027November\u0027,\u002712\u0027:\u0027December\u0027,\u00271\u0027:\u0027January\u0027,\u00272\u0027:\u0027February\u0027,\u00273\u0027:\u0027March\u0027}\n\t\tfor month in month_list:\n\t\t\tif month in [\u002711\u0027,\u002712\u0027]:\n\t\t\t\tyear \u003d startYear\n\t\t\telse:\n\t\t\t\tyear \u003d endYear\n\t\t\tget_nightlyTickets \u003d system.db.runNamedQuery(\u0027WinterShelter/Overview/GetNightlyTickets\u0027,{\u0027seasonId\u0027:seasonId,\u0027month\u0027:month_list[month],\u0027month_int\u0027:int(month),\u0027year\u0027:year})\n\n\t\t\tif get_nightlyTickets.getRowCount()\u003e0:\n\t\t\t\tfor j in range(0,get_nightlyTickets.getRowCount()):\n\t\t\t\t\tif ticketLable \u003d\u003d \u0027Regular\u0027:\n\t\t\t\t\t\ttotalTickets \u003d get_nightlyTickets.getValueAt(j,\u0027regularTickets\u0027)\n\t\t\t\t\telif ticketLable \u003d\u003d \u0027Plus\u0027:\n\t\t\t\t\t\ttotalTickets \u003d get_nightlyTickets.getValueAt(j,\u0027plusTickets\u0027)\n\t\t\t\t\telif ticketLable \u003d\u003d \u0027Double Plus\u0027:\n\t\t\t\t\t\ttotalTickets \u003d get_nightlyTickets.getValueAt(j,\u0027doublePlusTickets\u0027)\n\t\t\t\t\telif ticketLable \u003d\u003d \u0027If Room\u0027:\n\t\t\t\t\t\ttotalTickets \u003d get_nightlyTickets.getValueAt(j,\u0027ifRoomTickets\u0027)\n\t\t\t\t\t\n\t\t\t\t\tif totalTickets \u003d\u003d None:\n\t\t\t\t\t\ttotalTickets \u003d 0\n#\t\t\t\t\tdata.append(totalTickets)\n\t\t\t\t\tdata.append({\n\t\t\t\t\t\t\t\t\"x\": (month[0:3]).upper(),\n\t\t\t\t\t\t        \"y\": totalTickets,\n\t\t\t\t\t\t        \"date\": system.date.format(get_nightlyTickets.getValueAt(j,\u0027date_all\u0027),\u0027yyyy-MM-dd\u0027)\n\t\t\t\t\t\t      })\n\t\t\telse:\n#\t\t\t\tdata.append(0)\n\t\t\t\tdata.append({\n\t\t\t\t\t        \"x\": (month[0:3]).upper(),\n\t\t\t\t\t        \"y\": 0\n\t\t\t\t\t      })\n\t\tseries.append({\"data\":data,\"name\":ticketLable})\n\n\treturn series",
+                      "type": "script"
+                    }
+                  ],
+                  "type": "property"
+                }
+              }
+            },
+            "props": {
+              "options": {
+                "annotations": {},
+                "chart": {
+                  "animations": {
+                    "easing": "swing",
+                    "enabled": false
+                  },
+                  "background": "",
+                  "fontFamily": "Roboto",
+                  "foreColor": "#333",
+                  "height": 200,
+                  "id": "idsy9",
+                  "toolbar": {
+                    "autoSelected": "zoom",
+                    "offsetX": 0,
+                    "offsetY": 0,
+                    "show": true,
+                    "tools": {
+                      "download": false,
+                      "pan": false,
+                      "reset": false,
+                      "selection": false,
+                      "zoom": true,
+                      "zoomin": true,
+                      "zoomout": true
+                    }
+                  },
+                  "type": "line",
+                  "width": 480
+                },
+                "colors": [
+                  "#19F708",
+                  "#67b7dc",
+                  "#0C4E85",
+                  "#FF7a59",
+                  "#0db9a5",
+                  "#EA8D13"
+                ],
+                "dataLabels": {
+                  "style": {
+                    "fontWeight": 700
+                  }
+                },
+                "grid": {
+                  "padding": {
+                    "bottom": -5,
+                    "left": 2,
+                    "right": 2,
+                    "top": -20
+                  }
+                },
+                "legend": {
+                  "fontFamily": "Gibsonbook",
+                  "fontSize": 11,
+                  "itemMargin": {
+                    "vertical": 5
+                  },
+                  "offsetY": 10
+                },
+                "markers": {
+                  "hover": {
+                    "sizeOffset": 6
+                  }
+                },
+                "plotOptions": {
+                  "bar": {
+                    "borderRadius": 10,
+                    "borderRadiusApplication": "end",
+                    "borderRadiusWhenStacked": "last",
+                    "dataLabels": {
+                      "total": {
+                        "enabled": false,
+                        "offsetX": 0,
+                        "offsetY": 0,
+                        "style": {
+                          "color": "#373d3f",
+                          "fontSize": "12px",
+                          "fontWeight": 600
+                        }
+                      }
+                    },
+                    "hideZeroBarsWhenGrouped": false,
+                    "isDumbbell": false,
+                    "isFunnel": false,
+                    "isFunnel3d": true
+                  },
+                  "bubble": {
+                    "zScaling": true
+                  },
+                  "pie": {
+                    "donut": {
+                      "labels": {
+                        "name": {},
+                        "total": {},
+                        "value": {}
+                      }
+                    }
+                  },
+                  "radialBar": {
+                    "dataLabels": {
+                      "name": {},
+                      "total": {},
+                      "value": {}
+                    },
+                    "hollow": {
+                      "background": "#fff"
+                    }
+                  },
+                  "treemap": {
+                    "dataLabels": {
+                      "format": "scale"
+                    }
+                  }
+                },
+                "stroke": {
+                  "curve": "smooth",
+                  "fill": {
+                    "gradient": {
+                      "colorStops": [],
+                      "inverseColors": true,
+                      "opacityFrom": 1,
+                      "opacityTo": 1,
+                      "shade": "dark",
+                      "shadeIntensity": 0.5,
+                      "stops": [
+                        0,
+                        50,
+                        100
+                      ],
+                      "type": "horizontal"
+                    },
+                    "opacity": 0.85,
+                    "type": "solid"
+                  },
+                  "width": 1
+                },
+                "theme": {
+                  "palette": "palette4"
+                },
+                "tooltip": {
+                  "shared": true,
+                  "style": {
+                    "fontFamily": "Gibsonbook",
+                    "fontsize": "10px"
+                  },
+                  "y": {
+                    "formatter": "function(value, { series, seriesIndex, dataPointIndex, w }) {\n      var data \u003d w.globals.initialSeries[seriesIndex].data[dataPointIndex];\n      return ((!value) ? 0 : value.toLocaleString()) + \u0027 (\u0027 + data.date +\u0027)\u0027\n    }\n"
+                  }
+                },
+                "xaxis": {
+                  "axisTicks": {
+                    "color": "#668FB0"
+                  },
+                  "categories": [
+                    "NOV",
+                    "DEC",
+                    "JAN",
+                    "FEB",
+                    "MAR"
+                  ],
+                  "group": {
+                    "style": {
+                      "colors": [],
+                      "cssClass": "",
+                      "fontSize": "10px",
+                      "fontWeight": 400
+                    }
+                  },
+                  "labels": {
+                    "style": {
+                      "fontFamily": "Gibsonbook",
+                      "fontSize": 10
+                    },
+                    "trim": false
+                  },
+                  "tickAmount": "dataPoints",
+                  "tickPlacement": "between",
+                  "title": {
+                    "style": {}
+                  },
+                  "type": "value"
+                },
+                "yaxis": {
+                  "labels": {
+                    "style": {
+                      "fontFamily": "Gibsonbook",
+                      "fontSize": 10
+                    }
+                  },
+                  "title": {
+                    "style": {
+                      "fontWeight": 700
+                    }
+                  }
+                }
+              },
+              "style": {
+                "color": "#000000",
+                "padding": "24px"
+              }
+            },
+            "type": "kyvislabs.display.apexchart"
+          }
+        ],
+        "meta": {
+          "name": "Bottom"
+        },
+        "position": {
+          "basis": "90%",
+          "shrink": 0
+        },
+        "props": {
+          "direction": "column",
+          "style": {
+            "backgroundColor": "#FFFFFF",
+            "borderBottomLeftRadius": "4px",
+            "borderBottomRightRadius": "4px",
+            "borderTopLeftRadius": "4px",
+            "borderTopRightRadius": "4px"
+          }
+        },
+        "type": "ia.container.flex"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column",
+      "style": {
+        "classes": "Background/Alternative"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

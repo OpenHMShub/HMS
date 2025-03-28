@@ -1,0 +1,213 @@
+{
+  "custom": {},
+  "params": {
+    "participantID": 0,
+    "tab_name": "?"
+  },
+  "propConfig": {
+    "params.participantID": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.tab_name": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 52
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "Label_Construction"
+        },
+        "position": {
+          "basis": "600px",
+          "grow": 1
+        },
+        "propConfig": {
+          "props.text": {
+            "binding": {
+              "config": {
+                "path": "view.params.tab_name"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "style": {
+            "classes": "Table/Column_Bold Table/Filter_Header_Detail"
+          }
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "meta": {
+          "name": "Label"
+        },
+        "position": {
+          "basis": "96px",
+          "shrink": 0
+        },
+        "props": {
+          "style": {
+            "classes": "Table/Filter_Header_Detail",
+            "paddingLeft": "40px"
+          },
+          "text": "Filter by:"
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "meta": {
+          "name": "Dropdown_0"
+        },
+        "position": {
+          "basis": "240px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.options": {
+            "binding": {
+              "config": {
+                "parameters": {
+                  "participantID": "{view.params.participantID}"
+                },
+                "queryPath": "Participants/CaseNotes/Select Filter Users",
+                "returnFormat": "json"
+              },
+              "type": "query"
+            }
+          }
+        },
+        "props": {
+          "placeholder": {
+            "text": "All users"
+          },
+          "style": {
+            "classes": "Dropdowns/DetailFilter"
+          },
+          "value": -1
+        },
+        "scripts": {
+          "customMethods": [],
+          "messageHandlers": [
+            {
+              "messageType": "refreshCaseNotes",
+              "pageScope": true,
+              "script": "\t###refreshCaseNotes\n\tself.refreshBinding(\"props.options\")",
+              "sessionScope": true,
+              "viewScope": true
+            }
+          ]
+        },
+        "type": "ia.input.dropdown"
+      },
+      {
+        "meta": {
+          "name": "Dropdown_1"
+        },
+        "position": {
+          "basis": "125px",
+          "shrink": 0
+        },
+        "props": {
+          "options": [
+            {
+              "label": "All users",
+              "value": -1
+            },
+            {
+              "label": "Andrew D Hunt",
+              "value": 0
+            },
+            {
+              "label": "Andre33w D Hunt34",
+              "value": 1
+            }
+          ],
+          "placeholder": {
+            "text": "All types"
+          },
+          "style": {
+            "classes": "Dropdowns/DetailFilter"
+          }
+        },
+        "scripts": {
+          "customMethods": [],
+          "messageHandlers": [
+            {
+              "messageType": "refreshCaseNotes",
+              "pageScope": true,
+              "script": "\t###refreshCaseNotes\n\tself.refreshBinding(\"props.options\")",
+              "sessionScope": true,
+              "viewScope": true
+            }
+          ]
+        },
+        "type": "ia.input.dropdown"
+      },
+      {
+        "meta": {
+          "name": "TextField",
+          "visible": false
+        },
+        "position": {
+          "basis": "175px"
+        },
+        "props": {
+          "style": {
+            "classes": "Table/Filter_Header_Search",
+            "marginBottom": "auto",
+            "marginLeft": "auto",
+            "marginTop": "auto"
+          }
+        },
+        "type": "ia.input.text-field"
+      },
+      {
+        "events": {
+          "dom": {
+            "onClick": {
+              "config": {
+                "script": "\tvisible \u003d self.getSibling(\"TextField\").meta.visible\n\tif visible:\n\t\tself.getSibling(\"TextField\").meta.visible \u003d False\n\telse:\n\t\tself.getSibling(\"TextField\").meta.visible \u003d True"
+              },
+              "scope": "G",
+              "type": "script"
+            }
+          }
+        },
+        "meta": {
+          "name": "Icon"
+        },
+        "position": {
+          "basis": 20,
+          "shrink": 0
+        },
+        "props": {
+          "color": "#0C4E8B",
+          "path": "material/search",
+          "style": {
+            "cursor": "pointer",
+            "marginRight": "40px"
+          }
+        },
+        "type": "ia.display.icon"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "style": {
+        "classes": "Table/Filter_Header"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

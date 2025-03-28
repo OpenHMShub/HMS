@@ -1,0 +1,246 @@
+{
+  "custom": {},
+  "params": {
+    "bed": "",
+    "programId": -1,
+    "programName": "",
+    "room": "",
+    "shelter": ""
+  },
+  "propConfig": {
+    "params.bed": {
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.programId": {
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.programName": {
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.room": {
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.shelter": {
+      "paramDirection": "inout",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 83,
+      "width": 1421
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "Embed_programName_old"
+        },
+        "position": {
+          "basis": "300px",
+          "display": false,
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.text": {
+            "binding": {
+              "config": {
+                "bidirectional": true,
+                "path": "view.params.programName"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "label": "Program Name",
+            "placeholder": ""
+          },
+          "path": "1_TEMPLATES/60px/top/ReadOnly_Text_Grey",
+          "style": {
+            "classes": "InputCards/InputCard_NoBorder",
+            "cursor": "not-allowed"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Embed_programName"
+        },
+        "position": {
+          "basis": "300px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.options": {
+            "binding": {
+              "config": {
+                "expression": "if({session.custom.isCareCoordinator}, {/root.custom.CareCoordinatorPrograms}, if({session.custom.isSupportCoordinator} || {session.custom.isWSSupportCoordinator}, {/root.custom.SupportAndWSSupportCoordinatorPrograms}, {/root.custom.allPrograms}))"
+              },
+              "type": "expr"
+            }
+          },
+          "props.params.selection": {
+            "binding": {
+              "config": {
+                "bidirectional": true,
+                "path": "view.params.programId"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "highlight": false,
+            "text": "Program Name"
+          },
+          "path": "1_TEMPLATES/60px/top/Input_DropDownSingle",
+          "style": {
+            "classes": "InputCards/InputCard_NoBorder",
+            "cursor": "auto"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Embed_Shelter"
+        },
+        "position": {
+          "basis": "200px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.text": {
+            "binding": {
+              "config": {
+                "bidirectional": true,
+                "path": "view.params.shelter"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "label": "Shelter",
+            "placeholder": ""
+          },
+          "path": "1_TEMPLATES/60px/top/ReadOnly_Text_Grey",
+          "style": {
+            "classes": "InputCards/InputCard_NoBorder",
+            "cursor": "not-allowed"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Embed_Room"
+        },
+        "position": {
+          "basis": "200px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.text": {
+            "binding": {
+              "config": {
+                "bidirectional": true,
+                "path": "view.params.room"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "label": "Room",
+            "placeholder": ""
+          },
+          "path": "1_TEMPLATES/60px/top/ReadOnly_Text_Grey",
+          "style": {
+            "classes": "InputCards/InputCard_NoBorder",
+            "cursor": "not-allowed"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Embed_Bed"
+        },
+        "position": {
+          "basis": "200px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.text": {
+            "binding": {
+              "config": {
+                "bidirectional": true,
+                "path": "view.params.bed"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "label": "Bed",
+            "placeholder": ""
+          },
+          "path": "1_TEMPLATES/60px/top/ReadOnly_Text_Grey",
+          "style": {
+            "classes": "InputCards/InputCard_NoBorder",
+            "cursor": "not-allowed"
+          }
+        },
+        "type": "ia.display.view"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "propConfig": {
+      "custom.CareCoordinatorPrograms": {
+        "binding": {
+          "config": {
+            "queryPath": "Shelter/Reservations/SelectProgramsForReservations_CareCoordinator"
+          },
+          "type": "query"
+        }
+      },
+      "custom.SupportAndWSSupportCoordinatorPrograms": {
+        "binding": {
+          "config": {
+            "queryPath": "Shelter/Reservations/SelectProgramsForReservations_SupportCoordinators"
+          },
+          "type": "query"
+        }
+      },
+      "custom.allPrograms": {
+        "binding": {
+          "config": {
+            "queryPath": "Shelter/Reservations/SelectProgramsForReservations"
+          },
+          "type": "query"
+        }
+      }
+    },
+    "props": {
+      "style": {
+        "classes": "Background/Default"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

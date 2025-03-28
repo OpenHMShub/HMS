@@ -1,0 +1,136 @@
+{
+  "custom": {},
+  "params": {
+    "clear": false,
+    "options": [],
+    "placeholder": "",
+    "selection": null
+  },
+  "propConfig": {
+    "params.clear": {
+      "onChange": {
+        "enabled": null,
+        "script": "\tif self.params.clear:\n\t\tself.getChild(\"root\").getChild(\"Dropdown\").props.value \u003d None\n\tself.params.clear \u003d False"
+      },
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.options": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.placeholder": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.selection": {
+      "binding": {
+        "config": {
+          "path": "/root/Dropdown.props.value"
+        },
+        "transforms": [
+          {
+            "code": "\tif value \u003d\u003d None or value \u003d\u003d \u0027\u0027:\n\t\treturn None\n\telse:\n\t\t#Generate a .csv string to pass to the query\n\t\tselection \u003d \u0027\u0027\n\t\tfor item in range(len(value)):\n\t\t\tselection \u003d selection + str(value[item]) + \u0027,\u0027\n\t\t#Remove the last comma\n\t\tselection \u003d selection[0:(len(selection)-1)]\n\t\treturn selection",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 30,
+      "width": 775
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "Dropdown"
+        },
+        "position": {
+          "basis": "220px",
+          "grow": 1
+        },
+        "propConfig": {
+          "props.options": {
+            "binding": {
+              "config": {
+                "path": "view.params.options"
+              },
+              "type": "property"
+            }
+          },
+          "props.placeholder.text": {
+            "binding": {
+              "config": {
+                "path": "view.params.placeholder"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.classes": {
+            "binding": {
+              "config": {
+                "path": "this.props.value"
+              },
+              "transforms": [
+                {
+                  "code": "\ttext \u003d \"Filter/Filter_Text_Default\"\n\tif value !\u003d None:\n\t\tif value !\u003d \"\" and value \u003e -1:\n\t\t\ttext \u003d \"Filter/Filter_Text_Orange\"\n\treturn text",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "dropdownOptionStyle": {
+            "classes": "Dropdowns/DD_Options"
+          },
+          "multiSelect": true,
+          "placeholder": {
+            "color": "#AAAAAA"
+          },
+          "search": {
+            "enabled": false
+          },
+          "style": {},
+          "value": null,
+          "wrapMultiSelectValues": false
+        },
+        "type": "ia.input.dropdown"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "propConfig": {
+      "props.style.classes": {
+        "binding": {
+          "config": {
+            "path": "view.params.selection"
+          },
+          "transforms": [
+            {
+              "code": "\tborder \u003d \"Filter/Filter_Border_Default\"\n\tif value !\u003d None:\n\t\tif value !\u003d \"\" and value \u003e -1:\n\t\t\tborder \u003d \"Filter/Filter_Border_Orange\"\n\treturn border",
+              "type": "script"
+            }
+          ],
+          "type": "property"
+        }
+      }
+    },
+    "props": {
+      "alignItems": "center",
+      "style": {
+        "overflow": "hidden"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

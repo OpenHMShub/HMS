@@ -1,0 +1,1342 @@
+{
+  "custom": {},
+  "params": {
+    "age": -1,
+    "endDateTime": "",
+    "gender": -1,
+    "program": -1,
+    "race": -1,
+    "shelter": -1,
+    "startDateTime": "",
+    "tableData": {
+      "$": [
+        "ds",
+        192,
+        1623919796534
+      ],
+      "$columns": [
+        {
+          "data": [
+            1,
+            3,
+            4,
+            6,
+            7
+          ],
+          "name": "facilityId",
+          "type": "Integer"
+        },
+        {
+          "data": [
+            "Apartments",
+            "Hallway",
+            "Next Steps Dorm",
+            "Respite Dorm (Men)",
+            "Respite Dorm (Women)"
+          ],
+          "name": "facilityName",
+          "type": "String"
+        },
+        {
+          "data": [
+            "Trevaughn Xaevita Hunter",
+            "Black Widow  (None)",
+            "Chris Edward McLaughlin",
+            "Michael Eric Zimmerman",
+            "Tamika R Bender"
+          ],
+          "name": "name",
+          "type": "String"
+        },
+        {
+          "data": [
+            1618012800000,
+            1614902400000,
+            1617021660000,
+            1615618020000,
+            1613890080000
+          ],
+          "name": "eventStart",
+          "type": "Date"
+        },
+        {
+          "data": [
+            null,
+            null,
+            null,
+            null,
+            1623899522833
+          ],
+          "name": "eventEnd",
+          "type": "Date"
+        },
+        {
+          "data": [
+            "Bed 1",
+            "Bed 1",
+            "Top Bunk 13",
+            "Bed 2",
+            "Bed 2"
+          ],
+          "name": "bedName",
+          "type": "String"
+        },
+        {
+          "data": [
+            76,
+            3206,
+            4676,
+            519,
+            1882
+          ],
+          "name": "participantId",
+          "type": "Integer"
+        },
+        {
+          "data": [
+            92,
+            75,
+            89,
+            77,
+            68
+          ],
+          "name": "id",
+          "type": "Integer"
+        },
+        {
+          "data": [
+            4,
+            46,
+            47,
+            49,
+            50
+          ],
+          "name": "roomId",
+          "type": "Integer"
+        },
+        {
+          "data": [
+            "Apartment 300",
+            "Hallway-Female",
+            "Next Steps Dorm",
+            "Men\u0027s Respite Dorm",
+            "Women\u0027s Respite Dorm"
+          ],
+          "name": "roomName",
+          "type": "String"
+        },
+        {
+          "data": [
+            8,
+            81,
+            99,
+            106,
+            124
+          ],
+          "name": "bedId",
+          "type": "Integer"
+        },
+        {
+          "data": [
+            "Male",
+            "Female",
+            "Male",
+            "Male",
+            "Female"
+          ],
+          "name": "gender",
+          "type": "String"
+        },
+        {
+          "data": [
+            "White",
+            "White",
+            "White",
+            "White",
+            "Data not collected"
+          ],
+          "name": "race",
+          "type": "String"
+        },
+        {
+          "data": [
+            35,
+            57,
+            40,
+            53,
+            38
+          ],
+          "name": "age",
+          "type": "Integer"
+        },
+        {
+          "data": [
+            "Permanent Supportive Housing",
+            "All Residential Programs",
+            "All Residential Programs",
+            "All Residential Programs",
+            "All Residential Programs"
+          ],
+          "name": "associatedProgram",
+          "type": "String"
+        }
+      ]
+    }
+  },
+  "propConfig": {
+    "params.age": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.endDateTime": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.gender": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.program": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.race": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.shelter": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.startDateTime": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.tableData": {
+      "binding": {
+        "config": {
+          "path": "/root/Table.custom.filteredData"
+        },
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 620,
+      "width": 873
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "events": {
+          "component": {
+            "onRowClick": {
+              "config": {
+                "script": "\t#send message for CheckOut\n\tcurrentResidentBedLogId \u003d self.props.selection.data[0][\u0027id\u0027]\n\tsystem.perspective.sendMessage(messageType\u003d\"currentResidentSelected\", payload\u003d{\"residentId\":currentResidentBedLogId}, scope\u003d\"session\")\n\tselectedColumn \u003d self.props.selection.selectedColumn\n\tfor item in range(len(self.props.data)):\n\t\t#system.perspective.print(item)\n\t\tif item \u003d\u003d event.row:\n\t\t\tself.props.data[item].style.classes \u003d \u0027Table/Row_Select\u0027\n\t\telse:\n\t\t\tself.props.data[item].style.classes \u003d \u0027Table/Cell_Dashboard\u0027\n\t\t\n\tif selectedColumn \u003d\u003d \"Options\":\n\t\tparticipantID \u003d self.props.selection.data[0][\u0027participantId\u0027]\n\t\tid \u003d \"PreviewParticipant\" \n\t\tparams \u003d {\"participantID\":participantID}\n\t\tsystem.perspective.openDock(id\u003did,params\u003dparams)\n\t\t\n\telse:\n\t\tpass"
+              },
+              "scope": "G",
+              "type": "script"
+            }
+          }
+        },
+        "meta": {
+          "name": "Table"
+        },
+        "position": {
+          "basis": "100%"
+        },
+        "propConfig": {
+          "custom.filteredData": {
+            "binding": {
+              "config": {
+                "struct": {
+                  "filters": "{this.custom.filters}",
+                  "source": "{this.custom.sqlData}"
+                },
+                "waitOnAll": true
+              },
+              "transforms": [
+                {
+                  "code": "\t#return filters.applyFiltersOnDataset(self.custom.sqlData, self.custom.filters)\n\theaders \u003d [\"facilityId\",\"facilityName\",\"name\",\"eventStart\",\"eventEnd\",\"bedName\",\"participantId\",\"id\",\"roomId\",\"roomName\",\"bedId\",\"gender\",\"race\",\"age\",\"associatedProgram\"]\n\toriginalDataset \u003d self.custom.sqlData\n\tfilteredDataset \u003d originalDataset\n\t#system.perspective.print(\u0027rows\u003d \u0027+str(filteredDataset.getRowCount()))\n\tgenderFilter \u003d self.view.params.gender\n\traceFilter \u003d self.view.params.race\n\tageFilter \u003d self.view.params.age\n\tshelterFilter \u003d self.view.params.shelter\n\tprogramFilter \u003d self.view.params.program\n\tfromDate \u003d self.session.custom.dateRangeFromDate #self.view.params.startDateTime\n\ttoDate \u003d self.session.custom.dateRangeToDate #self.view.params.endDateTime\n\t#system.perspective.print(genderFilter)\n\t#system.perspective.print(raceFilter)\n#\tsystem.perspective.print(ageFilter)\n#\tsystem.perspective.print(shelterFilter)\n#\tsystem.perspective.print(programFilter)\n#\tsystem.perspective.print(fromDate)\n#\tsystem.perspective.print(toDate)\n\t\n\treturnDataset \u003d []\n\tfor i in range (filteredDataset.getRowCount()):\n\t\toneRow \u003d[]\n\t\tcolDate \u003d filteredDataset.getValueAt(i,\"eventStart\")\n\t\tcolDate \u003d system.date.setTime(colDate, 0, 0, 0)\n\t\tcolDate1 \u003d filteredDataset.getValueAt(i,\"eventEnd\")\n\t\tif colDate1 is not None and str(colDate1) is not \u0027None\u0027 and colDate1 !\u003d\u0027\u0027:\n#\t\t\tsystem.perspective.print(\"i  \u003d \" + str(i) + \" , colDate1 \" + str(colDate1))\n\t\t\tcolDate1 \u003d system.date.setTime(colDate1, 0, 0, 0)\n\t\tparseFrom \u003d system.date.parse(fromDate,\"MM/dd/yyyy\")\n\t\tparseTo \u003d system.date.parse(toDate,\"MM/dd/yyyy\")\n\t\t#system.perspective.print(colDate)\n\t\t#system.perspective.print(colDate1)\n#\t\tsystem.perspective.print(parseFrom)\n#\t\tsystem.perspective.print(parseTo)\n\t\tif (colDate1 is None or colDate1\u003d\u003d\u0027\u0027) and (system.date.isBefore(colDate,parseTo) or colDate\u003d\u003dparseTo):\n\t\t\toneRow \u003d [filteredDataset.getValueAt(i,0),filteredDataset.getValueAt(i,1),filteredDataset.getValueAt(i,2),filteredDataset.getValueAt(i,3),filteredDataset.getValueAt(i,4),filteredDataset.getValueAt(i,5),filteredDataset.getValueAt(i,6),filteredDataset.getValueAt(i,7),filteredDataset.getValueAt(i,8),filteredDataset.getValueAt(i,9),filteredDataset.getValueAt(i,10),filteredDataset.getValueAt(i,11),filteredDataset.getValueAt(i,12),filteredDataset.getValueAt(i,13),filteredDataset.getValueAt(i,14)]\n\t\t\treturnDataset.append(oneRow)\n\t\telse:\n\t\t\tif (system.date.isBetween(colDate, parseFrom,parseTo) or system.date.isBetween(colDate1, parseFrom,parseTo)): #and colDate1!\u003dparseFrom and colDate1!\u003dparseTo:\n#\t\t\t\tsystem.perspective.print(\"checkout not none\")\n\t\t\t\toneRow \u003d [filteredDataset.getValueAt(i,0),filteredDataset.getValueAt(i,1),filteredDataset.getValueAt(i,2),filteredDataset.getValueAt(i,3),filteredDataset.getValueAt(i,4),filteredDataset.getValueAt(i,5),filteredDataset.getValueAt(i,6),filteredDataset.getValueAt(i,7),filteredDataset.getValueAt(i,8),filteredDataset.getValueAt(i,9),filteredDataset.getValueAt(i,10),filteredDataset.getValueAt(i,11),filteredDataset.getValueAt(i,12),filteredDataset.getValueAt(i,13),filteredDataset.getValueAt(i,14)]\n\t\t\t\treturnDataset.append(oneRow)\n\t\t\telse:\n\t\t\t\tpass\n#\t\t\t\tsystem.perspective.print(\u0027##date not match###\u0027)\n\t\t\t\t\t\n\tfilteredDataset \u003d system.dataset.toDataSet(headers, returnDataset)\n\t\t\n\tif genderFilter\u003d\u003d-1 and raceFilter\u003d\u003d-1 and shelterFilter\u003d\u003d-1 and ageFilter \u003d\u003d -1 and programFilter \u003d\u003d -1:\n\t\treturn filteredDataset\n\telse:\n\t\treturnDataset \u003d []\n\t\tif genderFilter !\u003d-1 and genderFilter !\u003d None:\n\t\t\tfor p in range (len(genderFilter)):\n\t\t\t\tfilterText \u003d genderFilter[p]\n\t\t\t\tsystem.perspective.print(genderFilter[p])\n\t\t\t\tfor i in range (filteredDataset.getRowCount()):\n\t\t\t\t\toneRow \u003d[]\n#\t\t\t\t\tsystem.perspective.print(i)\n\t\t\t\t\tif str(filteredDataset.getValueAt(i,\"gender\")) \u003d\u003d filterText or filterText.find(str(filteredDataset.getValueAt(i,\"gender\")))\u003d\u003d0:\n\t\t\t\t\t\t#system.perspective.print(\u0027##########Match##############\u0027)\n\t\t\t\t\t\toneRow \u003d [filteredDataset.getValueAt(i,0),filteredDataset.getValueAt(i,1),filteredDataset.getValueAt(i,2),filteredDataset.getValueAt(i,3),filteredDataset.getValueAt(i,4),filteredDataset.getValueAt(i,5),filteredDataset.getValueAt(i,6),filteredDataset.getValueAt(i,7),filteredDataset.getValueAt(i,8),filteredDataset.getValueAt(i,9),filteredDataset.getValueAt(i,10),filteredDataset.getValueAt(i,11),filteredDataset.getValueAt(i,12),filteredDataset.getValueAt(i,13),filteredDataset.getValueAt(i,14)]\n\t\t\t\t\t\treturnDataset.append(oneRow)\n\t\t\t\t\telse:\n\t\t\t\t\t\tpass#system.perspective.print(\u0027##No match###\u0027)\n\t\t\tfilteredDataset \u003d system.dataset.toDataSet(headers, returnDataset)\n\t\t\n\t\treturnDataset \u003d []\n\t\tif filteredDataset.getRowCount\u003e0 and raceFilter !\u003d-1 and raceFilter !\u003d None:\n\t\t\tfor p in range (len(raceFilter)):\n\t\t\t\tfilterText \u003d raceFilter[p]\n\t\t\t\t#system.perspective.print(raceFilter[p])\n\t\t\t\tfor i in range (filteredDataset.getRowCount()):\n\t\t\t\t\toneRow \u003d[]\n\t\t\t\t\t#system.perspective.print(i)\n\t\t\t\t\tif str(filteredDataset.getValueAt(i,\"race\")) \u003d\u003d filterText:\n\t\t\t\t\t\t#system.perspective.print(\u0027##########Match##############\u0027)\n\t\t\t\t\t\toneRow \u003d [filteredDataset.getValueAt(i,0),filteredDataset.getValueAt(i,1),filteredDataset.getValueAt(i,2),filteredDataset.getValueAt(i,3),filteredDataset.getValueAt(i,4),filteredDataset.getValueAt(i,5),filteredDataset.getValueAt(i,6),filteredDataset.getValueAt(i,7),filteredDataset.getValueAt(i,8),filteredDataset.getValueAt(i,9),filteredDataset.getValueAt(i,10),filteredDataset.getValueAt(i,11),filteredDataset.getValueAt(i,12),filteredDataset.getValueAt(i,13),filteredDataset.getValueAt(i,14)]\n\t\t\t\t\t\treturnDataset.append(oneRow)\n\t\t\t\t\telse:\n\t\t\t\t\t\tpass#system.perspective.print(\u0027##No match###\u0027)\n\t\t\tfilteredDataset \u003d system.dataset.toDataSet(headers, returnDataset)\t\t\t\n\t\t\n\t\treturnDataset \u003d []\n\t\tif filteredDataset.getRowCount\u003e0 and ageFilter !\u003d-1 and ageFilter !\u003d None:\n\t\t\tfor p in range (len(ageFilter)):\n\t\t\t\tfilterText \u003d ageFilter[p]\n\t\t\t\t#system.perspective.print(ageFilter[p])\n\t\t\t\tfor i in range (filteredDataset.getRowCount()):\n\t\t\t\t\toneRow \u003d[]\n\t\t\t\t\t#system.perspective.print(i)\n\t\t\t\t\tvalAge \u003d filteredDataset.getValueAt(i,\"age\")\n\t\t\t\t\tif (filterText \u003d\u003d \u0027\u003c18\u0027 and valAge \u003c 18) or (filterText \u003d\u003d \u002718-24\u0027 and valAge \u003e\u003d 18 and valAge \u003c\u003d 24) or (filterText \u003d\u003d \u002725-34\u0027 and valAge \u003e\u003d 25 and valAge \u003c\u003d 34) or (filterText \u003d\u003d \u002735-44\u0027 and valAge \u003e\u003d 35 and valAge \u003c\u003d 44) or (filterText \u003d\u003d \u002745-55\u0027 and valAge \u003e\u003d 45 and valAge \u003c\u003d 55) or (filterText \u003d\u003d \u0027\u003e55\u0027 and valAge \u003e 55):\n\t\t\t\t\t\t#system.perspective.print(\u0027##########Match##############\u0027)\n\t\t\t\t\t\toneRow \u003d [filteredDataset.getValueAt(i,0),filteredDataset.getValueAt(i,1),filteredDataset.getValueAt(i,2),filteredDataset.getValueAt(i,3),filteredDataset.getValueAt(i,4),filteredDataset.getValueAt(i,5),filteredDataset.getValueAt(i,6),filteredDataset.getValueAt(i,7),filteredDataset.getValueAt(i,8),filteredDataset.getValueAt(i,9),filteredDataset.getValueAt(i,10),filteredDataset.getValueAt(i,11),filteredDataset.getValueAt(i,12),filteredDataset.getValueAt(i,13),filteredDataset.getValueAt(i,14)]\n\t\t\t\t\t\treturnDataset.append(oneRow)\n\t\t\t\t\telse:\n\t\t\t\t\t\tpass#system.perspective.print(\u0027##No match###\u0027)\n\t\t\tfilteredDataset \u003d system.dataset.toDataSet(headers, returnDataset)\n\t\t\n\t\treturnDataset \u003d []\n\t\tif filteredDataset.getRowCount\u003e0 and programFilter !\u003d-1 and programFilter !\u003d None:\n\t\t\tfor p in range (len(programFilter)):\n\t\t\t\tfilterText \u003d programFilter[p]\n\t\t\t\t#system.perspective.print(programFilter[p])\n\t\t\t\tfor i in range (filteredDataset.getRowCount()):\n\t\t\t\t\toneRow \u003d[]\n\t\t\t\t\t#system.perspective.print(i)\n\t\t\t\t\tprogramSet \u003d filteredDataset.getValueAt(i,\"associatedProgram\")\n\t\t\t\t\tprograms \u003d programSet.split(\",\")\n\t\t\t\t\tmatch\u003d0\n\t\t\t\t\tfor z in range(len(programs)):\n\t\t\t\t\t\t\t#system.perspective.print(programs[z])\n\t\t\t\t\t\t\tif(filterText.strip() \u003d\u003d programs[z].strip()):\n\t\t\t\t\t\t\t\tmatch\u003d1\n\t\t\t\t\t\t\t\tbreak\n\t\t\t\t\t\t\tprint match\t\n\t\t\t\t\tif match\u003d\u003d1:\n\t\t\t\t\t\t#system.perspective.print(\u0027##########Match##############\u0027)\n\t\t\t\t\t\toneRow \u003d [filteredDataset.getValueAt(i,0),filteredDataset.getValueAt(i,1),filteredDataset.getValueAt(i,2),filteredDataset.getValueAt(i,3),filteredDataset.getValueAt(i,4),filteredDataset.getValueAt(i,5),filteredDataset.getValueAt(i,6),filteredDataset.getValueAt(i,7),filteredDataset.getValueAt(i,8),filteredDataset.getValueAt(i,9),filteredDataset.getValueAt(i,10),filteredDataset.getValueAt(i,11),filteredDataset.getValueAt(i,12),filteredDataset.getValueAt(i,13),filteredDataset.getValueAt(i,14)]\n\t\t\t\t\t\treturnDataset.append(oneRow)\n\t\t\t\t\telse:\n\t\t\t\t\t\tpass#system.perspective.print(\u0027##No match###\u0027)\n\t\t\tfilteredDataset \u003d system.dataset.toDataSet(headers, returnDataset)\t\t\n\t\t\n\t\treturnDataset \u003d []\n\t\tif filteredDataset.getRowCount\u003e0 and shelterFilter !\u003d-1 and shelterFilter !\u003d None:\n\t\t\tfor p in range (len(shelterFilter)):\n\t\t\t\tfilterText \u003d shelterFilter[p]\n\t\t\t\t#system.perspective.print(shelterFilter[p])\n\t\t\t\tfor i in range (filteredDataset.getRowCount()):\n\t\t\t\t\toneRow \u003d[]\n\t\t\t\t\t#system.perspective.print(i)\n\t\t\t\t\tif filteredDataset.getValueAt(i,\"facilityName\") \u003d\u003d filterText:\n\t\t\t\t\t\t#system.perspective.print(\u0027##########Match##############\u0027)\n\t\t\t\t\t\toneRow \u003d [filteredDataset.getValueAt(i,0),filteredDataset.getValueAt(i,1),filteredDataset.getValueAt(i,2),filteredDataset.getValueAt(i,3),filteredDataset.getValueAt(i,4),filteredDataset.getValueAt(i,5),filteredDataset.getValueAt(i,6),filteredDataset.getValueAt(i,7),filteredDataset.getValueAt(i,8),filteredDataset.getValueAt(i,9),filteredDataset.getValueAt(i,10),filteredDataset.getValueAt(i,11),filteredDataset.getValueAt(i,12),filteredDataset.getValueAt(i,13),filteredDataset.getValueAt(i,14)]\n\t\t\t\t\t\treturnDataset.append(oneRow)\n\t\t\t\t\telse:\n\t\t\t\t\t\tpass#system.perspective.print(\u0027##No match###\u0027)\n\t\t\tfilteredDataset \u003d system.dataset.toDataSet(headers, returnDataset)\t\n\t\t\n\t\treturn filteredDataset",
+                  "type": "script"
+                }
+              ],
+              "type": "expr-struct"
+            }
+          },
+          "custom.filters": {
+            "binding": {
+              "config": {
+                "expression": "{view.params.gender}+\" \"+{view.params.age}+\" \"+{view.params.race}+\" \"+{view.params.program}+\" \"+{view.params.shelter}+\" \"+{view.params.startDateTime}+\" \"+{view.params.endDateTime}"
+              },
+              "transforms": [
+                {
+                  "code": "\tsystem.perspective.print(value)\n\treturn value",
+                  "type": "script"
+                }
+              ],
+              "type": "expr"
+            }
+          },
+          "custom.sqlData": {
+            "binding": {
+              "config": {
+                "queryPath": "Shelter/CurrentResidents/CurrentResidentsAllShelters_old"
+              },
+              "type": "query"
+            }
+          },
+          "props.data": {
+            "binding": {
+              "config": {
+                "path": "this.custom.filteredData"
+              },
+              "transforms": [
+                {
+                  "code": "\ttable_data \u003d []\n\t\n\t\t#Iterate over the results of the query\n\tfor row in range(value.getRowCount()):\n\t\t\trow_struct \u003d {}\n\t\t\trow_data \u003d {}\n\t\t\tstyle \u003d {}\t\n\t\t\t#Map query results into correct attributes\n\t\t\t\n\t\t\trow_data[\u0027facilityId\u0027] \u003d value.getValueAt(row, \"facilityId\")\n\t\t\trow_data[\u0027facilityName\u0027] \u003d value.getValueAt(row, \"facilityName\")\n\t\t\trow_data[\u0027associatedProgram\u0027] \u003d value.getValueAt(row, \"associatedProgram\")\n\t\t\trow_data[\u0027name\u0027] \u003d value.getValueAt(row, \"name\")\n\t\t\trow_data[\u0027eventStart\u0027] \u003d system.date.toMillis(value.getValueAt(row, \"eventStart\"))\n\t\t\tif value.getValueAt(row, \"eventEnd\") is None:\n\t\t\t\trow_data[\u0027eventEnd\u0027] \u003d None\n\t\t\telse :\t\n\t\t\t\trow_data[\u0027eventEnd\u0027] \u003d system.date.toMillis(value.getValueAt(row, \"eventEnd\"))\n\t\t\t#row_data[\u0027eventEnd\u0027] \u003d value.getValueAt(row, \"eventEnd\")\n\t\t\trow_data[\u0027bedName\u0027] \u003d value.getValueAt(row, \"bedName\")\n\t\t\trow_data[\u0027participantId\u0027] \u003d value.getValueAt(row, \"participantId\")\n\t\t\trow_data[\u0027id\u0027] \u003d value.getValueAt(row, \"id\")\n\t\t\trow_data[\u0027roomId\u0027] \u003d value.getValueAt(row, \"roomId\")\n\t\t\trow_data[\u0027roomName\u0027] \u003d value.getValueAt(row, \"roomName\")\n\t\t\trow_data[\u0027bedId\u0027] \u003d value.getValueAt(row, \"bedId\")\n\t\t\trow_data[\u0027gender\u0027] \u003d value.getValueAt(row, \"gender\")\n\t\t\trow_data[\u0027race\u0027] \u003d value.getValueAt(row, \"race\")\n\t\t\trow_data[\u0027age\u0027] \u003d value.getValueAt(row, \"age\")\n\t\t\trow_data[\u0027Options\u0027] \u003d \u0027\u0027\n\t\t\t#Set the default style for the row\n\t\t\tstyle[\u0027classes\u0027] \u003d \"Table/Cell_Dashboard\"\n\t\t\trow_struct[\u0027value\u0027] \u003d row_data\n\t\t\trow_struct[\u0027style\u0027] \u003d style\n\t\t\t#Append the individual row date to the table data object\n\t\t\ttable_data.append(row_struct)\n\t\t\t\t\n\treturn table_data\n\t",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "cells": {
+            "allowEditOn": "single-click"
+          },
+          "columns": [
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "Options",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header"
+                },
+                "title": " "
+              },
+              "justify": "left",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "view",
+              "resizable": true,
+              "sort": "none",
+              "sortable": false,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "1_TEMPLATES/Tables/TableOptions",
+              "visible": true,
+              "width": 35
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "name",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header_Detail"
+                },
+                "title": "Participant"
+              },
+              "justify": "left",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": true,
+              "style": {
+                "classes": ""
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 200
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "eventStart",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header_Detail"
+                },
+                "title": "Check-in"
+              },
+              "justify": "left",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "date",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": true,
+              "style": {
+                "classes": ""
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 100
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "eventEnd",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header_Detail"
+                },
+                "title": "Check-Out"
+              },
+              "justify": "left",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "date",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": true,
+              "style": {
+                "classes": ""
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 100
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "gender",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header_Detail"
+                },
+                "title": "Gender"
+              },
+              "justify": "left",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": true,
+              "style": {
+                "classes": ""
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 80
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY HH:mm:ss",
+              "editable": false,
+              "field": "race",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header_Detail"
+                },
+                "title": "Race"
+              },
+              "justify": "left",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": true,
+              "style": {
+                "classes": ""
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 150
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY HH:mm:ss",
+              "editable": false,
+              "field": "age",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header_Detail"
+                },
+                "title": "Age"
+              },
+              "justify": "left",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": true,
+              "style": {
+                "classes": ""
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 50
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY HH:mm:ss",
+              "editable": false,
+              "field": "associatedProgram",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header_Detail"
+                },
+                "title": "Program"
+              },
+              "justify": "left",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": true,
+              "style": {
+                "classes": ""
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 500
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "facilityName",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header_Detail"
+                },
+                "title": "Shelter"
+              },
+              "justify": "left",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": true,
+              "style": {
+                "classes": ""
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 180
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY HH:mm:ss",
+              "editable": false,
+              "field": "roomName",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header_Detail"
+                },
+                "title": "Room"
+              },
+              "justify": "left",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": true,
+              "style": {
+                "classes": ""
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 140
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY HH:mm:ss",
+              "editable": false,
+              "field": "id",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header_Detail"
+                },
+                "title": ""
+              },
+              "justify": "auto",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": true,
+              "style": {
+                "classes": ""
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": false,
+              "width": 0
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY HH:mm:ss",
+              "editable": false,
+              "field": "roomId",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header_Detail"
+                },
+                "title": ""
+              },
+              "justify": "auto",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": true,
+              "style": {
+                "classes": ""
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": false,
+              "width": 0
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY HH:mm:ss",
+              "editable": false,
+              "field": "bedName",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header_Detail"
+                },
+                "title": "Bed"
+              },
+              "justify": "left",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": true,
+              "style": {
+                "classes": ""
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 130
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY HH:mm:ss",
+              "editable": false,
+              "field": "facilityId",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "center",
+                "style": {
+                  "classes": "Table/Column_Header_Detail"
+                },
+                "title": "facilityId"
+              },
+              "justify": "left",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": true,
+              "style": {
+                "classes": ""
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": false,
+              "width": 0
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY HH:mm:ss",
+              "editable": false,
+              "field": "bedId",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "center",
+                "style": {
+                  "classes": "Table/Column_Header_Detail"
+                },
+                "title": "bedId"
+              },
+              "justify": "left",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": true,
+              "style": {
+                "classes": ""
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": false,
+              "width": 0
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY HH:mm:ss",
+              "editable": false,
+              "field": "participantId",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "center",
+                "style": {
+                  "classes": "Table/Column_Header_Detail"
+                },
+                "title": "participantId"
+              },
+              "justify": "left",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": true,
+              "style": {
+                "classes": ""
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": false,
+              "width": 0
+            }
+          ],
+          "resizeMode": "fixed",
+          "rows": {
+            "highlight": {
+              "color": "#EFEFF7",
+              "enabled": false
+            },
+            "striped": {
+              "enabled": false
+            }
+          },
+          "style": {
+            "classes": "Background/Default"
+          }
+        },
+        "scripts": {
+          "customMethods": [],
+          "extensionFunctions": null,
+          "messageHandlers": [
+            {
+              "messageType": "refreshReservations",
+              "pageScope": true,
+              "script": "\t###refreshReservations\n\t### Refresh data\n\t\n\tself.refreshBinding(\"custom.sqlData\")\n\tself.session.custom.selectedDateRange \u003d \"currentCalendar\"\n\tself.session.custom.dateRangeFromDate \u003d system.date.format(system.date.now(),\u0027MM/dd/yyyy\u0027)\n\tself.session.custom.dateRangeToDate \u003d system.date.format(system.date.now(),\u0027MM/dd/yyyy\u0027)",
+              "sessionScope": true,
+              "viewScope": true
+            },
+            {
+              "messageType": "datasetFilter",
+              "pageScope": true,
+              "script": "\t# implement your handler here\n\t\t# implement your handler here\n\tsystem.perspective.print(payload) \n\t#self.view.custom.searchPayload \u003d payload[\u0027searchText\u0027]\n\n\treturnDataset \u003d []\n\toneRow \u003d []\n\t#headers \u003d [\"facilityId\",\"facilityName\",\"name\",\"eventStart\",\"bedName\",\"participantId\",\"id\",\"roomId\",\"roomName\",\"bedId\",\"gender\",\"race\",\"age\"]\n\theaders \u003d [\"facilityId\",\"facilityName\",\"name\",\"eventStart\",\"eventEnd\",\"bedName\",\"participantId\",\"id\",\"roomId\",\"roomName\",\"bedId\",\"gender\",\"race\",\"age\",\"associatedProgram\"]\n\toriginaldataset \u003d self.custom.sqlData\n\tsearcthText \u003d payload[\u0027searchText\u0027].lower()\n\t#system.perspective.print(\u0027##########searcthText##############\u0027) \n\tsystem.perspective.print(searcthText) \n\tif searcthText !\u003d \"\":\n\t\tsystem.perspective.print(\u0027#searcthText not blank#\u0027)\n\t\tfor i in range (originaldataset.getRowCount()):\n\t\t\tfor j in [1,2,5,9,11,12,13,14]:\n\t\t\t\toneRow \u003d []\n\t\t\t\t#system.perspective.print(\u0027##########beforeIfCondition##############\u0027)\n\t\t\t\tsystem.perspective.print(str(i)+ \" \" +str(j))\n\t\t\t\tsystem.perspective.print(originaldataset.getValueAt(i,j))\n\t\t\t\tcellValue \u003d originaldataset.getValueAt(i,j)\n#\t\t\t\tif originaldataset.getValueAt(i,1).lower().find(searcthText) !\u003d -1 or originaldataset.getValueAt(i,2).lower().find(searcthText) !\u003d -1 or originaldataset.getValueAt(i,4).lower().find(searcthText) !\u003d -1 or originaldataset.getValueAt(i,8).lower().find(searcthText) !\u003d -1 or originaldataset.getValueAt(i,10).lower().find(searcthText) !\u003d -1 or str(originaldataset.getValueAt(i,12)).lower().find(searcthText) !\u003d -1:\n\t\t\t\tif cellValue!\u003dNone:\n\t\t\t\t\tsystem.perspective.print(\"not none\")\n\t\t\t\t\tif str(cellValue).lower().find(searcthText) !\u003d -1 :\n\t\t\t\t\t\t#system.perspective.print(\u0027##########IfCondition##############\u0027)\n\t\t\t\t\t\toneRow \u003d [originaldataset.getValueAt(i,0),originaldataset.getValueAt(i,1),originaldataset.getValueAt(i,2),originaldataset.getValueAt(i,3),originaldataset.getValueAt(i,4),originaldataset.getValueAt(i,5),originaldataset.getValueAt(i,6),originaldataset.getValueAt(i,7),originaldataset.getValueAt(i,8),originaldataset.getValueAt(i,9),originaldataset.getValueAt(i,10),originaldataset.getValueAt(i,11),originaldataset.getValueAt(i,12),originaldataset.getValueAt(i,13),originaldataset.getValueAt(i,14)]\n\t\t\t\t\t\treturnDataset.append(oneRow)\n\t\t\t\t\t\tbreak\n\t\t\t\t\telse:\n\t\t\t\t\t\tsystem.perspective.print(\u0027##No match###\u0027) \n\t\t#system.perspective.print(\u0027##########end for##############\u0027)\n\t\t#self.props.data \u003d system.dataset.toDataSet(headers, returnDataset)\n\t\tself.custom.filteredData \u003d system.dataset.toDataSet(headers, returnDataset)\n\t\t\n\telse:\n\t\tsystem.perspective.print(\u0027##Search text blank###\u0027)\n\t\t#self.props.data \u003d originaldataset\n\t\tself.custom.filteredData \u003d originaldataset\n",
+              "sessionScope": true,
+              "viewScope": true
+            },
+            {
+              "messageType": "applyFilter",
+              "pageScope": false,
+              "script": "\t#\treturnDataset \u003d []\n#\toneRow \u003d []\n#\theaders \u003d [\"facilityId\",\"facilityName\",\"name\",\"eventStart\",\"bedName\",\"participantId\",\"id\",\"roomId\",\"roomName\",\"bedId\",\"gender\",\"race\",\"age\"]\n#\toriginaldataset \u003d self.custom.sqlData\n#\tsystem.perspective.print(\u0027rows\u003d \u0027+str(originaldataset.getRowCount()))\n#\t\n#\tgenderFilter \u003d self.view.params.gender\n#\traceFilter \u003d self.view.params.race\n#\tshelterFilter \u003d self.view.params.shelter\n#\tsystem.perspective.print(genderFilter)\n#\tsystem.perspective.print(raceFilter)\n#\tsystem.perspective.print(shelterFilter)\n#\tfilterName \u003d payload[0]\n#\tfilter \u003dpayload[1]\n#\tif genderFilter !\u003d-1 and genderFilter !\u003d None:\n#\t\t\n#\t\tfor p in range (len(filter)):\n#\t\t\tfilterText \u003d filter[p]\n#\t\t\tsystem.perspective.print(filter[p])\n#\t\t\tfor i in range (originaldataset.getRowCount()):\n#\t\t\t\toneRow \u003d []\n#\t\t\t\t#system.perspective.print(\u0027##########beforeIfCondition##############\u0027)\n#\t\t\t\tsystem.perspective.print(i)\n#\t\t\t\tif filterName \u003d\u003d \u0027Gender\u0027:\n#\t\t\t\t\tif originaldataset.getValueAt(i,\"gender\") \u003d\u003d filterText or filterText.find(originaldataset.getValueAt(i,\"gender\"))\u003d\u003d0:\n#\t\t\t\t\t\tsystem.perspective.print(\u0027##########Match##############\u0027)\n#\t\t\t\t\t\toneRow \u003d [originaldataset.getValueAt(i,0),originaldataset.getValueAt(i,1),originaldataset.getValueAt(i,2),originaldataset.getValueAt(i,3),originaldataset.getValueAt(i,4),originaldataset.getValueAt(i,5),originaldataset.getValueAt(i,6),originaldataset.getValueAt(i,7),originaldataset.getValueAt(i,8),originaldataset.getValueAt(i,9),originaldataset.getValueAt(i,10),originaldataset.getValueAt(i,11),originaldataset.getValueAt(i,12)]\n#\t\t\t\t\t\treturnDataset.append(oneRow)\n#\t\t\t\t\telse:\n#\t\t\t\t\t\tsystem.perspective.print(\u0027##No match###\u0027) \n#\t\t\t\t\t\t#system.perspective.print(\u0027##########end for##############\u0027)\n#\t\t\t\telif filterName \u003d\u003d \u0027Race\u0027:\n#\t\t\t\t\tif originaldataset.getValueAt(i,\"race\") \u003d\u003d filterText:\n#\t\t\t\t\t\tsystem.perspective.print(\u0027##########Match##############\u0027)\n#\t\t\t\t\t\toneRow \u003d [originaldataset.getValueAt(i,0),originaldataset.getValueAt(i,1),originaldataset.getValueAt(i,2),originaldataset.getValueAt(i,3),originaldataset.getValueAt(i,4),originaldataset.getValueAt(i,5),originaldataset.getValueAt(i,6),originaldataset.getValueAt(i,7),originaldataset.getValueAt(i,8),originaldataset.getValueAt(i,9),originaldataset.getValueAt(i,10),originaldataset.getValueAt(i,11),originaldataset.getValueAt(i,12)]\n#\t\t\t\t\t\treturnDataset.append(oneRow)\n#\t\t\t\t\telse:\n#\t\t\t\t\t\tsystem.perspective.print(\u0027##No match###\u0027) \n#\t\t\t\t\t\t#system.perspective.print(\u0027##########end for##############\u0027)\n#\t\t\t\telif filterName \u003d\u003d \u0027Shelter\u0027:\n#\t\t\t\t\tif originaldataset.getValueAt(i,\"facilityName\") \u003d\u003d filterText:\n#\t\t\t\t\t\tsystem.perspective.print(\u0027##########Match##############\u0027)\n#\t\t\t\t\t\toneRow \u003d [originaldataset.getValueAt(i,0),originaldataset.getValueAt(i,1),originaldataset.getValueAt(i,2),originaldataset.getValueAt(i,3),originaldataset.getValueAt(i,4),originaldataset.getValueAt(i,5),originaldataset.getValueAt(i,6),originaldataset.getValueAt(i,7),originaldataset.getValueAt(i,8),originaldataset.getValueAt(i,9),originaldataset.getValueAt(i,10),originaldataset.getValueAt(i,11),originaldataset.getValueAt(i,12)]\n#\t\t\t\t\t\treturnDataset.append(oneRow)\n#\t\t\t\t\telse:\n#\t\t\t\t\t\tsystem.perspective.print(\u0027##No match###\u0027) \n#\t\t\t\t\t\t#system.perspective.print(\u0027##########end for##############\u0027)\t\t\t\t\t\t\t\t\t\n#\t\tself.custom.filteredData \u003d system.dataset.toDataSet(headers, returnDataset)\n#\telse:\n#\t\tsystem.perspective.print(\u0027#in else#\u0027)\n#\t\tself.custom.filteredData \u003d originaldataset\t\t\t",
+              "sessionScope": false,
+              "viewScope": false
+            }
+          ]
+        },
+        "type": "ia.display.table"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column"
+    },
+    "type": "ia.container.flex"
+  }
+}

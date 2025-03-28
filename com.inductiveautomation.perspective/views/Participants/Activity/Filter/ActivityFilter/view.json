@@ -1,0 +1,156 @@
+{
+  "custom": {},
+  "params": {
+    "activity_range": 365,
+    "participant_id": 4739,
+    "selection": null
+  },
+  "propConfig": {
+    "params.activity_range": {
+      "binding": {
+        "config": {
+          "path": "/root/ActivityRange.props.params.selection"
+        },
+        "transforms": [
+          {
+            "code": "\tif value \u003d\u003d 0 or value \u003d\u003d None:\n\t\treturn 36500\n\telse:\n\t\treturn value",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.participant_id": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.selection": {
+      "binding": {
+        "config": {
+          "path": "/root/Embed_ActivityType.props.params.selection"
+        },
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 30
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "Label"
+        },
+        "position": {
+          "basis": "110px",
+          "shrink": 0
+        },
+        "props": {
+          "style": {
+            "classes": "Filter/Header_Text",
+            "paddingLeft": "40px"
+          },
+          "text": "Last Activity:"
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "meta": {
+          "name": "ActivityRange"
+        },
+        "position": {
+          "basis": "150px"
+        },
+        "props": {
+          "params": {
+            "placeholder": "Activity Range",
+            "selection": 365,
+            "selection_in": 365
+          },
+          "path": "1_TEMPLATES/Filtering/Conditionals/Conditional_SingleDropDown_NoClear_ActivityRange",
+          "style": {
+            "classes": "Filter/Filter_Container"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Embed_ActivityType"
+        },
+        "position": {
+          "basis": "400px"
+        },
+        "propConfig": {
+          "props.params.options": {
+            "binding": {
+              "config": {
+                "parameters": {
+                  "participantId": "{view.params.participant_id}"
+                },
+                "queryPath": "Participants/Activities/ActivityFeedFilter"
+              },
+              "type": "query"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "placeholder": "Activity Type",
+            "selection": null
+          },
+          "path": "Participants/Activity/Filter/Activity_MulitDropDown",
+          "style": {
+            "classes": "Filter/Filter_Container",
+            "marginRight": "40px"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "events": {
+          "dom": {
+            "onClick": {
+              "config": {
+                "script": "\t\t## Add Homeless Letter Provided service for participant if there is no service created for current date\n\t\ttime_created \u003d system.date.now()\n\t\tuser_name \u003d self.session.props.auth.user.userName\n\t\tparticipant_id \u003d self.view.params.participant_id\n\t\temployee_id \u003d self.session.custom.loggedInStaffEmployeeID\n\t\tproject \u003d \u0027RITI\u0027\n\t\t\n\t\tget_service_id \u003d system.db.runPrepQuery(\"SELECT id FROM interaction.Service where serviceName \u003d \u0027Homeless Letter Provided\u0027 and timeRetired IS NULL\")\n\t\tif get_service_id !\u003d None and get_service_id.getRowCount()\u003e0:\n\t\t\tservice_id \u003d get_service_id.getValueAt(0,0)\n\t\t\t## check if there is already service added for current date\n\t\t\tis_service_exist \u003d system.db.runPrepQuery(\"SELECT * FROM participant.services where participantId \u003d \" + str(participant_id) + \" and Serviceid \u003d \" + str(service_id) + \" and cast(timeCreated as date) \u003d \u0027\" + str(system.date.format(system.date.now(),\u0027yyyy-MM-dd\u0027)) + \"\u0027\")\n\t\t\tif is_service_exist.getRowCount() \u003c 1:\n\t\t\t\tget_enrollment_id \u003d system.db.runPrepQuery(\"SELECT id FROM interaction.Program where programName \u003d \u0027Hope University\u0027 and timeRetired IS NULL\")\n\t\t\t\tenrollment_id \u003d get_enrollment_id.getValueAt(0,0)\n\t\t\t\tHMIS \u003d 0\n\t\t\t\tquantity \u003d 1\n\t\t\t\tcomment \u003d \"\"\n\t\t\t\t\n\t\t\t\t## get service location\n\t\t\t\tget_service_location_id \u003d system.db.runPrepQuery(\"SELECT id FROM interaction.ServiceLocation where location \u003d \u0027Hope U\u0027 and timeRetired IS NULL\")\n\t\t\t\tservice_location_id \u003d get_service_location_id.getValueAt(0,0) #29 #Hope University\n\t\t\t\t\t\n\t\t\t\t\t\n\t\t\t\tpath \u003d \"Participants/Services/ServicesDetailInsert\"\n\t\t\t\tparameters \u003d {\"time_created\":time_created,\"participant_id\":participant_id,\n\t\t\t\t\t\t\t\"employee_id\":employee_id,\"enrollment_id\":enrollment_id, \n\t\t\t\t\t\t\t\"service_id\":service_id,\"user_name\":user_name,\n\t\t\t\t\t\t\t\"HMIS\":HMIS,\"quantity\":quantity,\n\t\t\t\t\t\t\t\"comment\":comment, \"service_location_id\":service_location_id}\n\t\t\t\tRefresh \u003d system.db.runNamedQuery(project\u003dproject,path\u003dpath,parameters\u003dparameters, getKey\u003dTrue)\t\t\n\t\t\n\t\t## Open Homeless Letter Report popup\n\t\tsystem.perspective.openPopup(\"HomelessReportReport\",\u0027Participants/Activity/Report/HomelessReportReport\u0027, params \u003d {\"ParticipantId\":participant_id}, showCloseIcon \u003d False, resizable \u003d False, draggable \u003d False, overlayDismiss \u003d True, modal  \u003d True)"
+              },
+              "scope": "G",
+              "type": "script"
+            }
+          }
+        },
+        "meta": {
+          "name": "SendToMerge"
+        },
+        "position": {
+          "basis": "120px",
+          "shrink": 0
+        },
+        "props": {
+          "style": {
+            "classes": "Buttons/Main",
+            "marginRight": "30px"
+          },
+          "text": "Homeless Letter"
+        },
+        "type": "ia.input.button"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "style": {
+        "classes": "Filter/Filter_Text"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

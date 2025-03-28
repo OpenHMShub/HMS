@@ -1,0 +1,310 @@
+{
+  "custom": {},
+  "params": {
+    "header": "Date Range",
+    "min": {
+      "$": [
+        "ts",
+        201,
+        1592902180067
+      ],
+      "$ts": 1592902180067
+    },
+    "return_message": "EmployerDashboardLastAction"
+  },
+  "propConfig": {
+    "params.header": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.min": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.return_message": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 150,
+      "width": 330
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "children": [
+          {
+            "meta": {
+              "name": "lblHeader"
+            },
+            "position": {
+              "basis": "1px",
+              "grow": 1
+            },
+            "propConfig": {
+              "props.text": {
+                "binding": {
+                  "config": {
+                    "path": "view.params.header"
+                  },
+                  "type": "property"
+                }
+              }
+            },
+            "props": {
+              "style": {
+                "backgroundColor": "#FFFFFF",
+                "color": "#0C4E8B",
+                "fontSize": "25px",
+                "paddingLeft": "25px"
+              }
+            },
+            "type": "ia.display.label"
+          },
+          {
+            "meta": {
+              "name": "Placeholder"
+            },
+            "position": {
+              "basis": "1px",
+              "grow": 1
+            },
+            "props": {
+              "style": {
+                "classes": "Background/Default"
+              }
+            },
+            "type": "ia.display.label"
+          }
+        ],
+        "meta": {
+          "name": "header"
+        },
+        "position": {
+          "basis": "45px",
+          "shrink": 0
+        },
+        "props": {
+          "style": {
+            "borderBottomColor": "#FFFFFF",
+            "borderBottomStyle": "solid",
+            "borderBottomWidth": 1,
+            "borderLeftStyle": "none",
+            "borderRightStyle": "none",
+            "borderTopStyle": "none"
+          }
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "children": [
+          {
+            "meta": {
+              "name": "Placeholder_0"
+            },
+            "position": {
+              "basis": "1px",
+              "grow": 1
+            },
+            "props": {
+              "style": {
+                "classes": "Text/Detail_Action"
+              }
+            },
+            "type": "ia.display.label"
+          },
+          {
+            "meta": {
+              "name": "EmbedMin"
+            },
+            "position": {
+              "basis": "110px",
+              "shrink": 0
+            },
+            "propConfig": {
+              "props.params.date": {
+                "binding": {
+                  "config": {
+                    "bidirectional": true,
+                    "path": "view.params.min"
+                  },
+                  "type": "property"
+                }
+              }
+            },
+            "props": {
+              "params": {
+                "text": "Begin Date"
+              },
+              "path": "Employers/Templates/Input_DateNoHeader"
+            },
+            "type": "ia.display.view"
+          },
+          {
+            "meta": {
+              "name": "Placeholder_1"
+            },
+            "position": {
+              "basis": "1px",
+              "grow": 1
+            },
+            "props": {
+              "style": {
+                "classes": "Text/Detail_Action"
+              }
+            },
+            "type": "ia.display.label"
+          }
+        ],
+        "meta": {
+          "name": "body"
+        },
+        "position": {
+          "basis": "75px",
+          "shrink": 0
+        },
+        "props": {
+          "alignItems": "center",
+          "style": {
+            "backgroundColor": "#FFFFFF"
+          }
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "children": [
+          {
+            "meta": {
+              "name": "filler"
+            },
+            "position": {
+              "basis": "1px",
+              "grow": 1
+            },
+            "type": "ia.display.label"
+          },
+          {
+            "events": {
+              "dom": {
+                "onClick": {
+                  "config": {
+                    "script": "\tsystem.perspective.closePopup(\u0027sM9htpBg\u0027)"
+                  },
+                  "scope": "G",
+                  "type": "script"
+                }
+              }
+            },
+            "meta": {
+              "name": "btnCancel"
+            },
+            "position": {
+              "basis": "80px",
+              "shrink": 0
+            },
+            "props": {
+              "image": {
+                "width": 50
+              },
+              "style": {
+                "backgroundColor": "#0C4E8B",
+                "borderBottomLeftRadius": 5,
+                "borderBottomRightRadius": 5,
+                "borderStyle": "solid",
+                "borderTopLeftRadius": 5,
+                "borderTopRightRadius": 5,
+                "borderWidth": 1
+              },
+              "text": "Cancel",
+              "textStyle": {
+                "color": "#FFFFFF"
+              }
+            },
+            "type": "ia.input.button"
+          },
+          {
+            "meta": {
+              "name": "filler1"
+            },
+            "position": {
+              "basis": "40px",
+              "shrink": 0
+            },
+            "type": "ia.display.label"
+          },
+          {
+            "events": {
+              "dom": {
+                "onClick": {
+                  "config": {
+                    "script": "\timport traceback\n\ttry:\n\t\t#convert to the date form if sitll in long form\n\t\ttry:\n\t\t\tbegin_date \u003d system.date.fromMillis(self.view.params.min)\n\t\texcept:\n\t\t\tbegin_date \u003d self.view.params.min\n\t\t#Send a message to the requesting view\n\t\tpayload \u003d {\"min\":begin_date}\n\t\tmessageiD \u003d self.view.params.return_message\n\t\tsystem.perspective.sendMessage(messageiD,payload,scope \u003d \"page\")\n\t\tsystem.perspective.closePopup(\u0027sM9htpBg\u0027)\n\texcept:\n\t\tlogger \u003d system.util.getLogger(\"Participants Filter Template DateRangeSelection btnApply\")\n\t\tmsg \u003d traceback.format_exc()\n\t\tlogger.error(msg)"
+                  },
+                  "scope": "G",
+                  "type": "script"
+                }
+              }
+            },
+            "meta": {
+              "name": "btnApply"
+            },
+            "position": {
+              "basis": "80px",
+              "shrink": 0
+            },
+            "props": {
+              "style": {
+                "backgroundColor": "#0C4E8B",
+                "borderBottomLeftRadius": 5,
+                "borderBottomRightRadius": 5,
+                "borderStyle": "solid",
+                "borderTopLeftRadius": 5,
+                "borderTopRightRadius": 5,
+                "borderWidth": 1
+              },
+              "text": "Apply",
+              "textStyle": {
+                "color": "#FFFFFF"
+              }
+            },
+            "type": "ia.input.button"
+          },
+          {
+            "meta": {
+              "name": "filler_0"
+            },
+            "position": {
+              "basis": "1px",
+              "grow": 1
+            },
+            "type": "ia.display.label"
+          }
+        ],
+        "meta": {
+          "name": "footer"
+        },
+        "position": {
+          "basis": "30px",
+          "shrink": 0
+        },
+        "props": {
+          "alignItems": "flex-start",
+          "style": {
+            "backgroundColor": "#FFFFFF",
+            "overflow": "hidden"
+          }
+        },
+        "type": "ia.container.flex"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column"
+    },
+    "type": "ia.container.flex"
+  }
+}

@@ -1,0 +1,439 @@
+{
+  "custom": {
+    "facilityName": "Abc",
+    "occupiedInfo": {
+      "$": [
+        "ds",
+        192,
+        1612657851054
+      ],
+      "$columns": [
+        {
+          "data": [],
+          "name": "participantName",
+          "type": "String"
+        },
+        {
+          "data": [],
+          "name": "eventStart",
+          "type": "Date"
+        },
+        {
+          "data": [],
+          "name": "roomName",
+          "type": "String"
+        },
+        {
+          "data": [],
+          "name": "bedName",
+          "type": "String"
+        },
+        {
+          "data": [],
+          "name": "bedNameNo",
+          "type": "Integer"
+        }
+      ]
+    },
+    "reservedInfo": {
+      "$": [
+        "ds",
+        192,
+        1612657851053
+      ],
+      "$columns": [
+        {
+          "data": [],
+          "name": "participantName",
+          "type": "String"
+        },
+        {
+          "data": [],
+          "name": "reservationEnd",
+          "type": "Date"
+        },
+        {
+          "data": [],
+          "name": "roomName",
+          "type": "String"
+        },
+        {
+          "data": [],
+          "name": "bedName",
+          "type": "String"
+        },
+        {
+          "data": [],
+          "name": "bedNameNo",
+          "type": "Integer"
+        }
+      ]
+    },
+    "startId": "2020-11-11 11:12:13"
+  },
+  "params": {
+    "endDate": "2021-01-25",
+    "shelterID": -1,
+    "startDate": "2021-01-25"
+  },
+  "propConfig": {
+    "custom.facilityName": {
+      "persistent": true
+    },
+    "custom.startId": {
+      "persistent": true
+    },
+    "params.endDate": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.shelterID": {
+      "onChange": {
+        "enabled": null,
+        "script": "\troot \u003d self.getChild(\"root\")\n\t\n\temvCurrentDate \u003d root.getChild(\"CurrentDate_EmbeddedView\")\n\t\n\tfacilityId \u003d currentValue.value\n\t\t\n\tdateIn \u003d root.getAsClientTime(system.date.now())\n\temvCurrentDate.props.params.Info \u003d \u0027Room Availability\u0027 #system.date.format(dateIn,\"MMM d, yyyy h:mm a\")\n\t\n\troot.setShelterInfo(facilityId)\n\t\n\tpayload \u003d {\u0027dateIn\u0027: dateIn, \u0027facilityId\u0027:facilityId}\n\tsystem.perspective.sendMessage(\u0027mhSetPrevAvailability\u0027,payload)\n\n\troot.setReservedInfo(dateIn, facilityId)\n\troot.setOccupiedInfo(dateIn, facilityId)"
+      },
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.startDate": {
+      "access": "PUBLIC",
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "width": 599
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "PreviewHeader_EmbeddedView"
+        },
+        "position": {
+          "basis": "62px",
+          "shrink": 0
+        },
+        "props": {
+          "path": "Shelter/Dashboard/Preview/Cards/PreviewHeader",
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Header_EmbeddedView"
+        },
+        "position": {
+          "basis": "Auto",
+          "shrink": 0
+        },
+        "props": {
+          "params": {
+            "Text": "No data for facilityId -1!"
+          },
+          "path": "Shelter/Dashboard/Preview/Cards/Header"
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "CurrentDate_EmbeddedView"
+        },
+        "position": {
+          "basis": "Auto",
+          "shrink": 0
+        },
+        "props": {
+          "params": {
+            "Info": "Room Availability"
+          },
+          "path": "Shelter/Dashboard/Preview/Cards/OnlyLabel",
+          "style": {
+            "borderTopColor": "#e6e6e6",
+            "borderTopStyle": "solid",
+            "borderTopWidth": 1
+          },
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "children": [
+          {
+            "meta": {
+              "name": "TableEmbeddedView_0"
+            },
+            "position": {
+              "basis": "Auto"
+            },
+            "props": {
+              "params": {
+                "Description": "",
+                "Info": ""
+              },
+              "path": "Shelter/Dashboard/Preview/Cards/Availability_Table",
+              "useDefaultViewWidth": true
+            },
+            "type": "ia.display.view"
+          },
+          {
+            "meta": {
+              "name": "AboutHeader_EmbeddedView_0"
+            },
+            "position": {
+              "basis": "Auto",
+              "shrink": 0
+            },
+            "props": {
+              "params": {
+                "Text": "Reservations"
+              },
+              "path": "Shelter/Dashboard/Preview/Cards/AboutHeader",
+              "style": {
+                "borderTopColor": "#e6e6e6",
+                "borderTopStyle": "solid",
+                "borderTopWidth": 1
+              },
+              "useDefaultViewHeight": true
+            },
+            "type": "ia.display.view"
+          },
+          {
+            "meta": {
+              "name": "RepeaterHeader_EmbeddedView_0",
+              "visible": false
+            },
+            "position": {
+              "basis": "Auto",
+              "shrink": 0
+            },
+            "props": {
+              "params": {
+                "info1": "Participant",
+                "info2": "Expiration",
+                "info3": "Room",
+                "info4": "Bed"
+              },
+              "path": "Shelter/Dashboard/Preview/Cards/FourLabels_Header",
+              "useDefaultViewHeight": true,
+              "useDefaultViewWidth": true
+            },
+            "type": "ia.display.view"
+          },
+          {
+            "meta": {
+              "name": "Reserved_FlexRepeater"
+            },
+            "position": {
+              "basis": "Auto"
+            },
+            "props": {
+              "direction": "column",
+              "elementPosition": {
+                "grow": 0,
+                "shrink": 0
+              },
+              "path": "Shelter/Dashboard/Preview/Cards/FourLabels"
+            },
+            "type": "ia.display.flex-repeater"
+          },
+          {
+            "meta": {
+              "name": "PlaceHolder_EmbeddedView"
+            },
+            "position": {
+              "basis": "Auto",
+              "shrink": 0
+            },
+            "props": {
+              "params": {
+                "info1": "",
+                "info2": "",
+                "info3": "",
+                "info4": ""
+              },
+              "path": "Shelter/Dashboard/Preview/Cards/FourLabels",
+              "useDefaultViewHeight": true
+            },
+            "type": "ia.display.view"
+          },
+          {
+            "meta": {
+              "name": "AboutHeader_EmbeddedView_1"
+            },
+            "position": {
+              "basis": "Auto",
+              "shrink": 0
+            },
+            "props": {
+              "params": {
+                "Text": "Current Residents"
+              },
+              "path": "Shelter/Dashboard/Preview/Cards/AboutHeader",
+              "style": {
+                "borderTopColor": "#e6e6e6",
+                "borderTopStyle": "solid",
+                "borderTopWidth": 1
+              },
+              "useDefaultViewHeight": true
+            },
+            "type": "ia.display.view"
+          },
+          {
+            "meta": {
+              "name": "RepeaterHeader_EmbeddedView_1",
+              "visible": false
+            },
+            "position": {
+              "basis": "Auto",
+              "shrink": 0
+            },
+            "props": {
+              "params": {
+                "info1": "Participant",
+                "info2": "Check-In",
+                "info3": "Room",
+                "info4": "Bed"
+              },
+              "path": "Shelter/Dashboard/Preview/Cards/FourLabels_Header",
+              "useDefaultViewHeight": true,
+              "useDefaultViewWidth": true
+            },
+            "type": "ia.display.view"
+          },
+          {
+            "meta": {
+              "name": "Occupied_FlexRepeater"
+            },
+            "position": {
+              "basis": "Auto"
+            },
+            "props": {
+              "direction": "column",
+              "elementPosition": {
+                "grow": 0,
+                "shrink": 0
+              },
+              "path": "Shelter/Dashboard/Preview/Cards/FourLabels"
+            },
+            "type": "ia.display.flex-repeater"
+          }
+        ],
+        "meta": {
+          "name": "FlexContainer"
+        },
+        "position": {
+          "basis": "200px",
+          "grow": 1,
+          "shrink": 0
+        },
+        "props": {
+          "direction": "column"
+        },
+        "scripts": {
+          "customMethods": [
+            {
+              "name": "XsetReservedInfo",
+              "params": [
+                "dateIn",
+                "facilityId"
+              ],
+              "script": "\tflrReserved \u003d self.getChild(\"Reserved_FlexRepeater\")\n\temvRepeaterHeader \u003d self.getChild(\"RepeaterHeader_EmbeddedView_0\")\n\t#flrReserved.meta.visible \u003d False\n\t\n\tstartDate \u003d dateIn\n\tendDate \u003d dateIn\n\t\n\ttry:\n\t\tfacilityId \u003d long(facilityId)\n\texcept:\n\t\traise \n\telse:\n\n\t\tqueryReservedInfo \u003d \"\"\"\n\t\tDECLARE @StartInterval date \u003d ?   \n\t\tDECLARE @EndInterval date \u003d ?\n\t\t\n\t\tSELECT  [Reservation].[reservationStart] \n\t\t\t,[Reservation].[reservationEnd]\n\t\t\t,CONCAT_WS(\u0027 \u0027,[Human].[firstName],[Human].[middleName],[Human].[lastName]) AS participantName\n\t\t\t,[Reservation].participantId\n\t\tFROM [lodging].[Reservation] \n\t\t\tINNER JOIN [participant].[Participant] ON [Participant].[id] \u003d [Reservation].[participantId] \n\t\t\tINNER JOIN [humans].[Human] ON [Participant].[humanId] \u003d [Human].[id] \n\t\t\tINNER JOIN [lodging].[Bed] ON [Reservation].[bedId] \u003d [Bed].[id]\n\t\t\tINNER JOIN [lodging].[Room] ON [Bed].[roomId] \u003d [Room].[id]\n\t\t\t\n\t\tWHERE ([Reservation].[timeRetired] IS NULL\n\t\t\tAND [Reservation].[reservationStart] IS NOT NULL    \n\t\t\tAND CAST([Reservation].[reservationStart] AS date) \u003c\u003d @EndInterval\n\t\t\tAND CAST(ISNULL([Reservation].[reservationEnd],@EndInterval) AS date) \u003e\u003d @StartInterval\n\t\t\tAND [Room].[facilityId] \u003d ?) \n\t\t\n\t\tORDER BY [Reservation].[reservationStart]\"\"\"\n\t\t\n\t\tresult \u003d system.db.runPrepQuery(queryReservedInfo,[startDate,endDate, facilityId],\u0027RITIOps\u0027)\n\t\tself.view.custom.reservedInfo \u003d result\n\t\t\n\t\tauxList \u003d []\n\t\tfor item in system.dataset.toPyDataSet(result):\n\t\t\tauxDict \u003d {}\n\t\t\ttry:\n\t\t\t\tauxDict[\u0027startDate\u0027] \u003d system.date.format(item[\u0027reservationStart\u0027])\n\t\t\texcept:\n\t\t\t\tauxDict[\u0027startDate\u0027] \u003d None\n\t\t\t\t\n\t\t\ttry:\n\t\t\t\tauxDict[\u0027endDate\u0027] \u003d system.date.format(item[\u0027reservationEnd\u0027])\n\t\t\texcept:\n\t\t\t\tauxDict[\u0027endDate\u0027] \u003d None\t\t\t\t\n\t\n\t\t\tauxDict[\u0027participantName\u0027] \u003d item[\u0027participantName\u0027]\n\t\t\tauxDict[\u0027instanceStyle\u0027] \u003d {} \n\t\t\tauxDict[\u0027instanceStyle\u0027][\u0027classes\u0027] \u003d \u0027\u0027\n\t\t\tauxDict[\u0027instancePosition\u0027] \u003d {} \n\t\t\tauxList.append(auxDict)\n\t\n\t\n\t\tflrReserved.props.instances \u003d auxList\n\t\t#flrReserved.meta.visible \u003d True\n\t\t\n\t\temvRepeaterHeader.meta.visible \u003d False if len(auxList) \u003d\u003d 0 else True\n\t\n\t"
+            },
+            {
+              "name": "XsetOccupiedInfo",
+              "params": [
+                "dateIn",
+                "facilityId"
+              ],
+              "script": "\tflrOccupied \u003d self.getChild(\"Occupied_FlexRepeater\")\n\temvRepeaterHeader \u003d self.getChild(\"RepeaterHeader_EmbeddedView_1\")\n\t\n\ttry:\n\t\tfacilityId \u003d long(facilityId)\n\texcept:\n\t\traise \n\telse:\n\t\tstartDate \u003d dateIn\n\t\tendDate \u003d dateIn\n\t\n\t\tqueryOccupiedInfo \u003d \"\"\"\n\t\tDECLARE @StartInterval date \u003d ?\n\t\tDECLARE @EndInterval date \u003d ?\n\t\t\t\t\n\t\tSELECT eventStart\n\t\t\t,eventEnd\n\t\t\t,CONCAT_WS(\u0027 \u0027,[Human].[firstName],[Human].[middleName],[Human].[lastName]) AS participantName\n\t\t\t,[BedLog].participantId  \n\t\tFROM [lodging].[BedLog]  \n\t\t\tINNER JOIN [participant].[Participant] ON [Participant].[id] \u003d [BedLog].[participantId] \n\t\t\tINNER JOIN [humans].[Human] ON [Participant].[humanId] \u003d [Human].[id]\n\t\t\tINNER JOIN [lodging].[Bed] ON [BedLog].[bedId] \u003d [Bed].[id]\n\t\t\tINNER JOIN [lodging].[Room] ON [Bed].[roomId] \u003d [Room].[id] \n\t\tWHERE ([BedLog].[eventStart] IS NOT NULL    \n\t\tAND CAST([BedLog].[eventStart] AS date) \u003c\u003d @EndInterval\n\t\tAND CAST(ISNULL([BedLog].[eventEnd],@EndInterval) AS date) \u003e\u003d @StartInterval\n\t\tAND [Room].[facilityId] \u003d ?) \n\t\t\n\t\tORDER BY [BedLog].[eventStart]\"\"\"\n\t\t\n\t\tresult \u003d system.db.runPrepQuery(queryOccupiedInfo,[startDate,endDate, facilityId],\u0027RITIOps\u0027)\n\t\tself.view.custom.occupiedInfo \u003d result\n\t\t\n\t\t\n\t\tauxList \u003d []\n\t\tfor item in system.dataset.toPyDataSet(result):\n\t\t\tauxDict \u003d {}\n\t\t\ttry:\n\t\t\t\tauxDict[\u0027startDate\u0027] \u003d system.date.format(item[\u0027eventStart\u0027])\n\t\t\texcept:\n\t\t\t\tauxDict[\u0027startDate\u0027] \u003d None\n\t\t\t\t\n\t\t\ttry:\n\t\t\t\tauxDict[\u0027endDate\u0027] \u003d system.date.format(item[\u0027eventEnd\u0027])\n\t\t\texcept:\n\t\t\t\tauxDict[\u0027endDate\u0027] \u003d None\t\t\t\t\n\t\n\t\t\tauxDict[\u0027participantName\u0027] \u003d item[\u0027participantName\u0027]\n\t\t\tauxDict[\u0027instanceStyle\u0027] \u003d {} \n\t\t\tauxDict[\u0027instanceStyle\u0027][\u0027classes\u0027] \u003d \u0027\u0027\n\t\t\tauxDict[\u0027instancePosition\u0027] \u003d {} \n\t\t\tauxList.append(auxDict)\n\t\n\t\tflrOccupied.props.instances \u003d auxList\n\t\t\n\t\temvRepeaterHeader.meta.visible \u003d False if len(auxList) \u003d\u003d 0 else True\n\t\t\n\t\tsetOccupiedInfo\n\t\t\n\t\tdateIn, facilityId\n\t\t"
+            }
+          ],
+          "extensionFunctions": null,
+          "messageHandlers": []
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "events": {
+          "component": {
+            "onActionPerformed": {
+              "config": {
+                "script": "\troot \u003d self.parent \n\tshelterID \u003d self.view.params.shelterID\n#\tsystem.perspective.navigate(page \u003d \u0027Shelter/Detail/{}\u0027.format(shelterID))\n\tsystem.perspective.navigate(\u0027/Shelter/Detail/\u0027 + str(shelterID))"
+              },
+              "scope": "G",
+              "type": "script"
+            }
+          }
+        },
+        "meta": {
+          "name": "Button_0"
+        },
+        "position": {
+          "basis": "32px",
+          "shrink": 0
+        },
+        "props": {
+          "style": {
+            "classes": "Buttons/Main",
+            "marginBottom": "15px",
+            "marginLeft": "240px",
+            "marginRight": "240px",
+            "marginTop": "15px"
+          },
+          "text": "View record"
+        },
+        "type": "ia.input.button"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column",
+      "style": {
+        "classes": "Background/Default"
+      }
+    },
+    "scripts": {
+      "customMethods": [
+        {
+          "name": "getAsClientTime",
+          "params": [
+            "datetimeInput"
+          ],
+          "script": "\ttimeClientOffset \u003d self.session.props.device.timezone.utcOffset - system.date.getTimezoneOffset()\n\ttimeClient \u003d system.date.addMinutes(datetimeInput,int(timeClientOffset*60))\n\t\n\treturn timeClient\n\n\n"
+        },
+        {
+          "name": "setShelterInfo",
+          "params": [
+            "facilityId"
+          ],
+          "script": "\temvHeader \u003d self.getChild(\"Header_EmbeddedView\")\n\n\ttry:\n\t\tfacilityId \u003d long(facilityId)\n\texcept:\n\t\temvHeader.props.params.Text \u003d \u0027No data for facilityId {}!\u0027.format(facilityId)\n\telse:\n\t\n\t\tqueryShelterInfo \u003d \"\"\"\n\t\tSELECT [facilityName]\n\t\t\tFROM [lodging].[Facility] \n\t\tWHERE [id] \u003d ?\"\"\"\n\t\n\t\tresult \u003d system.db.runPrepQuery(queryShelterInfo,[facilityId],\u0027RITIOps\u0027)\n\t\t\n\t\tif result.rowCount \u003d\u003d 1:\n\t\t\temvHeader.props.params.Text \u003d result.getValueAt(0, \u0027facilityName\u0027)\n\t\telse:\n\t\t\temvHeader.props.params.Text \u003d \u0027No data for facilityId {}!\u0027.format(facilityId)\n\t\n\t\n\n\t"
+        },
+        {
+          "name": "setReservedInfo",
+          "params": [
+            "dateIn",
+            "facilityId"
+          ],
+          "script": "\t\n\tflex \u003d self.getChild(\"FlexContainer\")\n\tflrReserved \u003d flex.getChild(\"Reserved_FlexRepeater\")\n\temvRepeaterHeader \u003d flex.getChild(\"RepeaterHeader_EmbeddedView_0\")\n\t#flrReserved.meta.visible \u003d False\n\n\tstartDate \u003d dateIn\n\tendDate \u003d dateIn\n\n\tfacilityId \u003d long(facilityId)\n\n\t# Note: query result is sorted by name extracted from bedName (bedNameNo)\n\tqueryReservedInfo \u003d \"\"\"\n\tDECLARE @StartInterval date \u003d ?   \n\tDECLARE @EndInterval date \u003d ?\n\t\t\t\n\tSELECT  CONCAT_WS(\u0027 \u0027,[Human].[firstName],[Human].[middleName],[Human].[lastName]) AS participantName\n\t\t,[Reservation].[reservationEnd]\n\t\t,[Room].[roomName]\n\t\t,[Bed].[bedName]\n\t\t,ISNULL(TRY_CONVERT(int, SUBSTRING([bedName], PATINDEX(\u0027%[0-9]%\u0027, [bedName]), LEN([bedName]))),-1) bedNameNo\n\tFROM [lodging].[Reservation] \n\t\tINNER JOIN [participant].[Participant] ON [Participant].[id] \u003d [Reservation].[participantId] \n\t\tINNER JOIN [humans].[Human] ON [Participant].[humanId] \u003d [Human].[id] \n\t\tINNER JOIN [lodging].[Bed] ON [Reservation].[bedId] \u003d [Bed].[id]\n\t\tINNER JOIN [lodging].[Room] ON [Bed].[roomId] \u003d [Room].[id]\n\t\t\t\t\n\tWHERE ([Reservation].[timeRetired] IS NULL\n\t\tAND [Reservation].[reservationStart] IS NOT NULL    \n\t\tAND CAST([Reservation].[reservationStart] AS date) \u003c\u003d @EndInterval\n\t\tAND CAST(ISNULL([Reservation].[reservationEnd],@EndInterval) AS date) \u003e\u003d @StartInterval\n\t\tAND [Room].[facilityId] \u003d ?) \n\t\t\t\n\tORDER BY [Room].[roomName], ISNULL(TRY_CONVERT(int, SUBSTRING([bedName], PATINDEX(\u0027%[0-9]%\u0027, [bedName]), LEN([bedName]))),-1)\"\"\"\n\t\n\tresult \u003d system.db.runPrepQuery(queryReservedInfo,[startDate,endDate, facilityId],\u0027RITIOps\u0027)\n\tself.view.custom.reservedInfo \u003d result\n\t\n\tauxList \u003d []\n\tfor item in system.dataset.toPyDataSet(result):\n\t\t\n\t\tauxDict \u003d {}\n\t\tauxDict[\u0027info1\u0027] \u003d item[\u0027participantName\u0027]\n\t\tauxDict[\u0027info2\u0027] \u003d system.date.format(item[\u0027reservationEnd\u0027],\"MMM d, yyyy\") if item[\u0027reservationEnd\u0027] is not None else \u0027-\u0027\n\t\tauxDict[\u0027info3\u0027] \u003d item[\u0027roomName\u0027]\n\t\tauxDict[\u0027info4\u0027] \u003d item[\u0027bedName\u0027]\n\t\t\n\t\tauxDict[\u0027instanceStyle\u0027] \u003d {} \n\t\tauxDict[\u0027instanceStyle\u0027][\u0027classes\u0027] \u003d \u0027\u0027\n\t\tauxDict[\u0027instancePosition\u0027] \u003d {} \n\t\tauxList.append(auxDict)\n\n\n\tflrReserved.props.instances \u003d auxList\n\t#flrReserved.meta.visible \u003d True\n\t\n\temvRepeaterHeader.meta.visible \u003d False if len(auxList) \u003d\u003d 0 else True\n "
+        },
+        {
+          "name": "setOccupiedInfo",
+          "params": [
+            "dateIn",
+            "facilityId"
+          ],
+          "script": "\tflex \u003d self.getChild(\"FlexContainer\")\n\tflrOccupied \u003d flex.getChild(\"Occupied_FlexRepeater\")\n\temvRepeaterHeader \u003d flex.getChild(\"RepeaterHeader_EmbeddedView_1\")\n\n\tfacilityId \u003d long(facilityId)\n\n\tstartDate \u003d dateIn\n\tendDate \u003d dateIn\n\t\n\t# Note: query result is sorted by name extracted from bedName (bedNameNo)\n\tqueryOccupiedInfo \u003d \"\"\"\n\tDECLARE @StartInterval date \u003d ?\n\tDECLARE @EndInterval date \u003d ?\n\t\t\t\n\tSELECT CONCAT_WS(\u0027 \u0027,[Human].[firstName],[Human].[middleName],[Human].[lastName]) AS participantName\n\t\t\t,eventStart\n\t\t\t,[Room].[roomName]\n\t\t\t,[Bed].[bedName]\n\t\t\t,ISNULL(TRY_CONVERT(int, SUBSTRING([bedName], PATINDEX(\u0027%[0-9]%\u0027, [bedName]), LEN([bedName]))),-1) bedNameNo\n\tFROM [lodging].[BedLog]  \n\t\tINNER JOIN [participant].[Participant] ON [Participant].[id] \u003d [BedLog].[participantId] \n\t\tINNER JOIN [humans].[Human] ON [Participant].[humanId] \u003d [Human].[id]\n\t\tINNER JOIN [lodging].[Bed] ON [BedLog].[bedId] \u003d [Bed].[id]\n\t\tINNER JOIN [lodging].[Room] ON [Bed].[roomId] \u003d [Room].[id] \n\tWHERE ([BedLog].[eventStart] IS NOT NULL \n\tAND [lodging].[Room].[timeRetired] is NULL\n\tAND [lodging].[Bed].[timeRetired] is NULL   \n\tAND CAST([BedLog].[eventStart] AS date) \u003c\u003d @EndInterval\n\tAND CAST(ISNULL([BedLog].[eventEnd],@EndInterval) AS date) \u003e\u003d @StartInterval\n\tAND [Room].[facilityId] \u003d ?) \n\t\n\tORDER BY [Room].[roomName], ISNULL(TRY_CONVERT(int, SUBSTRING([bedName], PATINDEX(\u0027%[0-9]%\u0027, [bedName]), LEN([bedName]))),-1)\"\"\"\n\t\n\tresult \u003d system.db.runPrepQuery(queryOccupiedInfo,[startDate,endDate, facilityId],\u0027RITIOps\u0027)\n\tself.view.custom.occupiedInfo \u003d result\n\t\n\t\n\tauxList \u003d []\n\tfor item in system.dataset.toPyDataSet(result):\n\n\t\tauxDict \u003d {}\n\t\tauxDict[\u0027info1\u0027] \u003d item[\u0027participantName\u0027]\n\t\tauxDict[\u0027info2\u0027] \u003d system.date.format(item[\u0027eventStart\u0027],\"MMM d, yyyy\") if item[\u0027eventStart\u0027] is not None else \u0027-\u0027\n\t\tauxDict[\u0027info3\u0027] \u003d item[\u0027roomName\u0027]\n\t\tauxDict[\u0027info4\u0027] \u003d item[\u0027bedName\u0027]\n\n\t\tauxDict[\u0027instanceStyle\u0027] \u003d {} \n\t\tauxDict[\u0027instanceStyle\u0027][\u0027classes\u0027] \u003d \u0027\u0027\n\t\tauxDict[\u0027instancePosition\u0027] \u003d {} \n\t\tauxList.append(auxDict)\n\n\tflrOccupied.props.instances \u003d auxList\n\t\n\temvRepeaterHeader.meta.visible \u003d False if len(auxList) \u003d\u003d 0 else True\n\n\t\t"
+        }
+      ],
+      "extensionFunctions": null,
+      "messageHandlers": []
+    },
+    "type": "ia.container.flex"
+  }
+}

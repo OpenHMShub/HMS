@@ -1,0 +1,138 @@
+{
+  "custom": {},
+  "params": {
+    "jsonExpo": "value",
+    "jsonSource": "value"
+  },
+  "propConfig": {
+    "params.jsonExpo": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.jsonSource": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 50,
+      "width": 600
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "EmbeddedView_Participants"
+        },
+        "position": {
+          "basis": "320px",
+          "grow": 1
+        },
+        "props": {
+          "params": {
+            "jsonBase": "{\"cnd\":\"[participant].[Participant].[id] \u003d ?\", \"prepQuery\":{\"query\":\"SELECT [participant].[Participant].id AS [participantId], CONCAT_WS(\u0027 \u0027,[humans].[Human].lastName, [humans].[Human].middleName, [humans].[Human].firstName) AS [Participant] FROM [participant].[Participant] INNER JOIN [humans].[Human] ON [participant].[Participant].humanId \u003d [humans].[Human].id ORDER BY [humans].[Human].lastName\"}}",
+            "jsonExpo": "{\"Label.text\":\"Participants\"}",
+            "jsonIn": "{\"wherePlus\":[]}",
+            "jsonOut": "{\"wherePlus\":[{\"arg\":-1,\"cnd\":\"-1 \u003d ?\"}]}"
+          },
+          "path": "Shelter/Schedule/Cards/DropdownInput"
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "EmbeddedView_Facility"
+        },
+        "position": {
+          "basis": "320px",
+          "grow": 1
+        },
+        "propConfig": {
+          "props.params.jsonOut": {
+            "onChange": {
+              "enabled": null,
+              "script": "\tembSec \u003d self.getSibling(\"EmbeddedView_Rooms\")\n\t#system.perspective.print((\u0027before embSec.props.params.jsonIn: \u0027,embSec.props.params.jsonIn))\n\t\n\t# Convert 2nd view jsonBase to python collection\n\tsecPyIn \u003d system.util.jsonDecode(embSec.props.params.jsonIn)\n\t\n\t# Convert 1st view jsonOut to python collection\n\tprimPyOut \u003d system.util.jsonDecode(currentValue.value)\n\t\n\t# Set 2nd view jsonIn node \u0027args\u0027 to array containing value \n\t# from 1st view jsonOut node \u0027args\u0027  \n\t# Do job in python collection then convert to json\n\tsecPyIn[\u0027wherePlus\u0027] \u003d primPyOut[\u0027wherePlus\u0027] \n\t\n\t\n\tembSec.props.params.jsonIn \u003d system.util.jsonEncode(secPyIn)\n\t\n\t#system.perspective.print((\u0027after embSec.props.params.jsonIn: \u0027,embSec.props.params.jsonIn))\n\n\n"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "jsonBase": "{\"cnd\":\"[lodging].[Facility].[id] \u003d ?\", \"prepQuery\":{\"query\":\"SELECT [id] AS [facilityID], [facilityName] AS [Facility] FROM [RITIOps].[lodging].[Facility] WHERE timeRetired IS NULL ORDER BY facilityName\"}}",
+            "jsonExpo": "{\"Label.text\":\"Facility\"}",
+            "jsonIn": "{\"wherePlus\":[]}",
+            "jsonOut": "{\"wherePlus\":[{\"arg\":3,\"cnd\":\"[lodging].[Facility].[id] \u003d ?\"}]}"
+          },
+          "path": "Shelter/Schedule/Cards/DropdownInput"
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "EmbeddedView_Rooms"
+        },
+        "position": {
+          "basis": "320px",
+          "grow": 1
+        },
+        "propConfig": {
+          "props.params.jsonOut": {
+            "onChange": {
+              "enabled": null,
+              "script": "\tembSec \u003d self.getSibling(\"EmbeddedView_Beds\")\n\n\t#system.perspective.print((\u0027before embSec.props.params.jsonIn: \u0027,embSec.props.params.jsonIn))\n\t\n\t# Convert 2nd view jsonBase to python collection\n\tsecPyIn \u003d system.util.jsonDecode(embSec.props.params.jsonIn)\n\t\n\t# Convert 1st view jsonOut to python collection\n\tprimPyOut \u003d system.util.jsonDecode(currentValue.value)\n\t\n\t# Set 2nd view jsonIn node \u0027args\u0027 to array containing value \n\t# from 1st view jsonOut node \u0027args\u0027  \n\t# Do job in python collection then convert to json\n\tsecPyIn[\u0027wherePlus\u0027] \u003d primPyOut[\u0027wherePlus\u0027] \n\t\n\t\n\tembSec.props.params.jsonIn \u003d system.util.jsonEncode(secPyIn)\n\t\n\t#system.perspective.print((\u0027after embSec.props.params.jsonIn: \u0027,embSec.props.params.jsonIn))"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "jsonBase": "{\"cnd\":\"[lodging].[Room].[id] \u003d ?\", \"prepQuery\":{\"query\":\"SELECT [Room].[id] [roomId],[roomName] AS [Room] FROM [RITIOps].[lodging].[Room] WHERE facilityId \u003d  ? ORDER BY roomName \"}}",
+            "jsonExpo": "{\"Label.text\":\"Rooms\"}",
+            "jsonIn": "{\"wherePlus\":[{\"arg\":3,\"cnd\":\"[lodging].[Facility].[id] \u003d ?\"}]}",
+            "jsonOut": "{\"wherePlus\":[{\"arg\":45,\"cnd\":\"[lodging].[Room].[id] \u003d ?\"}]}"
+          },
+          "path": "Shelter/Schedule/Cards/DropdownInput"
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "EmbeddedView_Beds"
+        },
+        "position": {
+          "basis": "320px",
+          "grow": 1
+        },
+        "props": {
+          "params": {
+            "jsonBase": "{\"cnd\":\"[lodging].[Bed].[id] \u003d ?\", \"prepQuery\":{\"args\":[45],\"query\":\"SELECT  [id] AS [bedId],[bedName] AS [Bed] FROM [RITIOps].[lodging].[Bed] WHERE  timeRetired IS NULL AND roomId \u003d ? ORDER BY [id]\"}}",
+            "jsonExpo": "{\"Label.text\":\"Beds\"}",
+            "jsonIn": "{\"wherePlus\":[{\"arg\":45,\"cnd\":\"[lodging].[Room].[id] \u003d ?\"}]}",
+            "jsonOut": "{\"wherePlus\":[{\"arg\":-1,\"cnd\":\"-1 \u003d ?\"}]}"
+          },
+          "path": "Shelter/Schedule/Cards/DropdownInput"
+        },
+        "type": "ia.display.view"
+      }
+    ],
+    "custom": {
+      "facilityIdForReservation": null
+    },
+    "meta": {
+      "name": "root"
+    },
+    "scripts": {
+      "customMethods": [],
+      "messageHandlers": [
+        {
+          "messageType": "reservationselected",
+          "pageScope": true,
+          "script": "\t# implement your handler here\n\t#payload \u003d {\u0027reservationId\u0027:reservationId, \u0027bedId\u0027:bedId, \u0027participantId\u0027:participantId, \u0027roomId\u0027:roomId\n\tif (self.getChild(\"EmbeddedView Facility\").position.display ):\n\t\tself.getChild(\"EmbeddedView Facility\").props.params.SelectedValue \u003d int(payload[\u0027facilityId\u0027])\n\tself.view.params.reservationId \u003d payload[\u0027reservationId\u0027]\n\tself.getChild(\"EmbeddedView Participant\").props.params.SelectedValue \u003d int(payload[\u0027participantId\u0027])\n\tself.getChild(\"EmbeddedView Room\").props.params.SelectedValue \u003d int(payload[\u0027roomId\u0027])\n\tself.getChild(\"EmbeddedView Bed\").props.params.SelectedValue \u003d int(payload[\u0027bedId\u0027])",
+          "sessionScope": true,
+          "viewScope": true
+        }
+      ]
+    },
+    "type": "ia.container.flex"
+  }
+}

@@ -1,0 +1,441 @@
+{
+  "custom": {},
+  "params": {
+    "instanceID": 78
+  },
+  "propConfig": {
+    "params.instanceID": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 974,
+      "width": 1855
+    },
+    "loading": {
+      "mode": "blocking"
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "children": [
+          {
+            "meta": {
+              "name": "EventInformation"
+            },
+            "position": {
+              "basis": "286px"
+            },
+            "propConfig": {
+              "props.params.instanceID": {
+                "binding": {
+                  "config": {
+                    "path": "view.params.instanceID"
+                  },
+                  "type": "property"
+                }
+              }
+            },
+            "props": {
+              "path": "Events/Dashboard/Components/EventDetail/Details/InstanceInformation",
+              "style": {
+                "borderBottomColor": "#A1BAD2BF",
+                "borderBottomStyle": "solid",
+                "borderBottomWidth": 1,
+                "borderLeftStyle": "none",
+                "borderRightStyle": "none",
+                "borderTopStyle": "none",
+                "marginLeft": 40,
+                "marginRight": 40,
+                "marginTop": 40
+              }
+            },
+            "type": "ia.display.view"
+          },
+          {
+            "meta": {
+              "name": "EventTasks"
+            },
+            "position": {
+              "basis": "230px"
+            },
+            "propConfig": {
+              "props.params.instanceID": {
+                "binding": {
+                  "config": {
+                    "path": "view.params.instanceID"
+                  },
+                  "type": "property"
+                }
+              }
+            },
+            "props": {
+              "path": "Events/Dashboard/Components/EventDetail/Details/EventTaskView",
+              "style": {
+                "marginLeft": 40,
+                "marginRight": 40,
+                "marginTop": 20
+              }
+            },
+            "type": "ia.display.view"
+          },
+          {
+            "meta": {
+              "name": "EventNotes"
+            },
+            "position": {
+              "basis": "210px"
+            },
+            "propConfig": {
+              "props.params.instanceID": {
+                "binding": {
+                  "config": {
+                    "path": "view.params.instanceID"
+                  },
+                  "type": "property"
+                }
+              }
+            },
+            "props": {
+              "path": "Events/Dashboard/Components/EventDetail/Details/EventNotes",
+              "style": {
+                "marginBottom": 10,
+                "marginLeft": 40,
+                "marginRight": 40,
+                "marginTop": 20
+              }
+            },
+            "type": "ia.display.view"
+          },
+          {
+            "children": [
+              {
+                "events": {
+                  "component": {
+                    "onActionPerformed": {
+                      "config": {
+                        "script": "\tsystem.perspective.openDock(\"EditPeople\",params \u003d {\u0027instanceID\u0027 : int(self.view.params.instanceID)})"
+                      },
+                      "scope": "G",
+                      "type": "script"
+                    }
+                  }
+                },
+                "meta": {
+                  "name": "EditInstance"
+                },
+                "position": {
+                  "basis": "150px"
+                },
+                "props": {
+                  "style": {
+                    "classes": "Buttons/Btn_Blue_Outline"
+                  },
+                  "text": "Edit Instance"
+                },
+                "type": "ia.input.button"
+              },
+              {
+                "events": {
+                  "component": {
+                    "onActionPerformed": {
+                      "config": {
+                        "script": "\t#Calendar/EventInstance/GetEventInstanceByID\n\t\n\t\n\tdataset \u003d system.db.runNamedQuery(\"Calendar/EventInstance/GetEventInstanceByID\", {\u0027instanceID\u0027 : self.view.params.instanceID})\n\tsystem.perspective.print(message \u003d \"button \" + str(dataset.getValueAt(0,\"parentEventID\")) , destination \u003d \"all\")\n\tparamDict \u003d {\n\t\u0027eventId\u0027: int(dataset.getValueAt(0,\"parentEventID\")),\n\t\u0027isUpdateEvent\u0027: True\n\t}\n\tsystem.perspective.openDock(\"AddEvent\", params \u003d paramDict)"
+                      },
+                      "scope": "G",
+                      "type": "script"
+                    }
+                  }
+                },
+                "meta": {
+                  "name": "EditSeries"
+                },
+                "position": {
+                  "basis": "174px"
+                },
+                "props": {
+                  "style": {
+                    "classes": "Buttons/Btn_Blue_Outline"
+                  },
+                  "text": "Edit Series"
+                },
+                "type": "ia.input.button"
+              }
+            ],
+            "meta": {
+              "name": "Buttons"
+            },
+            "position": {
+              "basis": 50
+            },
+            "props": {
+              "justify": "space-between",
+              "style": {
+                "marginBottom": 40,
+                "marginLeft": 40,
+                "marginRight": 40
+              }
+            },
+            "type": "ia.container.flex"
+          }
+        ],
+        "meta": {
+          "name": "Event_Details"
+        },
+        "position": {
+          "basis": "500px",
+          "grow": 1
+        },
+        "props": {
+          "direction": "column",
+          "style": {
+            "backgroundColor": "#FFFFFF",
+            "borderBottomLeftRadius": 5,
+            "borderBottomRightRadius": 5,
+            "borderColor": "#A1BAD226",
+            "borderStyle": "solid",
+            "borderTopLeftRadius": 5,
+            "borderTopRightRadius": 5,
+            "borderWidth": 1,
+            "marginRight": 50
+          }
+        },
+        "scripts": {
+          "customMethods": [],
+          "extensionFunctions": null,
+          "messageHandlers": [
+            {
+              "messageType": "RefreshEventList",
+              "pageScope": true,
+              "script": "\t# implement your handler here\n\tself.getChild(\"EventInformation\").refreshBinding(\"props.params.instanceID\")",
+              "sessionScope": true,
+              "viewScope": false
+            }
+          ]
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "children": [
+          {
+            "meta": {
+              "name": "Host and staff"
+            },
+            "position": {
+              "basis": "230px"
+            },
+            "propConfig": {
+              "props.params.instanceID": {
+                "binding": {
+                  "config": {
+                    "path": "view.params.instanceID"
+                  },
+                  "type": "property"
+                }
+              }
+            },
+            "props": {
+              "path": "Events/Dashboard/Components/EventDetail/People/EventHostStaff",
+              "style": {
+                "marginLeft": 40,
+                "marginRight": 40,
+                "marginTop": 40
+              }
+            },
+            "type": "ia.display.view"
+          },
+          {
+            "meta": {
+              "name": "Volunteers"
+            },
+            "position": {
+              "basis": "500px"
+            },
+            "propConfig": {
+              "props.params.instanceID": {
+                "binding": {
+                  "config": {
+                    "path": "view.params.instanceID"
+                  },
+                  "type": "property"
+                }
+              }
+            },
+            "props": {
+              "path": "Events/Dashboard/Components/EventDetail/People/Volunteers",
+              "style": {
+                "marginBottom": 40,
+                "marginLeft": 40,
+                "marginRight": 40
+              }
+            },
+            "type": "ia.display.view"
+          }
+        ],
+        "meta": {
+          "name": "People"
+        },
+        "position": {
+          "basis": "500px"
+        },
+        "props": {
+          "direction": "column",
+          "style": {
+            "backgroundColor": "#FFFFFF",
+            "borderBottomLeftRadius": 5,
+            "borderBottomRightRadius": 5,
+            "borderColor": "#A1BAD226",
+            "borderStyle": "solid",
+            "borderTopLeftRadius": 5,
+            "borderTopRightRadius": 5,
+            "borderWidth": 1,
+            "marginRight": 50
+          }
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "meta": {
+                  "name": "EmbeddedView"
+                },
+                "position": {
+                  "basis": "511px"
+                },
+                "propConfig": {
+                  "props.params.instanceID": {
+                    "binding": {
+                      "config": {
+                        "path": "view.params.instanceID"
+                      },
+                      "type": "property"
+                    }
+                  }
+                },
+                "props": {
+                  "path": "Events/Dashboard/Components/EventDetail/Attendance/Attendance",
+                  "style": {
+                    "marginBottom": -5,
+                    "marginLeft": 40,
+                    "marginRight": 40,
+                    "marginTop": 40
+                  }
+                },
+                "type": "ia.display.view"
+              }
+            ],
+            "meta": {
+              "name": "Attendance"
+            },
+            "position": {
+              "basis": "650px"
+            },
+            "props": {
+              "direction": "column",
+              "style": {
+                "backgroundColor": "#FFFFFF",
+                "borderBottomLeftRadius": 5,
+                "borderBottomRightRadius": 5,
+                "borderColor": "#A1BAD226",
+                "borderStyle": "solid",
+                "borderTopLeftRadius": 5,
+                "borderTopRightRadius": 5,
+                "borderWidth": 1,
+                "marginBottom": 40,
+                "overflow": "hidden"
+              }
+            },
+            "type": "ia.container.flex"
+          },
+          {
+            "children": [
+              {
+                "meta": {
+                  "name": "EmbeddedView"
+                },
+                "position": {
+                  "basis": "320px"
+                },
+                "propConfig": {
+                  "props.params.instanceID": {
+                    "binding": {
+                      "config": {
+                        "path": ".../Attendance/EmbeddedView.props.params.instanceID"
+                      },
+                      "type": "property"
+                    },
+                    "persistent": true
+                  }
+                },
+                "props": {
+                  "params": {
+                    "instanceID": 78
+                  },
+                  "path": "Events/Dashboard/Components/KPI/Metrics",
+                  "style": {
+                    "marginBottom": 40,
+                    "marginLeft": 40,
+                    "marginRight": 40,
+                    "marginTop": 40
+                  }
+                },
+                "type": "ia.display.view"
+              }
+            ],
+            "meta": {
+              "name": "Metrics"
+            },
+            "position": {
+              "basis": "500px"
+            },
+            "props": {
+              "direction": "column",
+              "style": {
+                "backgroundColor": "#FFFFFF",
+                "borderBottomLeftRadius": 5,
+                "borderBottomRightRadius": 5,
+                "borderColor": "#A1BAD226",
+                "borderStyle": "solid",
+                "borderTopLeftRadius": 5,
+                "borderTopRightRadius": 5,
+                "borderWidth": 1
+              }
+            },
+            "type": "ia.container.flex"
+          }
+        ],
+        "meta": {
+          "name": "Attendance  metrics"
+        },
+        "position": {
+          "basis": "700px"
+        },
+        "props": {
+          "direction": "column"
+        },
+        "type": "ia.container.flex"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "alignContent": "flex-start",
+      "justify": "space-between",
+      "style": {
+        "classes": "Background/Alternative",
+        "marginBottom": 40,
+        "marginLeft": 40,
+        "marginRight": 40,
+        "marginTop": 40
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

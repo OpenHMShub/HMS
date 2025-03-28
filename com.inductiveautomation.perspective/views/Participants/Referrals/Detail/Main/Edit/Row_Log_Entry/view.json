@@ -1,0 +1,228 @@
+{
+  "custom": {},
+  "events": {
+    "system": {
+      "onStartup": {
+        "config": {
+          "script": "\tself.params.comment \u003d \u0027\u0027"
+        },
+        "scope": "G",
+        "type": "script"
+      }
+    }
+  },
+  "params": {
+    "comment": "",
+    "status_id": "",
+    "time_created": 0
+  },
+  "propConfig": {
+    "params.comment": {
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.row_num": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.status_id": {
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.status_name": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.time_created": {
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.type_id": {
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.type_name": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 60,
+      "width": 1120
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "Embed_Date"
+        },
+        "position": {
+          "basis": "220px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.date": {
+            "binding": {
+              "config": {
+                "bidirectional": true,
+                "path": "view.params.time_created"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.classes": {
+            "binding": {
+              "config": {
+                "path": "view.params.type_id"
+              },
+              "transforms": [
+                {
+                  "code": "\tif value \u003d\u003d 2:\n\t\treturn \u0027InputCards/InputCard_NoBorder\u0027\n\telse:\n\t\treturn \u0027InputCards/InputCard_TopBorder\u0027",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "text": "Date"
+          },
+          "path": "Participants/Templates/60px/top/Input_DateTime",
+          "style": {}
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Embed_ReferralStatus"
+        },
+        "position": {
+          "basis": "220px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.options": {
+            "binding": {
+              "config": {
+                "queryPath": "Participants/Referrals/ReferralStatusSelect_ForDetailsScreen"
+              },
+              "transforms": [
+                {
+                  "code": "\tstatusOptionsIn \u003d value\n\tfor row in range(statusOptionsIn.getRowCount()):\n\t\toption \u003d str(statusOptionsIn.getValueAt(row,1))\n\t\t#system.perspective.print(option)\n\t\tif option \u003d\u003d \u0027Checked In\u0027:\n\t\t\t#system.perspective.print(option)\n\t\t\tstatusOptionsOut \u003d system.dataset.deleteRow(statusOptionsIn,row)\n\treturn statusOptionsOut",
+                  "type": "script"
+                },
+                {
+                  "code": "\tstatusOptionsIn \u003d value\n\tfor row in range(statusOptionsIn.getRowCount()):\n\t\toption \u003d str(statusOptionsIn.getValueAt(row,1))\n\t\t#system.perspective.print(option)\n\t\tif option \u003d\u003d \u0027Created\u0027:\n\t\t\t#system.perspective.print(option)\n\t\t\tstatusOptionsOut \u003d system.dataset.deleteRow(statusOptionsIn,row)\n\treturn statusOptionsOut",
+                  "type": "script"
+                }
+              ],
+              "type": "query"
+            }
+          },
+          "props.params.selection": {
+            "binding": {
+              "config": {
+                "bidirectional": true,
+                "path": "view.params.status_id"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.classes": {
+            "binding": {
+              "config": {
+                "path": "view.params.type_id"
+              },
+              "transforms": [
+                {
+                  "code": "\tif value \u003d\u003d 2:\n\t\treturn \u0027InputCards/InputCard_NoBorder\u0027\n\telse:\n\t\treturn \u0027InputCards/InputCard_TopBorder\u0027",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "text": "Referral Status"
+          },
+          "path": "Participants/Templates/60px/top/Input_DropDownSingle",
+          "style": {}
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Embed_Comment"
+        },
+        "position": {
+          "basis": "330px",
+          "grow": 1
+        },
+        "propConfig": {
+          "props.params.text": {
+            "binding": {
+              "config": {
+                "bidirectional": true,
+                "path": "view.params.comment"
+              },
+              "type": "property"
+            }
+          },
+          "props.style.classes": {
+            "binding": {
+              "config": {
+                "path": "view.params.type_id"
+              },
+              "transforms": [
+                {
+                  "code": "\tif value \u003d\u003d 2:\n\t\treturn \u0027InputCards/InputCard_NoBorder\u0027\n\telse:\n\t\treturn \u0027InputCards/InputCard_TopBorder\u0027",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "label": "Comments",
+            "placeholder": "Start typing to add a comment..."
+          },
+          "path": "Participants/Templates/60px/top/Input_Text",
+          "style": {
+            "overflow": "hidden"
+          }
+        },
+        "type": "ia.display.view"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "style": {
+        "classes": "Background/Default"
+      }
+    },
+    "scripts": {
+      "customMethods": [],
+      "extensionFunctions": null,
+      "messageHandlers": [
+        {
+          "messageType": "RefreshReferralsData",
+          "pageScope": true,
+          "script": "\t# implement your handler here\n\tself.view.params.status_id \u003d -1\n\tself.view.params.comment \u003d \u0027\u0027",
+          "sessionScope": true,
+          "viewScope": false
+        }
+      ]
+    },
+    "type": "ia.container.flex"
+  }
+}

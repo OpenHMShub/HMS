@@ -1,0 +1,131 @@
+{
+  "custom": {},
+  "params": {
+    "Id": -1,
+    "LocationName": ""
+  },
+  "propConfig": {
+    "params.Id": {
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.LocationName": {
+      "paramDirection": "inout",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 70,
+      "width": 1202
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "Embed_Name"
+        },
+        "position": {
+          "basis": "440px"
+        },
+        "propConfig": {
+          "props.params.text": {
+            "binding": {
+              "config": {
+                "bidirectional": true,
+                "path": "view.params.LocationName"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "label": "Location Name",
+            "placeholder": "Start typing to add a location name..."
+          },
+          "path": "Settings/Templates/60px/top/Input_Text",
+          "style": {
+            "classes": "InputCards/InputCard_NoBorder",
+            "overflow": "hidden"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Embed_Placeholder"
+        },
+        "position": {
+          "basis": "1px",
+          "display": false,
+          "grow": 1
+        },
+        "props": {
+          "path": "Participants/Templates/Placeholder",
+          "style": {
+            "classes": "InputCards/InputCard"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Check_ResidensialProgram"
+        },
+        "position": {
+          "basis": "200px",
+          "display": false
+        },
+        "propConfig": {
+          "props.selected": {
+            "binding": {
+              "config": {
+                "bidirectional": true,
+                "path": "view.params.IsResidential"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "style": {
+            "classes": "Checkboxes/Checkbox_Table InputCards/InputCard Text/Add_InfoText"
+          },
+          "text": "Residential Program"
+        },
+        "type": "ia.input.checkbox"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "style": {
+        "classes": "Background/Default"
+      }
+    },
+    "scripts": {
+      "customMethods": [],
+      "extensionFunctions": null,
+      "messageHandlers": [
+        {
+          "messageType": "refreshLocationsSettings",
+          "pageScope": true,
+          "script": "\tself.view.params.LocationName\u003d \"\"",
+          "sessionScope": false,
+          "viewScope": false
+        },
+        {
+          "messageType": "LocationEdit",
+          "pageScope": true,
+          "script": "\tself.view.params.Id \u003d str(payload[\u0027Id\u0027])\n\tself.view.params.LocationName \u003d str(payload[\u0027LocationName\u0027])\n\t\n\t",
+          "sessionScope": true,
+          "viewScope": true
+        }
+      ]
+    },
+    "type": "ia.container.flex"
+  }
+}

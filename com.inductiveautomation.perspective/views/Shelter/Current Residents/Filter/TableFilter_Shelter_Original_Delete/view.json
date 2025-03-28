@@ -1,0 +1,381 @@
+{
+  "custom": {},
+  "events": {
+    "system": {
+      "onStartup": {
+        "config": {
+          "script": "\tself.session.custom.selectedDateRange \u003d \"currentCalendar\"\n\tself.session.custom.dateRangeFromDate \u003d system.date.format(system.date.now(),\u0027MM/dd/yyyy\u0027)\n\tself.session.custom.dateRangeToDate \u003d system.date.format(system.date.now(),\u0027MM/dd/yyyy\u0027)\t\t\t\n\tself.session.custom.isClearFilter \u003d 0\n\t\t\n\t#Gender\n\t\n\tself.getChild(\"root\").getChild(\"gender\").props.params.selectedValues \u003d -1\t\n\t\n\t#Race\n\t\n\tself.getChild(\"root\").getChild(\"race\").props.params.selectedValues \u003d -1\t\n\t\n\t#Age\n\t\t\n\tself.getChild(\"root\").getChild(\"age\").props.params.selectedValues \u003d -1\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t"
+        },
+        "scope": "G",
+        "type": "script"
+      }
+    }
+  },
+  "params": {
+    "age": -1,
+    "datasetForExport": "value",
+    "endDateTime": "06/18/2021",
+    "gender": -1,
+    "race": -1,
+    "startDateTime": "06/18/2021"
+  },
+  "propConfig": {
+    "params.age": {
+      "binding": {
+        "config": {
+          "path": "/root/age.props.params.selectedValues"
+        },
+        "transforms": [
+          {
+            "code": "\t#\tvalue \u003d value[1:(len(value) - 1)]\n#\tvalue \u003d value.lstrip(\u0027[\"\u0027)\n#\tvalue \u003d value.rstrip(\u0027\"]\u0027)\n#\tvalue \u003d value.replace(\u0027\\\"\u0027,\"\")\n#\t#value \u003d value.replace(\u0027\\\u0027\u0027,\u0027\\\"\u0027)\n#\tnewValue \u003d \u0027 \u0027.join(\"\u0027{}\u0027,\".format(word.strip()) for word in value.split(\u0027,\u0027))\n#\tnewValue \u003d \"(\" + newValue[0:(len(newValue) - 1)] + \")\"\n#\t#print (\"Output binding\")\n#\t#print newValue\n#\treturn newValue\n\treturn value",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      },
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.datasetForExport": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.endDateTime": {
+      "binding": {
+        "config": {
+          "path": "session.custom.dateRangeToDate"
+        },
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.gender": {
+      "binding": {
+        "config": {
+          "path": "/root/gender.props.params.selectedValues"
+        },
+        "transforms": [
+          {
+            "code": "\t#\tvalue \u003d value[1:(len(value) - 1)]\n#\tvalue \u003d value.lstrip(\u0027[\"\u0027)\n#\tvalue \u003d value.rstrip(\u0027\"]\u0027)\n#\tvalue \u003d value.replace(\u0027\\\"\u0027,\"\")\n#\t#value \u003d value.replace(\u0027\\\u0027\u0027,\u0027\\\"\u0027)\n#\tnewValue \u003d \u0027 \u0027.join(\"\u0027{}\u0027,\".format(word.strip()) for word in value.split(\u0027,\u0027))\n#\tnewValue \u003d \"(\" + newValue[0:(len(newValue) - 1)] + \")\"\n#\t#print (\"Output binding\")\n#\t#print newValue\n#\treturn newValue\n\treturn value",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      },
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.race": {
+      "binding": {
+        "config": {
+          "path": "/root/race.props.params.selectedValues"
+        },
+        "transforms": [
+          {
+            "code": "\t#\tvalue \u003d value[1:(len(value) - 1)]\n#\tvalue \u003d value.lstrip(\u0027[\"\u0027)\n#\tvalue \u003d value.rstrip(\u0027\"]\u0027)\n#\tvalue \u003d value.replace(\u0027\\\"\u0027,\"\")\n#\t#value \u003d value.replace(\u0027\\\u0027\u0027,\u0027\\\"\u0027)\n#\tnewValue \u003d \u0027 \u0027.join(\"\u0027{}\u0027,\".format(word.strip()) for word in value.split(\u0027,\u0027))\n#\tnewValue \u003d \"(\" + newValue[0:(len(newValue) - 1)] + \")\"\n#\t#print (\"Output binding\")\n#\t#print newValue\n#\treturn newValue\n\treturn value",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      },
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.startDateTime": {
+      "binding": {
+        "config": {
+          "path": "session.custom.dateRangeFromDate"
+        },
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 52
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "gender"
+        },
+        "position": {
+          "basis": "10%"
+        },
+        "props": {
+          "params": {
+            "filterData": [
+              {
+                "label": "Male",
+                "value": "Male"
+              },
+              {
+                "label": "Female",
+                "value": "Female"
+              },
+              {
+                "label": "Other",
+                "value": "Other"
+              }
+            ],
+            "filterName": "Gender",
+            "selectedValues": -1
+          },
+          "path": "Shelter/Templates/MultiselectFilter",
+          "style": {
+            "marginBottom": 8,
+            "marginLeft": 0,
+            "marginRight": 5,
+            "marginTop": 8,
+            "paddingLeft": "40px"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "race"
+        },
+        "position": {
+          "basis": "10%"
+        },
+        "props": {
+          "params": {
+            "filterData": [
+              {
+                "label": "White",
+                "value": "White"
+              },
+              {
+                "label": "Hispanic or Latino",
+                "value": "Hispanic or Latino"
+              },
+              {
+                "label": "Not Hispanic or Latino",
+                "value": "Not Hispanic or Latino"
+              }
+            ],
+            "filterName": "Race",
+            "selectedValues": -1
+          },
+          "path": "Shelter/Templates/MultiselectFilter",
+          "style": {
+            "marginBottom": 8,
+            "marginLeft": 5,
+            "marginRight": 5,
+            "marginTop": 8
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "age"
+        },
+        "position": {
+          "basis": "10%"
+        },
+        "props": {
+          "params": {
+            "filterData": [
+              {
+                "label": "\u003c18",
+                "value": "\u003c18"
+              },
+              {
+                "label": "18-24",
+                "value": "18-24"
+              },
+              {
+                "label": "25-34",
+                "value": "25-34"
+              },
+              {
+                "label": "35-44",
+                "value": "35-44"
+              },
+              {
+                "label": "45-55",
+                "value": "45-55"
+              },
+              {
+                "label": "\u003e55",
+                "value": "\u003e55"
+              }
+            ],
+            "filterName": "Age",
+            "selectedValues": -1
+          },
+          "path": "Shelter/Templates/MultiselectFilter",
+          "style": {
+            "marginBottom": 8,
+            "marginLeft": 5,
+            "marginRight": 5,
+            "marginTop": 8
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "events": {
+          "dom": {
+            "onClick": {
+              "config": {
+                "script": "\t#Gender\n\tself.getSibling(\"gender\").props.params.selectedValues \u003d -1\t\n\t\t\n\t#Race\n\tself.getSibling(\"race\").props.params.selectedValues \u003d -1\n\t\n\t#Age\n\tself.getSibling(\"age\").props.params.selectedValues \u003d -1\t\t\t\n\t\n\t#Set the isClearFilter flag to True\n\tself.session.custom.isClearFilter \u003d True\n\t\n\tself.session.custom.dateRangeFromDate \u003d system.date.format(system.date.now(),\u0027MM/dd/yyyy\u0027)\n\tself.session.custom.dateRangeToDate \u003d system.date.format(system.date.now(),\u0027MM/dd/yyyy\u0027)"
+              },
+              "scope": "G",
+              "type": "script"
+            }
+          }
+        },
+        "meta": {
+          "name": "clearFilters"
+        },
+        "position": {
+          "basis": "2%"
+        },
+        "props": {
+          "image": {
+            "icon": {
+              "path": "material/close"
+            },
+            "style": {
+              "backgroundColor": "#181818"
+            }
+          },
+          "style": {
+            "backgroundColor": "#0C4E8B",
+            "borderBottomLeftRadius": 5,
+            "borderBottomRightRadius": 5,
+            "borderColor": "#4D4D4D",
+            "borderStyle": "solid",
+            "borderTopLeftRadius": 5,
+            "borderTopRightRadius": 5,
+            "borderWidth": 1,
+            "margin": 8
+          },
+          "text": "",
+          "textStyle": {
+            "classes": "GreyColor"
+          }
+        },
+        "type": "ia.input.button"
+      },
+      {
+        "events": {
+          "dom": {
+            "onClick": {
+              "config": {
+                "script": "\tcolumNames \u003d [\"Participant\",\"Check-in\",\t\"Check-Out\",\"Gender\",\"Race\",\"Age\", \"Room\",\"Bed\"]\n\tdataSetForExport \u003d self.view.params.datasetForExport\n\tnewData \u003d []\n\t## only get few columns from the data for exporting to Excel\n\ttry:\n\t\tif dataSetForExport is not None and dataSetForExport.getRowCount() \u003e 0:\n\t\t\tfor i in range(dataSetForExport.getRowCount()):\n\t\t\t\toneRow \u003d []\n\t\t\t\tparticipant \u003d dataSetForExport.getValueAt(i,\"name\")\n\t\t\t\tcheckIn \u003d dataSetForExport.getValueAt(i,\"eventStart\")\n\t\t\t\tcheckOut \u003d dataSetForExport.getValueAt(i,\"eventEnd\")\n\t\t\t\tgender \u003d dataSetForExport.getValueAt(i,\"gender\")\n\t\t\t\trace \u003d dataSetForExport.getValueAt(i,\"race\")\n\t\t\t\tage \u003d dataSetForExport.getValueAt(i,\"age\")\n\t\t\t\troom \u003d dataSetForExport.getValueAt(i,\"roomName\")\n\t\t\t\tbed \u003d dataSetForExport.getValueAt(i,\"bedName\")\n\t\t\t\toneRow \u003d [participant, checkIn, checkOut, gender, race, age, room, bed]\n\t\t\t\tnewData.append(oneRow)\n\t\t\tdataSetForExport \u003d system.dataset.toDataSet(columNames, newData)\n\t\t\tfilename \u003d \u0027current_residents.xls\u0027\n\t\t\tspreadsheet \u003d system.dataset.toExcel(True, [dataSetForExport])\n\t\t\tsystem.perspective.download(filename,spreadsheet )\n\texcept Exception as e:\n\t\tsystem.perspective.print(e)"
+              },
+              "scope": "G",
+              "type": "script"
+            }
+          }
+        },
+        "meta": {
+          "name": "excelExport"
+        },
+        "position": {
+          "basis": "2%"
+        },
+        "props": {
+          "image": {
+            "icon": {
+              "path": "material/arrow_circle_down"
+            },
+            "style": {
+              "backgroundColor": "#181818"
+            }
+          },
+          "style": {
+            "backgroundColor": "#0C4E8B",
+            "borderBottomLeftRadius": 5,
+            "borderBottomRightRadius": 5,
+            "borderColor": "#4D4D4D",
+            "borderStyle": "solid",
+            "borderTopLeftRadius": 5,
+            "borderTopRightRadius": 5,
+            "borderWidth": 1,
+            "margin": 8
+          },
+          "text": "",
+          "textStyle": {
+            "classes": "GreyColor"
+          }
+        },
+        "type": "ia.input.button"
+      },
+      {
+        "meta": {
+          "name": "filler"
+        },
+        "position": {
+          "basis": "25%",
+          "grow": 1
+        },
+        "props": {
+          "style": {
+            "classes": "Table/Filter_Header_Detail",
+            "paddingLeft": "40px"
+          }
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "meta": {
+          "name": "dateRange"
+        },
+        "position": {
+          "basis": "15%"
+        },
+        "props": {
+          "params": {
+            "selectedDateRange": " 06/18/2021 to 06/18/2021"
+          },
+          "path": "Shelter/Templates/DateRange/DateInput",
+          "style": {
+            "marginBottom": 8,
+            "marginLeft": 5,
+            "marginRight": 5,
+            "marginTop": 8
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "searchBar"
+        },
+        "position": {
+          "basis": "10%"
+        },
+        "props": {
+          "path": "Shelter/Templates/Search_Bar",
+          "style": {
+            "marginBottom": 8,
+            "marginLeft": 5,
+            "marginRight": 0,
+            "marginTop": 8,
+            "paddingRight": "40px"
+          }
+        },
+        "type": "ia.display.view"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "style": {
+        "classes": "Table/Filter_Header"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

@@ -1,0 +1,183 @@
+{
+  "custom": {},
+  "params": {
+    "duration": "value",
+    "suspension_type": "type",
+    "time_begin": 0,
+    "time_end": 1
+  },
+  "propConfig": {
+    "params.duration": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.suspension_type": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.time_begin": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.time_end": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 35
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "EmbeddedView_Type"
+        },
+        "position": {
+          "basis": "25%",
+          "grow": 1
+        },
+        "propConfig": {
+          "props.params.Value": {
+            "binding": {
+              "config": {
+                "path": "view.params.suspension_type"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "Label": "Suspension Type"
+          },
+          "path": "Participants/Activity/Suspension/SuspensionLabel"
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "EmbeddedView_Duration"
+        },
+        "position": {
+          "basis": "25%",
+          "grow": 1
+        },
+        "propConfig": {
+          "props.params.Value": {
+            "binding": {
+              "config": {
+                "path": "view.params.duration"
+              },
+              "transforms": [
+                {
+                  "code": "\tif value !\u003d None and value !\u003d0:\n\t\tduration \u003d value\n\telse:\n\t\tduration \u003d 0\n\tif duration \u003d\u003d 1:\n\t\tduration_name \u003d \"1 Day\"\n\telif duration \u003d\u003d 7:\n\t\tduration_name \u003d \"1 Week\"\n\telif duration \u003d\u003d 14:\n\t\tduration_name \u003d \"2 Weeks\"\n\telif duration \u003d\u003d 30:\n\t\tduration_name \u003d \"30 Days\"\n\telif duration \u003d\u003d 60:\n\t\tduration_name \u003d \"60 Days\"\n\telif duration \u003d\u003d 90:\n\t\tduration_name \u003d \"90 Days\"\n\telif duration \u003d\u003d 365:\n\t\tduration_name \u003d \"1 Year\"\n\telif duration \u003d\u003d 3650:\n\t\tduration_name \u003d \"Indefinite\"\n\telse:\n\t\tduration_name \u003d \"Other\"\n\treturn duration_name",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "Label": "Duration"
+          },
+          "path": "Participants/Activity/Suspension/SuspensionLabel"
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "EmbeddedView_TimeBegin"
+        },
+        "position": {
+          "basis": "25%",
+          "grow": 1
+        },
+        "propConfig": {
+          "props.params.Value": {
+            "binding": {
+              "config": {
+                "path": "view.params.time_begin"
+              },
+              "transforms": [
+                {
+                  "code": "\tif value \u003d\u003d None:\n\t\treturn 0\n\telse:\n\t\treturn value",
+                  "type": "script"
+                },
+                {
+                  "expression": "fromMillis({value})",
+                  "type": "expression"
+                },
+                {
+                  "expression": "dateFormat({value},\"MMM. d, YYYY\")",
+                  "type": "expression"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "Label": "Time Begin"
+          },
+          "path": "Participants/Activity/Suspension/SuspensionLabel"
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "EmbeddedView_TimeEnd"
+        },
+        "position": {
+          "basis": "25%",
+          "grow": 1
+        },
+        "propConfig": {
+          "props.params.Value": {
+            "binding": {
+              "config": {
+                "path": "view.params.time_end"
+              },
+              "transforms": [
+                {
+                  "code": "\tif value \u003d\u003d None:\n\t\treturn 0\n\telse:\n\t\treturn value",
+                  "type": "script"
+                },
+                {
+                  "expression": "fromMillis({value})",
+                  "type": "expression"
+                },
+                {
+                  "expression": "dateFormat({value},\"MMM. d, YYYY\")",
+                  "type": "expression"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "Label": "Time End"
+          },
+          "path": "Participants/Activity/Suspension/SuspensionLabel"
+        },
+        "type": "ia.display.view"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "style": {
+        "classes": "Background/Default"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

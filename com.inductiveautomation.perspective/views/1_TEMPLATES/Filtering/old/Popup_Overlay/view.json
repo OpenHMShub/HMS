@@ -1,0 +1,199 @@
+{
+  "custom": {},
+  "params": {
+    "key": "dob",
+    "label": "All Ages",
+    "options": [
+      {
+        "label": "0-18",
+        "selected": false,
+        "value": "\u003c18"
+      },
+      {
+        "label": "18-24",
+        "selected": false,
+        "value": "18-24"
+      },
+      {
+        "label": "25-34",
+        "selected": false,
+        "value": "25-34"
+      },
+      {
+        "label": "55+",
+        "selected": false,
+        "value": "\u003e55"
+      }
+    ],
+    "type": "match"
+  },
+  "propConfig": {
+    "params.key": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.label": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.options": {
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.type": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 240,
+      "width": 175
+    },
+    "style": {
+      "backgroundColor": "transparent",
+      "borderColor": "transparent",
+      "borderStyle": "none",
+      "borderWidth": "0px",
+      "classes": "",
+      "fill": "transparent",
+      "opacity": "1",
+      "outlineColor": "transparent",
+      "outlineStyle": "none",
+      "outlineWidth": "0px",
+      "strokeWidth": "0"
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "TextField"
+        },
+        "position": {
+          "height": 30,
+          "width": 155,
+          "x": 10,
+          "y": 20
+        },
+        "propConfig": {
+          "props.text": {
+            "onChange": {
+              "enabled": null,
+              "script": "\tself.getSibling(\"FlexRepeater\").refreshBinding(\"props.instances\")"
+            }
+          }
+        },
+        "props": {
+          "deferUpdates": false,
+          "placeholder": "Search",
+          "style": {
+            "background-origin": "content-box",
+            "background-size": "15px",
+            "backgroundImage": "url(\"/system/images/SVGs/Search Magnifying Glass.svg\")",
+            "backgroundPosition": "right center",
+            "backgroundRepeat": "no-repeat",
+            "borderColor": "#3ec3d9",
+            "borderStyle": "solid",
+            "borderWidth": "1px",
+            "color": "#3C71A2",
+            "fontFamily": "Gibson",
+            "outlineColor": "#cee4f6",
+            "outlineStyle": "solid",
+            "outlineWidth": "10px"
+          }
+        },
+        "type": "ia.input.text-field"
+      },
+      {
+        "meta": {
+          "name": "FlexRepeater"
+        },
+        "position": {
+          "height": 179.99999999999997,
+          "width": 175,
+          "y": 60.00000000000003
+        },
+        "propConfig": {
+          "props.instances": {
+            "binding": {
+              "config": {
+                "path": "view.params.options"
+              },
+              "transforms": [
+                {
+                  "code": "\t#\t{\n#\t  \"instanceStyle\": {\n#\t    \"classes\": \"\"\n#\t  },\n#\t  \"instancePosition\": {},\n#\t  \"text\": \"Option 1\"\n#\t}\n\t\n\t####BEGIN ACTUAL SCRIPT####\n\t#instances is the data object to return\n\tinstances \u003d []\n\t#Iterate over the results of the query\n\tfor item in self.view.params.options:\n\t\tadd \u003d not len(self.getSibling(\"TextField\").props.text)\n\t\tif len(self.getSibling(\"TextField\").props.text):\n\t\t\t#_s \u003d [item[key] for key in item]\n\t\t\tadd \u003d self.getSibling(\"TextField\").props.text.lower() in item[\"label\"].lower()\n\t\t\t\n\t\tif add:\n\t\t\t#i is an individual instance to append to \u0027instances\u0027\n\t\t\ti \u003d {}\n\t\t\t#s is an instance style object to append to \u0027i\u0027\n\t\t\ts \u003d {}\n\t\t\t#p is an instance position object to append to \u0027i\u0027\n\t\t\tp \u003d {}\n\t\t\t\n\t\t\ts[\u0027classes\u0027] \u003d \u0027\u0027\n\t\t\ti[\u0027instanceStyle\u0027] \u003d s\n\t\t\ti[\u0027instancePosition\u0027] \u003d p\n\t\t\ti[\u0027text\u0027] \u003d item[\"label\"]\n\t\t\ti[\u0027key\u0027] \u003d self.view.params.key\n\t\t\ti[\u0027type\u0027] \u003d self.view.params.type\n\t\t\ti[\u0027value\u0027] \u003d item[\u0027value\u0027]\n\t\t\ti[\u0027selected\u0027] \u003d item[\u0027selected\u0027]\n\t\t\t#Append the individual participant to the participants object\n\t\t\tinstances.append(i)\n\t\t\t\t\n\treturn instances",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "direction": "column",
+          "path": "1_TEMPLATES/Filtering/Entry_Combobox",
+          "style": {
+            "backgroundColor": "#fff",
+            "borderStyle": "none",
+            "outlineStyle": "none",
+            "paddingLeft": 8
+          }
+        },
+        "type": "ia.display.flex-repeater"
+      },
+      {
+        "meta": {
+          "name": "Icon"
+        },
+        "position": {
+          "height": 53,
+          "width": 80,
+          "x": 46,
+          "y": -20.003
+        },
+        "props": {
+          "color": "#cee4f6",
+          "path": "material/arrow_drop_up"
+        },
+        "type": "ia.display.icon"
+      }
+    ],
+    "events": {
+      "dom": {
+        "onMouseLeave": {
+          "config": {
+            "draggable": false,
+            "id": "{view.params.label}",
+            "modal": false,
+            "overlayDismiss": false,
+            "resizable": false,
+            "showCloseIcon": false,
+            "type": "close",
+            "viewPath": "1_TEMPLATES/Filtering/Popup_Overlay"
+          },
+          "scope": "C",
+          "type": "popup"
+        }
+      }
+    },
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "style": {
+        "backgroundColor": "transparent",
+        "borderColor": "transparent",
+        "borderStyle": "hidden",
+        "borderWidth": "0px",
+        "fill": "transparent",
+        "opacity": "1",
+        "outlineColor": "transparent",
+        "outlineStyle": "none",
+        "outlineWidth": "0px",
+        "strokeWidth": "0"
+      }
+    },
+    "type": "ia.container.coord"
+  }
+}

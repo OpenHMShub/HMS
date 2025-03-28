@@ -1,0 +1,1060 @@
+{
+  "custom": {
+    "data": [],
+    "function": 0
+  },
+  "events": {
+    "system": {
+      "onStartup": {
+        "config": {
+          "script": "\tself.getChild(\"root\").custom.isAddNewShelter \u003d False"
+        },
+        "scope": "G",
+        "type": "script"
+      }
+    }
+  },
+  "params": {},
+  "propConfig": {
+    "custom.data": {
+      "persistent": true
+    },
+    "custom.function": {
+      "persistent": true
+    }
+  },
+  "props": {
+    "loading": {
+      "mode": "blocking"
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "children": [
+          {
+            "events": {
+              "component": {
+                "onActionPerformed": {
+                  "config": {
+                    "script": "\tself.view.getChild(\"root\").custom.isAddNewShelter \u003d True\n\tself.parent.parent.getChild(\"EmbeddedView Inputs\").props.params.facilityId \u003d -1"
+                  },
+                  "scope": "G",
+                  "type": "script"
+                }
+              }
+            },
+            "meta": {
+              "name": "New"
+            },
+            "position": {
+              "basis": "100px"
+            },
+            "props": {
+              "image": {
+                "position": "right"
+              },
+              "style": {
+                "classes": "Buttons/New_Item",
+                "marginBottom": "5px",
+                "marginLeft": "10px",
+                "marginRight": "5px",
+                "marginTop": "5px"
+              },
+              "text": "New Shelter"
+            },
+            "type": "ia.input.button"
+          }
+        ],
+        "meta": {
+          "name": "ShelterActions"
+        },
+        "position": {
+          "basis": "40px"
+        },
+        "props": {
+          "justify": "flex-end"
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "meta": {
+          "name": "EmbeddedView Header"
+        },
+        "position": {
+          "basis": "25px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.Text": {
+            "binding": {
+              "config": {
+                "expression": "if ({parent.custom.isAddNewShelter}, \"New Shelter\", \"Edit Shelter\")"
+              },
+              "type": "expr"
+            }
+          }
+        },
+        "props": {
+          "path": "Shelter/Settings/Cards/SettingsHeader",
+          "style": {
+            "borderTopLeftRadius": 5,
+            "borderTopRightRadius": 5,
+            "marginLeft": 5,
+            "marginRight": 5
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "EmbeddedView Inputs"
+        },
+        "position": {
+          "basis": "160px"
+        },
+        "propConfig": {
+          "props.params.endDate": {
+            "binding": {
+              "config": {
+                "expression": "now(0)"
+              },
+              "type": "expr"
+            }
+          },
+          "props.params.isEdit": {
+            "binding": {
+              "config": {
+                "expression": "if({parent.custom.isAddNewShelter}, False, True)"
+              },
+              "type": "expr"
+            }
+          },
+          "props.params.startDate": {
+            "binding": {
+              "config": {
+                "expression": "now(0)"
+              },
+              "type": "expr"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "Row": 0,
+            "bedId": -1,
+            "beds": null,
+            "clearForm": false,
+            "facilityId": 0,
+            "gender": -1,
+            "handicapAccess": null,
+            "newAssociatedPrograms": [],
+            "newCity": "",
+            "newDescription": "",
+            "newEmail": "",
+            "newFacilityType": -1,
+            "newName": "",
+            "newPhone": "",
+            "newState": "",
+            "newStreet": "",
+            "newZip": "",
+            "roomId": -1,
+            "smoking": null
+          },
+          "path": "Shelter/Settings/Cards/ServiceTemplate",
+          "style": {
+            "marginLeft": "17px",
+            "marginRight": "10px"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "meta": {
+                  "name": "Label"
+                },
+                "position": {
+                  "basis": "100px"
+                },
+                "props": {
+                  "style": {
+                    "classes": "Labels/Label_Text_Res"
+                  },
+                  "text": "Rooms"
+                },
+                "type": "ia.display.label"
+              },
+              {
+                "children": [
+                  {
+                    "meta": {
+                      "name": "Label",
+                      "visible": false
+                    },
+                    "position": {
+                      "basis": "50px",
+                      "grow": 1
+                    },
+                    "props": {
+                      "style": {
+                        "classes": "Text/Error_Message"
+                      },
+                      "text": "Cannot remove room, it is currently occupied."
+                    },
+                    "scripts": {
+                      "customMethods": [
+                        {
+                          "name": "showMessage",
+                          "params": [
+                            "message"
+                          ],
+                          "script": "\timport time\n\tself.props.text \u003d message\n\tself.meta.visible \u003d True\n\ttime.sleep(5)\n\tself.meta.visible \u003d False\n\t"
+                        }
+                      ],
+                      "extensionFunctions": null,
+                      "messageHandlers": []
+                    },
+                    "type": "ia.display.label"
+                  }
+                ],
+                "meta": {
+                  "name": "Filler"
+                },
+                "position": {
+                  "basis": "500px",
+                  "grow": 1
+                },
+                "type": "ia.container.flex"
+              },
+              {
+                "events": {
+                  "component": {
+                    "onActionPerformed": {
+                      "config": {
+                        "script": "\tnewRow \u003d [-1,\u0027\u0027,\u0027\u0027,0]\n\tself.parent.parent.getChild(\"RoomsTable\").custom.editedData \u003d system.dataset.addRow(self.parent.parent.getChild(\"RoomsTable\").custom.editedData,0,newRow)"
+                      },
+                      "scope": "G",
+                      "type": "script"
+                    }
+                  }
+                },
+                "meta": {
+                  "name": "add"
+                },
+                "position": {
+                  "basis": "20px"
+                },
+                "props": {
+                  "image": {
+                    "height": 15,
+                    "icon": {
+                      "path": "material/add"
+                    },
+                    "width": 15
+                  },
+                  "style": {
+                    "borderBottomLeftRadius": 25,
+                    "borderBottomRightRadius": 25,
+                    "borderTopLeftRadius": 25,
+                    "borderTopRightRadius": 25,
+                    "marginBottom": 8,
+                    "marginTop": 7
+                  },
+                  "text": ""
+                },
+                "type": "ia.input.button"
+              },
+              {
+                "meta": {
+                  "name": "Filler2"
+                },
+                "position": {
+                  "basis": "5px"
+                },
+                "type": "ia.container.flex"
+              },
+              {
+                "meta": {
+                  "name": "remove"
+                },
+                "position": {
+                  "basis": "25px",
+                  "display": false
+                },
+                "props": {
+                  "image": {
+                    "height": 15,
+                    "icon": {
+                      "path": "material/remove"
+                    },
+                    "width": 15
+                  },
+                  "style": {
+                    "borderBottomLeftRadius": 25,
+                    "borderBottomRightRadius": 25,
+                    "borderTopLeftRadius": 25,
+                    "borderTopRightRadius": 25,
+                    "marginBottom": 5,
+                    "marginTop": 5
+                  },
+                  "text": ""
+                },
+                "type": "ia.input.button"
+              },
+              {
+                "meta": {
+                  "name": "Filler3"
+                },
+                "position": {
+                  "basis": "5px"
+                },
+                "type": "ia.container.flex"
+              }
+            ],
+            "meta": {
+              "name": "Heading"
+            },
+            "position": {
+              "basis": "35px"
+            },
+            "props": {
+              "style": {
+                "classes": "ActivityCards/Header_Card"
+              }
+            },
+            "type": "ia.container.flex"
+          },
+          {
+            "custom": {
+              "editedData": {
+                "$": [
+                  "ds",
+                  192,
+                  1667901246267
+                ],
+                "$columns": [
+                  {
+                    "data": [],
+                    "name": "id",
+                    "type": "Integer"
+                  },
+                  {
+                    "data": [],
+                    "name": "roomName",
+                    "type": "String"
+                  },
+                  {
+                    "data": [],
+                    "name": "gender",
+                    "type": "String"
+                  },
+                  {
+                    "data": [],
+                    "name": "numberBeds",
+                    "type": "Integer"
+                  }
+                ]
+              },
+              "roomsToDelete": [],
+              "test": "value"
+            },
+            "events": {
+              "component": {
+                "onEditCellCommit": {
+                  "config": {
+                    "script": "\tself.custom.editedData \u003d system.dataset.setValue(self.custom.editedData, event.row, event.column, event.value)"
+                  },
+                  "scope": "G",
+                  "type": "script"
+                },
+                "onRowClick": {
+                  "config": {
+                    "script": "\tclickedColumn \u003d self.props.selection.selectedColumn\n\tif clickedColumn \u003d\u003d \"remove\":\n\t\trowToRemove \u003d self.props.selection.selectedRow\n\t\troomIdToRemove \u003d self.custom.editedData.getValueAt(rowToRemove,\u0027id\u0027)\n\t\t\n\t\tisRoomOccupied \u003d 0\n\t\tisRoomReserved \u003d 0\n\t\t# check if bed is occupied\n\t\tproject \u003d \"RITI\"\n\t\tpath \u003d \"Shelter/Settings/CheckIfRoomIsOccupied\"\n\t\tparameters \u003d {\"roomId\": roomIdToRemove}\n\t\t\n\t\tisRoomOccupiedData \u003d system.db.runNamedQuery(project\u003dproject,path\u003dpath,parameters\u003dparameters)\n\t\tif isRoomOccupiedData is not None and isRoomOccupiedData.getRowCount()\u003e0:\n\t\t\tisRoomOccupied \u003d int(isRoomOccupiedData.getValueAt(0,0))\n\t\t\tif isRoomOccupied \u003e 0:\n\t\t\t\tself.parent.getChild(\"Heading\").getChild(\"Filler\").getChild(\"Label\").showMessage(\"Cannot remove room, it is currently occupied.\")\n\t\telse:\n\t\t\tself.parent.getChild(\"Heading\").getChild(\"Filler\").getChild(\"Label\").showMessage(\"Something went wrong ... please try deleting again.\")\t\t\t\n\t\t\n\t\tif isRoomOccupied \u003d\u003d 0:\n\t\t\t# check if it is reserved\n\t\t\tpath \u003d \"Shelter/Settings/CheckIfRoomIsReserved\"\n\t\t\tparameters \u003d {\"roomId\": roomIdToRemove}\n\t\t\t\n\t\t\tisRoomReservedData \u003d system.db.runNamedQuery(project\u003dproject,path\u003dpath,parameters\u003dparameters)\n\t\t\tif isRoomReservedData is not None and isRoomReservedData.getRowCount()\u003e0:\n\t\t\t\tisRoomReserved \u003d int(isRoomReservedData.getValueAt(0,0))\n\t\t\t\tif isRoomReserved \u003e 0:\n\t\t\t\t\tself.parent.getChild(\"Heading\").getChild(\"Filler\").getChild(\"Label\").showMessage(\"Cannot remove room, it is currently reserved.\")\n\t\t\telse:\n\t\t\t\tself.parent.getChild(\"Heading\").getChild(\"Filler\").getChild(\"Label\").showMessage(\"Something went wrong ... please try deleting again.\")\t\n\t\t\n\t\t\n\t\tif isRoomReserved \u003d\u003d 0 and isRoomOccupied \u003d\u003d 0:\n\t\t\tself.custom.roomsToDelete.append(roomIdToRemove)\n\t\t\tself.custom.editedData \u003d system.dataset.deleteRow(self.custom.editedData, rowToRemove)"
+                  },
+                  "scope": "G",
+                  "type": "script"
+                }
+              }
+            },
+            "meta": {
+              "name": "RoomsTable"
+            },
+            "position": {
+              "basis": "450px",
+              "grow": 1
+            },
+            "propConfig": {
+              "custom.sqlData": {
+                "binding": {
+                  "config": {
+                    "parameters": {
+                      "facilityId": "{/root.custom.selectedFacilityId}"
+                    },
+                    "queryPath": "Shelter/Settings/GetRoomsForShelter"
+                  },
+                  "type": "query"
+                },
+                "onChange": {
+                  "enabled": null,
+                  "script": "\tself.custom.editedData \u003d self.custom.sqlData\n\tself.custom.roomsToDelete \u003d []\n\t"
+                }
+              },
+              "props.data": {
+                "binding": {
+                  "config": {
+                    "path": "this.custom.editedData"
+                  },
+                  "transforms": [
+                    {
+                      "code": "\trooms \u003d []\n\troomNameStyle \u003d {}\n\troomNameStyle[\u0027color\u0027] \u003d \u0027#0c4e85\u0027\n\troomNameStyle[\u0027cursor\u0027] \u003d \"pointer\"\n\troomNameStyle[\u0027fontFamily\u0027] \u003d \"Proxima Nova ExCn Medium\"\n\troomNameStyle[\u0027text-align\u0027] \u003d \"left\"\n\tfor row in range(value.getRowCount()):\n\t\t\toneRoom \u003d {}\n\t\t\toneRoom[\u0027id\u0027] \u003d str(value.getValueAt(row, \"id\"))\n\t\t\troomName \u003d {}\n\t\t\n\t\t\troomName[\u0027style\u0027] \u003d roomNameStyle\n\t\t\troomName[\u0027value\u0027] \u003d str(value.getValueAt(row, \"roomName\"))\n\t\t\toneRoom[\u0027roomName\u0027] \u003d roomName\n\t\t\toneRoom[\u0027gender\u0027] \u003d str(value.getValueAt(row, \"gender\"))\n\t\t\toneRoom[\u0027numberBeds\u0027] \u003d str(value.getValueAt(row, \"numberBeds\"))\n\t\t\toneRoom[\u0027add\u0027] \u003d \u0027\u0027\n\t\t\toneRoom[\u0027remove\u0027] \u003d \u0027\u0027\n\t\t\trooms.append(oneRoom)\n\treturn rooms\n\t",
+                      "type": "script"
+                    }
+                  ],
+                  "type": "property"
+                }
+              }
+            },
+            "props": {
+              "cells": {
+                "style": {
+                  "classes": "Table/Cell_Detail_NoBG",
+                  "height": "25px"
+                }
+              },
+              "columns": [
+                {
+                  "align": "center",
+                  "boolean": "checkbox",
+                  "dateFormat": "MM/DD/YYYY",
+                  "editable": false,
+                  "field": "id",
+                  "footer": {
+                    "align": "center",
+                    "justify": "left",
+                    "style": {
+                      "classes": ""
+                    },
+                    "title": ""
+                  },
+                  "header": {
+                    "align": "center",
+                    "justify": "left",
+                    "style": {
+                      "classes": ""
+                    },
+                    "title": ""
+                  },
+                  "justify": "auto",
+                  "number": "value",
+                  "numberFormat": "0,0.##",
+                  "progressBar": {
+                    "bar": {
+                      "color": "",
+                      "style": {
+                        "classes": ""
+                      }
+                    },
+                    "max": 100,
+                    "min": 0,
+                    "track": {
+                      "color": "",
+                      "style": {
+                        "classes": ""
+                      }
+                    },
+                    "value": {
+                      "enabled": true,
+                      "format": "0,0.##",
+                      "justify": "center",
+                      "style": {
+                        "classes": ""
+                      }
+                    }
+                  },
+                  "render": "auto",
+                  "resizable": true,
+                  "sort": "none",
+                  "sortable": true,
+                  "strictWidth": false,
+                  "style": {
+                    "classes": ""
+                  },
+                  "toggleSwitch": {
+                    "color": {
+                      "selected": "",
+                      "unselected": ""
+                    }
+                  },
+                  "viewParams": {},
+                  "viewPath": "",
+                  "visible": false,
+                  "width": 40
+                },
+                {
+                  "align": "center",
+                  "boolean": "checkbox",
+                  "dateFormat": "MM/DD/YYYY",
+                  "editable": true,
+                  "field": "roomName",
+                  "footer": {
+                    "align": "center",
+                    "justify": "left",
+                    "style": {
+                      "classes": ""
+                    },
+                    "title": ""
+                  },
+                  "header": {
+                    "align": "center",
+                    "justify": "left",
+                    "style": {
+                      "classes": "Table/Filter_Text"
+                    },
+                    "title": "Room"
+                  },
+                  "justify": "auto",
+                  "number": "value",
+                  "numberFormat": "0,0.##",
+                  "progressBar": {
+                    "bar": {
+                      "color": "",
+                      "style": {
+                        "classes": ""
+                      }
+                    },
+                    "max": 100,
+                    "min": 0,
+                    "track": {
+                      "color": "",
+                      "style": {
+                        "classes": ""
+                      }
+                    },
+                    "value": {
+                      "enabled": true,
+                      "format": "0,0.##",
+                      "justify": "center",
+                      "style": {
+                        "classes": ""
+                      }
+                    }
+                  },
+                  "render": "auto",
+                  "resizable": true,
+                  "sort": "none",
+                  "sortable": false,
+                  "strictWidth": false,
+                  "style": {
+                    "classes": ""
+                  },
+                  "toggleSwitch": {
+                    "color": {
+                      "selected": "",
+                      "unselected": ""
+                    }
+                  },
+                  "viewParams": {},
+                  "viewPath": "",
+                  "visible": true,
+                  "width": 100
+                },
+                {
+                  "align": "center",
+                  "boolean": "checkbox",
+                  "dateFormat": "MM/DD/YYYY",
+                  "editable": false,
+                  "field": "gender",
+                  "footer": {
+                    "align": "center",
+                    "justify": "left",
+                    "style": {
+                      "classes": ""
+                    },
+                    "title": ""
+                  },
+                  "header": {
+                    "align": "center",
+                    "justify": "center",
+                    "style": {
+                      "classes": "Table/Filter_Text"
+                    },
+                    "title": "Gender"
+                  },
+                  "justify": "center",
+                  "number": "value",
+                  "numberFormat": "0,0.##",
+                  "progressBar": {
+                    "bar": {
+                      "color": "",
+                      "style": {
+                        "classes": ""
+                      }
+                    },
+                    "max": 100,
+                    "min": 0,
+                    "track": {
+                      "color": "",
+                      "style": {
+                        "classes": ""
+                      }
+                    },
+                    "value": {
+                      "enabled": true,
+                      "format": "0,0.##",
+                      "justify": "center",
+                      "style": {
+                        "classes": ""
+                      }
+                    }
+                  },
+                  "render": "view",
+                  "resizable": false,
+                  "sort": "none",
+                  "sortable": false,
+                  "strictWidth": true,
+                  "style": {
+                    "classes": ""
+                  },
+                  "toggleSwitch": {
+                    "color": {
+                      "selected": "",
+                      "unselected": ""
+                    }
+                  },
+                  "viewParams": {},
+                  "viewPath": "Shelter/Settings/Cards/GenderDropdown",
+                  "visible": true,
+                  "width": 60
+                },
+                {
+                  "align": "center",
+                  "boolean": "checkbox",
+                  "dateFormat": "MM/DD/YYYY",
+                  "editable": false,
+                  "field": "numberBeds",
+                  "footer": {
+                    "align": "center",
+                    "justify": "left",
+                    "style": {
+                      "classes": ""
+                    },
+                    "title": ""
+                  },
+                  "header": {
+                    "align": "center",
+                    "justify": "center",
+                    "style": {
+                      "classes": "Table/Filter_Text"
+                    },
+                    "title": "Beds"
+                  },
+                  "justify": "center",
+                  "number": "value",
+                  "numberFormat": "0,0.##",
+                  "progressBar": {
+                    "bar": {
+                      "color": "",
+                      "style": {
+                        "classes": ""
+                      }
+                    },
+                    "max": 100,
+                    "min": 0,
+                    "track": {
+                      "color": "",
+                      "style": {
+                        "classes": ""
+                      }
+                    },
+                    "value": {
+                      "enabled": true,
+                      "format": "0,0.##",
+                      "justify": "center",
+                      "style": {
+                        "classes": ""
+                      }
+                    }
+                  },
+                  "render": "auto",
+                  "resizable": true,
+                  "sort": "none",
+                  "sortable": false,
+                  "strictWidth": false,
+                  "style": {
+                    "classes": ""
+                  },
+                  "toggleSwitch": {
+                    "color": {
+                      "selected": "",
+                      "unselected": ""
+                    }
+                  },
+                  "viewParams": {},
+                  "viewPath": "",
+                  "visible": true,
+                  "width": 50
+                },
+                {
+                  "align": "center",
+                  "boolean": "checkbox",
+                  "dateFormat": "MM/DD/YYYY",
+                  "editable": false,
+                  "field": "remove",
+                  "footer": {
+                    "align": "center",
+                    "justify": "left",
+                    "style": {
+                      "classes": ""
+                    },
+                    "title": ""
+                  },
+                  "header": {
+                    "align": "center",
+                    "justify": "left",
+                    "style": {
+                      "classes": ""
+                    },
+                    "title": ""
+                  },
+                  "justify": "center",
+                  "number": "value",
+                  "numberFormat": "0,0.##",
+                  "progressBar": {
+                    "bar": {
+                      "color": "",
+                      "style": {
+                        "classes": ""
+                      }
+                    },
+                    "max": 100,
+                    "min": 0,
+                    "track": {
+                      "color": "",
+                      "style": {
+                        "classes": ""
+                      }
+                    },
+                    "value": {
+                      "enabled": true,
+                      "format": "0,0.##",
+                      "justify": "center",
+                      "style": {
+                        "classes": ""
+                      }
+                    }
+                  },
+                  "render": "view",
+                  "resizable": false,
+                  "sort": "none",
+                  "sortable": true,
+                  "strictWidth": true,
+                  "style": {
+                    "classes": ""
+                  },
+                  "toggleSwitch": {
+                    "color": {
+                      "selected": "",
+                      "unselected": ""
+                    }
+                  },
+                  "viewParams": {},
+                  "viewPath": "Shelter/Settings/Cards/RemoveButton",
+                  "visible": true,
+                  "width": 20
+                }
+              ],
+              "emptyMessage": {
+                "noData": {
+                  "text": "No Data"
+                }
+              },
+              "pager": {
+                "bottom": false
+              },
+              "rows": {
+                "height": "25px",
+                "highlight": {
+                  "color": "#ccffff"
+                },
+                "style": {
+                  "classes": "Checkboxes/Checkbox_Blue"
+                },
+                "subview": {
+                  "enabled": true,
+                  "viewParams": {
+                    "value": {
+                      "id": -1
+                    }
+                  },
+                  "viewPath": "Shelter/Settings/Cards/BedsSubview"
+                }
+              },
+              "selection": {
+                "style": {
+                  "backgroundColor": "#9af4eb4d"
+                }
+              }
+            },
+            "type": "ia.display.table"
+          }
+        ],
+        "meta": {
+          "name": "Rooms"
+        },
+        "position": {
+          "basis": "600px",
+          "grow": 1
+        },
+        "props": {
+          "direction": "column",
+          "style": {
+            "marginLeft": 17,
+            "marginRight": 10,
+            "marginTop": 10
+          }
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "children": [
+          {
+            "events": {
+              "component": {
+                "onActionPerformed": {
+                  "config": {
+                    "script": "\ttry:\n\t\tshowError \u003d False\n\t\terrorMessage \u003d \"\"\n\t\tnewFacilityName \u003d self.parent.parent.getChild(\"EmbeddedView Inputs\").props.params.newName\n\t\tnewFacilityName \u003d newFacilityName.replace(\"\u0027\",\"\u0027\u0027\")\n\t\troomsData \u003d self.parent.parent.getChild(\"Rooms\").getChild(\"RoomsTable\").custom.editedData\n\t\ttotalRooms \u003d roomsData.getRowCount()\n\t\t\n\t\t## read all other fields of facility\n\t\tnewAssociatedPrograms \u003d self.parent.parent.getChild(\"EmbeddedView Inputs\").props.params.newAssociatedPrograms\n\t\tnewCity \u003d self.parent.parent.getChild(\"EmbeddedView Inputs\").props.params.newCity\n\t\tnewDescription \u003d self.parent.parent.getChild(\"EmbeddedView Inputs\").props.params.newDescription\n\t\tnewDescription \u003d newDescription.replace(\"\u0027\",\"\u0027\u0027\")\n\t\tnewEmail \u003d self.parent.parent.getChild(\"EmbeddedView Inputs\").props.params.newEmail\n\t\tnewFacilityType \u003d self.parent.parent.getChild(\"EmbeddedView Inputs\").props.params.newFacilityType\n\t\tnewPhone \u003d self.parent.parent.getChild(\"EmbeddedView Inputs\").props.params.newPhone\n\t\tnewState \u003d self.parent.parent.getChild(\"EmbeddedView Inputs\").props.params.newState\n\t\tnewStreet \u003d self.parent.parent.getChild(\"EmbeddedView Inputs\").props.params.newStreet\n\t\tnewZip \u003d self.parent.parent.getChild(\"EmbeddedView Inputs\").props.params.newZip\n\t\tif newZip is None or str(newZip) \u003d\u003d \u0027\u0027 or len(str(newZip)) \u003d\u003d 0:\n\t\t\tnewZip \u003d 0\n\t\t\n\t\tallResidential \u003d 0\n\t\tfacilityId \u003d -1\n\t\tsystem.perspective.print(\"start validation\")\n\t\t## Validate all inputs\n\t\tif newFacilityName is None or len(newFacilityName) \u003d\u003d 0:\n\t\t\tshowError \u003d True\n\t\t\terrorMessage \u003d \"Facility Name cannot be blank.\"\n\t\t\n\t\tif newFacilityType is None or newFacilityType \u003d\u003d -1:\n\t\t\tshowError \u003d True\n\t\t\terrorMessage \u003d \"Select facility type.\"\n\t\t\n\t\tif newAssociatedPrograms is not None and len(newAssociatedPrograms) \u003e 0: \n\t\t\tif newAssociatedPrograms[0] \u003d\u003d -2: ## -2 is the value from dropdown\n\t\t\t\tallResidential \u003d 1\n\t\telse:\n\t\t\tshowError \u003d True\n\t\t\terrorMessage \u003d \"Select at least one Associated Program.\"\n\t\t\t\n\t\tsystem.perspective.print(\"allResidential - \" + str(allResidential))\n\t\tif showError \u003d\u003d True:\n\t\t\tself.getSibling(\"Label\").showMessage(errorMessage)\n\t\telse:\n\t\t\t## no data validation error\n\t\t\tif self.view.getChild(\"root\").custom.isAddNewShelter \u003d\u003d True:\n\t\t\t\tsystem.perspective.print(\"isAddNewShelter - \" )\n\t\t\t\t## Add new shelter case - User has to first define shelter , rooms and click on save\n\t\t\t\t## then user can edit again to add beds.\n\t\t\t\tinsertQPath \u003d \u0027Shelter/Settings/AddNewShelter\u0027\n\t\t\t\tproject \u003d \u0027RITI\u0027\n\t\t\t\tparams \u003d {\u0027facilityName\u0027:newFacilityName}\n\t\t\t\tfacilityIdData \u003d system.db.runNamedQuery(project,insertQPath, params)\n\t\t\t\t## get newly added shelter id\n\t\t\t\tif facilityIdData is not None:\n\t\t\t\t\tfacilityId \u003d int(facilityIdData.getValueAt(0,0))\n\t\t\t\t\n\t\t\t\t\n\t\t\telse:\n\t\t\t\t## Edit shelter case\n\t\t\t\tsystem.perspective.print(\"Edit shelter value\u003d \" + str(self.view.getChild(\"root\").custom.isAddNewShelter))\n\t\t\t\tfacilityId \u003d self.view.getChild(\"root\").custom.selectedFacilityId\n\t\t\t\t\n\t\t\t\t\n\t\t\t### Common code for Add and Edit\t\n\t\t\t## Iterate through each row of the editedData for rooms , insert new row or update\n\n\t\t\tif facilityId \u003e 0:\n\t\t\t\ttotalBedsInFacility \u003d 0\n\t\t\t\tfor i in range(totalRooms):\n\t\t\t\t\troomId \u003d roomsData.getValueAt(i,\u0027id\u0027)\n\t\t\t\t\troomName \u003d roomsData.getValueAt(i,\u0027roomName\u0027)\n\t\t\t\t\troomName \u003d roomName.replace(\"\u0027\",\"\u0027\u0027\")\n\t\t\t\t\troomGender \u003d roomsData.getValueAt(i,\u0027gender\u0027)\n\t\t\t\t\troomBeds \u003d int(roomsData.getValueAt(i,\u0027numberBeds\u0027))\n\t\t\t\t\ttotalBedsInFacility \u003d totalBedsInFacility + roomBeds\n\t\t\t\t\tsqlQ \u003d \"\"\n\t\t\t\t\tif roomId \u003d\u003d -1:\n\t\t\t\t\t\t## this is new row so insert\n\t\t\t\t\t\tsqlQ \u003d \"INSERT INTO lodging.Room (facilityId, roomName, numberBeds, gender, timeCreated, isHandicapAccess, smoking) VALUES (\"\n\t\t\t\t\t\tsqlQ \u003d sqlQ + str(facilityId) + \",\u0027\" + roomName + \"\u0027,0,\u0027\" + roomGender + \"\u0027, CURRENT_TIMESTAMP, 0, 0)\"\n\t\t\t\t\t\t\n\t\t\t\t\telse:\n\t\t\t\t\t\t## this is for updation\n\t\t\t\t\t\tsqlQ \u003d \"UPDATE lodging.Room SET roomName \u003d \u0027\" + roomName + \"\u0027, gender \u003d \u0027\" + roomGender + \"\u0027 WHERE id \u003d \" + str(roomId)\n\t\t\t\t\t\n\t\t\t\t\tsystem.perspective.print(\"room update q\" + str(sqlQ))\n\t\t\t\t\tif sqlQ !\u003d \"\":\n\t\t\t\t\t\tsystem.db.runUpdateQuery(sqlQ)\n\t\t\t\t\t\tsystem.perspective.print(\u0027Done\u0027)\n\t\t\t\t\n\t\t\t\t## Also remove the room and beds from the room that are to be deleted \n\t\t\t\tfor oneRoom in self.parent.parent.getChild(\"Rooms\").getChild(\"RoomsTable\").custom.roomsToDelete:\n\t\t\t\t\tsqlQ \u003d \"UPDATE lodging.Room SET timeRetired \u003d CURRENT_TIMESTAMP WHERE id \u003d \" + str(oneRoom)\n#\t\t\t\t\tsystem.perspective.print(\"delete room q : \" + sqlQ)\n\t\t\t\t\tsystem.db.runUpdateQuery(sqlQ)\n\t\t\t\t\t\n\t\t\t\t\tsqlQ \u003d \"UPDATE lodging.Bed SET timeRetired \u003d CURRENT_TIMESTAMP WHERE roomId \u003d \" + str(oneRoom)\n#\t\t\t\t\tsystem.perspective.print(\"delete beds in room q : \" + sqlQ)\n\t\t\t\t\tsystem.db.runUpdateQuery(sqlQ)\n\t\t\t\t\n\t\t\t\t## Update numberBeds and number of rooms and all other details in the facility table \n\t\t\t\tsqlQ \u003d \"UPDATE lodging.Facility SET facilityName \u003d \u0027\" + newFacilityName + \"\u0027 , beds \u003d \" + str(totalBedsInFacility) \n\t\t\t\tsqlQ \u003d sqlQ + \", rooms \u003d \" + str(totalRooms) \n\t\t\t\tsqlQ \u003d sqlQ + \", facilityDescription \u003d \u0027\" + str(newDescription) + \"\u0027\"\n\t\t\t\tsqlQ \u003d sqlQ + \", facilityTypeId \u003d \" + str(newFacilityType)\n\t\t\t\tsqlQ \u003d sqlQ + \", street \u003d \u0027\" + str(newStreet) + \"\u0027\"\n\t\t\t\tsqlQ \u003d sqlQ + \", city \u003d \u0027\" + str(newCity) + \"\u0027\"\n\t\t\t\tsqlQ \u003d sqlQ + \", state \u003d \u0027\" + str(newState) + \"\u0027\"\n\t\t\t\tsqlQ \u003d sqlQ + \", zipCode \u003d \" + str(newZip)\n\t\t\t\tsqlQ \u003d sqlQ + \", phone \u003d \u0027\" + str(newPhone) + \"\u0027\"\n\t\t\t\tsqlQ \u003d sqlQ + \", email \u003d \u0027\" + str(newEmail) + \"\u0027\"\n\t\t\t\tsqlQ \u003d sqlQ + \", allResidential \u003d \" + str(allResidential)\n\t\t\t\tsqlQ \u003d sqlQ + \" WHERE id \u003d \" + str(facilityId)\n#\t\t\t\tsystem.perspective.print(\"update facility q : \" + sqlQ)\n\t\t\t\tsystem.db.runUpdateQuery(sqlQ)\n\t\t\t\t\n\t\t\t\t## insert associated programs rows in separate table\n\t\t\t\tinsertAssociatedPrograms \u003d False\n\t\t\t\tif allResidential \u003d\u003d 1:\n\t\t\t\t\tnewAssociatedPrograms \u003d [42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60] ## these are the ids of all residential programs \n\t\t\t\t\t\t\t\n\t\t\t\tif self.view.getChild(\"root\").custom.isAddNewShelter \u003d\u003d False:\n\t\t\t\t\tsystem.perspective.print(\"insertAssociatedPrograms\u003d\"+str(insertAssociatedPrograms))\n\t\t\t\t\t## Check if there is change in associated programs\n\t\t\t\t\tif self.view.getChild(\"root\").custom.shelterAssociatedPrograms !\u003d newAssociatedPrograms:\n\t\t\t\t\t\tinsertAssociatedPrograms \u003d True\n\t\t\t\t\t\t## there are changes so First delete the associated program entries if they exist\n\t\t\t\t\t\tsqlQ \u003d \"UPDATE lodging.FacilityAssociatedPrograms SET timeRetired \u003d CURRENT_TIMESTAMP WHERE facilityId \u003d \" + str(facilityId)\n#\t\t\t\t\t\tsystem.perspective.print(\"associatedProgram Delete Q : \" + sqlQ)\n\t\t\t\t\t\tsystem.db.runUpdateQuery(sqlQ)\n\t\t\t\t\t###### change\n\t\t\t\telse:\n\t\t\t\t\t## for new facility we have to always insert\n\t\t\t\t\tinsertAssociatedPrograms \u003d True\n\t\t\t\t\tsystem.perspective.print(\"insertAssociatedPrograms\u003d\"+str(insertAssociatedPrograms))\n\t\t\t\t\n\t\t\t\t\n\t\t\t\tif insertAssociatedPrograms:\t\n\t\t\t\t\tsystem.perspective.print(\"insertAssociatedPrograms\u003d\"+str(insertAssociatedPrograms))\n\t\t\t\t\t## insert into facilityAssociatedPrograms one row per associated program\n\t\t\t\t\tassociatedProgramUpdateQ \u003d \"INSERT INTO lodging.FacilityAssociatedPrograms(facilityId, associatedProgramId, timeCreated) VALUES \"\n\t\t\t\t\tfor item in newAssociatedPrograms:\n\t\t\t\t\t\tassociatedProgramUpdateQ \u003d associatedProgramUpdateQ + \"(\" + str(facilityId) + \",\" + str(item) + \", CURRENT_TIMESTAMP ),\"\n\t\t\t\t\tassociatedProgramUpdateQ \u003d associatedProgramUpdateQ[:-1] ## remove the extra comma at end\n#\t\t\t\t\tsystem.perspective.print(\"associatedProgramUpdateQ : \" + associatedProgramUpdateQ)\n\t\t\t\t\tsystem.db.runUpdateQuery(associatedProgramUpdateQ)\n\t\t\t\t\t\n\t\t\t\t## also send message to refresh the facility dropdown\n\t\t\t\tsystem.perspective.sendMessage(\"refreshShelters\",payload \u003d {},scope\u003d\"session\")\n\t\t\t\tself.getSibling(\"Label\").showMessage(\"Facility details saved successfully\")\n\t\t\t\t## refresh the sqlData\n\t\t\t\tself.parent.parent.getChild(\"Rooms\").getChild(\"RoomsTable\").refreshBinding(\"custom.sqlData\")\n\t\t\t\tif self.view.getChild(\"root\").custom.isAddNewShelter \u003d\u003d True:\n\t\t\t\t\tself.view.getChild(\"root\").custom.isAddNewShelter \u003d False\n\t\t\t\tself.parent.parent.getChild(\"EmbeddedView Inputs\").props.params.facilityId \u003d facilityId\t\n\t\t\t\t\t\n\t\t\telse:\n\t\t\t\tself.getSibling(\"Label\").showMessage(\"Please select facility to edit\")\n\t\t\t\n\texcept Exception as e:\n\t\tself.getSibling(\"Label\").showMessage(\"Exception while saving details. Please try again...\")\n\t\tsystem.perspective.print(str(e))\n\t\t\n\t\t\n\t\t\n\t\t\t"
+                  },
+                  "scope": "G",
+                  "type": "script"
+                }
+              }
+            },
+            "meta": {
+              "name": "Button_0"
+            },
+            "position": {
+              "basis": "100px"
+            },
+            "propConfig": {
+              "props.enabled": {
+                "binding": {
+                  "config": {
+                    "expression": "{/root.custom.selectedFacilityId} \u003e 0 || {/root.custom.isAddNewShelter} \u003d True"
+                  },
+                  "type": "expr"
+                }
+              }
+            },
+            "props": {
+              "style": {
+                "classes": "Buttons/Main",
+                "marginBottom": "5px",
+                "marginLeft": "10px",
+                "marginTop": "5px"
+              },
+              "text": "Save"
+            },
+            "type": "ia.input.button"
+          },
+          {
+            "events": {
+              "component": {
+                "onActionPerformed": {
+                  "config": {
+                    "script": "\ttry:\n\t\tself.parent.parent.getChild(\"Rooms\").getChild(\"RoomsTable\").refreshBinding(\"custom.sqlData\")\n\t\tself.parent.parent.getChild(\"Rooms\").getChild(\"RoomsTable\").custom.roomsToDelete \u003d []\n\t\tif self.view.getChild(\"root\").custom.isAddNewShelter \u003d\u003d True:\n\t\t\tself.view.getChild(\"root\").custom.isAddNewShelter \u003d False\n\t\tif self.parent.parent.getChild(\"EmbeddedView Inputs\").props.params.clearForm \u003d\u003d False:\n\t\t\tself.parent.parent.getChild(\"EmbeddedView Inputs\").props.params.clearForm \u003d True\n\t\telse:\n\t\t\tself.parent.parent.getChild(\"EmbeddedView Inputs\").props.params.clearForm \u003d False\n\t\tself.parent.parent.getChild(\"EmbeddedView Inputs\").props.params.facilityId \u003d -1\n\texcept Exception as e:\n\t\tsystem.perspective.print(str(e))\n\t\t"
+                  },
+                  "scope": "G",
+                  "type": "script"
+                }
+              }
+            },
+            "meta": {
+              "name": "Button_1"
+            },
+            "position": {
+              "basis": "100px"
+            },
+            "propConfig": {
+              "props.enabled": {
+                "binding": {
+                  "config": {
+                    "expression": "{/root.custom.selectedFacilityId} \u003e 0 || {/root.custom.isAddNewShelter} \u003d True"
+                  },
+                  "type": "expr"
+                }
+              }
+            },
+            "props": {
+              "style": {
+                "classes": "Buttons/Delete",
+                "marginBottom": "5px",
+                "marginLeft": "10px",
+                "marginTop": "5px"
+              },
+              "text": "Cancel"
+            },
+            "type": "ia.input.button"
+          },
+          {
+            "meta": {
+              "name": "Label",
+              "visible": false
+            },
+            "position": {
+              "basis": "50px",
+              "grow": 1
+            },
+            "props": {
+              "style": {
+                "classes": "Text/Error_Message"
+              },
+              "text": "Facility details saved successfully"
+            },
+            "scripts": {
+              "customMethods": [
+                {
+                  "name": "showMessage",
+                  "params": [
+                    "message"
+                  ],
+                  "script": "\timport time\n\tself.props.text \u003d message\n\tself.meta.visible \u003d True\n\ttime.sleep(5)\n\tself.meta.visible \u003d False\n\t"
+                }
+              ],
+              "extensionFunctions": null,
+              "messageHandlers": []
+            },
+            "type": "ia.display.label"
+          },
+          {
+            "events": {
+              "component": {
+                "onActionPerformed": {
+                  "config": {
+                    "script": "\ttry:\n\t\tisShelterOccupied \u003d 0\n\t\tisShelterReserved \u003d 0\n\t\t# check if shelter is occupied\n\t\tproject \u003d \"RITI\"\n\t\tpath \u003d \"Shelter/Settings/CheckIfShelterIsOccupied\"\n\t\tparameters \u003d {\"facilityId\": self.view.getChild(\"root\").custom.selectedFacilityId}\n\t\tisShelterOccupiedData \u003d system.db.runNamedQuery(project\u003dproject,path\u003dpath,parameters\u003dparameters)\n\t\tif isShelterOccupiedData is not None and isShelterOccupiedData.getRowCount()\u003e0:\n\t\t\tisShelterOccupied \u003d int(isShelterOccupiedData.getValueAt(0,0))\n\t\t\tif isShelterOccupied \u003e 0:\n\t\t\t\tself.getSibling(\"Label\").showMessage(\"Cannot remove shelter, it has residents.\")\n\t\telse:\n\t\t\tself.getSibling(\"Label\").showMessage(\"Something went wrong ... please try deleting again.\")\t\t\t\n\t\t\n\t\tif isShelterOccupied \u003d\u003d 0:\n\t\t\t# check if it is reserved\n\t\t\tpath \u003d \"Shelter/Settings/CheckIfShelterIsReserved\"\n\t\t\tparameters \u003d {\"facilityId\": self.view.getChild(\"root\").custom.selectedFacilityId}\n\t\t\tisShelterReservedData \u003d system.db.runNamedQuery(project\u003dproject,path\u003dpath,parameters\u003dparameters)\n\t\t\tif isShelterReservedData is not None and isShelterReservedData.getRowCount()\u003e0:\n\t\t\t\tisShelterReserved \u003d int(isShelterReservedData.getValueAt(0,0))\n\t\t\t\tif isShelterReserved \u003e 0:\n\t\t\t\t\tself.getSibling(\"Label\").showMessage(\"Cannot remove shelter, it has reservations.\")\n\t\t\telse:\n\t\t\t\tself.getSibling(\"Label\").showMessage(\"Something went wrong ... please try deleting again.\")\t\n\t\t\n\t\tif isShelterReserved \u003d\u003d 0 and isShelterOccupied \u003d\u003d 0:\n\t\t\tsystem.perspective.openPopup(\"deleteWarning\",\"Shelter/Settings/DeleteWarning\",params \u003d {\u0027facilityId\u0027:self.view.getChild(\"root\").custom.selectedFacilityId})\n\t\t\t\n\t\t\t## also send message to refresh the facility dropdown\n#\t\t\tsystem.perspective.sendMessage(\"refreshShelters\",payload \u003d {},scope\u003d\"session\")\n\texcept Exception as e:\n\t\tself.getSibling(\"Label\").showMessage(\"Something went wrong while deleting data. Please select \u0026 try again.\")"
+                  },
+                  "scope": "G",
+                  "type": "script"
+                }
+              }
+            },
+            "meta": {
+              "name": "Button_2"
+            },
+            "position": {
+              "basis": "100px"
+            },
+            "propConfig": {
+              "position.display": {
+                "binding": {
+                  "config": {
+                    "expression": "!{/root.custom.isAddNewShelter} \u0026\u0026 {/root.custom.selectedFacilityId} \u003e 0"
+                  },
+                  "type": "expr"
+                }
+              }
+            },
+            "props": {
+              "style": {
+                "classes": "Buttons/Delete",
+                "marginBottom": "5px",
+                "marginLeft": "10px",
+                "marginTop": "5px"
+              },
+              "text": "Delete"
+            },
+            "type": "ia.input.button"
+          }
+        ],
+        "custom": {
+          "ReservationSaved": false
+        },
+        "meta": {
+          "name": "root Actions"
+        },
+        "position": {
+          "basis": "51px",
+          "shrink": 0
+        },
+        "props": {
+          "style": {
+            "borderBottomLeftRadius": 5,
+            "borderBottomRightRadius": 5,
+            "borderTopColor": "#9db8d1",
+            "borderTopStyle": "solid",
+            "borderTopWidth": "1px",
+            "classes": "Background/Default",
+            "marginLeft": "10px",
+            "marginRight": "10px",
+            "marginTop": "5px",
+            "paddingTop": "5px"
+          }
+        },
+        "type": "ia.container.flex"
+      }
+    ],
+    "custom": {
+      "isAddNewShelter": false
+    },
+    "meta": {
+      "name": "root"
+    },
+    "propConfig": {
+      "custom.selectedFacilityId": {
+        "binding": {
+          "config": {
+            "path": "./EmbeddedView Inputs.props.params.facilityId"
+          },
+          "type": "property"
+        }
+      },
+      "custom.shelterAssociatedPrograms": {
+        "binding": {
+          "config": {
+            "parameters": {
+              "facilityId": "{this.custom.selectedFacilityId}"
+            },
+            "queryPath": "Shelter/Settings/GetAssociatedProgramsForAShelter"
+          },
+          "transforms": [
+            {
+              "code": "\tassociatedPrograms \u003d []\n\tif value is not None and value.getRowCount() \u003e 0:\n\t\t\tnoOfRows \u003d value.getRowCount()\n\t\t\tfor i in range(0,noOfRows):\n\t\t\t\tassociatedPrograms.append(int(value.getValueAt(i,\u0027id\u0027)))\n\treturn associatedPrograms",
+              "type": "script"
+            }
+          ],
+          "type": "query"
+        }
+      }
+    },
+    "props": {
+      "direction": "column",
+      "style": {
+        "classes": "Background/Default"
+      }
+    },
+    "scripts": {
+      "customMethods": [],
+      "extensionFunctions": null,
+      "messageHandlers": [
+        {
+          "messageType": "genderChanged",
+          "pageScope": true,
+          "script": "\t# implement your handler here\n\troomIdToChange \u003d payload[\u0027roomId\u0027]\n\tnewGender \u003d payload[\u0027selectedGender\u0027]\n\t\n\tsystem.perspective.print(\"payload:\" + str(payload))\n\tdataToEdit \u003d self.getChild(\"Rooms\").getChild(\"RoomsTable\").custom.editedData\n\tnoOfRows \u003d dataToEdit.getRowCount()\n\trowToEdit \u003d -1\n\tfor i in range(noOfRows):\n\t\tif int(dataToEdit.getValueAt(i,\u0027id\u0027)) \u003d\u003d int(roomIdToChange):\n\t\t\trowToEdit \u003d i\n\t\t\tbreak\n\tsystem.perspective.print(\"rowToEdit:\" + str(rowToEdit))\n\tif rowToEdit !\u003d -1:\n\t\tself.getChild(\"Rooms\").getChild(\"RoomsTable\").custom.editedData \u003d system.dataset.setValue(dataToEdit,rowToEdit, \u0027gender\u0027, newGender)  ",
+          "sessionScope": true,
+          "viewScope": false
+        },
+        {
+          "messageType": "refreshRoomsSettings",
+          "pageScope": true,
+          "script": "\t# implement your handler here\n\tself.getChild(\"Rooms\").getChild(\"RoomsTable\").refreshBinding(\"custom.sqlData\")",
+          "sessionScope": true,
+          "viewScope": false
+        }
+      ]
+    },
+    "type": "ia.container.flex"
+  }
+}

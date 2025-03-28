@@ -1,0 +1,184 @@
+{
+  "custom": {},
+  "params": {
+    "ageMax": "",
+    "ageMin": "",
+    "description": "",
+    "gender": "",
+    "id": "",
+    "name": -1
+  },
+  "propConfig": {
+    "params.ageMax": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.ageMin": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.description": {
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.gender": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.id": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.name": {
+      "paramDirection": "inout",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 40,
+      "width": 600
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "Embed_AddTask"
+        },
+        "position": {
+          "basis": "60px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.remove": {
+            "onChange": {
+              "enabled": null,
+              "script": "\tif currentValue.value:\n\t\tpayload \u003d {\u0027id\u0027: self.view.params.id}\n\t\tsystem.perspective.sendMessage(\"remove-task-assignment-register\", payload\u003dpayload, scope\u003d\"page\")\n\t\tself.props.params.remove \u003d False"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "remove": false,
+            "text": "Remove"
+          },
+          "path": "Volunteers/Registration/Templates/Remove",
+          "style": {
+            "marginLeft": "10px",
+            "marginRight": "10px"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Name"
+        },
+        "position": {
+          "basis": "200px"
+        },
+        "propConfig": {
+          "props.params.value": {
+            "binding": {
+              "config": {
+                "path": "view.params.name"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "text": "Name"
+          },
+          "path": "Volunteers/Registration/Templates/LabelValue",
+          "style": {
+            "marginLeft": "10px",
+            "marginRight": "10px"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Gender"
+        },
+        "position": {
+          "basis": "200px"
+        },
+        "propConfig": {
+          "props.params.value": {
+            "binding": {
+              "config": {
+                "path": "view.params.gender"
+              },
+              "transforms": [
+                {
+                  "expression": "if(isnull({value}),\u0027None\u0027,{value})",
+                  "type": "expression"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "text": "Gender Restrictions"
+          },
+          "path": "Volunteers/Registration/Templates/LabelValue",
+          "style": {
+            "marginLeft": "10px",
+            "marginRight": "10px"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Age"
+        },
+        "position": {
+          "basis": "200px"
+        },
+        "propConfig": {
+          "props.params.value": {
+            "binding": {
+              "config": {
+                "path": "view.params.ageMin"
+              },
+              "transforms": [
+                {
+                  "code": "\tif value or self.view.params.ageMax:\n\t\tvalue \u003d str(value)+\u0027-\u0027+str(self.view.params.ageMax)\n\telse:\n\t\tvalue \u003d \u0027None\u0027\n\treturn value",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "text": "Age Restrictions"
+          },
+          "path": "Volunteers/Registration/Templates/LabelValue",
+          "style": {
+            "marginLeft": "10px",
+            "marginRight": "10px"
+          }
+        },
+        "type": "ia.display.view"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "style": {
+        "classes": "Background/Default"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

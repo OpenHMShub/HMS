@@ -1,0 +1,724 @@
+{
+  "custom": {
+    "prevSeason": -1
+  },
+  "params": {
+    "selectedLocation": null,
+    "selectedSeason": 13
+  },
+  "propConfig": {
+    "custom.prevSeason": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "currentSeasonId": "{view.params.selectedSeason}"
+          },
+          "queryPath": "WinterShelterGlobal/GetLastSeason_FromCurrentSeason"
+        },
+        "transforms": [
+          {
+            "code": "\tif value is not None and value.getRowCount() \u003e 0:\n\t\treturn value.getValueAt(0,\u0027id\u0027)\n\telse:\n\t\treturn -1",
+            "type": "script"
+          }
+        ],
+        "type": "query"
+      },
+      "persistent": true
+    },
+    "params.selectedLocation": {
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.selectedSeason": {
+      "paramDirection": "output",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 876,
+      "width": 393
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "children": [
+          {
+            "meta": {
+              "name": "Header"
+            },
+            "position": {
+              "basis": "30px"
+            },
+            "props": {
+              "params": {
+                "HeaderText": "Report View"
+              },
+              "path": "Volunteers/Reports/Cards/FilterHeader",
+              "style": {
+                "borderTopLeftRadius": "8px",
+                "borderTopRightRadius": "8px",
+                "marginBottom": "0px"
+              }
+            },
+            "type": "ia.display.view"
+          },
+          {
+            "meta": {
+              "name": "season"
+            },
+            "position": {
+              "basis": "30px",
+              "shrink": 0
+            },
+            "propConfig": {
+              "props.params.options": {
+                "binding": {
+                  "config": {
+                    "queryPath": "WinterShelterGlobal/Filters/getSeasons"
+                  },
+                  "type": "query"
+                }
+              },
+              "props.params.placeholder": {
+                "binding": {
+                  "config": {
+                    "expression": "toInt(if (getMonth(now()),getYear(now()),getYear(now())-1))"
+                  },
+                  "transforms": [
+                    {
+                      "code": "\treturn str(value) + \u0027-\u0027 + str(value+1)",
+                      "type": "script"
+                    }
+                  ],
+                  "type": "expr"
+                }
+              },
+              "props.params.selection": {
+                "binding": {
+                  "config": {
+                    "queryPath": "WinterShelterGlobal/getCurrentSeason"
+                  },
+                  "transforms": [
+                    {
+                      "code": "\treturn value.getValueAt(0,\u0027id\u0027)",
+                      "type": "script"
+                    }
+                  ],
+                  "type": "query"
+                }
+              }
+            },
+            "props": {
+              "path": "1_globalTEMPLATES/Filtering/Conditionals/Conditional_SingleDropDown_NoClear",
+              "style": {
+                "classes": "Filter/Filter_Container",
+                "marginLeft": "20px",
+                "marginRight": "20px",
+                "marginTop": "20px"
+              }
+            },
+            "type": "ia.display.view"
+          },
+          {
+            "meta": {
+              "name": "Conditional_SingleDropDown"
+            },
+            "position": {
+              "basis": "30px"
+            },
+            "propConfig": {
+              "props.params.options": {
+                "binding": {
+                  "config": {
+                    "queryPath": "WinterShelterGlobal/getActiveCongregations"
+                  },
+                  "transforms": [
+                    {
+                      "code": "\toptions \u003d []\n\tif value is not None and value.getRowCount() \u003e 0:\n\t\tfor i in range(value.getRowCount()):\n\t\t\toneValue \u003d {}\n\t\t\toneValue[\u0027label\u0027] \u003d value.getValueAt(i,\u0027congregationName\u0027)\n\t\t\toneValue[\u0027value\u0027] \u003d value.getValueAt(i,\u0027congregationId\u0027)\n\t\t\toptions.append(oneValue)\n\treturn options",
+                      "type": "script"
+                    }
+                  ],
+                  "type": "query"
+                }
+              }
+            },
+            "props": {
+              "params": {
+                "placeholder": "Select Congretation",
+                "selection": null
+              },
+              "path": "1_TEMPLATES/Filtering/Conditionals/Conditional_SingleDropDown",
+              "style": {
+                "marginLeft": "20px",
+                "marginRight": "20px",
+                "marginTop": "20px"
+              }
+            },
+            "type": "ia.display.view"
+          },
+          {
+            "children": [
+              {
+                "events": {
+                  "dom": {
+                    "onClick": {
+                      "config": {
+                        "script": "\tself.view.params.selectedLocation \u003d self.parent.parent.getChild(\"Conditional_SingleDropDown\").props.params.selection\n\tself.view.params.selectedSeason \u003d self.parent.parent.getChild(\"season\").props.params.selection"
+                      },
+                      "scope": "G",
+                      "type": "script"
+                    }
+                  }
+                },
+                "meta": {
+                  "name": "Button"
+                },
+                "position": {
+                  "basis": "110px"
+                },
+                "props": {
+                  "style": {
+                    "classes": "Buttons/Main",
+                    "marginBottom": "10px",
+                    "marginTop": "0px"
+                  },
+                  "text": "Apply"
+                },
+                "type": "ia.input.button"
+              }
+            ],
+            "meta": {
+              "name": "Apply Button"
+            },
+            "position": {
+              "basis": "40px",
+              "shrink": 0
+            },
+            "props": {
+              "style": {
+                "marginBottom": "5px",
+                "marginLeft": "20px",
+                "marginTop": "20px"
+              }
+            },
+            "type": "ia.container.flex"
+          }
+        ],
+        "meta": {
+          "name": "ReportSection"
+        },
+        "position": {
+          "basis": "25%"
+        },
+        "props": {
+          "direction": "column",
+          "style": {
+            "backgroundColor": "#FFFFFF",
+            "borderBottomLeftRadius": "8px",
+            "borderBottomRightRadius": "8px",
+            "classes": "Background/Default"
+          }
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "events": {
+          "component": {
+            "onActionPerformed": {
+              "config": {
+                "script": "\tsDate \u003d self.parent.getChild(\"ReportSection\").getChild(\"DateFilter\").getChild(\"Date\").props.value\n\t\n\tparams \u003d {\"Date\":sDate}\n\tsystem.report.executeAndDistribute(path\u003d\"Participant Report\", project\u003d\"RITI\", parameters\u003dparams, action\u003d\"print\")\n"
+              },
+              "scope": "G",
+              "type": "script"
+            }
+          }
+        },
+        "meta": {
+          "name": "PrintReportButton"
+        },
+        "position": {
+          "basis": "60px",
+          "display": false
+        },
+        "props": {
+          "style": {
+            "classes": "Buttons/Main",
+            "marginBottom": 10,
+            "marginLeft": 80,
+            "marginRight": 80,
+            "marginTop": 10
+          },
+          "text": "Print Report",
+          "textStyle": {
+            "fontSize": 16
+          }
+        },
+        "type": "ia.input.button"
+      },
+      {
+        "children": [
+          {
+            "meta": {
+              "name": "Header"
+            },
+            "position": {
+              "basis": "40px",
+              "grow": 1
+            },
+            "props": {
+              "params": {
+                "HeaderText": "Save"
+              },
+              "path": "Volunteers/Reports/Cards/FilterHeader",
+              "style": {
+                "borderTopLeftRadius": "8px",
+                "borderTopRightRadius": "8px",
+                "marginBottom": "0px"
+              }
+            },
+            "type": "ia.display.view"
+          },
+          {
+            "children": [
+              {
+                "meta": {
+                  "name": "Label"
+                },
+                "position": {
+                  "basis": "32px"
+                },
+                "props": {
+                  "style": {
+                    "classes": "Text/Add_Value"
+                  },
+                  "text": "File Name"
+                },
+                "type": "ia.display.label"
+              },
+              {
+                "meta": {
+                  "name": "TextField"
+                },
+                "position": {
+                  "basis": "32px"
+                },
+                "props": {
+                  "placeholder": "Enter file name",
+                  "style": {
+                    "borderColor": "#D5D5D5",
+                    "borderStyle": "solid",
+                    "borderWidth": 2,
+                    "classes": "Text/Add_TextArea",
+                    "marginRight": "30%",
+                    "marginTop": "5px"
+                  }
+                },
+                "type": "ia.input.text-field"
+              },
+              {
+                "children": [
+                  {
+                    "events": {
+                      "component": {
+                        "onActionPerformed": {
+                          "config": {
+                            "script": "\tselectedLocation \u003d self.parent.parent.parent.parent.getChild(\"ReportSection\").getChild(\"Conditional_SingleDropDown\").props.params.selection\n\tselectedSeason \u003d self.parent.parent.parent.parent.getChild(\"ReportSection\").getChild(\"season\").props.params.selection\n\tprevSeason \u003d self.view.custom.prevSeason\n\tparams \u003d {\"locationId\":selectedLocation, \"seasonId\":selectedSeason, \"previousSeasonId\":prevSeason, \"CalledFromPage\":\"Report\"} #, \"EndDate\":eDate, \"VolunteerID\":volunteerID}\n\tbyteData \u003d system.report.executeReport(path\u003d\"WinterShelter/Registration Report\", project\u003d\"RITI\", parameters\u003dparams, fileType\u003d\"pdf\")\n\t\n#\tfilename \u003d self.getSibling(\"TextField\").props.text+\".pdf\"\n\tfilename \u003d self.parent.parent.getChild(\"TextField\").props.text + \".pdf\"\n\tsystem.perspective.download(filename, byteData)"
+                          },
+                          "scope": "G",
+                          "type": "script"
+                        }
+                      }
+                    },
+                    "meta": {
+                      "name": "Button"
+                    },
+                    "position": {
+                      "basis": "110px"
+                    },
+                    "props": {
+                      "style": {
+                        "classes": "Buttons/Main",
+                        "marginBottom": "5px",
+                        "marginRight": "60%",
+                        "marginTop": "5px"
+                      },
+                      "text": "SAVE"
+                    },
+                    "type": "ia.input.button"
+                  }
+                ],
+                "meta": {
+                  "name": "Save Button"
+                },
+                "position": {
+                  "basis": "40px",
+                  "shrink": 0
+                },
+                "props": {
+                  "style": {
+                    "marginBottom": "0px",
+                    "marginLeft": "0px",
+                    "marginTop": "0px"
+                  }
+                },
+                "type": "ia.container.flex"
+              }
+            ],
+            "meta": {
+              "name": "FlexContainer"
+            },
+            "position": {
+              "basis": "200px"
+            },
+            "props": {
+              "direction": "column",
+              "style": {
+                "marginBottom": "0px",
+                "marginLeft": "20px",
+                "marginTop": "5px"
+              }
+            },
+            "type": "ia.container.flex"
+          }
+        ],
+        "meta": {
+          "name": "SaveSection"
+        },
+        "position": {
+          "basis": "20.3%"
+        },
+        "props": {
+          "direction": "column",
+          "style": {
+            "backgroundColor": "#ffffff",
+            "borderBottomLeftRadius": "8px",
+            "borderBottomRightRadius": "8px",
+            "marginTop": "20px"
+          }
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "children": [
+          {
+            "meta": {
+              "name": "Header"
+            },
+            "position": {
+              "basis": "30px"
+            },
+            "props": {
+              "params": {
+                "HeaderText": "Email"
+              },
+              "path": "Volunteers/Reports/Cards/FilterHeader",
+              "style": {
+                "borderTopLeftRadius": "8px",
+                "borderTopRightRadius": "8px",
+                "marginBottom": "10px"
+              }
+            },
+            "type": "ia.display.view"
+          },
+          {
+            "children": [
+              {
+                "meta": {
+                  "name": "Emails"
+                },
+                "position": {
+                  "basis": "32px"
+                },
+                "props": {
+                  "placeholder": "Enter email address",
+                  "style": {
+                    "borderColor": "#D5D5D5",
+                    "borderStyle": "solid",
+                    "borderWidth": 2,
+                    "classes": "Text/Add_TextArea",
+                    "marginRight": "30%",
+                    "marginTop": "2px"
+                  }
+                },
+                "type": "ia.input.text-field"
+              },
+              {
+                "meta": {
+                  "name": "Subject"
+                },
+                "position": {
+                  "basis": "32px"
+                },
+                "props": {
+                  "placeholder": "Enter subject line",
+                  "style": {
+                    "borderColor": "#D5D5D5",
+                    "borderStyle": "solid",
+                    "borderWidth": 2,
+                    "classes": "Text/Add_TextArea",
+                    "marginRight": "30%"
+                  }
+                },
+                "type": "ia.input.text-field"
+              },
+              {
+                "meta": {
+                  "name": "Message"
+                },
+                "position": {
+                  "basis": "130px"
+                },
+                "props": {
+                  "placeholder": "Enter message",
+                  "style": {
+                    "borderColor": "#D5D5D5",
+                    "borderStyle": "solid",
+                    "borderWidth": 2,
+                    "classes": "Text/Add_TextArea",
+                    "marginRight": "5%"
+                  }
+                },
+                "type": "ia.input.text-area"
+              },
+              {
+                "children": [
+                  {
+                    "events": {
+                      "component": {
+                        "onActionPerformed": {
+                          "config": {
+                            "script": "\tselectedLocation \u003d self.parent.parent.parent.parent.getChild(\"ReportSection\").getChild(\"Conditional_SingleDropDown\").props.params.selection\n\tselectedSeason \u003d self.parent.parent.parent.parent.getChild(\"ReportSection\").getChild(\"season\").props.params.selection\n\tprevSeason \u003d self.view.custom.prevSeason\n\tparams \u003d {\"locationId\":selectedLocation, \"seasonId\":selectedSeason, \"previousSeasonId\":prevSeason, \"CalledFromPage\":\"Report\"} #, \"EndDate\":eDate, \"VolunteerID\":volunteerID}\n\t\n\tbyteData \u003d system.report.executeReport(path\u003d\"WinterShelter/Registration Report\", project\u003d\"RITI\", parameters\u003dparams, fileType\u003d\"pdf\")\n\n#\trawEmail \u003d self.getSibling(\"Emails\").props.text\n#\temails \u003d rawEmail.split(\";\")\n#\tsubj \u003d self.getSibling(\"Subject\").props.text\n#\tmessage \u003d self.getSibling(\"Message\").props.text\n\trawEmail \u003d self.parent.parent.getChild(\"Emails\").props.text\n\temails \u003d rawEmail.split(\";\")\n\tsubj \u003d self.parent.parent.getChild(\"Subject\").props.text\n\tmessage \u003d self.parent.parent.getChild(\"Message\").props.text\n\n\tfilename \u003d \"WinterShelter Registration Report.pdf\"\n\t\n\tsystem.net.sendEmail(fromAddr\u003d\"test@test.org\", subject\u003dsubj, \n\t\t\t\t\t\t\tbody\u003d message, to\u003d emails, attachmentNames\u003d[filename], attachmentData\u003d [byteData],\n\t\t\t\t\t\t\tsmtpProfile\u003d\"test.org\")\n\n\t# reset the form\n#\tself.getSibling(\"Emails\").props.text \u003d \"\"\n#\tself.getSibling(\"Subject\").props.text \u003d \"\"\n#\tmessage \u003d self.getSibling(\"Message\").props.text \u003d \"\"\n\tself.parent.parent.getChild(\"Emails\").props.text \u003d \"\"\n\tself.parent.parent.getChild(\"Subject\").props.text \u003d \"\"\n\tmessage \u003d self.parent.parent.getChild(\"Message\").props.text \u003d \"\""
+                          },
+                          "scope": "G",
+                          "type": "script"
+                        }
+                      }
+                    },
+                    "meta": {
+                      "name": "Button"
+                    },
+                    "position": {
+                      "basis": "110px"
+                    },
+                    "props": {
+                      "style": {
+                        "classes": "Buttons/Main",
+                        "marginBottom": "5px",
+                        "marginRight": "60%",
+                        "marginTop": "5px"
+                      },
+                      "text": "SEND"
+                    },
+                    "type": "ia.input.button"
+                  }
+                ],
+                "meta": {
+                  "name": "Send Button"
+                },
+                "position": {
+                  "basis": "40px",
+                  "shrink": 0
+                },
+                "type": "ia.container.flex"
+              }
+            ],
+            "meta": {
+              "name": "FlexContainer"
+            },
+            "position": {
+              "basis": "90%"
+            },
+            "props": {
+              "direction": "column",
+              "style": {
+                "marginBottom": "5px",
+                "marginLeft": "20px",
+                "marginTop": "5px"
+              }
+            },
+            "type": "ia.container.flex"
+          }
+        ],
+        "meta": {
+          "name": "EmailSection"
+        },
+        "position": {
+          "basis": "37.9%"
+        },
+        "props": {
+          "direction": "column",
+          "style": {
+            "backgroundColor": "#FFFFFF",
+            "borderBottomLeftRadius": "8px",
+            "borderBottomRightRadius": "8px",
+            "marginTop": "20px"
+          }
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "children": [
+          {
+            "meta": {
+              "name": "Header"
+            },
+            "position": {
+              "basis": "30px"
+            },
+            "props": {
+              "params": {
+                "HeaderText": "Legend"
+              },
+              "path": "Volunteers/Reports/Cards/FilterHeader",
+              "style": {
+                "borderTopLeftRadius": "8px",
+                "borderTopRightRadius": "8px",
+                "marginBottom": "10px"
+              }
+            },
+            "type": "ia.display.view"
+          },
+          {
+            "children": [
+              {
+                "meta": {
+                  "name": "Icon"
+                },
+                "position": {
+                  "basis": "60px"
+                },
+                "props": {
+                  "color": "#FF0000",
+                  "path": "material/ac_unit",
+                  "style": {
+                    "paddingBottom": "10px",
+                    "paddingLeft": "10px",
+                    "paddingRight": "10px",
+                    "paddingTop": "10px"
+                  }
+                },
+                "type": "ia.display.icon"
+              },
+              {
+                "meta": {
+                  "name": "Label"
+                },
+                "position": {
+                  "basis": "313px"
+                },
+                "props": {
+                  "text": "Not Enrolled in the Program",
+                  "textStyle": {
+                    "color": "#0c4e8b",
+                    "fontFamily": "Proxima NovaC",
+                    "fontSize": "16px",
+                    "textAlign": "left"
+                  }
+                },
+                "type": "ia.display.label"
+              }
+            ],
+            "meta": {
+              "name": "Legend1"
+            },
+            "position": {
+              "basis": "50px"
+            },
+            "props": {
+              "style": {
+                "marginBottom": "5px",
+                "marginLeft": "10px"
+              }
+            },
+            "type": "ia.container.flex"
+          },
+          {
+            "children": [
+              {
+                "meta": {
+                  "name": "Icon_0"
+                },
+                "position": {
+                  "basis": "60px"
+                },
+                "props": {
+                  "color": "#FF0000",
+                  "path": "material/info",
+                  "style": {
+                    "paddingBottom": "10px",
+                    "paddingLeft": "10px",
+                    "paddingRight": "10px",
+                    "paddingTop": "10px"
+                  }
+                },
+                "type": "ia.display.icon"
+              },
+              {
+                "meta": {
+                  "name": "Label_0"
+                },
+                "position": {
+                  "basis": "312px"
+                },
+                "props": {
+                  "text": "Suspended",
+                  "textStyle": {
+                    "color": "#0c4e8b",
+                    "fontFamily": "Proxima NovaC",
+                    "fontSize": "16px",
+                    "textAlign": "left"
+                  }
+                },
+                "type": "ia.display.label"
+              }
+            ],
+            "meta": {
+              "name": "Legend2"
+            },
+            "position": {
+              "basis": "50px"
+            },
+            "props": {
+              "style": {
+                "marginBottom": "5px",
+                "marginLeft": "10px"
+              }
+            },
+            "type": "ia.container.flex"
+          }
+        ],
+        "meta": {
+          "name": "Legend"
+        },
+        "position": {
+          "basis": "18%",
+          "display": false,
+          "grow": 1
+        },
+        "props": {
+          "direction": "column",
+          "style": {
+            "backgroundColor": "#FFFFFF",
+            "borderBottomLeftRadius": "8px",
+            "borderBottomRightRadius": "8px",
+            "marginBottom": "20px",
+            "marginTop": "20px"
+          }
+        },
+        "type": "ia.container.flex"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column",
+      "style": {
+        "classes": "Background/Alternative"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

@@ -1,0 +1,239 @@
+{
+  "custom": {},
+  "params": {
+    "selectedTab": "Assignments"
+  },
+  "propConfig": {
+    "params.selectedTab": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 983,
+      "width": 1374
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "children": [
+          {
+            "meta": {
+              "name": "Tabstrip"
+            },
+            "position": {
+              "basis": "320px",
+              "grow": 1
+            },
+            "propConfig": {
+              "props.params.selectedTab": {
+                "binding": {
+                  "config": {
+                    "bidirectional": true,
+                    "path": "view.params.selectedTab"
+                  },
+                  "type": "property"
+                }
+              }
+            },
+            "props": {
+              "path": "Events/Dashboard/Components/TabStrip/TabStrip"
+            },
+            "type": "ia.display.view"
+          },
+          {
+            "children": [
+              {
+                "meta": {
+                  "name": "EmbeddedView"
+                },
+                "position": {
+                  "basis": "500px"
+                },
+                "propConfig": {
+                  "meta.visible": {
+                    "binding": {
+                      "config": {
+                        "expression": "{.../Tabstrip.props.params.selectedTab} \u003d \"Event Details\""
+                      },
+                      "type": "expr"
+                    }
+                  }
+                },
+                "props": {
+                  "params": {
+                    "selectedInstance": null
+                  },
+                  "path": "Events/Dashboard/Components/TabStrip/searchEvents"
+                },
+                "type": "ia.display.view"
+              },
+              {
+                "meta": {
+                  "name": "EmbeddedView_2"
+                },
+                "position": {
+                  "basis": "280px"
+                },
+                "propConfig": {
+                  "position.display": {
+                    "binding": {
+                      "config": {
+                        "expression": "if({view.params.selectedTab} \u003d \"Assignments\", false,True)"
+                      },
+                      "type": "expr"
+                    }
+                  }
+                },
+                "props": {
+                  "params": {
+                    "Text": "NEW EVENT"
+                  },
+                  "path": "Events/Dashboard/Components/Buttons/New_Event",
+                  "style": {
+                    "paddingLeft": 4
+                  },
+                  "useDefaultViewHeight": true
+                },
+                "type": "ia.display.view"
+              },
+              {
+                "meta": {
+                  "name": "EmbeddedView_0"
+                },
+                "position": {
+                  "basis": "280px"
+                },
+                "propConfig": {
+                  "position.display": {
+                    "binding": {
+                      "config": {
+                        "expression": "if({view.params.selectedTab} \u003d \"Assignments\", true,false)"
+                      },
+                      "type": "expr"
+                    }
+                  }
+                },
+                "props": {
+                  "params": {
+                    "Text": "NEW ASSIGNMENT"
+                  },
+                  "path": "Events/Dashboard/Components/Buttons/New_Assignment",
+                  "useDefaultViewHeight": true
+                },
+                "type": "ia.display.view"
+              }
+            ],
+            "meta": {
+              "name": "Controls"
+            },
+            "position": {
+              "basis": "350px"
+            },
+            "props": {
+              "alignItems": "center",
+              "style": {
+                "classes": "Background/Default",
+                "marginRight": "40px"
+              }
+            },
+            "type": "ia.container.flex"
+          }
+        ],
+        "meta": {
+          "name": "Tabs_Header"
+        },
+        "position": {
+          "basis": "55px",
+          "shrink": 0
+        },
+        "props": {
+          "justify": "space-between",
+          "style": {
+            "classes": "Background/Default",
+            "overflow": "hidden"
+          },
+          "wrap": "wrap"
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "meta": {
+          "name": "Content"
+        },
+        "position": {
+          "grow": 1
+        },
+        "propConfig": {
+          "props.params.instanceID": {
+            "persistent": false
+          },
+          "props.path": {
+            "binding": {
+              "config": {
+                "path": "../Tabs_Header/Tabstrip.props.params.selectedTab"
+              },
+              "transforms": [
+                {
+                  "fallback": null,
+                  "inputType": "scalar",
+                  "mappings": [
+                    {
+                      "input": "Overview",
+                      "output": "Events/Dashboard/Components/Tabs/Events_Overview"
+                    },
+                    {
+                      "input": "Calendar",
+                      "output": "Events/Dashboard/Components/Calendar/CalendarView"
+                    },
+                    {
+                      "input": "Event Details",
+                      "output": "Events/Dashboard/Components/EventDetail/Events_Detail"
+                    },
+                    {
+                      "input": "Series",
+                      "output": "Events/Dashboard/Components/Assignments/Components/Tabs/Dashboard_Assignments"
+                    },
+                    {
+                      "input": "Past Events",
+                      "output": "Events/Dashboard/Components/Past Events/Tabs/Dashboard_PastEvents"
+                    }
+                  ],
+                  "outputType": "scalar",
+                  "type": "map"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "type": "ia.display.view"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column",
+      "style": {
+        "classes": "Background/Alternative"
+      }
+    },
+    "scripts": {
+      "customMethods": [],
+      "extensionFunctions": null,
+      "messageHandlers": [
+        {
+          "messageType": "eventDetails",
+          "pageScope": true,
+          "script": "\t# implement your handler here\n\tsystem.perspective.print(message \u003d \"received\", destination \u003d \"all\")\n\tself.getChild(\"Content\").props.params.instanceID \u003d payload[\u0027id\u0027]",
+          "sessionScope": true,
+          "viewScope": true
+        }
+      ]
+    },
+    "type": "ia.container.flex"
+  }
+}

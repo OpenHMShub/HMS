@@ -1,0 +1,1934 @@
+{
+  "custom": {},
+  "events": {
+    "system": {
+      "onStartup": {
+        "config": {
+          "script": "\ttry:\n\t\tpass\n\t\t#payload \u003d{} #\u0027offset\u0027:0,\u0027fetch\u0027 :100 }\n\t\t\n\t\t\n\t\t#system.perspective.sendMessage(\u0027mhByCondition\u0027, payload \u003d payload)\n\n\texcept:\n\t\tpass\n\t\t#import traceback\n\t\t#logger \u003d system.util.getLogger(\"{}\".format(\u0027Providers_Table onStartUp\u0027))\n\t\t#msg \u003d traceback.format_exc()\n\t\t#logger.error(msg)\t\n\n"
+        },
+        "scope": "G",
+        "type": "script"
+      }
+    }
+  },
+  "params": {
+    "fetch": null,
+    "printMode": false,
+    "resultRowCount": 16
+  },
+  "propConfig": {
+    "params.fetch": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.printMode": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.resultRowCount": {
+      "paramDirection": "output",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 900,
+      "width": 1500
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "children": [
+          {
+            "meta": {
+              "name": "lblRowQty"
+            },
+            "position": {
+              "basis": "70px",
+              "shrink": 0
+            },
+            "props": {
+              "style": {
+                "classes": "Table/Filter_Header",
+                "textAlign": "end"
+              },
+              "text": "Rows:"
+            },
+            "type": "ia.display.label"
+          },
+          {
+            "meta": {
+              "name": "emvRowQty"
+            },
+            "position": {
+              "basis": "120px",
+              "shrink": 0
+            },
+            "props": {
+              "params": {
+                "clear": false,
+                "fieldText": "",
+                "keyUpPulse": true
+              },
+              "path": "Shelter/Layout/Components/Filters/Text_Field",
+              "style": {
+                "classes": "Table/Search_Bar"
+              }
+            },
+            "type": "ia.display.view"
+          },
+          {
+            "meta": {
+              "name": "lblColumnQty"
+            },
+            "position": {
+              "basis": "70px",
+              "shrink": 0
+            },
+            "props": {
+              "style": {
+                "classes": "Table/Filter_Header",
+                "textAlign": "end"
+              },
+              "text": "Columns:"
+            },
+            "type": "ia.display.label"
+          },
+          {
+            "meta": {
+              "name": "emvColQty"
+            },
+            "position": {
+              "basis": "120px",
+              "shrink": 0
+            },
+            "props": {
+              "params": {
+                "clear": false,
+                "fieldText": "",
+                "keyUpPulse": false
+              },
+              "path": "Shelter/Layout/Components/Filters/Text_Field",
+              "style": {
+                "classes": "Table/Search_Bar"
+              }
+            },
+            "type": "ia.display.view"
+          },
+          {
+            "events": {
+              "component": {
+                "onActionPerformed": {
+                  "config": {
+                    "script": "\troot \u003d self.view.getChild(\"root\")\n\ttableList \u003d root.getChild(\"flexTables\").getChild(\"TableList\")\n\ttableLayout \u003d root.getChild(\"flexTables\").getChild(\"TableLayout\")\n\temvColQty \u003d root.getChild(\"flexHead\").getChild(\"emvColQty\")\n\temvRowQty \u003d root.getChild(\"flexHead\").getChild(\"emvRowQty\")\n\t\n\tif not(tableList.props.data):\n\t\treturn\n\t\n\tbedId \u003d tableList.props.data[0].get(\u0027bedId\u0027) if tableList.props.data else None\n\troomId \u003d tableList.props.data[0].get(\u0027roomId\u0027) if tableList.props.data else None\n\tfacilityId \u003d tableList.props.data[0].get(\u0027facilityId\u0027) if tableList.props.data else None\n\t\n\ttry:\n\t\tcolSize \u003d int(emvColQty.props.params.fieldText)\n\texcept:\n\t\tcolSize \u003d 0\n\n\ttry:\n\t\trowSize \u003d int(emvRowQty.props.params.fieldText)  \n\texcept:\n\t\trowSize \u003d 0\t\n\t\n\t#ystem.perspective.print((\u0027preview: facilityId, roomId :\u0027, facilityId, roomId))\t\n\tif facilityId and roomId is None:\n\t\tdictError \u003d tableList.validateGlobal(rowSize, colSize)\n\t\ttableList.addErrorColumn(dictError)\n\t\t#ystem.perspective.print((\u0027g1\u0027,dictError))\n\t\tif dictError:\n\t\t\ttableLayout.setGlobalLayout(rowSize, colSize, [])\n\t\t\treturn\t\n\t\t#ystem.perspective.print((\u0027g2\u0027))\n\t\tglobalLayoutList \u003d root.getFromTableGlobalList(True)\n\t\tsystem.perspective.print((\u0027g3 globalLayoutList:\u0027, globalLayoutList))\n\t\ttableLayout.setGlobalLayout(rowSize, colSize, globalLayoutList)\t\t\n\n\telif roomId and facilityId:\n\t\tdictError \u003d tableList.validateFacility(rowSize, colSize)\n\t\ttableList.addErrorColumn(dictError)\n\t\t\n\t\tif dictError:\n\t\t\ttableLayout.setFacilityLayout(facilityId, rowSize, colSize, [])\n\t\t\treturn\n\n\t\tfacilityLayoutList \u003d root.getFromTableFacilityList(True)\n\t\n\t\tsystem.perspective.print((\u0027facilityId, rowSize, colSize, facilityLayoutList:\u0027, facilityId, rowSize, colSize, facilityLayoutList))\n\t\ttableLayout.setFacilityLayout(facilityId, rowSize, colSize, facilityLayoutList)\t\t\n\t\n\telif bedId and roomId:\n\t\tdictError \u003d tableList.validateRoom(rowSize, colSize)\n\t\tsystem.perspective.print((\u0027dictError:\u0027, dictError))\n\t\ttableList.addErrorColumn(dictError)\n\t\t\n\t\tif dictError:\n\t\t\ttableLayout.setRoomLayout(roomId, rowSize, colSize, [])\n\t\t\treturn\n\t\t\t\n\t\troomLayoutList \u003d root.getFromTableRoomList()\n\t\ttableLayout.setRoomLayout(roomId, rowSize, colSize, roomLayoutList)\n\t\n\telse:\n\t\ttableLayout.props.data \u003d []\n\t\t\n"
+                  },
+                  "scope": "G",
+                  "type": "script"
+                }
+              }
+            },
+            "meta": {
+              "name": "btnPreview"
+            },
+            "position": {
+              "basis": "80px"
+            },
+            "props": {
+              "style": {
+                "classes": "Buttons/Main",
+                "marginLeft": "20px",
+                "marginRight": "10px"
+              },
+              "text": "Preview"
+            },
+            "type": "ia.input.button"
+          },
+          {
+            "meta": {
+              "name": "lblPlaceholder"
+            },
+            "position": {
+              "basis": "100px"
+            },
+            "props": {
+              "textStyle": {
+                "classes": "Text/Add_InfoText"
+              }
+            },
+            "type": "ia.display.label"
+          },
+          {
+            "events": {
+              "component": {
+                "onActionPerformed": {
+                  "config": {
+                    "script": "\troot \u003d self.view.getChild(\"root\")\n\ttableList \u003d root.getChild(\"flexTables\").getChild(\"TableList\")\n\ttableLayout \u003d root.getChild(\"flexTables\").getChild(\"TableLayout\")\n\tlblInfo \u003d root.getChild(\"flexHead\").getChild(\"lblInfo\")\n\temvColQty \u003d root.getChild(\"flexHead\").getChild(\"emvColQty\")\n\temvRowQty \u003d root.getChild(\"flexHead\").getChild(\"emvRowQty\")\n\t\n\tlblInfo.props.text \u003d \u0027\u0027\n\tinfoMsg \u003d \u0027NOT SAVED!\u0027\n\t\n\tif not(tableList.props.data):\n\t\treturn\n\t\n\tparams \u003d {}\n\tparams[\u0027bedId\u0027]\u003d tableList.props.data[0].get(\u0027bedId\u0027) if tableList.props.data else None\n\tparams[\u0027roomId\u0027]\u003d tableList.props.data[0].get(\u0027roomId\u0027) if tableList.props.data else None\n\tparams[\u0027facilityId\u0027] \u003d tableList.props.data[0].get(\u0027facilityId\u0027) if tableList.props.data else None\n\t\n\ttry:\n\t\tparams[\u0027colSize\u0027] \u003d int(emvColQty.props.params.fieldText)\n\texcept:\n\t\tparams[\u0027colSize\u0027] \u003d 0\n\n\ttry:\n\t\tparams[\u0027rowSize\u0027] \u003d int(emvRowQty.props.params.fieldText)  \n\texcept:\n\t\tparams[\u0027rowSize\u0027] \u003d 0\t\n\n\t#ystem.perspective.print((\u0027params:\u0027, params))\n\tif params[\u0027facilityId\u0027] and params[\u0027roomId\u0027] is None:\n\t\tglobalList \u003d root.getFromTableGlobalList()\n\t\t\n\t\tdictError \u003d tableList.validateGlobal(params[\u0027rowSize\u0027], params[\u0027colSize\u0027])\n\t\ttableList.addErrorColumn(dictError)\n\t\t\n\t\tif dictError:\n\t\t\ttableLayout.setGlobalLayout(params[\u0027rowSize\u0027], params[\u0027colSize\u0027], [])\n\t\telse:\t\n\t\t\tparams[\u0027jsonLayout\u0027] \u003d system.util.jsonEncode(globalList)\n\t\t\troot.saveToDb(params)\t\t\n\t\t\tinfoMsg \u003d \u0027Saved!\u0027\n\t\t\n\telif params[\u0027facilityId\u0027] and params[\u0027roomId\u0027]:\n\t\tfacilityList \u003d root.getFromTableFacilityList()\n\t\t\n\t\tdictError \u003d tableList.validateFacility(params[\u0027rowSize\u0027], params[\u0027colSize\u0027])\n\t\ttableList.addErrorColumn(dictError)\n\t\t\n\t\tif dictError:\n\t\t\ttableLayout.setFacilityLayout(facilityId, params[\u0027rowSize\u0027], params[\u0027colSize\u0027], [])\n\t\telse:\n\t\t\tparams[\u0027jsonLayout\u0027] \u003d system.util.jsonEncode(facilityList)\n\t\t\troot.saveToDb(params)\n\t\t\tinfoMsg \u003d \u0027Saved!\u0027\n\t\t\t\t\n\telif params[\u0027roomId\u0027] and params[\u0027bedId\u0027]:\n\t\troomList \u003d root.getFromTableRoomList()\n\t\t\n\t\tdictError \u003d tableList.validateRoom(params[\u0027rowSize\u0027], params[\u0027colSize\u0027])\n\t\ttableList.addErrorColumn(dictError)\n\t\t\n\t\tif dictError:\n\t\t\ttableLayout.setRoomLayout(roomId, params[\u0027rowSize\u0027], params[\u0027colSize\u0027], [])\n\t\telse:\n\t\t\tparams[\u0027jsonLayout\u0027] \u003d system.util.jsonEncode(roomList)\n\t\t\troot.saveToDb(params)\n\t\t\tinfoMsg \u003d \u0027Saved!\u0027\n\n\tlblInfo.showMessage(infoMsg)\n"
+                  },
+                  "scope": "G",
+                  "type": "script"
+                }
+              }
+            },
+            "meta": {
+              "name": "btnSave"
+            },
+            "position": {
+              "basis": "80px"
+            },
+            "props": {
+              "style": {
+                "classes": "Buttons/Main",
+                "marginRight": "10px"
+              },
+              "text": "Save"
+            },
+            "type": "ia.input.button"
+          },
+          {
+            "meta": {
+              "name": "lblInfo"
+            },
+            "position": {
+              "basis": "50px",
+              "grow": 1
+            },
+            "props": {
+              "textStyle": {
+                "classes": "Text/Add_InfoText",
+                "marginLeft": 5,
+                "paddingLeft": 10
+              }
+            },
+            "scripts": {
+              "customMethods": [
+                {
+                  "name": "showMessage",
+                  "params": [
+                    "message"
+                  ],
+                  "script": "\timport time\n\tself.props.text \u003d message\n\t#self.meta.visible \u003d True\n\ttime.sleep(5)\n\t#self.meta.visible \u003d False\n\tself.props.text \u003d \u0027\u0027\n"
+                }
+              ],
+              "extensionFunctions": null,
+              "messageHandlers": []
+            },
+            "type": "ia.display.label"
+          }
+        ],
+        "meta": {
+          "name": "flexHead"
+        },
+        "position": {
+          "shrink": 0
+        },
+        "propConfig": {
+          "position.basis": {
+            "binding": {
+              "config": {
+                "path": "view.params.printMode"
+              },
+              "transforms": [
+                {
+                  "expression": "if({value},\u00270px\u0027,\u002735px\u0027)",
+                  "type": "expression"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "children": [
+          {
+            "custom": {
+              "_devPulse": false,
+              "_devTxt": "",
+              "_isDev": false,
+              "jsonLastPayload": null,
+              "lastPayload": {},
+              "roomlLayout_NextStepDorm": [
+                [
+                  {},
+                  {
+                    "beds": [
+                      8,
+                      7
+                    ],
+                    "type": "h"
+                  },
+                  {
+                    "beds": [
+                      2,
+                      1
+                    ],
+                    "type": "h"
+                  }
+                ],
+                [
+                  {},
+                  {
+                    "beds": [
+                      9
+                    ],
+                    "type": "h"
+                  },
+                  {
+                    "beds": [
+                      3
+                    ],
+                    "type": "h"
+                  }
+                ],
+                [
+                  {
+                    "beds": [
+                      16,
+                      15
+                    ],
+                    "type": "v"
+                  },
+                  {
+                    "beds": [
+                      11,
+                      10
+                    ],
+                    "type": "v"
+                  },
+                  {
+                    "beds": [
+                      4,
+                      5
+                    ],
+                    "type": "v"
+                  }
+                ],
+                [
+                  {},
+                  {
+                    "beds": [
+                      13,
+                      12
+                    ],
+                    "type": "h"
+                  },
+                  {}
+                ],
+                [
+                  {},
+                  {
+                    "beds": [
+                      14
+                    ],
+                    "type": "h"
+                  },
+                  {
+                    "beds": [
+                      6
+                    ],
+                    "type": "h"
+                  }
+                ]
+              ]
+            },
+            "events": {
+              "component": {
+                "onEditCellCommit": {
+                  "config": {
+                    "script": "\t#ystem.perspective.print((event[\u0027row\u0027], event[\u0027column\u0027]))\n\t#self.props.data[event[\u0027row\u0027]][event[\u0027column\u0027]][\u0027value\u0027] \u003d event[\u0027value\u0027]\n\t\n\tif event[\u0027column\u0027] \u003d\u003d \u0027position\u0027:\n\t\tself.props.data[event[\u0027row\u0027]][event[\u0027column\u0027]] \u003d event[\u0027value\u0027].upper()\n\telse:\n\t\tself.props.data[event[\u0027row\u0027]][event[\u0027column\u0027]] \u003d event[\u0027value\u0027]"
+                  },
+                  "scope": "G",
+                  "type": "script"
+                }
+              }
+            },
+            "meta": {
+              "name": "TableList"
+            },
+            "propConfig": {
+              "custom._devPulse": {
+                "onChange": {
+                  "enabled": null,
+                  "script": "\t_json \u003d \"\"\"\n[\n  {\n\t\"a1\": {\n\t  \"info\": [\n\t\t{\n\t\t  \"l0\": \"xa0\",\n\t\t  \"l1\": \"xa1\",\n\t\t  \"l2\": \"xa2\",\n\t\t  \"l3\": \"xa3\"\n\t\t},\n\t\t{\n\t\t  \"l0\": \"xb0\",\n\t\t  \"l1\": \"xb1\",\n\t\t  \"l2\": \"xb2\",\n\t\t  \"l3\": \"xb3\"\n\t\t}\n\t  ],\n\t  \"type\": \"h\"\n\t}\n  },\n  {\n\t\"a1\": {\n\t  \"info\": [\n\t\t{\n\t\t  \"l0\": \"ya0\",\n\t\t  \"l1\": \"ya1\",\n\t\t  \"l2\": \"ya2\",\n\t\t  \"l3\": \"ya3\"\n\t\t},\n\t\t{\n\t\t  \"l0\": \"ya0\",\n\t\t  \"l1\": \"ya1\",\n\t\t  \"l2\": \"ya2\",\n\t\t  \"l3\": \"ya3\"\n\t\t}\n\t  ],\n\t  \"type\": \"v\"\n\t}\n  }\n]\n\t\"\"\"\n\t\n\t\n\tif self.custom._isDev:\n\t\tif currentValue.value is True:\n\t\t\t#self.props.data \u003d system.util.jsonDecode(_json)\n\t\t\tpayload \u003d {}\n\t\t\tpayload[\u0027oneDay\u0027] \u003d system.date.now()\n\t\t\tpayload[\u0027facilityId\u0027] \u003d 4\n\t\t\tpayload[\u0027roomId\u0027] \u003d 47\n\t\t\t\n\t\t\t\n\t\t\tsystem.perspective.sendMessage(\u0027mhUpdateTableList\u0027, payload \u003d payload)\n\t\t\tself.custom.jsonLastPayload \u003d system.util.jsonEncode(payload)\n\t\t\t\n\n\t\telse:\n\t\t\t#self.props.data \u003d system.dataset.clearDataset(self.props.data)\n\t\t\tself.props.data \u003d [] # [{key: None for key in self.props.data[0]}]\n\t\t\tself.custom.jsonLastPayload \u003d None\n\n\n"
+                }
+              },
+              "position.basis": {
+                "binding": {
+                  "config": {
+                    "path": "view.params.printMode"
+                  },
+                  "transforms": [
+                    {
+                      "expression": "if({value},\u00270px\u0027,\u0027400px\u0027)",
+                      "type": "expression"
+                    }
+                  ],
+                  "type": "property"
+                }
+              },
+              "position.grow": {
+                "binding": {
+                  "config": {
+                    "path": "view.params.printMode"
+                  },
+                  "transforms": [
+                    {
+                      "expression": "if({value},0,1)",
+                      "type": "expression"
+                    }
+                  ],
+                  "type": "property"
+                }
+              },
+              "props.filter.text": {
+                "access": "PUBLIC"
+              }
+            },
+            "props": {
+              "cells": {
+                "allowEditOn": "single-click",
+                "style": {
+                  "borderColor": "#CCFFFF",
+                  "borderStyle": "solid",
+                  "classes": "Table/Cell_Dashboard"
+                }
+              },
+              "columns": [
+                {
+                  "align": "center",
+                  "boolean": "checkbox",
+                  "dateFormat": "MM/DD/YYYY",
+                  "editable": false,
+                  "field": "objectType",
+                  "footer": {
+                    "align": "center",
+                    "justify": "left",
+                    "style": {
+                      "classes": ""
+                    },
+                    "title": ""
+                  },
+                  "header": {
+                    "align": "center",
+                    "justify": "left",
+                    "style": {
+                      "classes": "Table/Column_Header"
+                    },
+                    "title": ""
+                  },
+                  "justify": "left",
+                  "number": "value",
+                  "numberFormat": "0,0.##",
+                  "progressBar": {
+                    "bar": {
+                      "color": "#62A3F6",
+                      "linecap": "round",
+                      "width": 5
+                    },
+                    "max": 100,
+                    "track": {
+                      "color": "#DADADA",
+                      "linecap": "round",
+                      "width": 2
+                    },
+                    "value": {
+                      "color": "#7D7D7D",
+                      "show": true
+                    }
+                  },
+                  "render": "auto",
+                  "resizable": true,
+                  "sort": "none",
+                  "sortable": true,
+                  "strictWidth": false,
+                  "style": {
+                    "classes": "Table/Column_Normal"
+                  },
+                  "toggleSwitch": {
+                    "color": {
+                      "selected": "#2196F3",
+                      "unselected": "#FFFFFF"
+                    }
+                  },
+                  "viewParams": {},
+                  "viewPath": "",
+                  "visible": false,
+                  "width": ""
+                },
+                {
+                  "align": "center",
+                  "boolean": "checkbox",
+                  "dateFormat": "MM/DD/YYYY",
+                  "editable": false,
+                  "field": "roomId",
+                  "footer": {
+                    "align": "center",
+                    "justify": "left",
+                    "style": {
+                      "classes": ""
+                    },
+                    "title": ""
+                  },
+                  "header": {
+                    "align": "center",
+                    "justify": "left",
+                    "style": {
+                      "classes": "Table/Column_Header"
+                    },
+                    "title": ""
+                  },
+                  "justify": "left",
+                  "number": "value",
+                  "numberFormat": "0,0.##",
+                  "progressBar": {
+                    "bar": {
+                      "color": "#62A3F6",
+                      "linecap": "round",
+                      "width": 5
+                    },
+                    "max": 100,
+                    "track": {
+                      "color": "#DADADA",
+                      "linecap": "round",
+                      "width": 2
+                    },
+                    "value": {
+                      "color": "#7D7D7D",
+                      "show": true
+                    }
+                  },
+                  "render": "auto",
+                  "resizable": true,
+                  "sort": "none",
+                  "sortable": true,
+                  "strictWidth": false,
+                  "style": {
+                    "classes": "Table/Column_Normal"
+                  },
+                  "toggleSwitch": {
+                    "color": {
+                      "selected": "#2196F3",
+                      "unselected": "#FFFFFF"
+                    }
+                  },
+                  "viewParams": {},
+                  "viewPath": "",
+                  "visible": false,
+                  "width": ""
+                },
+                {
+                  "align": "center",
+                  "boolean": "checkbox",
+                  "dateFormat": "MM/DD/YYYY",
+                  "editable": false,
+                  "field": "bedId",
+                  "footer": {
+                    "align": "center",
+                    "justify": "left",
+                    "style": {
+                      "classes": ""
+                    },
+                    "title": ""
+                  },
+                  "header": {
+                    "align": "center",
+                    "justify": "left",
+                    "style": {
+                      "classes": "Table/Column_Header"
+                    },
+                    "title": ""
+                  },
+                  "justify": "left",
+                  "number": "value",
+                  "numberFormat": "0,0.##",
+                  "progressBar": {
+                    "bar": {
+                      "color": "#62A3F6",
+                      "linecap": "round",
+                      "width": 5
+                    },
+                    "max": 100,
+                    "track": {
+                      "color": "#DADADA",
+                      "linecap": "round",
+                      "width": 2
+                    },
+                    "value": {
+                      "color": "#7D7D7D",
+                      "show": true
+                    }
+                  },
+                  "render": "auto",
+                  "resizable": true,
+                  "sort": "none",
+                  "sortable": true,
+                  "strictWidth": false,
+                  "style": {
+                    "classes": "Table/Column_Normal"
+                  },
+                  "toggleSwitch": {
+                    "color": {
+                      "selected": "#2196F3",
+                      "unselected": "#FFFFFF"
+                    }
+                  },
+                  "viewParams": {},
+                  "viewPath": "",
+                  "visible": false,
+                  "width": ""
+                },
+                {
+                  "align": "center",
+                  "boolean": "checkbox",
+                  "dateFormat": "MM/DD/YYYY",
+                  "editable": false,
+                  "field": "roomName",
+                  "footer": {
+                    "align": "center",
+                    "justify": "left",
+                    "style": {
+                      "classes": ""
+                    },
+                    "title": ""
+                  },
+                  "header": {
+                    "align": "center",
+                    "justify": "left",
+                    "style": {
+                      "classes": "Table/Column_Header"
+                    },
+                    "title": "Room"
+                  },
+                  "justify": "left",
+                  "number": "value",
+                  "numberFormat": "0,0.##",
+                  "progressBar": {
+                    "bar": {
+                      "color": "#62A3F6",
+                      "linecap": "round",
+                      "width": 5
+                    },
+                    "max": 100,
+                    "track": {
+                      "color": "#DADADA",
+                      "linecap": "round",
+                      "width": 2
+                    },
+                    "value": {
+                      "color": "#7D7D7D",
+                      "show": true
+                    }
+                  },
+                  "render": "auto",
+                  "resizable": true,
+                  "sort": "none",
+                  "sortable": true,
+                  "strictWidth": true,
+                  "style": {
+                    "classes": "Table/Column_Normal"
+                  },
+                  "toggleSwitch": {
+                    "color": {
+                      "selected": "#2196F3",
+                      "unselected": "#FFFFFF"
+                    }
+                  },
+                  "viewParams": {},
+                  "viewPath": "",
+                  "visible": false,
+                  "width": 250
+                },
+                {
+                  "align": "center",
+                  "boolean": "checkbox",
+                  "dateFormat": "MM/DD/YYYY",
+                  "editable": false,
+                  "field": "bedName",
+                  "footer": {
+                    "align": "center",
+                    "justify": "left",
+                    "style": {
+                      "classes": ""
+                    },
+                    "title": ""
+                  },
+                  "header": {
+                    "align": "center",
+                    "justify": "left",
+                    "style": {
+                      "classes": "Table/Column_Header"
+                    },
+                    "title": "Bed Name"
+                  },
+                  "justify": "left",
+                  "number": "value",
+                  "numberFormat": "0,0.##",
+                  "progressBar": {
+                    "bar": {
+                      "color": "#62A3F6",
+                      "linecap": "round",
+                      "width": 5
+                    },
+                    "max": 100,
+                    "track": {
+                      "color": "#DADADA",
+                      "linecap": "round",
+                      "width": 2
+                    },
+                    "value": {
+                      "color": "#7D7D7D",
+                      "show": true
+                    }
+                  },
+                  "render": "auto",
+                  "resizable": true,
+                  "sort": "none",
+                  "sortable": true,
+                  "strictWidth": true,
+                  "style": {
+                    "classes": "Table/Column_Normal"
+                  },
+                  "toggleSwitch": {
+                    "color": {
+                      "selected": "#2196F3",
+                      "unselected": "#FFFFFF"
+                    }
+                  },
+                  "viewParams": {},
+                  "viewPath": "",
+                  "visible": true,
+                  "width": 150
+                },
+                {
+                  "align": "center",
+                  "boolean": "checkbox",
+                  "dateFormat": "MM/DD/YYYY",
+                  "editable": false,
+                  "field": "bedNameNo",
+                  "footer": {
+                    "align": "center",
+                    "justify": "left",
+                    "style": {
+                      "classes": ""
+                    },
+                    "title": ""
+                  },
+                  "header": {
+                    "align": "center",
+                    "justify": "left",
+                    "style": {
+                      "classes": "Table/Column_Header"
+                    },
+                    "title": "No"
+                  },
+                  "justify": "center",
+                  "number": "value",
+                  "numberFormat": "0,0.##",
+                  "progressBar": {
+                    "bar": {
+                      "color": "#62A3F6",
+                      "linecap": "round",
+                      "width": 5
+                    },
+                    "max": 100,
+                    "track": {
+                      "color": "#DADADA",
+                      "linecap": "round",
+                      "width": 2
+                    },
+                    "value": {
+                      "color": "#7D7D7D",
+                      "show": true
+                    }
+                  },
+                  "render": "auto",
+                  "resizable": true,
+                  "sort": "none",
+                  "sortable": true,
+                  "strictWidth": true,
+                  "style": {
+                    "classes": "Table/Column_Normal"
+                  },
+                  "toggleSwitch": {
+                    "color": {
+                      "selected": "#2196F3",
+                      "unselected": "#FFFFFF"
+                    }
+                  },
+                  "viewParams": {},
+                  "viewPath": "",
+                  "visible": false,
+                  "width": 50
+                },
+                {
+                  "align": "center",
+                  "boolean": "checkbox",
+                  "dateFormat": "MM/DD/YYYY",
+                  "editable": true,
+                  "field": "position",
+                  "footer": {
+                    "align": "center",
+                    "justify": "left",
+                    "style": {
+                      "classes": ""
+                    },
+                    "title": ""
+                  },
+                  "header": {
+                    "align": "center",
+                    "justify": "left",
+                    "style": {
+                      "classes": "Table/Column_Header"
+                    },
+                    "title": "Position"
+                  },
+                  "justify": "center",
+                  "number": "value",
+                  "numberFormat": "0,0.##",
+                  "progressBar": {
+                    "bar": {
+                      "color": "#62A3F6",
+                      "linecap": "round",
+                      "width": 5
+                    },
+                    "max": 100,
+                    "track": {
+                      "color": "#DADADA",
+                      "linecap": "round",
+                      "width": 2
+                    },
+                    "value": {
+                      "color": "#7D7D7D",
+                      "show": true
+                    }
+                  },
+                  "render": "auto",
+                  "resizable": true,
+                  "sort": "none",
+                  "sortable": true,
+                  "strictWidth": true,
+                  "style": {
+                    "classes": "Table/Column_Normal"
+                  },
+                  "toggleSwitch": {
+                    "color": {
+                      "selected": "#2196F3",
+                      "unselected": "#FFFFFF"
+                    }
+                  },
+                  "viewParams": {},
+                  "viewPath": "",
+                  "visible": true,
+                  "width": 80
+                },
+                {
+                  "align": "center",
+                  "boolean": "checkbox",
+                  "dateFormat": "MM/DD/YYYY",
+                  "editable": true,
+                  "field": "isVertical",
+                  "footer": {
+                    "align": "center",
+                    "justify": "left",
+                    "style": {
+                      "classes": ""
+                    },
+                    "title": ""
+                  },
+                  "header": {
+                    "align": "center",
+                    "justify": "left",
+                    "style": {
+                      "classes": "Table/Column_Header"
+                    },
+                    "title": "isVertical"
+                  },
+                  "justify": "center",
+                  "number": "value",
+                  "numberFormat": "0,0.##",
+                  "progressBar": {
+                    "bar": {
+                      "color": "#62A3F6",
+                      "linecap": "round",
+                      "width": 5
+                    },
+                    "max": 100,
+                    "track": {
+                      "color": "#DADADA",
+                      "linecap": "round",
+                      "width": 2
+                    },
+                    "value": {
+                      "color": "#7D7D7D",
+                      "show": true
+                    }
+                  },
+                  "render": "auto",
+                  "resizable": true,
+                  "sort": "none",
+                  "sortable": true,
+                  "strictWidth": true,
+                  "style": {
+                    "classes": "Table/Column_Normal"
+                  },
+                  "toggleSwitch": {
+                    "color": {
+                      "selected": "#2196F3",
+                      "unselected": "#FFFFFF"
+                    }
+                  },
+                  "viewParams": {},
+                  "viewPath": "",
+                  "visible": true,
+                  "width": 80
+                },
+                {
+                  "align": "center",
+                  "boolean": "checkbox",
+                  "dateFormat": "MM/DD/YYYY",
+                  "editable": true,
+                  "field": "isUpper",
+                  "footer": {
+                    "align": "center",
+                    "justify": "left",
+                    "style": {
+                      "classes": ""
+                    },
+                    "title": ""
+                  },
+                  "header": {
+                    "align": "center",
+                    "justify": "left",
+                    "style": {
+                      "classes": "Table/Column_Header"
+                    },
+                    "title": "isUpper"
+                  },
+                  "justify": "center",
+                  "number": "value",
+                  "numberFormat": "0,0.##",
+                  "progressBar": {
+                    "bar": {
+                      "color": "#62A3F6",
+                      "linecap": "round",
+                      "width": 5
+                    },
+                    "max": 100,
+                    "track": {
+                      "color": "#DADADA",
+                      "linecap": "round",
+                      "width": 2
+                    },
+                    "value": {
+                      "color": "#7D7D7D",
+                      "show": true
+                    }
+                  },
+                  "render": "auto",
+                  "resizable": true,
+                  "sort": "none",
+                  "sortable": true,
+                  "strictWidth": true,
+                  "style": {
+                    "classes": "Table/Column_Normal"
+                  },
+                  "toggleSwitch": {
+                    "color": {
+                      "selected": "#2196F3",
+                      "unselected": "#FFFFFF"
+                    }
+                  },
+                  "viewParams": {},
+                  "viewPath": "",
+                  "visible": true,
+                  "width": 80
+                },
+                {
+                  "align": "center",
+                  "boolean": "checkbox",
+                  "dateFormat": "MM/DD/YYYY",
+                  "editable": true,
+                  "field": "error",
+                  "footer": {
+                    "align": "center",
+                    "justify": "left",
+                    "style": {
+                      "classes": ""
+                    },
+                    "title": ""
+                  },
+                  "header": {
+                    "align": "center",
+                    "justify": "left",
+                    "style": {
+                      "classes": "Table/Column_Header"
+                    },
+                    "title": ""
+                  },
+                  "justify": "left",
+                  "number": "value",
+                  "numberFormat": "0,0.##",
+                  "progressBar": {
+                    "bar": {
+                      "color": "#62A3F6",
+                      "linecap": "round",
+                      "width": 5
+                    },
+                    "max": 100,
+                    "track": {
+                      "color": "#DADADA",
+                      "linecap": "round",
+                      "width": 2
+                    },
+                    "value": {
+                      "color": "#7D7D7D",
+                      "show": true
+                    }
+                  },
+                  "render": "auto",
+                  "resizable": true,
+                  "sort": "none",
+                  "sortable": true,
+                  "strictWidth": false,
+                  "style": {
+                    "classes": "Table/Column_Normal"
+                  },
+                  "toggleSwitch": {
+                    "color": {
+                      "selected": "#2196F3",
+                      "unselected": "#FFFFFF"
+                    }
+                  },
+                  "viewParams": {},
+                  "viewPath": "",
+                  "visible": true,
+                  "width": ""
+                }
+              ],
+              "pager": {
+                "bottom": false,
+                "initialOption": 100
+              },
+              "rows": {
+                "height": "40px",
+                "striped": {
+                  "enabled": false
+                }
+              },
+              "selection": {
+                "enableColumnSelection": true
+              },
+              "style": {
+                "classes": "Background/Default",
+                "overflowX": "hidden"
+              },
+              "virtualized": false
+            },
+            "scripts": {
+              "customMethods": [
+                {
+                  "name": "getPropsColumns",
+                  "params": [
+                    "dataset",
+                    "layoutType"
+                  ],
+                  "script": "\tjsonDefaultColumn \u003d \"\"\"\n\t  {\n\t\t    \"field\": \"\",\n\t\t    \"visible\": false,\n\t\t    \"editable\": false,\n\t\t    \"render\": \"auto\",\n\t\t    \"justify\": \"left\",\n\t\t    \"align\": \"center\",\n\t\t    \"resizable\": true,\n\t\t    \"sortable\": true,\n\t\t    \"sort\": \"none\",\n\t\t    \"viewPath\": \"\",\n\t\t    \"viewParams\": {},\n\t\t    \"boolean\": \"checkbox\",\n\t\t    \"number\": \"value\",\n\t\t    \"progressBar\": {\n\t\t      \"max\": 100,\n\t\t      \"bar\": {\n\t\t        \"color\": \"#62A3F6\",\n\t\t        \"linecap\": \"round\",\n\t\t        \"width\": 5\n\t\t      },\n\t\t      \"track\": {\n\t\t        \"color\": \"#DADADA\",\n\t\t        \"linecap\": \"round\",\n\t\t        \"width\": 2\n\t\t      },\n\t\t      \"value\": {\n\t\t        \"color\": \"#7D7D7D\",\n\t\t        \"show\": true\n\t\t      }\n\t\t    },\n\t\t    \"toggleSwitch\": {\n\t\t      \"color\": {\n\t\t        \"selected\": \"#2196F3\",\n\t\t        \"unselected\": \"#FFFFFF\"\n\t\t      }\n\t\t    },\n\t\t    \"numberFormat\": \"0,0.##\",\n\t\t    \"dateFormat\": \"MM/DD/YYYY\",\n\t\t    \"width\": \"\",\n\t\t    \"strictWidth\": false,\n\t\t    \"header\": {\n\t\t      \"title\": \"\",\n\t\t      \"justify\": \"left\",\n\t\t      \"align\": \"center\",\n\t\t      \"style\": {\n\t\t        \"classes\": \"Table/Column_Header\"\n\t\t      }\n\t\t    },\n\t\t    \"footer\": {\n\t\t      \"title\": \"\",\n\t\t      \"justify\": \"left\",\n\t\t      \"align\": \"center\",\n\t\t      \"style\": {\n\t\t        \"classes\": \"\"\n\t\t      }\n\t\t    },\n\t\t    \"style\": {\n\t\t      \"classes\": \"Table/Column_Normal\"\n\t\t    }\n\t\t  },\t\n\t\t\"\"\"\n\n\tcolumnsForced \u003d [\n\t  {\n\t\t\"field\": \"facilityName\",\n\t\t\"width\": 250,\n\t\t\"title\": \"Facility\",\n\t},\n\t  {\n\t\t\"field\": \"roomName\",\n\t\t\"width\": 250,\n\t\t\"title\": \"Room\",\n\t},\n\t  {\n\t\t\"field\": \"bedName\",\n\t\t\"width\": 150,\n\t\t\"title\": \"Bed Name\",\n\t  },\n\t  {\n\t\t\"field\": \"bedNameNo\",\n\t\t\"width\": 50,\n\t\t\"title\": \"No\",\n\t  },\n\t  {\n\t\t\"field\": \"position\",\n\t\t\"width\": 80,\n\t\t\"title\": \"Position\",\n\t  },\n\t  {\n\t\t\"field\": \"isVertical\",\n\t\t\"width\": 80,\n\t\t\"title\": \"isVertical\",\n\t  },\n\t  {\n\t\t\"field\": \"isUpper\",\n\t\t\"width\": 80,\n\t\t\"title\": \"isUpper\",\n\t  },\n\t]\n\n\tcolNames \u003d system.dataset.getColumnHeaders(dataset)\n\n\t\n\t_columns \u003d []\n\tfor col in colNames:\n\t\t# This conversion json_\u003edict create actually deepcopy\n\t\tpyColumn \u003d system.util.jsonDecode(jsonDefaultColumn)\n\t\t\n\t\t# Note: Field must contain only letters and numbers.\n\t\tpyColumn[\u0027field\u0027] \u003d col\n\t\t\n\t\t_dictCol \u003d None\n\t\tfor item in columnsForced:\n\t\t\tif item[\u0027field\u0027] \u003d\u003d pyColumn[\u0027field\u0027]:\n\t\t\t\t_dictCol \u003d item.copy() \n\t\t\t\n\t\t\n\t\t#ystem.perspective.print((\u0027dictCol: \u0027, _dictCol))\n\t\t\n\t\tpyColumn[\u0027header\u0027][\u0027title\u0027] \u003d _dictCol[\u0027title\u0027] if _dictCol else \u0027\u0027\n\t\t\n\t\tif _dictCol and _dictCol.get(\u0027width\u0027):\n\t\t\tpyColumn[\u0027width\u0027] \u003d _dictCol[\u0027width\u0027]\n\t\t\tpyColumn[\u0027strictWidth\u0027] \u003d True\n\t\t\t#pyColumn[\u0027visible\u0027] \u003d _dictCol[\u0027visible\u0027]\n\t\t\t#pyColumn[\u0027editable\u0027] \u003d _dictCol[\u0027editable\u0027]\n\n\t\tif col \u003d\u003d \u0027isVertical\u0027:\n\t\t\t#pyColumn[\u0027header\u0027][\u0027title\u0027] \u003d \u0027 \u0027\n\t\t\tpyColumn[\"visible\"] \u003d True\n\t\t\tpyColumn[\u0027editable\u0027] \u003d True\n\t\t\tpyColumn[\"justify\"] \u003d \"center\"\t\t\t\n\t\t\n\t\t\n\t\tif col \u003d\u003d \u0027isUpper\u0027:\n\t\t\t#pyColumn[\u0027header\u0027][\u0027title\u0027] \u003d \u0027 \u0027\n\t\t\tpyColumn[\"visible\"] \u003d True\n\t\t\tpyColumn[\u0027editable\u0027] \u003d True\n\t\t\tpyColumn[\"justify\"] \u003d \"center\"\n\n\t\tif col \u003d\u003d \u0027position\u0027:\n\t\t\t#pyColumn[\u0027header\u0027][\u0027title\u0027] \u003d \u0027 \u0027\n\t\t\tpyColumn[\"visible\"] \u003d True\n\t\t\tpyColumn[\u0027editable\u0027] \u003d True\n\t\t\tpyColumn[\"justify\"] \u003d \"center\"\n\n\t\tif col \u003d\u003d \u0027error\u0027:\n\t\t\tpyColumn[\"visible\"] \u003d True\n\t\t\tpyColumn[\u0027editable\u0027] \u003d True\n\t\t\tpyColumn[\"justify\"] \u003d \"left\"\n\n\n\t\tif layoutType \u003d\u003d \u0027room\u0027:\n\t\t\tif col \u003d\u003d \u0027bedName\u0027:\n\t\t\t\tpyColumn[\u0027visible\u0027] \u003d True\n\t\t\t\tpyColumn[\u0027editable\u0027] \u003d False\n\t\t\tif col \u003d\u003d \u0027bedNameNo\u0027:\n\t\t\t\tpyColumn[\u0027visible\u0027] \u003d False #True\n\t\t\t\tpyColumn[\u0027editable\u0027] \u003d False\n\t\t\t\tpyColumn[\"justify\"] \u003d \"center\"\t\t\n\t\t\t\t\n\t\tif layoutType \u003d\u003d \u0027facility\u0027:\n\t\t\tif col \u003d\u003d \u0027roomName\u0027:\n\t\t\t\tpyColumn[\u0027visible\u0027] \u003d True\n\t\t\t\tpyColumn[\u0027editable\u0027] \u003d False\t\n\t\t\t\t\n\t\tif layoutType \u003d\u003d \u0027global\u0027:\n\t\t\tif col \u003d\u003d \u0027facilityName\u0027:\n\t\t\t\tpyColumn[\u0027visible\u0027] \u003d True\n\t\t\t\tpyColumn[\u0027editable\u0027] \u003d False\t\t\t\t\t\n\n\n\t\t\t\t\n\t\t\t#pyColumn[\"justify\"] \u003d \"center\"\n\t\t\t#pyColumn[\"resizable\"] \u003d False\n\t\t\t#pyColumn[\"sortable\"] \u003d False\n\t\t\t#pyColumn[\"viewPath\"] \u003d \"Employers/Dashboard/Components/Tables/Templates/TableOptions\"\t\n\t\t\t\t\n\t\t_columns.append(pyColumn)\n\t\n\t#ystem.perspective.print((\"_columns: \",_columns))\n\t\n\treturn _columns\n"
+                },
+                {
+                  "name": "setMisc",
+                  "params": [],
+                  "script": "\t\n\tself.props.cells.style\u003d {\n\t    \"classes\": \"Table/Cell_Dashboard\"\n\t}\n\t\n\tself.props.style \u003d {\n\t  \"classes\": \"Background/Default\",\n\t  \"overflowX\": \"hidden\"\n\t}\n"
+                },
+                {
+                  "name": "validateRoom",
+                  "params": [
+                    "rowSize",
+                    "colSize"
+                  ],
+                  "script": "\timport string\n\timport re\n\n\tpattern_position \u003d \"^[A-Z]+[0-9]+$\"\n\t\n\tcolPossibleLetters \u003d list(string.ascii_uppercase)[:colSize]\n\tdictCountPos \u003d {}\n\tdictCountUnique \u003d {}\n\tdictSyncPosIsVertical \u003d {}\n\n\tdictError \u003d {}\n\tvarnDict \u003d {}\n\n\tfor rowIndex, row in enumerate(self.props.data):\n\t\terrRowList \u003d []\n\t\tposition \u003d row[\u0027position\u0027]\n\t\tisVertical \u003d row[\u0027isVertical\u0027]\n\t\tisUpper \u003d row[\u0027isUpper\u0027]\n\t\t\n\t\tif re.search(pattern_position, position):\n\t\t\tposLetter \u003d \u0027\u0027.join([char for  char in position if char.isalpha()])\n\t\t\ttry:\n\t\t\t\tposCol \u003d colPossibleLetters.index(posLetter)\n\t\t\texcept:\n\t\t\t\terrRowList.append(\u0027column letter is larger then colSize\u0027)\n\t\t\tposRow \u003d int(position[len(posLetter):]) - 1\n\t\t\tif posRow + 1 \u003e rowSize:\n\t\t\t\terrRowList.append(\u0027row number is larger then rowSize\u0027)\n\t\telse:\n\t\t\terrRowList.append(\u0027position address not correct\u0027)\n\t\t\t\n\t\tif position in dictCountPos:\n\t\t\tif dictCountPos[position] \u003e\u003d 2:\n\t\t\t\terrRowList.append(\u0027same position used more than 2 times\u0027)\n\t\t\tdictCountPos[position] +\u003d 1\n\t\telse:\n\t\t\tdictCountPos[position] \u003d 1\n\t\t\n\t\tif (position,isUpper) in dictCountUnique:\n\t\t\terrRowList.append(\u0027position-isUpper must be unique\u0027)\n\t\telse:\n\t\t\tdictCountUnique[(position,isUpper)] \u003d 1\n\t\t\n\t\tif position in dictSyncPosIsVertical:\n\t\t\tif dictSyncPosIsVertical[position] !\u003d isVertical:\n\t\t\t\terrRowList.append(\u0027position-isVertical must be the same\u0027)\n\t\telse:\n\t\t\tdictSyncPosIsVertical[position] \u003d isVertical\n\t\t\n\t\tif len(errRowList) \u003e 0:\n\t\t\tdictError[rowIndex] \u003d errRowList\n\t\n\treturn dictError\n\n"
+                },
+                {
+                  "name": "validateFacility",
+                  "params": [
+                    "rowSize",
+                    "colSize"
+                  ],
+                  "script": "\timport string\n\timport re\n\n\tpattern_position \u003d \"^[A-Z]+[0-9]+$\"\n\t\n\tcolPossibleLetters \u003d list(string.ascii_uppercase)[:colSize]\n\tdictCountPos \u003d {}\n\tdictCountUnique \u003d {}\n\tdictSyncPosIsVertical \u003d {}\n\n\tdictError \u003d {}\n\tvarnDict \u003d {}\n\t#ystem.perspective.print((\"validF: \",rowSize, colSize, self.props.data))\n\tfor rowIndex, row in enumerate(self.props.data):\n\t\terrRowList \u003d []\n\t\tisSideOut \u003d False\n\t\tposition \u003d row[\u0027position\u0027]\n\t\t\n\t\t#ystem.perspective.print((\"pattern: \",pattern_position, position, re.search(pattern_position, position)))\n\n\t\tif re.search(pattern_position, position):\n\t\t\tposLetter \u003d \u0027\u0027.join([char for  char in position if char.isalpha()])\n\t\t\ttry:\n\t\t\t\tposCol \u003d colPossibleLetters.index(posLetter)\n\t\t\texcept:\n\t\t\t\tposCol \u003d colSize\n\t\t\t\terrRowList.append(\u0027column letter is larger then colSize\u0027)\n\n\t\t\tif posCol + row[\u0027colSize\u0027] \u003e colSize:\n\t\t\t\terrRowList.append(\u0027east side is out\u0027)\n\t\t\t\tisSideOut \u003d True\n\t\t\t\t\n\t\t\tposRow \u003d int(position[len(posLetter):]) - 1\n\t\t\tif posRow + 1 \u003e rowSize:\n\t\t\t\terrRowList.append(\u0027row number is larger then rowSize\u0027)\n\t\t\t\n\t\t\tif posRow + row[\u0027rowSize\u0027]  \u003e rowSize:\n\t\t\t\terrRowList.append(\u0027south side is out\u0027)\t\t\n\t\t\t\tisSideOut \u003d True\n\t\t\t\n\t\t\tif isSideOut:\t\n\t\t\t\terrRowList.append(\u0027roomSize: r*c\u003d{}*{}\u0027.format(row[\u0027rowSize\u0027] ,row[\u0027colSize\u0027]))\t\t\n\t\telse:\n\t\t\terrRowList.append(\u0027position address not correct\u0027)\n\t\t\t\n\t\t#TODO: check intersection?\n\t\t\n\t\tif len(errRowList) \u003e 0:\n\t\t\tdictError[rowIndex] \u003d errRowList\n\t\n\treturn dictError\n\t\t\n\n\t\n"
+                },
+                {
+                  "name": "validateGlobal",
+                  "params": [
+                    "rowSize",
+                    "colSize"
+                  ],
+                  "script": "\timport string\n\timport re\n\n\tpattern_position \u003d \"^[A-Z]+[0-9]+$\"\n\t\n\tcolPossibleLetters \u003d list(string.ascii_uppercase)[:colSize]\n\tdictCountPos \u003d {}\n\tdictCountUnique \u003d {}\n\tdictSyncPosIsVertical \u003d {}\n\n\tdictError \u003d {}\n\tvarnDict \u003d {}\n\t#ystem.perspective.print((\"validF: \",rowSize, colSize, self.props.data))\n\tfor rowIndex, row in enumerate(self.props.data):\n\t\terrRowList \u003d []\n\t\tisSideOut \u003d False\n\t\tposition \u003d row[\u0027position\u0027]\n\t\tsystem.perspective.print((rowSize, colSize, row[\u0027rowSize\u0027] ,row[\u0027colSize\u0027]))\n\t\t#ystem.perspective.print((\"pattern: \",pattern_position, position, re.search(pattern_position, position)))\n\n\t\tif re.search(pattern_position, position):\n\t\t\tposLetter \u003d \u0027\u0027.join([char for  char in position if char.isalpha()])\n\t\t\ttry:\n\t\t\t\tposCol \u003d colPossibleLetters.index(posLetter)\n\t\t\texcept:\n\t\t\t\tposCol \u003d colSize\n\t\t\t\terrRowList.append(\u0027column letter is larger then colSize\u0027)\n\n\t\t\tif posCol + row[\u0027colSize\u0027] \u003e colSize:\n\t\t\t\terrRowList.append(\u0027east side is out\u0027)\n\t\t\t\tisSideOut \u003d True\n\t\t\t\t\n\t\t\tposRow \u003d int(position[len(posLetter):]) - 1\n\t\t\tif posRow + 1 \u003e rowSize:\n\t\t\t\terrRowList.append(\u0027row number is larger then rowSize\u0027)\n\t\t\t\n\t\t\tif posRow + row[\u0027rowSize\u0027]  \u003e rowSize:\n\t\t\t\terrRowList.append(\u0027south side is out\u0027)\t\t\n\t\t\t\tisSideOut \u003d True\n\t\t\t\n\t\t\tif isSideOut:\t\n\t\t\t\terrRowList.append(\u0027facilitySize: r*c\u003d{}*{}\u0027.format(row[\u0027rowSize\u0027] ,row[\u0027colSize\u0027]))\t\t\n\t\telse:\n\t\t\terrRowList.append(\u0027position address not correct\u0027)\n\t\t\t\n\t\t#TODO: check intersection?\n\t\t\n\t\tif len(errRowList) \u003e 0:\n\t\t\tdictError[rowIndex] \u003d errRowList\n\t\n\treturn dictError\n\t\t\n\n\t\n"
+                },
+                {
+                  "name": "addErrorColumn",
+                  "params": [
+                    "dictError"
+                  ],
+                  "script": "\t\n\t_data \u003d []\n\t\n\tfor rowIndex, row in enumerate(self.props.data):\n\t\t_dictAux \u003d {}\n\t\t\n\t\t_err \u003d \u0027; \u0027.join(dictError[rowIndex]) if rowIndex in dictError else \u0027\u0027\n\t\t#ystem.perspective.print((\u0027_err:\u0027, _err))\n\t\t\n\t\tfor _key in row:\n\t\t\t_dictAux[_key] \u003d _err if _key \u003d\u003d \u0027error\u0027 else row[_key] \n\t\t\t\n\t\t_data.append(_dictAux)\n\t\n\ttry:\n\t\tpass\n\t\t#ystem.perspective.print((\u0027_data:\u0027, _data[1]))\n\texcept:\n\t\tpass\n\t\t\n\tself.props.data \u003d _data\n\t"
+                }
+              ],
+              "extensionFunctions": null,
+              "messageHandlers": [
+                {
+                  "messageType": "XmhUpdateTableList",
+                  "pageScope": true,
+                  "script": "\tsystem.perspective.print((\u0027Msgstep1\u0027, payload))\n\n\tself.doByCondition(payload)\t\n\tself.custom.jsonLastPayload \u003d system.util.jsonEncode(payload)\n\t\n\t\n\t\t\t\t\t",
+                  "sessionScope": false,
+                  "viewScope": false
+                }
+              ]
+            },
+            "type": "ia.display.table"
+          },
+          {
+            "custom": {
+              "_devPulse": false,
+              "_devTxt": "",
+              "_isDev": false,
+              "jsonLastPayload": null,
+              "lastPayload": {},
+              "roomlLayout_NextStepDorm": [
+                [
+                  {},
+                  {
+                    "beds": [
+                      8,
+                      7
+                    ],
+                    "type": "h"
+                  },
+                  {
+                    "beds": [
+                      2,
+                      1
+                    ],
+                    "type": "h"
+                  }
+                ],
+                [
+                  {},
+                  {
+                    "beds": [
+                      9
+                    ],
+                    "type": "h"
+                  },
+                  {
+                    "beds": [
+                      3
+                    ],
+                    "type": "h"
+                  }
+                ],
+                [
+                  {
+                    "beds": [
+                      16,
+                      15
+                    ],
+                    "type": "v"
+                  },
+                  {
+                    "beds": [
+                      11,
+                      10
+                    ],
+                    "type": "v"
+                  },
+                  {
+                    "beds": [
+                      4,
+                      5
+                    ],
+                    "type": "v"
+                  }
+                ],
+                [
+                  {},
+                  {
+                    "beds": [
+                      13,
+                      12
+                    ],
+                    "type": "h"
+                  },
+                  {}
+                ],
+                [
+                  {},
+                  {
+                    "beds": [
+                      14
+                    ],
+                    "type": "h"
+                  },
+                  {
+                    "beds": [
+                      6
+                    ],
+                    "type": "h"
+                  }
+                ]
+              ]
+            },
+            "events": {
+              "component": {
+                "onRowClick": {
+                  "config": {
+                    "script": "\t\n\tsystem.perspective.print((\u0027onRcEmplo\u0027))\n\tselectedColumn \u003d self.props.selection.selectedColumn \n\n\ttrackID \u003d event.value.get(\u0027id\u0027)\n\t\n\tsystem.perspective.print((\u0027trackID : {} {}\u0027.format(trackID , type(trackID)) ))\n\t\n\tif trackID is None:\n\t\tsystem.perspective.print((\u0027trackID is None : {} {}\u0027.format(trackID , type(trackID)) ))\n\t\treturn\n\t\n\tsystem.perspective.print((\u0027selectedColumn: \u0027, selectedColumn ))\n\n\tif selectedColumn \u003d\u003d \"id\":\n\t\tid \u003d \"PreviewEmployer\" \n\t\tparams \u003d {\"trackID\": trackID}\n\t\tsystem.perspective.openDock(id\u003did,params\u003dparams)\n\n\telif selectedColumn \u003d\u003d \"employerName\" or selectedColumn is None: \n\t\ttab_id \u003d \"1\"\n\t\tsystem.perspective.navigate(view \u003d \u0027Employers/Detail/Employer_Detail\u0027, params \u003d {\u0027trackID\u0027:trackID, \u0027tab_id\u0027:tab_id})\n\n\telse:\n\t\tpass\n"
+                  },
+                  "scope": "G",
+                  "type": "script"
+                }
+              }
+            },
+            "meta": {
+              "name": "TableLayout"
+            },
+            "position": {
+              "basis": "800px",
+              "grow": 1
+            },
+            "propConfig": {
+              "custom._devPulse": {
+                "onChange": {
+                  "enabled": null,
+                  "script": "\t_json \u003d \"\"\"\n[\n  {\n\t\"a1\": {\n\t  \"info\": [\n\t\t{\n\t\t  \"l0\": \"xa0\",\n\t\t  \"l1\": \"xa1\",\n\t\t  \"l2\": \"xa2\",\n\t\t  \"l3\": \"xa3\"\n\t\t},\n\t\t{\n\t\t  \"l0\": \"xb0\",\n\t\t  \"l1\": \"xb1\",\n\t\t  \"l2\": \"xb2\",\n\t\t  \"l3\": \"xb3\"\n\t\t}\n\t  ],\n\t  \"type\": \"h\"\n\t}\n  },\n  {\n\t\"a1\": {\n\t  \"info\": [\n\t\t{\n\t\t  \"l0\": \"ya0\",\n\t\t  \"l1\": \"ya1\",\n\t\t  \"l2\": \"ya2\",\n\t\t  \"l3\": \"ya3\"\n\t\t},\n\t\t{\n\t\t  \"l0\": \"ya0\",\n\t\t  \"l1\": \"ya1\",\n\t\t  \"l2\": \"ya2\",\n\t\t  \"l3\": \"ya3\"\n\t\t}\n\t  ],\n\t  \"type\": \"v\"\n\t}\n  }\n]\n\t\"\"\"\n\t\n\t\n\tif self.custom._isDev:\n\t\tif currentValue.value is True:\n\t\t\t#self.props.data \u003d system.util.jsonDecode(_json)\n\t\t\tpayload \u003d {}\n\t\t\tpayload[\u0027oneDay\u0027] \u003d system.date.now()\n\t\t\tpayload[\u0027facilityId\u0027] \u003d 4\n\t\t\tpayload[\u0027roomId\u0027] \u003d 47\n\t\t\t\n\t\t\t\n\t\t\tsystem.perspective.sendMessage(\u0027mhByCondition\u0027, payload \u003d payload)\n\t\t\tself.custom.jsonLastPayload \u003d system.util.jsonEncode(payload)\n\t\t\t\n\n\t\telse:\n\t\t\t#self.props.data \u003d system.dataset.clearDataset(self.props.data)\n\t\t\tself.props.data \u003d [] # [{key: None for key in self.props.data[0]}]\n\t\t\tself.custom.jsonLastPayload \u003d None\n\n\n"
+                }
+              },
+              "props.filter.text": {
+                "access": "PUBLIC"
+              }
+            },
+            "props": {
+              "cells": {
+                "style": {
+                  "borderColor": "#CCFFFF",
+                  "borderStyle": "solid",
+                  "classes": "Table/Cell_Dashboard"
+                }
+              },
+              "columns": [
+                {
+                  "align": "center",
+                  "boolean": "checkbox",
+                  "dateFormat": "MM/DD/YYYY",
+                  "editable": false,
+                  "field": "A",
+                  "footer": {
+                    "align": "center",
+                    "justify": "left",
+                    "style": {
+                      "classes": ""
+                    },
+                    "title": ""
+                  },
+                  "header": {
+                    "align": "center",
+                    "justify": "center",
+                    "style": {
+                      "classes": "Table/Column_Header"
+                    },
+                    "title": "A"
+                  },
+                  "justify": "left",
+                  "number": "value",
+                  "numberFormat": "0,0.##",
+                  "progressBar": {
+                    "bar": {
+                      "color": "#62A3F6",
+                      "linecap": "round",
+                      "width": 5
+                    },
+                    "max": 100,
+                    "track": {
+                      "color": "#DADADA",
+                      "linecap": "round",
+                      "width": 2
+                    },
+                    "value": {
+                      "color": "#7D7D7D",
+                      "show": true
+                    }
+                  },
+                  "render": "view",
+                  "resizable": false,
+                  "sort": "none",
+                  "sortable": false,
+                  "strictWidth": true,
+                  "style": {
+                    "classes": "Table/Column_Normal"
+                  },
+                  "toggleSwitch": {
+                    "color": {
+                      "selected": "#2196F3",
+                      "unselected": "#FFFFFF"
+                    }
+                  },
+                  "viewParams": {},
+                  "viewPath": "Shelter/Room Layout/Components/ver4/BedCell",
+                  "visible": true,
+                  "width": 160
+                },
+                {
+                  "align": "center",
+                  "boolean": "checkbox",
+                  "dateFormat": "MM/DD/YYYY",
+                  "editable": false,
+                  "field": "B",
+                  "footer": {
+                    "align": "center",
+                    "justify": "left",
+                    "style": {
+                      "classes": ""
+                    },
+                    "title": ""
+                  },
+                  "header": {
+                    "align": "center",
+                    "justify": "center",
+                    "style": {
+                      "classes": "Table/Column_Header"
+                    },
+                    "title": "B"
+                  },
+                  "justify": "left",
+                  "number": "value",
+                  "numberFormat": "0,0.##",
+                  "progressBar": {
+                    "bar": {
+                      "color": "#62A3F6",
+                      "linecap": "round",
+                      "width": 5
+                    },
+                    "max": 100,
+                    "track": {
+                      "color": "#DADADA",
+                      "linecap": "round",
+                      "width": 2
+                    },
+                    "value": {
+                      "color": "#7D7D7D",
+                      "show": true
+                    }
+                  },
+                  "render": "view",
+                  "resizable": false,
+                  "sort": "none",
+                  "sortable": false,
+                  "strictWidth": true,
+                  "style": {
+                    "classes": "Table/Column_Normal"
+                  },
+                  "toggleSwitch": {
+                    "color": {
+                      "selected": "#2196F3",
+                      "unselected": "#FFFFFF"
+                    }
+                  },
+                  "viewParams": {},
+                  "viewPath": "Shelter/Room Layout/Components/ver4/BedCell",
+                  "visible": true,
+                  "width": 160
+                },
+                {
+                  "align": "center",
+                  "boolean": "checkbox",
+                  "dateFormat": "MM/DD/YYYY",
+                  "editable": false,
+                  "field": "C",
+                  "footer": {
+                    "align": "center",
+                    "justify": "left",
+                    "style": {
+                      "classes": ""
+                    },
+                    "title": ""
+                  },
+                  "header": {
+                    "align": "center",
+                    "justify": "center",
+                    "style": {
+                      "classes": "Table/Column_Header"
+                    },
+                    "title": "C"
+                  },
+                  "justify": "left",
+                  "number": "value",
+                  "numberFormat": "0,0.##",
+                  "progressBar": {
+                    "bar": {
+                      "color": "#62A3F6",
+                      "linecap": "round",
+                      "width": 5
+                    },
+                    "max": 100,
+                    "track": {
+                      "color": "#DADADA",
+                      "linecap": "round",
+                      "width": 2
+                    },
+                    "value": {
+                      "color": "#7D7D7D",
+                      "show": true
+                    }
+                  },
+                  "render": "view",
+                  "resizable": false,
+                  "sort": "none",
+                  "sortable": false,
+                  "strictWidth": true,
+                  "style": {
+                    "classes": "Table/Column_Normal"
+                  },
+                  "toggleSwitch": {
+                    "color": {
+                      "selected": "#2196F3",
+                      "unselected": "#FFFFFF"
+                    }
+                  },
+                  "viewParams": {},
+                  "viewPath": "Shelter/Room Layout/Components/ver4/BedCell",
+                  "visible": true,
+                  "width": 160
+                }
+              ],
+              "pager": {
+                "bottom": false,
+                "initialOption": 100
+              },
+              "rows": {
+                "striped": {
+                  "enabled": false
+                }
+              },
+              "style": {
+                "classes": "Background/Default",
+                "overflowX": "hidden"
+              },
+              "virtualized": false
+            },
+            "scripts": {
+              "customMethods": [
+                {
+                  "name": "getPropsColumns",
+                  "params": [
+                    "layout"
+                  ],
+                  "script": "\timport string\n\tcolPossibleNames \u003d list(string.ascii_uppercase)\n\t\n\t\n\tjsonDefaultColumn \u003d \"\"\"\n{\n\t  \"field\": \"a1\",\n\t  \"visible\": true,\n\t  \"editable\": false,\n\t  \"render\": \"view\",\n\t  \"justify\": \"left\",\n\t  \"align\": \"center\",\n\t  \"resizable\": false,\n\t  \"sortable\": false,\n\t  \"sort\": \"none\",\n\t  \"viewPath\": \"Shelter/Room Layout/Components/ver4/BedCell\",\n\t  \"viewParams\": {},\n\t  \"boolean\": \"checkbox\",\n\t  \"number\": \"value\",\n\t  \"progressBar\": {\n\t    \"max\": 100,\n\t    \"bar\": {\n\t      \"color\": \"#62A3F6\",\n\t      \"linecap\": \"round\",\n\t      \"width\": 5\n\t    },\n\t    \"track\": {\n\t      \"color\": \"#DADADA\",\n\t      \"linecap\": \"round\",\n\t      \"width\": 2\n\t    },\n\t    \"value\": {\n\t      \"color\": \"#7D7D7D\",\n\t      \"show\": true\n\t    }\n\t  },\n\t  \"toggleSwitch\": {\n\t    \"color\": {\n\t      \"selected\": \"#2196F3\",\n\t      \"unselected\": \"#FFFFFF\"\n\t    }\n\t  },\n\t  \"numberFormat\": \"0,0.##\",\n\t  \"dateFormat\": \"MM/DD/YYYY\",\n\t  \"width\": 160,\n\t  \"strictWidth\": true,\n\t  \"header\": {\n\t    \"title\": \"a1\",\n\t    \"justify\": \"center\",\n\t    \"align\": \"center\",\n\t    \"style\": {\n\t      \"classes\": \"Table/Column_Header\"\n\t    }\n\t  },\n\t  \"footer\": {\n\t    \"title\": \"\",\n\t    \"justify\": \"left\",\n\t    \"align\": \"center\",\n\t    \"style\": {\n\t      \"classes\": \"\"\n\t    }\n\t  },\n\t  \"style\": {\n\t    \"classes\": \"Table/Column_Normal\"\n\t  }\n\t}\n\t\"\"\"\n\t#try:\n\t\t#colQty \u003d len(layout[0])\n\t#except:\n\t\t#colQty \u003d None\n\t\n\t#if not(colQty):\n\t\t#raise ValueError(\u0027Layout list of list is not correct!\u0027)\n\t\n\ttry:\n\t\tcolQty \u003d len(layout[0])\n\texcept:\n\t\tcolQty \u003d 1\n\t\t\n\tcolNames \u003d colPossibleNames[:colQty]\n\n\t_columns \u003d []\n\tfor col in colNames:\n\t\t# This conversion json_\u003edict create actually deepcopy\n\t\tpyColumn \u003d system.util.jsonDecode(jsonDefaultColumn)\n\t\t\n\t\t# Note: Field must contain only letters and numbers.\n\t\tpyColumn[\u0027field\u0027] \u003d col\n\t\tpyColumn[\u0027header\u0027][\u0027title\u0027] \u003d col\n\n\t\t_columns.append(pyColumn)\n\t\n\t#ystem.perspective.print((\"_columns: \",_columns))\n\t\n\treturn _columns\n\n\n\t_example \u003d \"\"\"\nroomlLayout_NextStepDorm:\n\t\n\t[\n\t  [\n\t    {},\n\t    {\n\t      \"type\": \"h\",\n\t      \"beds\": [\n\t        8,\n\t        7\n\t      ]\n\t    },\n\t    {\n\t      \"type\": \"h\",\n\t      \"beds\": [\n\t        2,\n\t        1\n\t      ]\n\t    }\n\t  ],\n\t  [\n\t    {},\n\t    {\n\t      \"type\": \"h\",\n\t      \"beds\": [\n\t        9\n\t      ]\n\t    },\n\t    {\n\t      \"type\": \"h\",\n\t      \"beds\": [\n\t        3\n\t      ]\n\t    }\n\t  ],\n\t  [\n\t    {\n\t      \"type\": \"v\",\n\t      \"beds\": [\n\t        16,\n\t        15\n\t      ]\n\t    },\n\t    {\n\t      \"type\": \"v\",\n\t      \"beds\": [\n\t        11,\n\t        10\n\t      ]\n\t    },\n\t    {\n\t      \"type\": \"v\",\n\t      \"beds\": [\n\t        4,\n\t        5\n\t      ]\n\t    }\n\t  ],\n\t  [\n\t    {},\n\t    {\n\t      \"type\": \"h\",\n\t      \"beds\": [\n\t        13,\n\t        12\n\t      ]\n\t    },\n\t    {}\n\t  ],\n\t  [\n\t    {},\n\t    {\n\t      \"type\": \"h\",\n\t      \"beds\": [\n\t        14\n\t      ]\n\t    },\n\t    {\n\t      \"type\": \"h\",\n\t      \"beds\": [\n\t        6\n\t      ]\n\t    }\n\t  ]\n\t]\n\t\"\"\"\n"
+                },
+                {
+                  "name": "XsetMisc",
+                  "params": [],
+                  "script": "\t\n\tself.props.cells.style\u003d {\n\t    \"classes\": \"Table/Cell_Dashboard\"\n\t}\n\t\n\tself.props.style \u003d {\n\t  \"classes\": \"Background/Default\",\n\t  \"overflowX\": \"hidden\"\n\t}\n"
+                },
+                {
+                  "name": "joinDataAndLayout",
+                  "params": [
+                    "data",
+                    "layout"
+                  ],
+                  "script": "\t#colPossibleNames \u003d [\u0027A\u0027, \u0027B\u0027, \u0027C\u0027, \u0027D\u0027, \u0027E\u0027, \u0027F\u0027, \u0027G\u0027, \u0027H\u0027, \u0027I\u0027, \u0027J\u0027, \u0027K\u0027, \u0027L\u0027, \u0027M\u0027, \u0027N\u0027, \u0027O\u0027, \u0027P\u0027, \u0027Q\u0027, \u0027R\u0027, \u0027S\u0027, \u0027T\u0027, \u0027U\u0027, \u0027V\u0027, \u0027W\u0027, \u0027X\u0027, \u0027Y\u0027, \u0027Z\u0027]\n\t\n\timport string\n\tcolPossibleNames \u003d list(string.ascii_uppercase)\n\t\n\t#ystem.perspective.print((\u0027layoutX: \u0027, layout))\n\tlayoutData \u003d []\n\tfor rowIndex, row in enumerate(layout):\n\t\tlayoutData.append({})\n\t\tfor colIndex, cell in enumerate(row):\n\t\t\t\n\t\t\t_colName \u003d colPossibleNames[colIndex]\n\t\t\tlayoutData[rowIndex][_colName] \u003d {}\n\t\t\t\n\t\t\t_type \u003d cell.get(\u0027type\u0027)\n\t\t\t\n\t\t\tif _type:\n\t\t\t\tlayoutData[rowIndex][_colName][\u0027type\u0027] \u003d _type\n\t\t\telse:\n\t\t\t\tlayoutData[rowIndex][_colName][\u0027type\u0027] \u003d \u0027x\u0027\n\t\t\t\n\t\t\t_beds \u003d cell.get(\u0027beds\u0027)\n\t\t\tif _beds and isinstance(_beds,list):\n\t\t\t\t_info \u003d self.getBedInfo(_beds, data)\n\t\t\t\tlayoutData[rowIndex][_colName][\u0027info\u0027] \u003d _info\n\t\t\telse:\n#\t\t\t\tlayoutData[rowIndex][_colName][\u0027info\u0027] \u003d []\n\t\t\t\t_info \u003d []\n\t\t\t\tfor item in data:\n\t\t\t\t\t_facilityName \u003d item[\u0027facilityName\u0027] if item[\u0027facilityName\u0027] else \u0027\u0027\n\t\t\t\t\t_roomName \u003d item[\u0027roomName\u0027] if item[\u0027roomName\u0027] else \u0027\u0027\n\t\t\t\t\t_dictAux \u003d {\u0027l0\u0027:None , \u0027l1\u0027: None, \u0027l2\u0027: None, \u0027l3\u0027: None, \u0027l4\u0027: _facilityName, \u0027l5\u0027: _roomName }\n\t\t\t\t\t_info.append(_dictAux)\n\t\t\t\tlayoutData[rowIndex][_colName][\u0027info\u0027] \u003d _info\n\n\t#system.perspective.print((\u0027layoutData: \u0027, layoutData))\n\t\n\treturn layoutData\n\t\n\tExamples \u003d \"\"\"\n\tbeds \u003d [89, 88]\n\t\n\tdata \u003d [\n\t    {\n\t        u\"facilityId\": 4,\n\t        u\"bedState\": u\"\",\n\t        u\"bedStateNo\": 0,\n\t        u\"bedId\": 86,\n\t        u\"roomId\": 47,\n\t        u\"roomName\": u\"Next Steps Dorm\",\n\t        u\"bedName\": u\"Bottom Bunk 1\",\n\t        u\"bedNameNo\": 1,\n\t        u\"facilityName\": u\"Next Steps Dorm\",\n\t        u\"bedStateDate\": None,\n\t        u\"participantName\": u\"\",\n\t    },\n\t    {\n\t        u\"facilityId\": 4,\n\t        u\"bedState\": u\"\",\n\t        u\"bedStateNo\": 0,\n\t        u\"bedId\": 85,\n\t        u\"roomId\": 47,\n\t        u\"roomName\": u\"Next Steps Dorm\",\n\t        u\"bedName\": u\"Top Bunk 2\",\n\t        u\"bedNameNo\": 2,\n\t        u\"facilityName\": u\"Next Steps Dorm\",\n\t        u\"bedStateDate\": None,\n\t        u\"participantName\": u\"\",\n\t    },\n\t    {\n\t        u\"facilityId\": 4,\n\t        u\"bedState\": u\"\",\n\t        u\"bedStateNo\": 0,\n\t        u\"bedId\": 87,\n\t        u\"roomId\": 47,\n\t        u\"roomName\": u\"Next Steps Dorm\",\n\t        u\"bedName\": u\"Bed 3\",\n\t        u\"bedNameNo\": 3,\n\t        u\"facilityName\": u\"Next Steps Dorm\",\n\t        u\"bedStateDate\": None,\n\t        u\"participantName\": u\"\",\n\t    },\n\t    {\n\t        u\"facilityId\": 4,\n\t        u\"bedState\": u\"\",\n\t        u\"bedStateNo\": 0,\n\t        u\"bedId\": 89,\n\t        u\"roomId\": 47,\n\t        u\"roomName\": u\"Next Steps Dorm\",\n\t        u\"bedName\": u\"Bottom Bunk 4\",\n\t        u\"bedNameNo\": 4,\n\t        u\"facilityName\": u\"Next Steps Dorm\",\n\t        u\"bedStateDate\": None,\n\t        u\"participantName\": u\"\",\n\t    },\n\t    {\n\t        u\"facilityId\": 4,\n\t        u\"bedState\": u\"occupied\",\n\t        u\"bedStateNo\": 2,\n\t        u\"bedId\": 88,\n\t        u\"roomId\": 47,\n\t        u\"roomName\": u\"Next Steps Dorm\",\n\t        u\"bedName\": u\"Top Bunk 5\",\n\t        u\"bedNameNo\": 5,\n\t        u\"facilityName\": u\"Next Steps Dorm\",\n\t        u\"bedStateDate\": \"2021-07-19 05:30:00.0\",\n\t        u\"participantName\": u\"Eddie Billy Frierson\",\n\t    },\n\t    {\n\t        u\"facilityId\": 4,\n\t        u\"bedState\": u\"\",\n\t        u\"bedStateNo\": 0,\n\t        u\"bedId\": 90,\n\t        u\"roomId\": 47,\n\t        u\"roomName\": u\"Next Steps Dorm\",\n\t        u\"bedName\": u\"Bed 6\",\n\t        u\"bedNameNo\": 6,\n\t        u\"facilityName\": u\"Next Steps Dorm\",\n\t        u\"bedStateDate\": None,\n\t        u\"participantName\": u\"\",\n\t    },\n\t    {\n\t        u\"facilityId\": 4,\n\t        u\"bedState\": u\"\",\n\t        u\"bedStateNo\": 0,\n\t        u\"bedId\": 92,\n\t        u\"roomId\": 47,\n\t        u\"roomName\": u\"Next Steps Dorm\",\n\t        u\"bedName\": u\"Bottom Bunk 7\",\n\t        u\"bedNameNo\": 7,\n\t        u\"facilityName\": u\"Next Steps Dorm\",\n\t        u\"bedStateDate\": None,\n\t        u\"participantName\": u\"\",\n\t    },\n\t    {\n\t        u\"facilityId\": 4,\n\t        u\"bedState\": u\"\",\n\t        u\"bedStateNo\": 0,\n\t        u\"bedId\": 91,\n\t        u\"roomId\": 47,\n\t        u\"roomName\": u\"Next Steps Dorm\",\n\t        u\"bedName\": u\"Top Bunk 8\",\n\t        u\"bedNameNo\": 8,\n\t        u\"facilityName\": u\"Next Steps Dorm\",\n\t        u\"bedStateDate\": None,\n\t        u\"participantName\": u\"\",\n\t    },\n\t    {\n\t        u\"facilityId\": 4,\n\t        u\"bedState\": u\"\",\n\t        u\"bedStateNo\": 0,\n\t        u\"bedId\": 93,\n\t        u\"roomId\": 47,\n\t        u\"roomName\": u\"Next Steps Dorm\",\n\t        u\"bedName\": u\"Bed 9\",\n\t        u\"bedNameNo\": 9,\n\t        u\"facilityName\": u\"Next Steps Dorm\",\n\t        u\"bedStateDate\": None,\n\t        u\"participantName\": u\"\",\n\t    },\n\t    {\n\t        u\"facilityId\": 4,\n\t        u\"bedState\": u\"\",\n\t        u\"bedStateNo\": 0,\n\t        u\"bedId\": 98,\n\t        u\"roomId\": 47,\n\t        u\"roomName\": u\"Next Steps Dorm\",\n\t        u\"bedName\": u\"Bottom Bunk 10\",\n\t        u\"bedNameNo\": 10,\n\t        u\"facilityName\": u\"Next Steps Dorm\",\n\t        u\"bedStateDate\": None,\n\t        u\"participantName\": u\"\",\n\t    },\n\t    {\n\t        u\"facilityId\": 4,\n\t        u\"bedState\": u\"\",\n\t        u\"bedStateNo\": 0,\n\t        u\"bedId\": 97,\n\t        u\"roomId\": 47,\n\t        u\"roomName\": u\"Next Steps Dorm\",\n\t        u\"bedName\": u\"Top Bunk 11\",\n\t        u\"bedNameNo\": 11,\n\t        u\"facilityName\": u\"Next Steps Dorm\",\n\t        u\"bedStateDate\": None,\n\t        u\"participantName\": u\"\",\n\t    },\n\t    {\n\t        u\"facilityId\": 4,\n\t        u\"bedState\": u\"\",\n\t        u\"bedStateNo\": 0,\n\t        u\"bedId\": 100,\n\t        u\"roomId\": 47,\n\t        u\"roomName\": u\"Next Steps Dorm\",\n\t        u\"bedName\": u\"Bottom Bunk 12\",\n\t        u\"bedNameNo\": 12,\n\t        u\"facilityName\": u\"Next Steps Dorm\",\n\t        u\"bedStateDate\": None,\n\t        u\"participantName\": u\"\",\n\t    },\n\t    {\n\t        u\"facilityId\": 4,\n\t        u\"bedState\": u\"\",\n\t        u\"bedStateNo\": 0,\n\t        u\"bedId\": 99,\n\t        u\"roomId\": 47,\n\t        u\"roomName\": u\"Next Steps Dorm\",\n\t        u\"bedName\": u\"Top Bunk 13\",\n\t        u\"bedNameNo\": 13,\n\t        u\"facilityName\": u\"Next Steps Dorm\",\n\t        u\"bedStateDate\": None,\n\t        u\"participantName\": u\"\",\n\t    },\n\t    {\n\t        u\"facilityId\": 4,\n\t        u\"bedState\": u\"\",\n\t        u\"bedStateNo\": 0,\n\t        u\"bedId\": 94,\n\t        u\"roomId\": 47,\n\t        u\"roomName\": u\"Next Steps Dorm\",\n\t        u\"bedName\": u\"Bed 14\",\n\t        u\"bedNameNo\": 14,\n\t        u\"facilityName\": u\"Next Steps Dorm\",\n\t        u\"bedStateDate\": None,\n\t        u\"participantName\": u\"\",\n\t    },\n\t    {\n\t        u\"facilityId\": 4,\n\t        u\"bedState\": u\"\",\n\t        u\"bedStateNo\": 0,\n\t        u\"bedId\": 96,\n\t        u\"roomId\": 47,\n\t        u\"roomName\": u\"Next Steps Dorm\",\n\t        u\"bedName\": u\"Bottom Bunk 15\",\n\t        u\"bedNameNo\": 15,\n\t        u\"facilityName\": u\"Next Steps Dorm\",\n\t        u\"bedStateDate\": None,\n\t        u\"participantName\": u\"\",\n\t    },\n\t    {\n\t        u\"facilityId\": 4,\n\t        u\"bedState\": u\"\",\n\t        u\"bedStateNo\": 0,\n\t        u\"bedId\": 95,\n\t        u\"roomId\": 47,\n\t        u\"roomName\": u\"Next Steps Dorm\",\n\t        u\"bedName\": u\"Top Bunk 16\",\n\t        u\"bedNameNo\": 16,\n\t        u\"facilityName\": u\"Next Steps Dorm\",\n\t        u\"bedStateDate\": None,\n\t        u\"participantName\": u\"\",\n\t    },\n\t]\n\n\tinfo \u003d [{\u0027l0\u0027: 4, \u0027l1\u0027: \u0027\u0027, \u0027l2\u0027: \u0027\u0027, \u0027l3\u0027: \u0027\u0027}, {\u0027l0\u0027: 5, \u0027l1\u0027: u\u0027occupied\u0027, \u0027l2\u0027: u\u002707/19/2021\u0027, \u0027l3\u0027: u\u0027Eddie Billy Frierson\u0027}]\n\t\n\t\"\"\"\t\n\"\"\""
+                },
+                {
+                  "name": "getBedInfo",
+                  "params": [
+                    "beds",
+                    "data"
+                  ],
+                  "script": "\texample_beds \u003d [\n\t  87,\n\t  88\n\t]\n\t\n\texample_info \u003d [\n\t\t{\n\t\t  \"l0\": \"xa0\",\n\t\t  \"l1\": \"xa1\",\n\t\t  \"l2\": \"xa2\",\n\t\t  \"l3\": \"xa3\"\n\t\t},\n\t\t{\n\t\t  \"l0\": \"xb0\",\n\t\t  \"l1\": \"xb1\",\n\t\t  \"l2\": \"xb2\",\n\t\t  \"l3\": \"xb3\"\n\t\t}\n\t]\n\t# implement your method here\n\tinfo \u003d []\n\n\tfor bed in beds:\n\t\t_dictAux \u003d {\u0027l0\u0027: \u0027err\u0027 , \u0027l1\u0027: \u0027\u0027, \u0027l2\u0027: \u0027\u0027, \u0027l3\u0027: \u0027\u0027, \u0027l4\u0027: \u0027\u0027, \u0027l5\u0027: \u0027\u0027 }\n\t\t\n\t\tfor item in data:\n\t\t\tif item[\u0027bedId\u0027] \u003d\u003d bed:\n\t\t\t\t_bedState \u003d item[\u0027bedState\u0027] if item[\u0027bedState\u0027] else \u0027\u0027\n\t\t\t\t_bedNameNo \u003d item[\u0027bedNameNo\u0027] if item[\u0027bedNameNo\u0027] else \u0027\u0027\n\t\t\t\t_bedStateDate \u003d system.date.format(item[\u0027bedStateDate\u0027],\u0027MM/dd/yyyy\u0027) if item[\u0027bedStateDate\u0027] else \u0027\u0027\n\t\t\t\t_participantName \u003d item[\u0027participantName\u0027] if item[\u0027participantName\u0027] else \u0027\u0027\n\t\t\t\t_facilityName \u003d item[\u0027facilityName\u0027] if item[\u0027facilityName\u0027] else \u0027\u0027\n\t\t\t\t_roomName \u003d item[\u0027roomName\u0027] if item[\u0027roomName\u0027] else \u0027\u0027\n\t\t\t\t_dictAux \u003d {\u0027l0\u0027:_bedNameNo , \u0027l1\u0027: _bedState, \u0027l2\u0027: _bedStateDate, \u0027l3\u0027: _participantName, \u0027l4\u0027: _facilityName, \u0027l5\u0027: _roomName }\n\t\t\t\tbreak\n\t\t\n\t\tinfo.append(_dictAux)\n\n\t#system.perspective.print((\u0027info: \u0027, info))\n\treturn info"
+                },
+                {
+                  "name": "getMatrixFromList",
+                  "params": [
+                    "rowSize",
+                    "colSize",
+                    "roomLayoutList"
+                  ],
+                  "script": "\t\n\timport string\n\tcolPossibleLetters \u003d list(string.ascii_uppercase)[:colSize]\n\t\n\t# matrix empty 3x5: [[{}.{},{}],[{}.{},{}],[{}.{},{}],[{}.{},{}],[{}.{},{}]]\n\tmatrix \u003d [[{} for x in range(colSize)] for j in range(rowSize)]\n\t\n\tfor item in roomLayoutList:\n\t\tbedId \u003d item[\u0027bedId\u0027]\n\t\tbedType \u003d \u0027v\u0027 if item[\u0027isVertical\u0027] else \u0027h\u0027 \n\t\tisUpper \u003d item[\u0027isUpper\u0027]\n\t\n\t\tposition \u003d item[\u0027position\u0027] \n\t\tposLetter \u003d \u0027\u0027.join([char for  char in position if char.isalpha()])\n\t\tposCol \u003d colPossibleLetters.index(posLetter)\n\t\tposRow \u003d int(position[len(posLetter):]) - 1\n\t\t\n\t\tif matrix[posRow][posCol] \u003d\u003d {}:\n\t\t\tmatrix[posRow][posCol][\u0027type\u0027] \u003d bedType\n\t\t\tmatrix[posRow][posCol][\u0027beds\u0027] \u003d [bedId]\n\t\telse:\n\t\t\tif isUpper: \n\t\t\t\tmatrix[posRow][posCol][\u0027beds\u0027].insert(0,bedId)\n\t\t\telse:\n\t\t\t\tmatrix[posRow][posCol][\u0027beds\u0027].append(bedId)\n\t\n\tsystem.perspective.print((\u0027jsonMatrixRoom:\u0027))\n\tsystem.perspective.print((system.util.jsonEncode(matrix)))\t\t\n\treturn matrix"
+                },
+                {
+                  "name": "setRoomLayout",
+                  "params": [
+                    "roomId",
+                    "rowSize",
+                    "colSize",
+                    "roomLayoutList"
+                  ],
+                  "script": "\troot \u003d self.view.getChild(\"root\")\n\t_matrix \u003d extend.layout.getRoomMatrixFromList(rowSize, colSize, roomLayoutList)\n\tself.props.columns \u003d self.getPropsColumns(_matrix)\n\t\n\t_dataOccupation \u003d self.getOccupationDataDb(roomId \u003d roomId)\n\t\n\t_lstDataOccupation \u003d root.getListOfDictFromDataset(_dataOccupation)\n\t_layoutAndData \u003d self.joinDataAndLayout(_lstDataOccupation, _matrix)\n\tself.props.data \u003d _layoutAndData"
+                },
+                {
+                  "name": "getOccupationDataDb",
+                  "params": [
+                    "**kwargs"
+                  ],
+                  "script": "\troomId \u003d kwargs.get(\u0027roomId\u0027)\n\tfacilityId \u003d kwargs.get(\u0027facilityId\u0027)\n\n\toneDay \u003d system.date.now()\t\n\t\n\tquery \u003d \"\"\"\nDECLARE @oneDay date \u003d ?,\n\t@roomId int \u003d ?,\n\t@facilityId int \u003d ?\n\n;WITH frb As (\nSELECT \n\t [Facility].[id] AS facilityId\n\t,[Room].[id] AS roomId\n\t,[Bed].[id] AS bedId\n\t,[Facility].[facilityName]\n\t,[Room].[roomName]\n\t,[Bed].[bedName]\n\t,ISNULL(TRY_CONVERT(int, SUBSTRING([bedName], PATINDEX(\u0027%[0-9]%\u0027, [bedName]), LEN([bedName]))),-1) bedNameNo \nFROM [lodging].[Bed]\n\tINNER JOIN [lodging].[Room] ON [Bed].[roomId] \u003d [Room].[id]\n\tINNER JOIN [lodging].[Facility] ON [Room].[facilityId] \u003d [Facility].[id]\nWHERE ([Facility].[timeRetired] is NULL \n\tAND [Room].[timeRetired] is NULL\n\tAND [Bed].[timeRetired] is NULL) \n)\n\t\n, cteR AS (\nSELECT \n\t [bedId]\n\t,[participantId]\n\t,[reservationStart]\n\t,ROW_NUMBER() OVER (PARTITION BY [bedId] ORDER BY [reservationStart]) rowNo\nFROM [lodging].[Reservation]  \nWHERE ([timeRetired] IS NULL\n\tAND [reservationStart] IS NOT NULL    \n\tAND CAST([reservationStart] AS date) \u003c\u003d @oneDay\n\tAND CAST(ISNULL([reservationEnd],@oneDay) AS date) \u003e\u003d @oneDay)\n)\n\n, cteReserved AS (\nSELECT \n\t [bedId]\n\t,CONCAT([Human].[firstName] , \u0027 \u0027 , [Human].[lastName]) AS [participantName]\n\t,[reservationStart]\nFROM cteR  \nLEFT JOIN [participant].[Participant] ON cteR.[participantId] \u003d [Participant].[id]\nLEFT JOIN [humans].[Human] ON [Participant].[humanId] \u003d [Human].[id]\nWHERE rowNo \u003c 2\n)\n\n, cteO AS (\nSELECT \n\t [bedId]\n\t,[participantId]\n\t,[eventStart]\n\t,ROW_NUMBER() OVER (PARTITION BY [bedId] ORDER BY [eventStart]) rowNo\nFROM [lodging].[BedLog]  \nWHERE ([eventStart] IS NOT NULL    \n\tAND CAST([eventStart] AS date) \u003c\u003d @oneDay\n\tAND [eventEnd] IS NULL)\n)\n\t\n, cteOccupied AS (\nSELECT \n\t [bedId]\n\t,CONCAT([Human].[firstName] , \u0027 \u0027 , [Human].[lastName]) AS [participantName]\n\t,[eventStart]\nFROM cteO\nLEFT JOIN [participant].[Participant] ON cteO.[participantId] \u003d [Participant].[id]\nLEFT JOIN [humans].[Human] ON [Participant].[humanId] \u003d [Human].[id]\nWHERE rowNo \u003c 2\n)\n\nSELECT \n\t frb.facilityId\n\t,frb.roomId\n\t,frb.bedId\n\t,frb.[facilityName]\n\t,frb.[roomName]\n\t,frb.[bedName]\n\t,frb.[bedNameNo] \n\t,CASE WHEN cteOccupied.bedId IS NOT NULL THEN 2 ELSE (CASE WHEN cteReserved.bedId IS NOT NULL THEN 1 ELSE 0 END) END AS [bedStateNo]\n\t,CASE WHEN cteOccupied.bedId IS NOT NULL THEN \u0027occupied\u0027 ELSE (CASE WHEN cteReserved.bedId IS NOT NULL THEN \u0027reserved\u0027 ELSE \u0027\u0027 END) END AS [bedState]\n\t,CASE WHEN cteOccupied.bedId IS NOT NULL THEN cteOccupied.[eventStart] ELSE (CASE WHEN cteReserved.bedId IS NOT NULL THEN cteReserved.[reservationStart] ELSE NULL END) END AS [bedStateDate]\n\t,CASE WHEN cteOccupied.bedId IS NOT NULL THEN cteOccupied.[participantName] ELSE (CASE WHEN cteReserved.bedId IS NOT NULL THEN cteReserved.[participantName] ELSE \u0027\u0027 END) END  AS [participantName]\nFROM frb \nLEFT JOIN cteReserved ON cteReserved.bedId \u003d frb.bedId\nLEFT JOIN cteOccupied ON cteOccupied.bedId \u003d frb.bedId\nWHERE 1\u003d1\n\tAND (@roomId IS NULL OR frb.roomId \u003d @roomId)\n\tAND (@facilityId IS NULL OR frb.facilityId \u003d @facilityId)\n\nORDER BY facilityName,facilityId, roomName, roomId, bedNameNo\n\"\"\"\n\targs \u003d [oneDay, roomId, facilityId]\n\tresult \u003d system.db.runPrepQuery(query, args, \u0027RITIOps\u0027)\n\treturn result"
+                },
+                {
+                  "name": "BgetOccupationDataDb",
+                  "params": [
+                    "roomId"
+                  ],
+                  "script": "\toneDay \u003d system.date.now()\n\tquery \u003d \"\"\"\nDECLARE @oneDay date \u003d ?,\n\t@roomId int \u003d ?\n\n;WITH frb As (\nSELECT \n\t [Facility].[id] AS facilityId\n\t,[Room].[id] AS roomId\n\t,[Bed].[id] AS bedId\n\t,[Facility].[facilityName]\n\t,[Room].[roomName]\n\t,[Bed].[bedName]\n\t,ISNULL(TRY_CONVERT(int, SUBSTRING([bedName], PATINDEX(\u0027%[0-9]%\u0027, [bedName]), LEN([bedName]))),-1) bedNameNo \nFROM [lodging].[Bed]\n\tINNER JOIN [lodging].[Room] ON [Bed].[roomId] \u003d [Room].[id]\n\tINNER JOIN [lodging].[Facility] ON [Room].[facilityId] \u003d [Facility].[id]\nWHERE ([Facility].[timeRetired] is NULL \n\tAND [Room].[timeRetired] is NULL\n\tAND [Bed].[timeRetired] is NULL) \n)\n\t\n, cteR AS (\nSELECT \n\t [bedId]\n\t,[participantId]\n\t,[reservationStart]\n\t,ROW_NUMBER() OVER (PARTITION BY [bedId] ORDER BY [reservationStart]) rowNo\nFROM [lodging].[Reservation]  \nWHERE ([timeRetired] IS NULL\n\tAND [reservationStart] IS NOT NULL    \n\tAND CAST([reservationStart] AS date) \u003c\u003d @oneDay\n\tAND CAST(ISNULL([reservationEnd],@oneDay) AS date) \u003e\u003d @oneDay)\n)\n\n, cteReserved AS (\nSELECT \n\t [bedId]\n\t,CONCAT([Human].[firstName] , \u0027 \u0027 , [Human].[lastName]) AS [participantName]\n\t,[reservationStart]\nFROM cteR  \nLEFT JOIN [participant].[Participant] ON cteR.[participantId] \u003d [Participant].[id]\nLEFT JOIN [humans].[Human] ON [Participant].[humanId] \u003d [Human].[id]\nWHERE rowNo \u003c 2\n)\n\n, cteO AS (\nSELECT \n\t [bedId]\n\t,[participantId]\n\t,[eventStart]\n\t,ROW_NUMBER() OVER (PARTITION BY [bedId] ORDER BY [eventStart]) rowNo\nFROM [lodging].[BedLog]  \nWHERE ([eventStart] IS NOT NULL    \n\tAND CAST([eventStart] AS date) \u003c\u003d @oneDay\n\tAND CAST(ISNULL([eventEnd],@oneDay) AS date) \u003e\u003d @oneDay)\n)\n\t\n, cteOccupied AS (\nSELECT \n\t [bedId]\n\t,CONCAT([Human].[firstName] , \u0027 \u0027, [Human].[lastName]) AS [participantName]\n\t,[eventStart]\nFROM cteO\nLEFT JOIN [participant].[Participant] ON cteO.[participantId] \u003d [Participant].[id]\nLEFT JOIN [humans].[Human] ON [Participant].[humanId] \u003d [Human].[id]\nWHERE rowNo \u003c 2\n)\n\nSELECT \n\t frb.facilityId\n\t,frb.roomId\n\t,frb.bedId\n\t,frb.[facilityName]\n\t,frb.[roomName]\n\t,frb.[bedName]\n\t,frb.[bedNameNo] \n\t,CASE WHEN cteOccupied.bedId IS NOT NULL THEN 2 ELSE (CASE WHEN cteReserved.bedId IS NOT NULL THEN 1 ELSE 0 END) END AS [bedStateNo]\n\t,CASE WHEN cteOccupied.bedId IS NOT NULL THEN \u0027occupied\u0027 ELSE (CASE WHEN cteReserved.bedId IS NOT NULL THEN \u0027reserved\u0027 ELSE \u0027\u0027 END) END AS [bedState]\n\t,CASE WHEN cteOccupied.bedId IS NOT NULL THEN cteOccupied.[eventStart] ELSE (CASE WHEN cteReserved.bedId IS NOT NULL THEN cteReserved.[reservationStart] ELSE NULL END) END AS [bedStateDate]\n\t,CASE WHEN cteOccupied.bedId IS NOT NULL THEN cteOccupied.[participantName] ELSE (CASE WHEN cteReserved.bedId IS NOT NULL THEN cteReserved.[participantName] ELSE \u0027\u0027 END) END  AS [participantName]\nFROM frb \nLEFT JOIN cteReserved ON cteReserved.bedId \u003d frb.bedId\nLEFT JOIN cteOccupied ON cteOccupied.bedId \u003d frb.bedId\nWHERE 1\u003d1\n\tAND frb.roomId \u003d @roomId\n\nORDER BY facilityName,facilityId, roomName, roomId, bedNameNo\n\"\"\"\n\targs \u003d [oneDay, roomId]\n\tresult \u003d system.db.runPrepQuery(query, args, \u0027RITIOps\u0027)\n\treturn result"
+                },
+                {
+                  "name": "setFacilityLayout",
+                  "params": [
+                    "facilityId",
+                    "rowSize",
+                    "colSize",
+                    "facilityLayoutList"
+                  ],
+                  "script": "\troot \u003d self.view.getChild(\"root\")\n\t#ystem.perspective.print((\u0027rowwSize, colSize, facilityLayoutList: \u0027, rowSize, colSize, facilityLayoutList))\n\t_matrix \u003d self.getFacilityMatrixFromList(rowSize, colSize, facilityLayoutList)\n\t#system.perspective.print((\u0027fac matrix: \u0027, _matrix[:2]))\n\t\n\tself.props.columns \u003d self.getPropsColumns(_matrix)\n\n\t_dataOccupation \u003d self.getOccupationDataDb(facilityId \u003d facilityId)\n\t\n\t_lstDataOccupation \u003d root.getListOfDictFromDataset(_dataOccupation)\n\t#ystem.perspective.print((\u0027fac matrix: \u0027, _matrix[:2]))\n\t#ystem.perspective.print((\u0027fac lstDataOccupation: \u0027, _lstDataOccupation[:2]))\n\t\n\t_layoutAndData \u003d self.joinDataAndLayout(_lstDataOccupation, _matrix)\n\n\t#ystem.perspective.print((\u0027fac _layoutAndData: \u0027, _layoutAndData[:2]))\n\tself.props.data \u003d _layoutAndData\n\t"
+                },
+                {
+                  "name": "setGlobalLayout",
+                  "params": [
+                    "rowSize",
+                    "colSize",
+                    "globalLayoutList"
+                  ],
+                  "script": "\t\n\troot \u003d self.view.getChild(\"root\")\n\t#ystem.perspective.print((\u0027gl rowSize, colSize, facilityLayoutList: \u0027, rowSize, colSize, globalLayoutList))\n\t_matrix \u003d self.getGlobalMatrixFromList(rowSize, colSize, globalLayoutList)\n\t#ystem.perspective.print((\u0027glbmatrix: \u0027, _matrix))\n\tself.props.columns \u003d self.getPropsColumns(_matrix)\n\n\t_dataOccupation \u003d self.getOccupationDataDb()\n\t\n\t_lstDataOccupation \u003d root.getListOfDictFromDataset(_dataOccupation)\n\t#ystem.perspective.print((\u0027glbmatrix: \u0027, len(_matrix), len(_matrix[0])))\n\t#ystem.perspective.print((\u0027glb lstDataOccupation: \u0027, _lstDataOccupation[:2]))\n\t\n\t_layoutAndData \u003d self.joinDataAndLayout(_lstDataOccupation, _matrix)\n\n\t#ystem.perspective.print((\u0027glb _layoutAndData: \u0027, _layoutAndData[:2]))\n\tself.props.data \u003d _layoutAndData\n\t"
+                },
+                {
+                  "name": "getFacilityMatrixFromList",
+                  "params": [
+                    "rowSize",
+                    "colSize",
+                    "facilityLayoutList"
+                  ],
+                  "script": "\timport string\n\tcolPossibleLetters \u003d list(string.ascii_uppercase)[:colSize]\n\t\n\t# matrix empty 3x5: [[{}.{},{}],[{}.{},{}],[{}.{},{}],[{}.{},{}],[{}.{},{}]]\n\tmatrix \u003d [[{} for x in range(colSize)] for j in range(rowSize)]\n\t#ystem.perspective.print((\u0027facilityLayoutListx: \u0027,facilityLayoutList[:2]))\n\t\n\t#ystem.perspective.print((\"len matrix: \",len(matrix), len(matrix[0]) ))\n\t\n\tfor item in facilityLayoutList:\n\t\troomRowSize \u003d item[\u0027rowSize\u0027]\n\t\troomColSize \u003d item[\u0027colSize\u0027]\n\t\troomLayoutList \u003d system.util.jsonDecode(item[\u0027jsonLayout\u0027]) if item.get(\u0027jsonLayout\u0027) else []\n\t\t#ystem.perspective.print((\u0027roomLayoutList: \u0027,roomLayoutList[:2]))\n\t\t_matrixRoom \u003d extend.layout.getRoomMatrixFromList(roomRowSize, roomColSize, roomLayoutList)\n\t\t#ystem.perspective.print((\"len matrixRoom: \",_matrixRoom, len(_matrixRoom), len(_matrixRoom[0]) ))\n\t\troomId \u003d item[\u0027roomId\u0027]\n\t\tposition \u003d item[\u0027position\u0027] \n\t\tposLetter \u003d \u0027\u0027.join([char for  char in position if char.isalpha()])\n\t\tposCol \u003d colPossibleLetters.index(posLetter)\n\t\tposRow \u003d int(position[len(posLetter):]) - 1\n\t\t\n\t\tfor rowIndex , row in enumerate(_matrixRoom):\n\t\t\tfor colIndex, item in enumerate(row):\n\t\t\t\t\n\t\t\t\ttry:\n\t\t\t\t\tmatrix[posRow + rowIndex][posCol + colIndex] \u003d item #possible to add border\n\t\t\t\texcept:\n\t\t\t\t\tsystem.perspective.print((\"exception getFacilityMatrixFromList: rowIndex, colIndex, posRow, posCol:\",rowIndex, colIndex, posRow, posCol))\n\t\t\t\t\tsystem.perspective.print((\"exception getFacilityMatrixFromList: roomId, position:\",roomId, position))\n\t\t\n\t\n\treturn matrix\t\n\t"
+                },
+                {
+                  "name": "getGlobalMatrixFromList",
+                  "params": [
+                    "rowSize",
+                    "colSize",
+                    "globalLayoutList"
+                  ],
+                  "script": "\timport string\n\timport copy\n\tcolPossibleLetters \u003d list(string.ascii_uppercase)[:colSize]\n\t\n\t# matrix empty 3x5: [[{}.{},{}],[{}.{},{}],[{}.{},{}],[{}.{},{}],[{}.{},{}]]\n\tmatrix \u003d [[{} for x in range(colSize)] for j in range(rowSize)]\n\t#ystem.perspective.print((\u0027globalLayoutList: \u0027,globalLayoutList))\n\t\n\t#ystem.perspective.print((\u0027in glob lmatrix: \u0027))\n\t#ystem.perspective.print((\"len matrix: \",len(matrix), len(matrix[0]) ))\n\tfor obj in globalLayoutList:\n\t\tfacilityId \u003d obj[\u0027facilityId\u0027]\n\t\tfacilityLayoutList \u003d system.util.jsonDecode(obj[\u0027jsonLayout\u0027]) if obj.get(\u0027jsonLayout\u0027) else []\n\t\tfacilityRowSize \u003d obj[\u0027rowSize\u0027]\n\t\tfacilityColSize \u003d obj[\u0027colSize\u0027]\n\t\tpositionF \u003d obj[\u0027position\u0027] \n\t\tposLetterF \u003d \u0027\u0027.join([char for  char in positionF if char.isalpha()])\n\t\tposColF \u003d colPossibleLetters.index(posLetterF)\n\t\tposRowF \u003d int(positionF[len(posLetterF):]) - 1\t\t\n\t\t#_matrixFacility \u003d [[{} for x in range(facilityColSize)] for j in range(facilityRowSize)]\n\t\troomsLayout \u003d system.util.jsonDecode(obj[\u0027roomsLayout\u0027]) if obj.get(\u0027roomsLayout\u0027) else []\n\t\troomJ \u003d []\n\t\tfor x in roomsLayout:\n\t\t\tabc \u003d copy.deepcopy(x)\n\t\t\tabc[\u0027jsonLayout\u0027] \u003d system.util.jsonEncode(x[\u0027jsonLayout\u0027]) \n\t\t\troomJ.append(abc)\n\t\t\n\t\t\n\t\t#ystem.perspective.print((\u0027roomsJLayout: \u0027, facilityRowSize, facilityColSize, roomJ))\n\t\t_matrixFacility \u003d self.getFacilityMatrixFromList(facilityRowSize,facilityColSize, roomJ) #roomsLayout)\n\t\t#ystem.perspective.print((\u0027matrixFacility: \u0027,len(matrix), _matrixFacility[:3]))\t\n\t\t\n\t\tfor rowIndex , row in enumerate(_matrixFacility):\n\t\t\tfor colIndex, item in enumerate(row):\n\t\t\t\t#ystem.perspective.print((\"rowIndex, colIndex, posRow, posCol:\",rowIndex, colIndex, posRowF, posColF))\n\t\t\t\tmatrix[posRowF + rowIndex][posColF + colIndex] \u003d item #possible to add border\n\t#ystem.perspective.print((\u0027glbmatrix: \u0027, len(matrix), len(matrix[0])))\t\t\t\t\t\t\n\t#ystem.perspective.print((\u0027glbmatrix: \u0027, matrix))\t\t\t\t\t\t\n\t#ystem.perspective.print((\u0027matrix: \u0027,len(matrix), matrix[:3]))\t\t\n\t\n\treturn matrix\t\n\t\n\t\n"
+                }
+              ],
+              "extensionFunctions": null,
+              "messageHandlers": []
+            },
+            "type": "ia.display.table"
+          }
+        ],
+        "meta": {
+          "name": "flexTables"
+        },
+        "position": {
+          "basis": "900px",
+          "grow": 1
+        },
+        "type": "ia.container.flex"
+      }
+    ],
+    "custom": {
+      "_devPreview": false,
+      "_devSetFacility_1": false,
+      "_devSetFacility_4": false,
+      "_devSetFacility_5": false,
+      "_devSetGlobal": false,
+      "_devSetRoom_47": false,
+      "_devSetRoom_48": false,
+      "_devSetRoom_51": false,
+      "_isDev": false,
+      "jsonLastPayload": "{}"
+    },
+    "meta": {
+      "name": "root"
+    },
+    "propConfig": {
+      "custom._devPreview": {
+        "onChange": {
+          "enabled": null,
+          "script": "\timport extend.layout\n\n\ttableList \u003d self.getChild(\"flexTables\").getChild(\"TableList\")\n\ttableLayout \u003d self.getChild(\"flexTables\").getChild(\"TableLayout\")\n\temvColQty \u003d self.getChild(\"flexHead\").getChild(\"emvColQty\")\n\temvRowQty \u003d self.getChild(\"flexHead\").getChild(\"emvRowQty\")\n\n\tcolSize \u003d int(emvColQty.props.params.fieldText) if emvColQty.props.params.fieldText.isnumeric() else 0\n\t\n\trowSize \u003d int(emvRowQty.props.params.fieldText)  if emvRowQty.props.params.fieldText.isnumeric() else 0\n\t\n\tsystem.perspective.print((\"rowSize,colSize: \",rowSize,colSize))\n\t\n\tif not(tableList.props.data):\n\t\treturn\n\t\n\troomId \u003d tableList.props.data[0].get(\u0027roomId\u0027)\n\t\n\tif roomId is None or colSize \u003d\u003d 0 or rowSize \u003d\u003d 0 :\n\t\treturn\n\t\n\tif self.custom._isDev:\n\t\tif currentValue.value is True:\n\n\t\t\troomLayoutList \u003d self.getFromTableRoomList()\n\t\t\tsystem.perspective.print((\u0027roomLayoutList:\u0027))\n\t\t\tsystem.perspective.print((system.util.jsonEncode(roomLayoutList)))\t\n\t\t\t\n\t\t\ttableLayout.setRoomLayout(roomId, rowSize, colSize, roomLayoutList)\n\t\t\t#matrix \u003d extend.layout.getRoomMatrixFromList(rowSize, colSize, roomLayoutList)\n\t\t\t#system.perspective.print((\u0027matrix:\u0027))\n\t\t\t#system.perspective.print((system.util.jsonEncode(matrix)))\t\n\t\telse:\n\t\t\tsystem.perspective.sendMessage(\u0027nix\u0027)\n\t\t\ttableLayout.props.data \u003d []"
+        }
+      },
+      "custom._devSetFacility_1": {
+        "onChange": {
+          "enabled": null,
+          "script": "\tif self.custom._isDev:\n\t\tif currentValue.value is True:\n\t\t\tpayload \u003d {}\n\t\t\tpayload[\u0027oneDay\u0027] \u003d system.date.now()\n\t\t\tpayload[\u0027facilityId\u0027] \u003d 1\n\t\t\t#payload[\u0027roomId\u0027] \u003d 51\n\t\telse:\n\t\t\tpayload \u003d {}\n\n\t\tsystem.perspective.sendMessage(\u0027mhSetLayoutDesigner\u0027, payload \u003d payload)\t"
+        }
+      },
+      "custom._devSetFacility_4": {
+        "onChange": {
+          "enabled": null,
+          "script": "\tif self.custom._isDev:\n\t\tif currentValue.value is True:\n\t\t\tpayload \u003d {}\n\t\t\tpayload[\u0027oneDay\u0027] \u003d system.date.now()\n\t\t\tpayload[\u0027facilityId\u0027] \u003d 4\n\t\t\t#payload[\u0027roomId\u0027] \u003d 51\n\t\telse:\n\t\t\tpayload \u003d {}\n\n\t\tsystem.perspective.sendMessage(\u0027mhSetLayoutDesigner\u0027, payload \u003d payload)\t"
+        }
+      },
+      "custom._devSetFacility_5": {
+        "onChange": {
+          "enabled": null,
+          "script": "\tif self.custom._isDev:\n\t\tif currentValue.value is True:\n\t\t\tpayload \u003d {}\n\t\t\tpayload[\u0027oneDay\u0027] \u003d system.date.now()\n\t\t\tpayload[\u0027facilityId\u0027] \u003d 5\n\t\t\t#payload[\u0027roomId\u0027] \u003d 51\n\t\telse:\n\t\t\tpayload \u003d {}\n\n\t\tsystem.perspective.sendMessage(\u0027mhSetLayoutDesigner\u0027, payload \u003d payload)\t"
+        }
+      },
+      "custom._devSetGlobal": {
+        "onChange": {
+          "enabled": null,
+          "script": "\tif self.custom._isDev:\n\t\tif currentValue.value is True:\n\t\t\tpayload \u003d {}\n\t\t\tpayload[\u0027oneDay\u0027] \u003d system.date.now()\n\t\t\t#payload[\u0027facilityId\u0027] \u003d 1\n\t\t\t#payload[\u0027roomId\u0027] \u003d 51\n\t\telse:\n\t\t\tpayload \u003d {}\n\n\t\tsystem.perspective.sendMessage(\u0027mhSetLayoutDesigner\u0027, payload \u003d payload)\t"
+        }
+      },
+      "custom._devSetRoom_47": {
+        "onChange": {
+          "enabled": null,
+          "script": "\tif self.custom._isDev:\n\t\tif currentValue.value is True:\n\t\t\tpayload \u003d {}\n\t\t\tpayload[\u0027oneDay\u0027] \u003d system.date.now()\n\t\t\t#payload[\u0027facilityId\u0027] \u003d 4\n\t\t\tpayload[\u0027roomId\u0027] \u003d 47\n\t\telse:\n\t\t\tpayload \u003d {}\n\n\t\tsystem.perspective.sendMessage(\u0027mhSetLayoutDesigner\u0027, payload \u003d payload)"
+        }
+      },
+      "custom._devSetRoom_48": {
+        "onChange": {
+          "enabled": null,
+          "script": "\tif self.custom._isDev:\n\t\tif currentValue.value is True:\n\t\t\tpayload \u003d {}\n\t\t\tpayload[\u0027oneDay\u0027] \u003d system.date.now()\n\t\t\t#payload[\u0027facilityId\u0027] \u003d 4\n\t\t\tpayload[\u0027roomId\u0027] \u003d 48\n\t\telse:\n\t\t\tpayload \u003d {}\n\n\t\tsystem.perspective.sendMessage(\u0027mhSetLayoutDesigner\u0027, payload \u003d payload)"
+        }
+      },
+      "custom._devSetRoom_51": {
+        "onChange": {
+          "enabled": null,
+          "script": "\tif self.custom._isDev:\n\t\tif currentValue.value is True:\n\t\t\tpayload \u003d {}\n\t\t\tpayload[\u0027oneDay\u0027] \u003d system.date.now()\n\t\t\t#payload[\u0027facilityId\u0027] \u003d 4\n\t\t\tpayload[\u0027roomId\u0027] \u003d 51\n\t\telse:\n\t\t\tpayload \u003d {}\n\n\t\tsystem.perspective.sendMessage(\u0027mhSetLayoutDesigner\u0027, payload \u003d payload)\t"
+        }
+      }
+    },
+    "props": {
+      "data": [
+        {
+          "bedId": 86,
+          "bedName": "Bottom Bunk 1",
+          "bedNameNo": 1,
+          "facilityId": 4,
+          "facilityName": "Next Steps Dorm",
+          "isUpper": false,
+          "isVertical": false,
+          "objectType": "bed",
+          "position": "C1",
+          "roomId": 47,
+          "roomName": "Next Steps Dorm"
+        },
+        {
+          "bedId": 85,
+          "bedName": "Top Bunk 2",
+          "bedNameNo": 2,
+          "facilityId": 4,
+          "facilityName": "Next Steps Dorm",
+          "isUpper": true,
+          "isVertical": false,
+          "objectType": "bed",
+          "position": "C1",
+          "roomId": 47,
+          "roomName": "Next Steps Dorm"
+        },
+        {
+          "bedId": 87,
+          "bedName": "Bed 3",
+          "bedNameNo": 3,
+          "facilityId": 4,
+          "facilityName": "Next Steps Dorm",
+          "isUpper": false,
+          "isVertical": false,
+          "objectType": "bed",
+          "position": "C2",
+          "roomId": 47,
+          "roomName": "Next Steps Dorm"
+        },
+        {
+          "bedId": 89,
+          "bedName": "Bottom Bunk 4",
+          "bedNameNo": 4,
+          "facilityId": 4,
+          "facilityName": "Next Steps Dorm",
+          "isUpper": true,
+          "isVertical": true,
+          "objectType": "bed",
+          "position": "C3",
+          "roomId": 47,
+          "roomName": "Next Steps Dorm"
+        },
+        {
+          "bedId": 88,
+          "bedName": "Top Bunk 5",
+          "bedNameNo": 5,
+          "facilityId": 4,
+          "facilityName": "Next Steps Dorm",
+          "isUpper": false,
+          "isVertical": true,
+          "objectType": "bed",
+          "position": "C3",
+          "roomId": 47,
+          "roomName": "Next Steps Dorm"
+        },
+        {
+          "bedId": 90,
+          "bedName": "Bed 6",
+          "bedNameNo": 6,
+          "facilityId": 4,
+          "facilityName": "Next Steps Dorm",
+          "isUpper": false,
+          "isVertical": false,
+          "objectType": "bed",
+          "position": "C5",
+          "roomId": 47,
+          "roomName": "Next Steps Dorm"
+        },
+        {
+          "bedId": 92,
+          "bedName": "Bottom Bunk 7",
+          "bedNameNo": 7,
+          "facilityId": 4,
+          "facilityName": "Next Steps Dorm",
+          "isUpper": false,
+          "isVertical": false,
+          "objectType": "bed",
+          "position": "B1",
+          "roomId": 47,
+          "roomName": "Next Steps Dorm"
+        },
+        {
+          "bedId": 91,
+          "bedName": "Top Bunk 8",
+          "bedNameNo": 8,
+          "facilityId": 4,
+          "facilityName": "Next Steps Dorm",
+          "isUpper": true,
+          "isVertical": false,
+          "objectType": "bed",
+          "position": "B1",
+          "roomId": 47,
+          "roomName": "Next Steps Dorm"
+        },
+        {
+          "bedId": 93,
+          "bedName": "Bed 9",
+          "bedNameNo": 9,
+          "facilityId": 4,
+          "facilityName": "Next Steps Dorm",
+          "isUpper": false,
+          "isVertical": false,
+          "objectType": "bed",
+          "position": "B2",
+          "roomId": 47,
+          "roomName": "Next Steps Dorm"
+        },
+        {
+          "bedId": 98,
+          "bedName": "Bottom Bunk 10",
+          "bedNameNo": 10,
+          "facilityId": 4,
+          "facilityName": "Next Steps Dorm",
+          "isUpper": false,
+          "isVertical": true,
+          "objectType": "bed",
+          "position": "B3",
+          "roomId": 47,
+          "roomName": "Next Steps Dorm"
+        },
+        {
+          "bedId": 97,
+          "bedName": "Top Bunk 11",
+          "bedNameNo": 11,
+          "facilityId": 4,
+          "facilityName": "Next Steps Dorm",
+          "isUpper": true,
+          "isVertical": true,
+          "objectType": "bed",
+          "position": "B3",
+          "roomId": 47,
+          "roomName": "Next Steps Dorm"
+        },
+        {
+          "bedId": 100,
+          "bedName": "Bottom Bunk 12",
+          "bedNameNo": 12,
+          "facilityId": 4,
+          "facilityName": "Next Steps Dorm",
+          "isUpper": false,
+          "isVertical": false,
+          "objectType": "bed",
+          "position": "B4",
+          "roomId": 47,
+          "roomName": "Next Steps Dorm"
+        },
+        {
+          "bedId": 99,
+          "bedName": "Top Bunk 13",
+          "bedNameNo": 13,
+          "facilityId": 4,
+          "facilityName": "Next Steps Dorm",
+          "isUpper": true,
+          "isVertical": false,
+          "objectType": "bed",
+          "position": "B4",
+          "roomId": 47,
+          "roomName": "Next Steps Dorm"
+        },
+        {
+          "bedId": 94,
+          "bedName": "Bed 14",
+          "bedNameNo": 14,
+          "facilityId": 4,
+          "facilityName": "Next Steps Dorm",
+          "isUpper": false,
+          "isVertical": false,
+          "objectType": "bed",
+          "position": "B5",
+          "roomId": 47,
+          "roomName": "Next Steps Dorm"
+        },
+        {
+          "bedId": 96,
+          "bedName": "Bottom Bunk 15",
+          "bedNameNo": 15,
+          "facilityId": 4,
+          "facilityName": "Next Steps Dorm",
+          "isUpper": false,
+          "isVertical": true,
+          "objectType": "bed",
+          "position": "A3",
+          "roomId": 47,
+          "roomName": "Next Steps Dorm"
+        },
+        {
+          "bedId": 95,
+          "bedName": "Top Bunk 16",
+          "bedNameNo": 16,
+          "facilityId": 4,
+          "facilityName": "Next Steps Dorm",
+          "isUpper": true,
+          "isVertical": true,
+          "objectType": "bed",
+          "position": "A3",
+          "roomId": 47,
+          "roomName": "Next Steps Dorm"
+        }
+      ],
+      "direction": "column",
+      "style": {
+        "classes": "Background/Default",
+        "overflow": "visible"
+      }
+    },
+    "scripts": {
+      "customMethods": [
+        {
+          "name": "setLayoutDesigner",
+          "params": [
+            "payload"
+          ],
+          "script": "\timport java.lang\n\t\n\ttableList \u003d self.getChild(\"flexTables\").getChild(\"TableList\")\n\ttableLayout \u003d self.getChild(\"flexTables\").getChild(\"TableLayout\")\n\temvRowQty \u003d self.getChild(\"flexHead\").getChild(\"emvRowQty\")\n\temvColQty \u003d self.getChild(\"flexHead\").getChild(\"emvColQty\")\n\t\n\tif not(payload):\n\t\ttableList.props.data \u003d [] \n\t\ttableList.custom.jsonLastPayload \u003d None\n\t\ttableLayout.props.data \u003d [] \n\t\ttableLayout.custom.jsonLastPayload \u003d None\n\t\temvRowQty.props.params.fieldText \u003d 0\n\t\temvColQty.props.params.fieldText \u003d 0\n\t\treturn\n\t\t\n\tfacilityId \u003d payload.get(\u0027facilityId\u0027)\n\troomId \u003d payload.get(\u0027roomId\u0027)\n\n\t\n\tif facilityId is None and roomId is None:\n\t\t_data \u003d self.getListFacilitiesByGlobalDb()\n\t\t_lstData \u003d self.getListOfDictFromDataset(_data)\n\t\t_rowSize, _colSize, _globalLayoutList \u003d self.getSizeLayoutGlobalDb()\n\t\tsystem.perspective.print((\u0027global: _rowSize, _colSize \u0027,_rowSize, _colSize))\n\t\temvRowQty.props.params.fieldText \u003d str(_rowSize)\n\t\temvColQty.props.params.fieldText \u003d str(_colSize)\n\t\t\n\t\ttableList.props.data \u003d self.joinFacilitiesAndGlobalLayoutList(_lstData, _globalLayoutList)\t\n\n\t\tif _rowSize and _colSize and _globalLayoutList:\n\t\t\tnewGlobalLayoutList \u003d self.getFromTableGlobalList(True)\n\t\t\ttableLayout.setGlobalLayout(_rowSize, _colSize, newGlobalLayoutList)\t\t\t\n\t\t\n\t\t_layoutType \u003d \u0027global\u0027\n\n\telif facilityId is not None and roomId is None:\n\t\t_data \u003d self.getListRoomsByFacilityDb(facilityId)\n\t\t_lstData \u003d self.getListOfDictFromDataset(_data)\n\t\t_rowSize, _colSize, _facilityLayoutList \u003d self.getSizeLayoutFacilityDb(facilityId)\n\t\t#ystem.perspective.print((\u0027facility: _rowSize, _colSize \u0027,_rowSize, _colSize))\n\t\temvRowQty.props.params.fieldText \u003d str(_rowSize)\n\t\temvColQty.props.params.fieldText \u003d str(_colSize)\n\t\t\n\t\ttableList.props.data \u003d self.joinRoomsAndFacilityLayoutList(_lstData, _facilityLayoutList)\n\n\t\tif _rowSize and _colSize and _facilityLayoutList:\n\t\t\tnewfacilityLayoutList \u003d self.getFromTableFacilityList(True)\n\t\t\ttableLayout.setFacilityLayout(facilityId, _rowSize, _colSize, newfacilityLayoutList)\t\t\n\t\t\t\t\t\n\t\t_layoutType \u003d \u0027facility\u0027\n\n\telif roomId is not None:\n\t\t_data \u003d self.getListBedsByRoomDb(roomId)\n\t\t_lstData \u003d self.getListOfDictFromDataset(_data)\n\t\t_rowSize, _colSize, _roomLayoutList \u003d self.getSizeLayoutRoomDb(roomId)\n\t\t#ystem.perspective.print((\u0027_rowSize, _colSize \u0027,_rowSize, _colSize))\n\t\temvRowQty.props.params.fieldText \u003d str(_rowSize)\n\t\temvColQty.props.params.fieldText \u003d str(_colSize)\n\t\t\n\t\ttableList.props.data \u003d self.joinBedsAndRoomLayoutList(_lstData, _roomLayoutList)\n\t\tif _rowSize and _colSize and _roomLayoutList:\n\t\t\ttableLayout.setRoomLayout(roomId, _rowSize, _colSize, _roomLayoutList)\n\t\t\n\t\t_layoutType \u003d \u0027room\u0027\n\n\telse:\n\t\traise  ValueError(\u0027Not defined for payload: {}\u0027.format(payload))\n\t\n\t\t\n\ttableList.props.columns \u003d tableList.getPropsColumns(_data, _layoutType)\n"
+        },
+        {
+          "name": "getListBedsByRoomDb",
+          "params": [
+            "roomId"
+          ],
+          "script": "\tquery \u003d \t\"\"\"\nDECLARE @roomId int \u003d ?;\n\nSELECT \n\t \u0027bed\u0027 AS [objectType]\n\t,[Room].[id] AS [roomId]\n\t,[Bed].[id] AS [bedId]\n\t,[Room].[roomName]\n\t,[Bed].[bedName]\n\t,ISNULL(TRY_CONVERT(int, SUBSTRING([bedName], PATINDEX(\u0027%[0-9]%\u0027, [bedName]), LEN([bedName]))),-1) AS [bedNameNo] \n\t,\u0027\u0027 AS [position]\n\t,cast(0 AS bit) AS [isVertical]\n\t,cast(0 AS bit) AS [isUpper]\n\t,\u0027\u0027 AS [error]\nFROM [lodging].[Bed]\n\tINNER JOIN [lodging].[Room] ON [Bed].[roomId] \u003d [Room].[id]\nWHERE 1\u003d1\n\tAND [Room].[timeRetired] is NULL\n\tAND [Bed].[timeRetired] is NULL\n\tAND [Room].[Id] \u003d @roomId\nORDER BY [bedNameNo]\n\"\"\"\n\n\n\n\t#ystem.perspective.print((\u0027Exec:\u0027,roomId)) \n\tresult \u003d system.db.runPrepQuery(query, [roomId], \u0027RITIOps\u0027)\n\treturn result"
+        },
+        {
+          "name": "getFromTableRoomList",
+          "params": [],
+          "script": "\ttableList \u003d self.getChild(\"flexTables\").getChild(\"TableList\")\n\troomLayoutList \u003d [{\t\"bedId\":x[\"bedId\"],\n\t\t\t\t\t\t\"position\":x[\u0027position\u0027], \n\t\t\t\t\t\t\"isVertical\":x[\"isVertical\"], \n\t\t\t\t\t\t\"isUpper\":x[\"isUpper\"]} \n\t\t\t\t\t\tfor x in tableList.props.data  if x[\u0027position\u0027]]\n\t\n\treturn roomLayoutList"
+        },
+        {
+          "name": "getFromTableFacilityList",
+          "params": [
+            "includeLayout\u003dFalse"
+          ],
+          "script": "\ttableList \u003d self.getChild(\"flexTables\").getChild(\"TableList\")\n\t\n\tif includeLayout:\n\t\tfacilityLayoutList \u003d [{\"roomId\":x[\"roomId\"], \n\t\t\t\t\t\t\t\t\"position\":x[\u0027position\u0027],\n\t\t\t\t\t\t\t\t\"rowSize\": x[\u0027rowSize\u0027],\n\t\t\t\t\t\t\t\t\"colSize\": x[\u0027colSize\u0027],\n\t\t\t\t\t\t\t\t\"jsonLayout\": x[\u0027jsonLayout\u0027]} for x in tableList.props.data if x[\u0027position\u0027]]\n\telse:\n\t\tfacilityLayoutList \u003d [{\"roomId\":x[\"roomId\"]\n\t\t\t\t\t\t\t\t,\"position\":x[\u0027position\u0027]} for x in tableList.props.data if x[\u0027position\u0027]]\n\t\n\treturn facilityLayoutList"
+        },
+        {
+          "name": "getFromTableGlobalList",
+          "params": [
+            "includeLayout\u003dFalse"
+          ],
+          "script": "\ttableList \u003d self.getChild(\"flexTables\").getChild(\"TableList\")\n\t\n\tif includeLayout:\n\t\tglobalLayoutList \u003d [{\"facilityId\":x[\"facilityId\"], \n\t\t\t\t\t\t\t\t\"position\":x[\u0027position\u0027],\n\t\t\t\t\t\t\t\t\"rowSize\": x[\u0027rowSize\u0027],\n\t\t\t\t\t\t\t\t\"colSize\": x[\u0027colSize\u0027],\n\t\t\t\t\t\t\t\t\"jsonLayout\": x[\u0027jsonLayout\u0027],\n\t\t\t\t\t\t\t\t\"roomsLayout\":x[\u0027roomsLayout\u0027]} \n\t\t\t\t\t\t\t\tfor x in tableList.props.data if x[\u0027position\u0027]]\n\telse:\n\t\tglobalLayoutList \u003d [{\"facilityId\":x[\"facilityId\"], \n\t\t\t\t\t\t\t\t\"position\":x[\u0027position\u0027]} \n\t\t\t\t\t\t\t\tfor x in tableList.props.data if x[\u0027position\u0027]]\n\t\n\treturn globalLayoutList"
+        },
+        {
+          "name": "getSizeLayoutRoomDb",
+          "params": [
+            "roomId"
+          ],
+          "script": "\t\n\tquery \u003d \"\"\"\nSELECT\n\t [rowSize]\n\t,[colSize]\n\t,[jsonLayout]\nFROM [lodging].[RoomLayout]\nWHERE [roomId] \u003d ?\n\t\n\t\"\"\"\n\n\tresult \u003d system.db.runPrepQuery(query,[roomId],\u0027RITIOps\u0027)\n\t\n\tif len(result) !\u003d 1:\n\t\treturn 0, 0, None\n\t\t\n\trowSize \u003d result[0][\u0027rowSize\u0027]\n\tcolSize \u003d result[0][\u0027colSize\u0027]\n\troomLayoutList \u003d system.util.jsonDecode(result[0][\u0027jsonLayout\u0027])\n\t\n\treturn rowSize, colSize, roomLayoutList"
+        },
+        {
+          "name": "getSizeLayoutFacilityDb",
+          "params": [
+            "facilityId"
+          ],
+          "script": "\t\n\tquery \u003d \"\"\"\nSELECT\n\t [rowSize]\n\t,[colSize]\n\t,[jsonLayout]\nFROM [lodging].[FacilityLayout]\nWHERE [facilityId] \u003d ?\n\t\n\t\"\"\"\n\n\tresult \u003d system.db.runPrepQuery(query,[facilityId],\u0027RITIOps\u0027)\n\t\n\tif len(result) !\u003d 1:\n\t\treturn 0, 0, None\n\t\t\n\trowSize \u003d result[0][\u0027rowSize\u0027]\n\tcolSize \u003d result[0][\u0027colSize\u0027]\n\troomLayoutList \u003d system.util.jsonDecode(result[0][\u0027jsonLayout\u0027])\n\t\n\treturn rowSize, colSize, roomLayoutList"
+        },
+        {
+          "name": "getSizeLayoutGlobalDb",
+          "params": [],
+          "script": "\t\n\tquery \u003d \"\"\"\nSELECT\n\t [rowSize]\n\t,[colSize]\n\t,[jsonLayout]\nFROM [lodging].[GlobalLayout]\n\t\"\"\"\n\n\tresult \u003d system.db.runPrepQuery(query,[],\u0027RITIOps\u0027)\n\t\n\tif len(result) !\u003d 1:\n\t\treturn 0, 0, None\n\t\t\n\trowSize \u003d result[0][\u0027rowSize\u0027]\n\tcolSize \u003d result[0][\u0027colSize\u0027]\n\troomLayoutList \u003d system.util.jsonDecode(result[0][\u0027jsonLayout\u0027])\n\t\n\treturn rowSize, colSize, roomLayoutList"
+        },
+        {
+          "name": "joinBedsAndRoomLayoutList",
+          "params": [
+            "bedList",
+            "roomLayoutList"
+          ],
+          "script": "\t#ystem.perspective.print((\u0027input bedList, roomLayoutList:\u0027,type(bedList), bedList, type(roomLayoutList), roomLayoutList))\n\tif not(roomLayoutList):\n\t\treturn bedList\n\t\t\n\timport copy\n\tnewBedList \u003d []\n\t\n\tfor bed in bedList:\n\t\titem \u003d copy.deepcopy(bed)\n\t\t_pos \u003d \u0027\u0027\n\t\tfor layoutRow in roomLayoutList:\n\t\t\tif layoutRow[\u0027bedId\u0027] \u003d\u003d bed[\u0027bedId\u0027]:\n\t\t\t\t_pos \u003d layoutRow[\u0027position\u0027]\n\t\t\t\tbreak\n\t\t\t\t\n\t\titem[\u0027position\u0027] \u003d _pos \n\t\titem[\u0027isVertical\u0027] \u003d layoutRow[\u0027isVertical\u0027]\n\t\titem[\u0027isUpper\u0027] \u003d layoutRow[\u0027isUpper\u0027]\n\t\tnewBedList.append(item)\n\treturn newBedList\n\t\n\t_toDel_Example \u003d \"\"\"\n(\u0027input bedList, roomLayoutList:\u0027, \u003ctype \u0027list\u0027\u003e, [{u\u0027bedId\u0027: 86, u\u0027roomId\u0027: 47, u\u0027roomName\u0027: u\u0027Next Steps Dorm\u0027, u\u0027bedName\u0027: u\u0027Bottom Bunk 1\u0027, u\u0027objectType\u0027: u\u0027bed\u0027, u\u0027bedNameNo\u0027: 1, u\u0027isVertical\u0027: False, u\u0027isUpper\u0027: False, u\u0027position\u0027: u\u0027\u0027},\n  {u\u0027bedId\u0027: 85, u\u0027roomId\u0027: 47, u\u0027roomName\u0027: u\u0027Next Steps Dorm\u0027, u\u0027bedName\u0027: u\u0027Top Bunk 2\u0027, u\u0027objectType\u0027: u\u0027bed\u0027, u\u0027bedNameNo\u0027: 2, u\u0027isVertical\u0027: False, u\u0027isUpper\u0027: False, u\u0027position\u0027: u\u0027\u0027}, {u\u0027bedId\u0027: 87, u\u0027roomId\u0027: 47\n  , u\u0027roomName\u0027: u\u0027Next Steps Dorm\u0027, u\u0027bedName\u0027: u\u0027Bed 3\u0027, u\u0027objectType\u0027: u\u0027bed\u0027, u\u0027bedNameNo\u0027: 3, u\u0027isVertical\u0027: False, u\u0027isUpper\u0027: False, u\u0027position\u0027: u\u0027\u0027}\n  , {u\u0027bedId\u0027: 89, u\u0027roomId\u0027: 47, u\u0027roomName\u0027: u\u0027Next Steps Dorm\u0027, u\u0027bedName\u0027: u\u0027Bottom Bunk 4\u0027, u\u0027objectType\u0027: u\u0027bed\u0027, u\u0027bedNameNo\u0027: 4, u\u0027isVertical\u0027: False, u\u0027isUpper\u0027: False, u\u0027position\u0027: u\u0027\u0027},\n   {u\u0027bedId\u0027: 88, u\u0027roomId\u0027: 47, u\u0027roomName\u0027: u\u0027Next Steps Dorm\u0027, u\u0027bedName\u0027: u\u0027Top Bunk 5\u0027, u\u0027objectType\u0027: u\u0027bed\u0027, u\u0027bedNameNo\u0027: 5, u\u0027isVertical\u0027: False, u\u0027isUpper\u0027: False, u\u0027position\u0027: u\u0027\u0027},\n    {u\u0027bedId\u0027: 90, u\u0027roomId\u0027: 47, u\u0027roomName\u0027: u\u0027Next Steps Dorm\u0027, u\u0027bedName\u0027: u\u0027Bed 6\u0027, u\u0027objectType\u0027: u\u0027bed\u0027, u\u0027bedNameNo\u0027: 6, u\u0027isVertical\u0027: False, u\u0027isUpper\u0027: False, u\u0027position\u0027: u\u0027\u0027},\n     {u\u0027bedId\u0027: 92, u\u0027roomId\u0027: 47, u\u0027roomName\u0027: u\u0027Next Steps Dorm\u0027, u\u0027bedName\u0027: u\u0027Bottom Bunk 7\u0027, u\u0027objectType\u0027: u\u0027bed\u0027, u\u0027bedNameNo\u0027: 7, u\u0027isVertical\u0027: False, u\u0027isUpper\u0027: False, u\u0027position\u0027: u\u0027\u0027},\n      {u\u0027bedId\u0027: 91, u\u0027roomId\u0027: 47, u\u0027roomName\u0027: u\u0027Next Steps Dorm\u0027, u\u0027bedName\u0027: u\u0027Top Bunk 8\u0027, u\u0027objectType\u0027: u\u0027bed\u0027, u\u0027bedNameNo\u0027: 8, u\u0027isVertical\u0027: False, u\u0027isUpper\u0027: False, u\u0027position\u0027: u\u0027\u0027}\n      , {u\u0027bedId\u0027: 93, u\u0027roomId\u0027: 47, u\u0027roomName\u0027: u\u0027Next Steps Dorm\u0027, u\u0027bedName\u0027: u\u0027Bed 9\u0027, u\u0027objectType\u0027: u\u0027bed\u0027, u\u0027bedNameNo\u0027: 9, u\u0027isVertical\u0027: False, u\u0027isUpper\u0027: False, u\u0027position\u0027: u\u0027\u0027}\n      , {u\u0027bedId\u0027: 98, u\u0027roomId\u0027: 47, u\u0027roomName\u0027: u\u0027Next Steps Dorm\u0027, u\u0027bedName\u0027: u\u0027Bottom Bunk 10\u0027, u\u0027objectType\u0027: u\u0027bed\u0027, u\u0027bedNameNo\u0027: 10, u\u0027isVertical\u0027: False, u\u0027isUpper\u0027: False, u\u0027position\u0027: u\u0027\u0027}\n      , {u\u0027bedId\u0027: 97, u\u0027roomId\u0027: 47, u\u0027roomName\u0027: u\u0027Next Steps Dorm\u0027, u\u0027bedName\u0027: u\u0027Top Bunk 11\u0027, u\u0027objectType\u0027: u\u0027bed\u0027, u\u0027bedNameNo\u0027: 11, u\u0027isVertical\u0027: False, u\u0027isUpper\u0027: False, u\u0027position\u0027: u\u0027\u0027}\n      , {u\u0027bedId\u0027: 100, u\u0027roomId\u0027: 47, u\u0027roomName\u0027: u\u0027Next Steps Dorm\u0027, u\u0027bedName\u0027: u\u0027Bottom Bunk 12\u0027, u\u0027objectType\u0027: u\u0027bed\u0027, u\u0027bedNameNo\u0027: 12, u\u0027isVertical\u0027: False, u\u0027isUpper\u0027: False, u\u0027position\u0027: u\u0027\u0027},\n       {u\u0027bedId\u0027: 99, u\u0027roomId\u0027: 47, u\u0027roomName\u0027: u\u0027Next Steps Dorm\u0027, u\u0027bedName\u0027: u\u0027Top Bunk 13\u0027, u\u0027objectType\u0027: u\u0027bed\u0027, u\u0027bedNameNo\u0027: 13, u\u0027isVertical\u0027: False, u\u0027isUpper\u0027: False, u\u0027position\u0027: u\u0027\u0027}\n       , {u\u0027bedId\u0027: 94, u\u0027roomId\u0027: 47, u\u0027roomName\u0027: u\u0027Next Steps Dorm\u0027, u\u0027bedName\u0027: u\u0027Bed 14\u0027, u\u0027objectType\u0027: u\u0027bed\u0027, u\u0027bedNameNo\u0027: 14, u\u0027isVertical\u0027: False, u\u0027isUpper\u0027: False, u\u0027position\u0027: u\u0027\u0027},\n        {u\u0027bedId\u0027: 96, u\u0027roomId\u0027: 47, u\u0027roomName\u0027: u\u0027Next Steps Dorm\u0027, u\u0027bedName\u0027: u\u0027Bottom Bunk 15\u0027, u\u0027objectType\u0027: u\u0027bed\u0027, u\u0027bedNameNo\u0027: 15, u\u0027isVertical\u0027: False, u\u0027isUpper\u0027: False, u\u0027position\u0027: u\u0027\u0027}\n        , {u\u0027bedId\u0027: 95, u\u0027roomId\u0027: 47, u\u0027roomName\u0027: u\u0027Next Steps Dorm\u0027, u\u0027bedName\u0027: u\u0027Top Bunk 16\u0027, u\u0027objectType\u0027: u\u0027bed\u0027, u\u0027bedNameNo\u0027: 16, u\u0027isVertical\u0027: False, u\u0027isUpper\u0027: False, u\u0027position\u0027: u\u0027\u0027}]\n , \u003ctype \u0027list\u0027\u003e, [{u\u0027bedId\u0027: 86, u\u0027isVertical\u0027: False, u\u0027isUpper\u0027: False, u\u0027position\u0027: \u0027C1\u0027}, {u\u0027bedId\u0027: 85, u\u0027isVertical\u0027: False, u\u0027isUpper\u0027: True, u\u0027position\u0027: \u0027C1\u0027}, {u\u0027bedId\u0027: 87, u\u0027isVertical\u0027: False, u\u0027isUpper\u0027: False, u\u0027position\u0027: \u0027C2\u0027},\n  {u\u0027bedId\u0027: 89, u\u0027isVertical\u0027: True, u\u0027isUpper\u0027: True, u\u0027position\u0027: \u0027C3\u0027}, {u\u0027bedId\u0027: 88, u\u0027isVertical\u0027: True, u\u0027isUpper\u0027: False, u\u0027position\u0027: \u0027C3\u0027}, {u\u0027bedId\u0027: 90, u\u0027isVertical\u0027: False, u\u0027isUpper\u0027: False, u\u0027position\u0027: \u0027C5\u0027},\n   {u\u0027bedId\u0027: 92, u\u0027isVertical\u0027: False, u\u0027isUpper\u0027: False, u\u0027position\u0027: \u0027B1\u0027}, {u\u0027bedId\u0027: 91, u\u0027isVertical\u0027: False, u\u0027isUpper\u0027: True, u\u0027position\u0027: \u0027B1\u0027}, {u\u0027bedId\u0027: 93, u\u0027isVertical\u0027: False, u\u0027isUpper\u0027: False, u\u0027position\u0027: \u0027B2\u0027}\n   , {u\u0027bedId\u0027: 98, u\u0027isVertical\u0027: True, u\u0027isUpper\u0027: False, u\u0027position\u0027: \u0027B3\u0027}, {u\u0027bedId\u0027: 97, u\u0027isVertical\u0027: True, u\u0027isUpper\u0027: True, u\u0027position\u0027: \u0027B3\u0027}, {u\u0027bedId\u0027: 100, u\u0027isVertical\u0027: False, u\u0027isUpper\u0027: False, u\u0027position\u0027: \u0027B4\u0027},\n    {u\u0027bedId\u0027: 99, u\u0027isVertical\u0027: False, u\u0027isUpper\u0027: True, u\u0027position\u0027: \u0027B4\u0027}, {u\u0027bedId\u0027: 94, u\u0027isVertical\u0027: False, u\u0027isUpper\u0027: False, u\u0027position\u0027: \u0027B5\u0027}, {u\u0027bedId\u0027: 96, u\u0027isVertical\u0027: True, u\u0027isUpper\u0027: False, u\u0027position\u0027: \u0027A3\u0027},\n     {u\u0027bedId\u0027: 95, u\u0027isVertical\u0027: True, u\u0027isUpper\u0027: True, u\u0027position\u0027: \u0027A3\u0027}])\n\t\n\t\n\t\"\"\""
+        },
+        {
+          "name": "joinRoomsAndFacilityLayoutList",
+          "params": [
+            "roomList",
+            "facilityLayoutList"
+          ],
+          "script": "\t#system.perspective.print((\u0027input roomList:\u0027,type(roomList), roomList[:3]))\n\t#system.perspective.print((\u0027input facilityLayoutList:\u0027,type(facilityLayoutList),  facilityLayoutList[:3]))\n\tif not(facilityLayoutList):\n\t\treturn roomList\n\t\t\n\timport copy\n\tnewRoomList \u003d []\n\t\n\tfor room in roomList:\n\t\titem \u003d copy.deepcopy(room)\n\t\t_pos \u003d \u0027\u0027\n\t\tfor layoutRow in facilityLayoutList:\n\t\t\tif layoutRow[\u0027roomId\u0027] \u003d\u003d room[\u0027roomId\u0027]:\n\t\t\t\t_pos \u003d layoutRow[\u0027position\u0027]\n\t\t\t\tbreak\n\t\t\t\t\n\t\titem[\u0027position\u0027] \u003d \t_pos\n\t\t#item[\u0027isVertical\u0027] \u003d layoutRow[\u0027isVertical\u0027]\n\t\t#item[\u0027isUpper\u0027] \u003d layoutRow[\u0027isUpper\u0027]\n\t\tnewRoomList.append(item)\n\treturn newRoomList"
+        },
+        {
+          "name": "joinFacilitiesAndGlobalLayoutList",
+          "params": [
+            "facilityList",
+            "globalLayoutList"
+          ],
+          "script": "\tif not(globalLayoutList):\n\t\treturn facilityList\n\t\t\n\timport copy\n\tnewFacilityList \u003d []\n\t\n\tfor facility in facilityList:\n\t\titem \u003d copy.deepcopy(facility)\n\t\t_pos \u003d \u0027\u0027\n\t\tfor layoutRow in globalLayoutList:\n\t\t\tif layoutRow[\u0027facilityId\u0027] \u003d\u003d facility[\u0027facilityId\u0027]:\n\t\t\t\t_pos \u003d layoutRow[\u0027position\u0027]\n\t\t\t\tbreak\n\t\t\t\t\n\t\titem[\u0027position\u0027] \u003d _pos\n\n\t\tnewFacilityList.append(item)\n\treturn newFacilityList"
+        },
+        {
+          "name": "getListOfDictFromDataset",
+          "params": [
+            "dataset"
+          ],
+          "script": "\t\n\t_colNames \u003d system.dataset.getColumnHeaders(dataset)\n\t\n\tif dataset.rowCount \u003d\u003d 0:\n\t\t_lstData \u003d [{col: None for col in _colNames}]\n\telse:\n\t\t_pyds \u003d system.dataset.toPyDataSet(dataset)\n\t\t_lstData \u003d [{col: row[col] for col in _colNames} for row in _pyds]\n\t\n\treturn _lstData"
+        },
+        {
+          "name": "saveToDb",
+          "params": [
+            "params"
+          ],
+          "script": "\tsystem.perspective.print((\u0027params save:\u0027,params)) \n\n\troomId \u003d params.get(\u0027roomId\u0027)\n\tfacilityId \u003d params.get(\u0027facilityId\u0027)\n\tbedId \u003d params.get(\u0027bedId\u0027)\n\trowSize \u003d params.get(\u0027rowSize\u0027)\n\tcolSize \u003d params.get(\u0027colSize\u0027)\n\tjsonLayout \u003d params.get(\u0027jsonLayout\u0027)\n\ttimeCreated \u003d system.date.now()\n\tuserName \u003d self.session.props.auth.user.userName\n\n\tsystem.perspective.print((\u0027_userName:\u0027,userName)) \n\t\n\tif facilityId and roomId is None:\n\t\targs \u003d [rowSize,colSize,jsonLayout,timeCreated,userName]\n\t\tupsertQuery \u003d \"\"\"\n\tDECLARE @rowSize INT \u003d ?\n\t\t,@colSize INT \u003d ?\n\t\t,@jsonLayout NVARCHAR(max) \u003d ?\n\t\t,@timeCreated datetime \u003d ?\n\t\t,@userName VARCHAR(100) \u003d ?;\n\t\t\t\t\t\n\tIF EXISTS(SELECT 1 FROM [lodging].[GlobalLayout]) \n\tBEGIN\n\t\tUPDATE [lodging].[GlobalLayout]\n\t\tSET [rowSize] \u003d @rowSize\n\t\t\t,[colSize] \u003d @colSize\n\t\t\t,[jsonLayout] \u003d @jsonLayout\n\t\t\t,[timeCreated] \u003d @timeCreated\n\t\t\t,[userName] \u003d @userName\n\t\tWHERE [Id] \u003d1 \n\tEND\n\tELSE\n\tBEGIN\n\t\tINSERT INTO [lodging].[GlobalLayout]\n\t\t\t([rowSize]\n\t\t\t,[colSize]\n\t\t\t,[jsonLayout]\n\t\t\t,[timeCreated]\n\t\t\t,[userName])\n\t\tVALUES (@rowSize,@colSize,@jsonLayout,@timeCreated,@userName)\n\tEND\t\t\n\t\t\n\"\"\"\n\telif facilityId and roomId:\n\t\targs \u003d [facilityId,rowSize,colSize,jsonLayout,timeCreated,userName]\n\t\tupsertQuery \u003d \"\"\"\n\t\tDECLARE @facilityId INT \u003d ?\n\t\t\t,@rowSize INT \u003d ?\n\t\t\t,@colSize INT \u003d ?\n\t\t\t,@jsonLayout NVARCHAR(max) \u003d ?\n\t\t\t,@timeCreated datetime \u003d ?\n\t\t\t,@userName VARCHAR(100) \u003d ?;\n\t\t\t\t\n\t\tIF EXISTS(SELECT 1 FROM [lodging].[FacilityLayout] WHERE facilityId \u003d @facilityId) \n\t\tBEGIN\n\t\t\tUPDATE [lodging].[FacilityLayout]\n\t\t\tSET [rowSize] \u003d @rowSize\n\t\t\t\t,[colSize] \u003d @colSize\n\t\t\t\t,[jsonLayout] \u003d @jsonLayout\n\t\t\t\t,[timeCreated] \u003d @timeCreated\n\t\t\t\t,[userName] \u003d @userName\n\t\t\tWHERE [facilityId] \u003d @facilityId \n\t\tEND\n\t\tELSE\n\t\tBEGIN\n\t\t\tINSERT INTO [lodging].[FacilityLayout]\n\t\t\t\t([facilityId]\n\t\t\t\t,[rowSize]\n\t\t\t\t,[colSize]\n\t\t\t\t,[jsonLayout]\n\t\t\t\t,[timeCreated]\n\t\t\t\t,[userName])\n\t\t\tVALUES (@facilityId ,@rowSize,@colSize,@jsonLayout,@timeCreated,@userName)\n\t\tEND\n\t\t\"\"\"\n\telif roomId and bedId:\n\t\targs \u003d [roomId,rowSize,colSize,jsonLayout,timeCreated,userName]\n\t\tupsertQuery \u003d \"\"\"\n\t\tDECLARE @roomId INT \u003d ?\n\t\t\t,@rowSize INT \u003d ?\n\t\t\t,@colSize INT \u003d ?\n\t\t\t,@jsonLayout NVARCHAR(max) \u003d ?\n\t\t\t,@timeCreated datetime \u003d ?\n\t\t\t,@userName VARCHAR(100) \u003d ?;\n\t\t\n\t\tIF EXISTS(SELECT 1 FROM [lodging].[RoomLayout] WHERE roomId \u003d @roomId) \n\t\tBEGIN\n\t\t\tUPDATE [lodging].[RoomLayout]\n\t\t\tSET [rowSize] \u003d @rowSize\n\t\t\t\t,[colSize] \u003d @colSize\n\t\t\t\t,[jsonLayout] \u003d @jsonLayout\n\t\t\t\t,[timeCreated] \u003d @timeCreated\n\t\t\t\t,[userName] \u003d @userName\n\t\t\tWHERE [roomId] \u003d @roomId \n\t\tEND\n\t\tELSE\n\t\tBEGIN\n\t\t\tINSERT INTO [lodging].[RoomLayout]\n\t\t\t\t([roomId]\n\t\t\t\t,[rowSize]\n\t\t\t\t,[colSize]\n\t\t\t\t,[jsonLayout]\n\t\t\t\t,[timeCreated]\n\t\t\t\t,[userName])\n\t\t\tVALUES (@roomId ,@rowSize,@colSize,@jsonLayout,@timeCreated,@userName)\n\t\tEND\n\t\t\"\"\"\n\telse:\n\t\traise NotImplementedError(\u0027Not defined scenario!\u0027)\n\t\n\tresult \u003d system.db.runPrepUpdate(upsertQuery,args,\u0027RITIOps\u0027)\n\t\n\t#ystem.perspective.print((\u0027result:\u0027,result)) \t\n\t\t\n\t"
+        },
+        {
+          "name": "getListRoomsByFacilityDb",
+          "params": [
+            "facilityId"
+          ],
+          "script": "\tquery \u003d \t\"\"\"\nDECLARE @facilityId int \u003d ?;\n\t\nSELECT \n\t \u0027room\u0027 AS [objectType]\n\t,[Facility].[id] AS [facilityId]\n\t,[Room].[id] AS [roomId]\n\t,[Facility].[facilityName]\n\t,[Room].[roomName]\n\t,\u0027\u0027 AS [position]\n\t,[RoomLayout].[rowSize]\n\t,[RoomLayout].[colSize]\n\t,[RoomLayout].[jsonLayout]\n\t,\u0027\u0027 AS [error]\nFROM [lodging].[Room] \n\tINNER JOIN [lodging].[Facility] ON [Room].[facilityId] \u003d [Facility].[id]\n\tLEFT JOIN [lodging].[RoomLayout] ON [RoomLayout].[roomId] \u003d [Room].[id]\nWHERE 1\u003d1\n\tAND [Facility].[timeRetired] is NULL \n\tAND [Room].[timeRetired] is NULL\n\tAND [Facility].[Id] \u003d @facilityId\n\tAND [RoomLayout].[rowSize] IS NOT NULL\n\tAND [RoomLayout].[colSize] IS NOT NULL\n\tAND [RoomLayout].[jsonLayout] IS NOT NULL\nORDER BY [roomName]\n\"\"\"\n\n\t#system.perspective.print((\u0027Exec:\u0027,roomId)) \n\tresult \u003d system.db.runPrepQuery(query, [facilityId], \u0027RITIOps\u0027)\n\treturn result\n"
+        },
+        {
+          "name": "getListFacilitiesByGlobalDb",
+          "params": [],
+          "script": "\tquery \u003d \t\"\"\"\nSELECT \n\t [Facility].[Id] AS [facilityId]\n\t,[facilityName] \n\t,\u0027\u0027 AS [position]\n\t,[FacilityLayout].[rowSize]\n\t,[FacilityLayout].[colSize]\n\t,[FacilityLayout].[jsonLayout]\n\t,\u0027\u0027 AS [error]\n\t,(\tSELECT\n\t\t\t [Room].[id] AS [roomId]\n\t\t\t,[Room].[roomName]\n\t\t\t,[RoomLayout].[rowSize]\n\t\t\t,[RoomLayout].[colSize]\n\t\t\t,j.[position]\n\t\t\t,(SELECT *\n\t\t\t\tFROM OPENJSON([RoomLayout].[jsonLayout]) \n\t\t\t\tWITH (bedId\t\t\tINT\t\t\t\t\u0027$.bedId\u0027,  \n\t\t\t\t\t  position\t\tNVARCHAR(10)\t\u0027$.position\u0027,\n\t\t\t\t\t  isVertical\tbit\t\t\t\t\u0027$.isVertical\u0027,\n\t\t\t\t\t  isUpper\t\tbit\t\t\t\t\u0027$.isUpper\u0027)\n\t\t\t\tFOR JSON PATH) AS [jsonLayout]\n\t\tFROM [lodging].[Room] \n\t\t\tLEFT JOIN [lodging].[RoomLayout] ON [RoomLayout].[roomId] \u003d [Room].[id]\n\t\t\tINNER JOIN OPENJSON([FacilityLayout].[jsonLayout]) \n\t\t\t\t\t\tWITH (\troomId\t\tINT\t\t\t\t\u0027$.roomId\u0027,  \n\t\t\t\t\t\t\t\tposition\tNVARCHAR(10)\t\u0027$.position\u0027) j ON j.[roomId] \u003d [Room].[id]\n\t\tWHERE [Room].[facilityId] \u003d [Facility].[Id]\n\t\tFOR JSON PATH\n\t\t) AS roomsLayout\nFROM [lodging].[Facility]\n\tLEFT JOIN [lodging].[FacilityLayout] ON [FacilityLayout].[facilityId] \u003d [Facility].[id]\nWHERE 1\u003d1\n\tAND [Facility].[timeRetired] is NULL \n\tAND [FacilityLayout].[rowSize] IS NOT NULL\n\tAND [FacilityLayout].[colSize] IS NOT NULL\n\tAND [FacilityLayout].[jsonLayout] IS NOT NULL\nORDER BY [facilityName]\n\"\"\"\n\n\t#system.perspective.print((\u0027Exec:\u0027,roomId)) \n\tresult \u003d system.db.runPrepQuery(query, [], \u0027RITIOps\u0027)\n\treturn result\n"
+        }
+      ],
+      "extensionFunctions": null,
+      "messageHandlers": [
+        {
+          "messageType": "mhSetLayoutDesigner",
+          "pageScope": true,
+          "script": "\t\n\n\tself.setLayoutDesigner(payload)\t\n\tself.custom.jsonLastPayload \u003d system.util.jsonEncode(payload)\n\tsystem.perspective.print((\u0027setLayoutDesigner\u0027, payload))",
+          "sessionScope": false,
+          "viewScope": false
+        }
+      ]
+    },
+    "type": "ia.container.flex"
+  }
+}

@@ -1,0 +1,839 @@
+{
+  "custom": {
+    "filters": []
+  },
+  "params": {
+    "activity_range": 60,
+    "age_max": {
+      "$": [
+        "ds",
+        192,
+        1622073639360
+      ],
+      "$columns": [
+        {
+          "data": [
+            101
+          ],
+          "name": "value",
+          "type": "Integer"
+        },
+        {
+          "data": [
+            101
+          ],
+          "name": "label",
+          "type": "Integer"
+        }
+      ]
+    },
+    "age_min": {
+      "$": [
+        "ds",
+        192,
+        1622073639358
+      ],
+      "$columns": [
+        {
+          "data": [
+            101
+          ],
+          "name": "value",
+          "type": "Integer"
+        },
+        {
+          "data": [
+            101
+          ],
+          "name": "label",
+          "type": "Integer"
+        }
+      ]
+    }
+  },
+  "propConfig": {
+    "custom.filters": {
+      "binding": {
+        "config": {
+          "path": "session.custom.filters"
+        },
+        "transforms": [
+          {
+            "code": "\treturn filters.retrievePageFilters(value, self.page.props.pageId)",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      },
+      "persistent": true
+    },
+    "params.activity_range": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.age_max": {
+      "binding": {
+        "config": {
+          "path": "/root/Table.props.data"
+        },
+        "transforms": [
+          {
+            "code": "\theaders \u003d [\"value\", \"label\"]\n\tdata \u003d []\n\tif value \u003d\u003d None:\n\t\tpass\n\telif len(value) \u003d\u003d 0:\n\t\tpass\n\telse:\n\t\ts \u003d set()\n\t\tfor item in range(len(value)):\n\t\t\t#for val in value[item].values():\n\t\t\t#\ts.add(val)\n\t\t\tval \u003d value[item].value.age\n\t\t\tif val \u003d\u003d \u0027\u0027:\n\t\t\t\tcontinue\n\t\t\telse:\n\t\t\t\tlabel \u003d val\n\t\t\tif val in s:\n\t\t\t\tcontinue\n\t\t\telse:\n\t\t\t\tlist \u003d [val,label]\n\t\t\t\tdata.append(list)\n\t\t\t\ts.add(val)\n\tdata.sort()\n\tdataset \u003d system.dataset.toDataSet(headers, data)\n\treturn dataset\t\n\t\n\t\n\t\u0027\u0027\u0027\n\tpyDS \u003d system.dataset.toPyDataSet(value)\t\n\t\n\theaders \u003d [\"value\", \"label\"]\n\tdata \u003d []\n\tif pyDS \u003d\u003d None:\n\t\tpass\n\telif pyDS.rowCount \u003d\u003d 0:\n\t\tpass\n\telse:\n\t\ts \u003d set()\n\t\tfor item in range(pyDS.rowCount):\n\t\t\tval \u003d pyDS.getValueAt(item, \"age\")\n\t\t\tif val \u003d\u003d \u0027\u0027:\n\t\t\t\tcontinue\n\t\t\telse:\n\t\t\t\tlabel \u003d val\n\t\t\tif val in s:\n\t\t\t\tcontinue\n\t\t\telse:\n\t\t\t\tlist \u003d [val,label]\n\t\t\t\tdata.append(list)\n\t\t\t\ts.add(val)\n\tdata.sort()\n\tdataset \u003d system.dataset.toDataSet(headers, data)\n\treturn dataset",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    },
+    "params.age_min": {
+      "binding": {
+        "config": {
+          "path": "/root/Table.props.data"
+        },
+        "transforms": [
+          {
+            "code": "\t\n\theaders \u003d [\"value\", \"label\"]\n\tdata \u003d []\n\tif value \u003d\u003d None:\n\t\tpass\n\telif len(value) \u003d\u003d 0:\n\t\tpass\n\telse:\n\t\ts \u003d set()\n\t\tfor item in range(len(value)):\n\t\t\t#for val in value[item].values():\n\t\t\t#\ts.add(val)\n\t\t\tval \u003d value[item].value.age\n\t\t\tif val \u003d\u003d \u0027\u0027:\n\t\t\t\tcontinue\n\t\t\telse:\n\t\t\t\tlabel \u003d val\n\t\t\tif val in s:\n\t\t\t\tcontinue\n\t\t\telse:\n\t\t\t\tlist \u003d [val,label]\n\t\t\t\tdata.append(list)\n\t\t\t\ts.add(val)\n\tdata.sort()\n\tdataset \u003d system.dataset.toDataSet(headers, data)\n\treturn dataset\n\n\t\u0027\u0027\u0027\n\tpyDS \u003d system.dataset.toPyDataSet(value)\t\n\t\n\theaders \u003d [\"value\", \"label\"]\n\tdata \u003d []\n\tif pyDS \u003d\u003d None:\n\t\tpass\n\telif pyDS.rowCount \u003d\u003d 0:\n\t\tpass\n\telse:\n\t\ts \u003d set()\n\t\tfor item in range(pyDS.rowCount):\n\t\t\tval \u003d pyDS.getValueAt(item, \"age\")\n\t\t\tif val \u003d\u003d \u0027\u0027:\n\t\t\t\tcontinue\n\t\t\telse:\n\t\t\t\tlabel \u003d val\n\t\t\tif val in s:\n\t\t\t\tcontinue\n\t\t\telse:\n\t\t\t\tlist \u003d [val,label]\n\t\t\t\tdata.append(list)\n\t\t\t\ts.add(val)\n\tdata.sort()\n\tdataset \u003d system.dataset.toDataSet(headers, data)\n\treturn dataset",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 713,
+      "width": 2109
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "Label_0"
+        },
+        "position": {
+          "basis": "25px"
+        },
+        "propConfig": {
+          "props.text": {
+            "binding": {
+              "config": {
+                "path": "view.custom.filters"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "style": {
+            "classes": "Table/Filter_Header_Container Text/Error_Message"
+          }
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "events": {
+          "component": {
+            "onRowClick": {
+              "config": {
+                "script": "\tselectedColumn \u003d self.props.selection.selectedColumn\n\t#system.perspective.print(selectedColumn)\n\tif selectedColumn \u003d\u003d \"name\": \n\t\t##Display the detail screen\n\t\tparticipantID \u003d self.props.data[event.row][\u0027value\u0027][\u0027participant_id\u0027]\n\t\ttab_id \u003d 30\n\t\tsystem.perspective.navigate(\"Participants/Detail/\" + str(participantID) + \"/\" + str(tab_id))\n\telif selectedColumn \u003d\u003d \"id\":\n\t\tparticipantID \u003d str(self.props.data[event.row][\u0027value\u0027][\u0027participant_id\u0027])\n\t\tid \u003d \"PreviewParticipant\" \n\t\tparams \u003d {\"participantID\":participantID}\n\t\tsystem.perspective.openDock(id\u003did,params\u003dparams)\n\telse:\n\t\tpass"
+              },
+              "scope": "G",
+              "type": "script"
+            }
+          }
+        },
+        "meta": {
+          "name": "Table"
+        },
+        "position": {
+          "basis": "100%"
+        },
+        "propConfig": {
+          "custom.filteredData": {
+            "binding": {
+              "config": {
+                "struct": {
+                  "filters": "{this.custom.filters}",
+                  "source": "hasChanged({this.custom.sqlData})"
+                },
+                "waitOnAll": true
+              },
+              "transforms": [
+                {
+                  "code": "\treturn filtering.doFilter(self.custom.sqlData, self.custom.filters)",
+                  "type": "script"
+                }
+              ],
+              "type": "expr-struct"
+            },
+            "onChange": {
+              "enabled": null,
+              "script": "\tdataset \u003d currentValue.value\n\t\n\tif dataset \u003d\u003d None:\n\t\t#system.perspective.sendMessage(\"newParticipantsReferralsMonthly\", payload \u003d {\"newParticipantsReferralsMonthly\": 0}, scope \u003d \"page\")\n\t\treturn\n\n\tidlist \u003d []\n\tfor i in range(dataset.getRowCount()):\n\t\tidlist.append(str(dataset.getValueAt(i, \"participant_id\")))\n\tstrIdList \u003d \u0027,\u0027.join(idlist)\n\tparams \u003d {\"IdList\": strIdList}\n\t\n\t#KPI3 Interviews Monthly\n\tresult3 \u003d system.db.runNamedQuery(\"Participants/Referrals/KPI/NewReferralsMonthly\", params)\n\tMonthCount \u003d 6\n\tnewReferralsMonthly \u003d []\n\tnow \u003d system.date.now()\n\tfor i in reversed(range(MonthCount)):\n\t\timonthago \u003d system.date.addMonths(now, -i)\n\t\tcmonthago \u003d system.date.addMonths(imonthago, 1)\n\t\tmonth \u003d system.date.getMonth(imonthago) + 1\n\t\tdateMonth \u003d system.date.getMonth(imonthago)\n\t\tdateYear \u003d system.date.getYear(imonthago)\n\t\tdate \u003d system.date.getDate(dateYear, dateMonth, 01)\n\t\tdatetime \u003d system.date.setTime(date, 00, 00, 00)\n\t\tappend_item \u003d {\"time\": system.date.format(datetime, \"M/d/yyyy\") , \"Participants\": 0}\n\t\tresultMonths \u003d 0\n\t\tfor row in range(result3.getRowCount()):\n\t\t\tresultMonth \u003d result3.getValueAt(row, \"referral_month\")\n\t\t\tif month \u003d\u003d resultMonth:\n\t\t\t\tresultMonths +\u003d 1\n\t\t\t\t\n\t\tappend_item[\"Participants\"] \u003d resultMonths\n\t\tnewReferralsMonthly.append(append_item)\n\t\t\n\t\t#Update Applicants Per Month KPIs\n\t\tsystem.perspective.sendMessage(\"newParticipantsReferralsMonthly\", payload \u003d {\"newParticipantsReferralsMonthly\": newReferralsMonthly}, scope \u003d \"page\")"
+            }
+          },
+          "custom.filters": {
+            "binding": {
+              "config": {
+                "path": "session.custom.filters"
+              },
+              "transforms": [
+                {
+                  "code": "\treturn filters.retrievePageFilters(value, self.page.props.pageId)",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          },
+          "custom.sqlData": {
+            "binding": {
+              "config": {
+                "parameters": {
+                  "activity_range": "{view.params.activity_range}"
+                },
+                "queryPath": "Participants/Referrals/ReferralsDashboardSelect",
+                "returnFormat": "dataset"
+              },
+              "type": "query"
+            }
+          },
+          "props.data": {
+            "binding": {
+              "config": {
+                "path": "this.custom.filteredData"
+              },
+              "transforms": [
+                {
+                  "code": "\timport traceback\n\ttry:\n\t\tpyDS \u003d system.dataset.toPyDataSet(value)\n\t\t\n\t\t#table_data is the data object to return\n\t\ttable_data \u003d []\n\t\tif pyDS !\u003d None:\n\t\t\t#Iterate over the results of the query\n\t\t\tfor row in pyDS:\n\t\t\t\trow_struct \u003d {}\n\t\t\t\trow_data \u003d {}\n\t\t\t\tstyle \u003d {}\n\t\t\t\t#Map query results into correct attributes\n\t\t\t\trow_data[\u0027id\u0027] \u003d row[\"id\"]\n\t\t\t\trow_data[\u0027participant_id\u0027] \u003d row[\"participant_id\"]\n\t\t\t\trow_data[\u0027firstName\u0027] \u003d row[\"firstName\"]\n\t\t\t\trow_data[\u0027middleName\u0027] \u003d row[\"middleName\"]\n\t\t\t\trow_data[\u0027lastName\u0027] \u003d row[\"lastName\"]\n\t\t\t\trow_data[\u0027nickName\u0027] \u003d row[\"nickName\"]\n\t\t\t\trow_data[\u0027name\u0027] \u003d row[\"name\"]\n\t\t\t\trow_data[\u0027birth_date\u0027] \u003d row[\"birth_date\"]\n\t\t\t\trow_data[\u0027referral_date\u0027] \u003d row[\"referral_date\"]\n\t\t\t\trow_data[\u0027age\u0027] \u003d row[\"age\"]\n\t\t\t\trow_data[\u0027provider_id\u0027] \u003d row[\"provider_id\"]\n\t\t\t\trow_data[\u0027provider_name\u0027] \u003d row[\"provider_name\"]\n\t\t\t\trow_data[\u0027type_id\u0027] \u003d row[\"type_id\"]\n\t\t\t\trow_data[\u0027referral_type\u0027] \u003d row[\"referral_type\"]\n\t\t\t\trow_data[\u0027status_id\u0027] \u003d row[\"status_id\"]\n\t\t\t\trow_data[\u0027referral_status\u0027] \u003d row[\"referral_status\"]\n\t\t\t\t\n\t\t\t\tstyle[\u0027classes\u0027] \u003d \"Table/Cell_Dashboard\"\n\t\t\t\trow_struct[\u0027value\u0027] \u003d row_data\n\t\t\t\trow_struct[\u0027style\u0027] \u003d style\n\t\t\t\t\n\t\t\t\t#Append the individual row date to the table data object\n\t\t\t\ttable_data.append(row_struct)\n\t\n\t\treturn table_data\n\texcept:\n\t\tlogger \u003d system.util.getLogger(\"Participants Referrals Table Table.props.data\")\n\t\tmsg \u003d traceback.format_exc()\n\t\tlogger.error(msg)",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            },
+            "onChange": {
+              "enabled": null,
+              "script": "\tdataset \u003d currentValue.value\n\t\n\tif dataset \u003d\u003d None:\n\t\t#system.perspective.sendMessage(\"newParticipantsReferralsMonthly\", payload \u003d {\"newParticipantsReferralsMonthly\": 0}, scope \u003d \"page\")\n\t\treturn\n\n\tidlist \u003d []\n\tfor row in dataset:\n\t\tidlist.append(str(row.value[\u0027value\u0027].value[\u0027participant_id\u0027].value))\n\tstrIdList \u003d \u0027,\u0027.join(idlist)\n\tparams \u003d {\"IdList\": strIdList}\n\t\n\t#KPI3 Interviews Monthly\n\tresult3 \u003d system.db.runNamedQuery(\"Participants/Referrals/KPI/NewReferralsMonthly\", params)\n\tMonthCount \u003d 6\n\tnewReferralsMonthly \u003d []\n\tnow \u003d system.date.now()\n\tfor i in reversed(range(MonthCount)):\n\t\timonthago \u003d system.date.addMonths(now, -i)\n\t\tcmonthago \u003d system.date.addMonths(imonthago, 1)\n\t\tmonth \u003d system.date.getMonth(imonthago) + 1\n\t\tdateMonth \u003d system.date.getMonth(imonthago)\n\t\tdateYear \u003d system.date.getYear(imonthago)\n\t\tdate \u003d system.date.getDate(dateYear, dateMonth, 01)\n\t\tdatetime \u003d system.date.setTime(date, 00, 00, 00)\n\t\tappend_item \u003d {\"time\": system.date.format(datetime, \"M/d/yyyy\") , \"Participants\": 0}\n\t\tresultMonths \u003d 0\n\t\tfor row in range(result3.getRowCount()):\n\t\t\tresultMonth \u003d result3.getValueAt(row, \"referral_month\")\n\t\t\tif month \u003d\u003d resultMonth:\n\t\t\t\tresultMonths +\u003d 1\n\t\t\t\t\n\t\tappend_item[\"Participants\"] \u003d resultMonths\n\t\tnewReferralsMonthly.append(append_item)\n\t\t\n\t\t#Update Applicants Per Month KPIs\n\t\tsystem.perspective.sendMessage(\"newParticipantsReferralsMonthly\", payload \u003d {\"newParticipantsReferralsMonthly\": newReferralsMonthly}, scope \u003d \"page\")"
+            }
+          }
+        },
+        "props": {
+          "cells": {
+            "style": {
+              "classes": "Table/Cell_Dashboard"
+            }
+          },
+          "columns": [
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "id",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header"
+                },
+                "title": " "
+              },
+              "justify": "center",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "view",
+              "resizable": false,
+              "sort": "none",
+              "sortable": false,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {
+                "rowData": {
+                  "ID": "value"
+                }
+              },
+              "viewPath": "1_TEMPLATES/Tables/TableOptions",
+              "visible": true,
+              "width": 40
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "name",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header"
+                },
+                "title": "Name"
+              },
+              "justify": "left",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 200
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "nickName",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header"
+                },
+                "title": "Nickname"
+              },
+              "justify": "left",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 140
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "birth_date",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header"
+                },
+                "title": "Birth Date"
+              },
+              "justify": "left",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 100
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "age",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header"
+                },
+                "title": "Age"
+              },
+              "justify": "left",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 60
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "referral_date",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header"
+                },
+                "title": "Referral Date"
+              },
+              "justify": "auto",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 120
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "provider_name",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header"
+                },
+                "title": "Provider Name"
+              },
+              "justify": "auto",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "#62A3F6",
+                  "linecap": "round",
+                  "width": 5
+                },
+                "max": 100,
+                "track": {
+                  "color": "#DADADA",
+                  "linecap": "round",
+                  "width": 2
+                },
+                "value": {
+                  "color": "#7D7D7D",
+                  "show": true
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": true,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "#2196F3",
+                  "unselected": "#FFFFFF"
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 300
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "referral_type",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header"
+                },
+                "title": "Referral Type"
+              },
+              "justify": "auto",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "string",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": true,
+              "style": {
+                "classes": ""
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "Participants/Dashboard/Components/Tables/Templates/Boolean",
+              "visible": true,
+              "width": 240
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "referral_status",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header"
+                },
+                "title": "Status"
+              },
+              "justify": "auto",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": false,
+              "style": {
+                "classes": "Table/Column_Normal"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": 120
+            }
+          ],
+          "pager": {
+            "initialOption": 14
+          },
+          "rows": {
+            "striped": {
+              "enabled": false
+            }
+          },
+          "selection": {
+            "enableColumnSelection": true
+          },
+          "style": {
+            "classes": "Background/Default"
+          }
+        },
+        "scripts": {
+          "customMethods": [],
+          "extensionFunctions": null,
+          "messageHandlers": [
+            {
+              "messageType": "filterHandler",
+              "pageScope": true,
+              "script": "\tfrom datetime import datetime, date\n\t\n\tif(payload[\u0027key\u0027] \u003d\u003d \u0027gender\u0027):\n\t\tcurFilter \u003d str(self.view.params.gender)\n\t\t#If checkbox is checked, we\u0027re adding the payload\n\t\tif(payload[\u0027state\u0027]):\n\t\t\t#If not default, need to do on-purpose SQL injection\n\t\t\tif(curFilter !\u003d \u0027%\u0027):\n\t\t\t\tself.view.params.gender \u003d curFilter + \"%\u0027 OR [humans].[Human].[gender] LIKE \u0027\" + str(payload[\u0027val\u0027]) \n\t\t\t#Else, it\u0027s default, just set the value\n\t\t\telse:\n\t\t\t\tself.view.params.gender \u003d str(payload[\u0027val\u0027])\n\t\t#If checkbox isn\u0027t checked, we\u0027re removing the payload\n\t\telse:\n\t\t\t#If we already have a SQL injection, we need to remove the selected query\n\t\t\tif(\u0027LIKE\u0027 in curFilter):\n\t\t\t\tself.view.params.gender \u003d curFilter.replace(\"%\u0027 OR [humans].[Human].[gender] LIKE \u0027\" + str(payload[\u0027val\u0027]), \u0027\u0027)\n\t\t\t#If no SQL injection, set to default\n\t\t\telse:\n\t\t\t\tself.view.params.gender \u003d \u0027%\u0027\n\telif(payload[\u0027key\u0027] \u003d\u003d \u0027dobRange\u0027):\n\t\tcurStartDate \u003d str(self.view.params.startDOB)\n\t\tcurEndDate \u003d str(self.view.params.endDOB)\n\t\t\n\t\ttoday \u003d datetime.now()\n\t\t#If 55+ is selected, force it to 55-120\n\t\tageRange \u003d payload[\u0027val\u0027].replace(\u0027+\u0027,\u0027-120\u0027)\n\t\tdashPtr \u003d str(ageRange).find(\u0027-\u0027)\n\t\t\n\t\tstartAge \u003d int(ageRange[0:dashPtr])\n\t\tendAge \u003d int(ageRange[dashPtr + 1:])\n\t\t#Start date is now minus end age. End date is now minus start age\n\t\t#I would like to confess I spent 3 entire minutes remembering how dates worked on this part\n\t\tnewStartDOB \u003d today.replace(year \u003d datetime.now().year - endAge)\n\t\tnewEndDOB \u003d today.replace(year \u003d datetime.now().year - startAge)\n\t\t\n\t\t#If checkbox is checked, we\u0027re adding the payload\n\t\tif(payload[\u0027state\u0027]):\n\t\t\t#If not default, need to do on-purpose SQL injection\n\t\t\t#Note, added if not self check because saw weird instance where this happened from clicking too fast\n\t\t\tif(curEndDate !\u003d \"2110-01-01\" and  curEndDate !\u003d newEndDOB.strftime(\"%Y-%m-%d\")):\n\t\t\t\tnewEndQueryStr \u003d curEndDate + \"\u0027 OR [humans].[Human].[dob] BETWEEN \u0027\" + newStartDOB.strftime(\"%Y-%m-%d\") + \"\u0027 AND \u0027\" + newEndDOB.strftime(\"%Y-%m-%d\")\n\t\t\t\tself.view.params.startDOB \u003d curStartDate\n\t\t\t\tself.view.params.endDOB \u003d newEndQueryStr\n\t\t\t#Else, it\u0027s default, just add the range\n\t\t\telse:\n\t\t\t\tself.view.params.startDOB \u003d newStartDOB.strftime(\"%Y-%m-%d\")\n\t\t\t\tself.view.params.endDOB \u003d newEndDOB.strftime(\"%Y-%m-%d\")\n\t\t#If checkbox isn\u0027t checked, we\u0027re removing the payload\n\t\telse:\n\t\t\t#If we already have a SQL injection, we need to remove the selected query\n\t\t\tif(\u0027OR [humans]\u0027 in curEndDate):\n\t\t\t\tself.view.params.endDOB \u003d curEndDate.replace(\"\u0027 OR [humans].[Human].[dob] BETWEEN \u0027\" + newStartDOB.strftime(\"%Y-%m-%d\") + \"\u0027 AND \u0027\" + newEndDOB.strftime(\"%Y-%m-%d\"), \u0027\u0027)\n\t\t\t#If no SQL injection, set to default\n\t\t\telse:\n\t\t\t\tself.view.params.startDOB \u003d \u00271910-01-01\u0027\n\t\t\t\tself.view.params.endDOB \u003d \u00272110-01-01\u0027\n\t#Have to refresh the binding for the query to run again with the new query strings in the view params\n\tself.refreshBinding(\"props.data\")",
+              "sessionScope": true,
+              "viewScope": true
+            }
+          ]
+        },
+        "type": "ia.display.table"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column"
+    },
+    "type": "ia.container.flex"
+  }
+}

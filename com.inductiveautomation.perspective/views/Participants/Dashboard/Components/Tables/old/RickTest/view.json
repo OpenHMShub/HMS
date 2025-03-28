@@ -1,0 +1,301 @@
+{
+  "custom": {},
+  "params": {},
+  "props": {},
+  "root": {
+    "children": [
+      {
+        "custom": {
+          "previousSelectedRow": -1
+        },
+        "events": {
+          "component": {
+            "onRowClick": {
+              "config": {
+                "script": "#\tif event.row \u003d\u003d self.props.selection.selectedRow:\n#\t\tself.props.data[event.row].row_id.style.backgroundColor \u003d \"#FF0000\"\n#\t\tself.props.data[event.row].participant_name.style.backgroundColor \u003d \"#FF0000\"\n#\t\tself.props.data[event.row].participant_id.style.backgroundColor \u003d \"#FF0000\"\n#\t\n#\t\t\n#\tsystem.perspective.sendMessage(\"refresh\", payload \u003d {}, scope \u003d \"view\")\n\t#\tsystem.perspective.print(event.row)\n\t\n\tpSR \u003d self.custom.previousSelectedRow\n\tnSR \u003d event.row\n\t\n\tif pSR \u003d\u003d -1:\n\t\tpSR \u003d nSR\n\t\tself.props.data[nSR][\u0027style\u0027].classes \u003d \u0027Table/Row_Select_Dashboard\u0027\n\t\tself.custom.previousSelectedRow \u003d nSR\n\telse:\n\t\tself.props.data[pSR][\u0027style\u0027].classes \u003d \u0027Table/Cell_Dashboard\u0027\n\t\tself.props.data[nSR][\u0027style\u0027].classes \u003d \u0027Table/Row_Select_Dashboard\u0027\n\t\tself.custom.previousSelectedRow \u003d nSR\n#\t\t\n#\tsystem.perspective.sendMessage(\"refresh\", payload \u003d {}, scope \u003d \"view\")\n\t\n\t\n\t\n\t\n\t\n\t\n\t#system.perspective.print(len(self.props.data))\n#\tfor item in range(len(self.props.data)):\n#\t\tif item \u003d\u003d event.row:\n#\t\t\tself.props.data[item][\u0027city\u0027][\u0027style\u0027].classes \u003d \u0027Table/Row_Select_Dashboard\u0027\n#\t\telse:\n#\t\t\tself.props.data[item][\u0027city\u0027][\u0027style\u0027].classes \u003d \u0027Table/Cell_Dashboard\u0027"
+              },
+              "scope": "G",
+              "type": "script"
+            }
+          },
+          "system": {
+            "onStartup": {
+              "config": {
+                "script": "\tself.custom.previousSelectedRow \u003d -1"
+              },
+              "scope": "G",
+              "type": "script"
+            }
+          }
+        },
+        "meta": {
+          "name": "Table"
+        },
+        "position": {
+          "basis": "400px"
+        },
+        "propConfig": {
+          "props.data": {
+            "binding": {
+              "config": {
+                "parameters": {
+                  "activity_range": "60"
+                },
+                "queryPath": "Participants/Services/ServicesDashboardSelect",
+                "returnFormat": "json"
+              },
+              "transforms": [
+                {
+                  "code": "\ttable_data \u003d []\n\t\t\n\tfor row in value:\n\t\trow_struct \u003d {}\n\t\tstyle \u003d {}\n\n\t\tstyle[\u0027classes\u0027] \u003d \"Table/Cell_Dashboard\"\t\n\n\t\trow_struct[\u0027value\u0027] \u003d row\n\t\trow_struct[\u0027style\u0027] \u003d style\n\t\n\t\ttable_data.append(row_struct)\t\t\n\t\n\treturn table_data",
+                  "type": "script"
+                }
+              ],
+              "type": "query"
+            }
+          }
+        },
+        "props": {
+          "columns": [
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "city",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header_Detail"
+                },
+                "title": "City"
+              },
+              "justify": "auto",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": false,
+              "style": {
+                "classes": "Table/Column_Normal_Detail"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": ""
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "country",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header_Detail"
+                },
+                "title": "Country"
+              },
+              "justify": "auto",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": false,
+              "style": {
+                "classes": "Table/Column_Normal_Detail"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": ""
+            },
+            {
+              "align": "center",
+              "boolean": "checkbox",
+              "dateFormat": "MM/DD/YYYY",
+              "editable": false,
+              "field": "population",
+              "footer": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": ""
+                },
+                "title": ""
+              },
+              "header": {
+                "align": "center",
+                "justify": "left",
+                "style": {
+                  "classes": "Table/Column_Header_Detail"
+                },
+                "title": "Population"
+              },
+              "justify": "auto",
+              "number": "value",
+              "numberFormat": "0,0.##",
+              "progressBar": {
+                "bar": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "max": 100,
+                "min": 0,
+                "track": {
+                  "color": "",
+                  "style": {
+                    "classes": ""
+                  }
+                },
+                "value": {
+                  "enabled": true,
+                  "format": "0,0.##",
+                  "justify": "center",
+                  "style": {
+                    "classes": ""
+                  }
+                }
+              },
+              "render": "auto",
+              "resizable": true,
+              "sort": "none",
+              "sortable": true,
+              "strictWidth": false,
+              "style": {
+                "classes": "Table/Column_Normal_Detail"
+              },
+              "toggleSwitch": {
+                "color": {
+                  "selected": "",
+                  "unselected": ""
+                }
+              },
+              "viewParams": {},
+              "viewPath": "",
+              "visible": true,
+              "width": ""
+            }
+          ],
+          "rows": {
+            "highlight": {
+              "color": "#D5D5D5",
+              "enabled": false
+            }
+          },
+          "selection": {
+            "mode": "single interval"
+          },
+          "style": {
+            "classes": "Background/Default"
+          }
+        },
+        "scripts": {
+          "customMethods": [],
+          "extensionFunctions": null,
+          "messageHandlers": [
+            {
+              "messageType": "refresh",
+              "pageScope": true,
+              "script": "\tsystem.perspective.refresh(\"self.props\")\n\t# implement your handler here",
+              "sessionScope": true,
+              "viewScope": false
+            }
+          ]
+        },
+        "type": "ia.display.table"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column"
+    },
+    "type": "ia.container.flex"
+  }
+}

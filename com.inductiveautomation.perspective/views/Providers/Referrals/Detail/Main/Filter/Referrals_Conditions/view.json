@@ -1,0 +1,604 @@
+{
+  "custom": {},
+  "events": {
+    "system": {
+      "onStartup": {
+        "config": {
+          "script": "\ttry:\n\t\troot \u003d self.getChild(\"root\")\n\t\troot.setPropsDropdowns()\n\t\t#emvSearch \u003d root.getChild(\"emvSearch\")\n\t\t#emvReferralStatus \u003d root.getChild(\"emvReferralStatus\")\n\n\t\t#emvSearch.props.params.keyUpPulse \u003d False\n\texcept:\n\t\timport traceback\n\t\tlogger \u003d system.util.getLogger(\"Providers\")\n\t\tmsg \u003d self.name + \u0027:\\n\u0027\n\t\tmsg +\u003d traceback.format_exc()\n\t\tlogger.error(msg)\t\t\t"
+        },
+        "scope": "G",
+        "type": "script"
+      }
+    }
+  },
+  "params": {
+    "providerId": null
+  },
+  "propConfig": {
+    "params.providerId": {
+      "onChange": {
+        "enabled": null,
+        "script": "\tif currentValue.value is not None:\n\t\troot \u003d self.getChild(\"root\")\n\t\troot.sendMsgCondition()\t"
+      },
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 30,
+      "width": 1817
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "emvProgram"
+        },
+        "position": {
+          "basis": "250px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.actionPerformedPulse": {
+            "onChange": {
+              "enabled": null,
+              "script": "\troot \u003d self.parent\n\troot.sendMsgCondition()\t"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "actionPerformedPulse": false,
+            "clear": false,
+            "multiSelect": false,
+            "options": [
+              {
+                "label": "Permanent Supportive Housing",
+                "value": 1
+              },
+              {
+                "label": "Campus Store",
+                "value": 24
+              },
+              {
+                "label": "Hope University",
+                "value": 29
+              },
+              {
+                "label": "Navigation",
+                "value": 32
+              },
+              {
+                "label": "Winter Shelter",
+                "value": 40
+              },
+              {
+                "label": "Extended Recuperative Care",
+                "value": 44
+              },
+              {
+                "label": "Guest House",
+                "value": 47
+              },
+              {
+                "label": "Guest House Recovery Program",
+                "value": 48
+              },
+              {
+                "label": "Post-Treatment Supportive Shelter",
+                "value": 49
+              },
+              {
+                "label": "Recuperative Care",
+                "value": 50
+              },
+              {
+                "label": "RHP/TDOC",
+                "value": 51
+              },
+              {
+                "label": "Seeking/Pending Treatment",
+                "value": 52
+              },
+              {
+                "label": "Special Shelter",
+                "value": 53
+              },
+              {
+                "label": "Transitional Housing Program",
+                "value": 55
+              },
+              {
+                "label": "Veterans Hospital to Housing",
+                "value": 56
+              },
+              {
+                "label": "Veterans Low Demand",
+                "value": 57
+              },
+              {
+                "label": "Veterans Service Intensive",
+                "value": 58
+              },
+              {
+                "label": "Vine Hill Residential",
+                "value": 59
+              },
+              {
+                "label": "Paticipant Escrow",
+                "value": 61
+              },
+              {
+                "label": "Paticipant Mail Service",
+                "value": 62
+              },
+              {
+                "label": "Next Steps Residential",
+                "value": 80
+              },
+              {
+                "label": "Metro",
+                "value": 81
+              },
+              {
+                "label": "Search Program",
+                "value": 82
+              },
+              {
+                "label": "Test program1",
+                "value": 83
+              }
+            ],
+            "placeholder": "Program",
+            "selection": null
+          },
+          "path": "Providers/Dashboard/Components/Filters/Conditional_DropDown",
+          "style": {
+            "classes": "Filter/Filter_Container"
+          }
+        },
+        "scripts": {
+          "customMethods": [
+            {
+              "name": "setOptions",
+              "params": [],
+              "script": "\tquery \u003d \"\"\"\nSELECT\n\t [id]\n\t,[programName]\nFROM [interaction].[Program]\nWHERE [timeRetired] IS NULL\n\"\"\"\n\tresult \u003d system.db.runPrepQuery(query, [], \u0027RITIOps\u0027)\n\tself.props.params.options \u003d [ dict(value \u003d x[0],label \u003d x[1]) for x in result]\n"
+            }
+          ],
+          "extensionFunctions": null,
+          "messageHandlers": []
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "emvReferralStatus"
+        },
+        "position": {
+          "basis": "150px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.actionPerformedPulse": {
+            "onChange": {
+              "enabled": null,
+              "script": "\troot \u003d self.parent\n\troot.sendMsgCondition()\t"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "actionPerformedPulse": false,
+            "clear": false,
+            "multiSelect": false,
+            "options": [
+              {
+                "label": "Received",
+                "value": 1
+              },
+              {
+                "label": "In Process",
+                "value": 2
+              },
+              {
+                "label": "Waiting for Info",
+                "value": 3
+              },
+              {
+                "label": "Denied",
+                "value": 4
+              },
+              {
+                "label": "Approved",
+                "value": 5
+              },
+              {
+                "label": "No Show",
+                "value": 10
+              },
+              {
+                "label": "Created",
+                "value": 12
+              },
+              {
+                "label": "Checked In",
+                "value": 13
+              },
+              {
+                "label": "Conditionally Approved",
+                "value": 14
+              },
+              {
+                "label": "Other Arrangements Made",
+                "value": 15
+              },
+              {
+                "label": "Already Discharged",
+                "value": 16
+              },
+              {
+                "label": "Approved / Other Arrangements Made",
+                "value": 17
+              },
+              {
+                "label": "Approved / Already Discharged",
+                "value": 18
+              }
+            ],
+            "placeholder": "Referral Status",
+            "selection": null
+          },
+          "path": "Providers/Dashboard/Components/Filters/Conditional_DropDown",
+          "style": {
+            "classes": "Filter/Filter_Container"
+          }
+        },
+        "scripts": {
+          "customMethods": [
+            {
+              "name": "setOptions",
+              "params": [],
+              "script": "\tquery \u003d \"\"\"\nSELECT \n\t [id]\n\t,[ReferralStatusName]\nFROM [participant].[ReferralStatus]\n\"\"\"\n\tresult \u003d system.db.runPrepQuery(query, [], \u0027RITIOps\u0027)\n\t\n\tself.props.params.options \u003d [ dict(value \u003d x[0],label \u003d x[1]) for x in result]\n"
+            }
+          ],
+          "extensionFunctions": null,
+          "messageHandlers": []
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "emvActivityRange"
+        },
+        "position": {
+          "basis": "150px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.params.actionPerformedPulse": {
+            "onChange": {
+              "enabled": null,
+              "script": "\troot \u003d self.parent\n\troot.sendMsgCondition()\t"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "actionPerformedPulse": false,
+            "clear": false,
+            "multiSelect": false,
+            "options": [
+              {
+                "label": "Yesterday",
+                "value": {
+                  "$": [
+                    "ts",
+                    192,
+                    1675847181142
+                  ],
+                  "$ts": 1675749600000
+                }
+              },
+              {
+                "label": "7 Days",
+                "value": {
+                  "$": [
+                    "ts",
+                    192,
+                    1675847181142
+                  ],
+                  "$ts": 1675231200000
+                }
+              },
+              {
+                "label": "14 Days",
+                "value": {
+                  "$": [
+                    "ts",
+                    192,
+                    1675847181142
+                  ],
+                  "$ts": 1674626400000
+                }
+              },
+              {
+                "label": "30 Days",
+                "value": {
+                  "$": [
+                    "ts",
+                    192,
+                    1675847181142
+                  ],
+                  "$ts": 1673244000000
+                }
+              },
+              {
+                "label": "60 Days",
+                "value": {
+                  "$": [
+                    "ts",
+                    192,
+                    1675847181142
+                  ],
+                  "$ts": 1670652000000
+                }
+              },
+              {
+                "label": "90 Days",
+                "value": {
+                  "$": [
+                    "ts",
+                    192,
+                    1675847181142
+                  ],
+                  "$ts": 1668060000000
+                }
+              },
+              {
+                "label": "180 Days",
+                "value": {
+                  "$": [
+                    "ts",
+                    192,
+                    1675847181142
+                  ],
+                  "$ts": 1660280400000
+                }
+              },
+              {
+                "label": "1 Year",
+                "value": {
+                  "$": [
+                    "ts",
+                    192,
+                    1675847181142
+                  ],
+                  "$ts": 1644300000000
+                }
+              },
+              {
+                "label": "2 Years",
+                "value": {
+                  "$": [
+                    "ts",
+                    192,
+                    1675847181142
+                  ],
+                  "$ts": 1612764000000
+                }
+              },
+              {
+                "label": "3 Years",
+                "value": {
+                  "$": [
+                    "ts",
+                    192,
+                    1675847181142
+                  ],
+                  "$ts": 1581141600000
+                }
+              },
+              {
+                "label": "4 Years",
+                "value": {
+                  "$": [
+                    "ts",
+                    192,
+                    1675847181142
+                  ],
+                  "$ts": 1549605600000
+                }
+              },
+              {
+                "label": "5 Years",
+                "value": {
+                  "$": [
+                    "ts",
+                    192,
+                    1675847181142
+                  ],
+                  "$ts": 1518069600000
+                }
+              },
+              {
+                "label": "All Time",
+                "value": {
+                  "$": [
+                    "ts",
+                    192,
+                    1675847181142
+                  ],
+                  "$ts": -1479924000000
+                }
+              }
+            ],
+            "placeholder": "Activity Range",
+            "selection": null
+          },
+          "path": "1_TEMPLATES/Filtering/Conditionals/Conditional_DropDown_TealBlue_ActivityRange",
+          "style": {
+            "classes": "Filter/Filter_Container"
+          }
+        },
+        "scripts": {
+          "customMethods": [
+            {
+              "name": "setOptions",
+              "params": [],
+              "script": "\tmidnight \u003d system.date.midnight(system.date.now())\n\t\n\tlstDateFrom \u003d \t[\n\t[system.date.addDays(midnight, -1), \u0027Yesterday\u0027],\n\t[system.date.addDays(midnight,-7), \u00277 Days\u0027],\n\t[system.date.addDays(midnight, -14), \u002714 Days\u0027],\n\t[-2, \u0027Month to Date\u0027],\n\t[system.date.addDays(midnight, -30), \u002730 Days\u0027],\n\t[system.date.addDays(midnight,-60), \u002760 Days\u0027],\n\t[system.date.addDays(midnight,-90), \u002790 Days\u0027],\n\t[system.date.addDays(midnight,-180), \u0027180 Days\u0027],\n\t[-3, \u0027Year to Date\u0027],\n\t[system.date.addYears(midnight, -1), \u00271 Year\u0027],\n\t[system.date.addYears(midnight, -2), \u00272 Years\u0027],\n\t[system.date.addYears(midnight, -3), \u00273 Years\u0027],\n\t[system.date.addYears(midnight, -4), \u00274 Years\u0027],\n\t[system.date.addYears(midnight, -5), \u00275 Years\u0027],\n\t[system.date.addYears(midnight, -100), \u0027All Time\u0027]\t\n\t]\n\t\t\n\tself.props.params.options \u003d [ dict(value \u003d x[0],label \u003d x[1]) for x in lstDateFrom]\n"
+            }
+          ],
+          "extensionFunctions": null,
+          "messageHandlers": []
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Placeholder"
+        },
+        "position": {
+          "basis": "200px",
+          "grow": 1
+        },
+        "props": {
+          "path": "1_TEMPLATES/Filtering/Filter_Placeholder"
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "lblSearch"
+        },
+        "position": {
+          "basis": "50px"
+        },
+        "props": {
+          "style": {
+            "classes": "Table/Filter_Header",
+            "textAlign": "end"
+          },
+          "text": "Search:"
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "meta": {
+          "name": "emvSearch"
+        },
+        "position": {
+          "basis": "220px"
+        },
+        "propConfig": {
+          "props.params.keyUpPulse": {
+            "onChange": {
+              "enabled": null,
+              "script": "\troot \u003d self.parent\n\troot.sendMsgCondition()"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "byColumn": null,
+            "clear": false,
+            "keyUpPulse": false,
+            "placeholder": "Search ",
+            "searchText": ""
+          },
+          "path": "Providers/Referrals/Detail/Main/Filter/Search_Bar",
+          "style": {
+            "classes": "Table/Search_Bar"
+          }
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "events": {
+          "component": {
+            "onActionPerformed": {
+              "config": {
+                "script": "\troot \u003d self.parent\n\temvProgram \u003d root.getChild(\"emvProgram\")\n\temvReferralStatus \u003d root.getChild(\"emvReferralStatus\")\n\temvActivityRange \u003d root.getChild(\"emvActivityRange\")\n\temvSearch \u003d root.getChild(\"emvSearch\")\n\n\temvProgram.props.params.clear \u003d True\n\temvActivityRange.props.params.clear \u003d True\n\temvReferralStatus.props.params.clear \u003d True\n\temvSearch.props.params.clear \u003d True\n\n\tpayload \u003d {}\n\tpayload[\u0027provider_id\u0027] \u003d self.view.params.providerId\n\tpayload[\u0027program_id\u0027] \u003d None\n\tpayload[\u0027referral_status_id\u0027] \u003d None\n\tpayload[\u0027activity_start\u0027] \u003d None\n\tpayload[\u0027search_text\u0027] \u003d None\n\n\troot.sendMsgCondition(payload)\n\t\n"
+              },
+              "scope": "G",
+              "type": "script"
+            }
+          }
+        },
+        "meta": {
+          "name": "clearConditions"
+        },
+        "position": {
+          "basis": "30px",
+          "shrink": 0
+        },
+        "props": {
+          "image": {
+            "height": 16,
+            "icon": {
+              "color": "#0C4E8B",
+              "path": "material/close"
+            },
+            "position": "center",
+            "width": 16
+          },
+          "style": {
+            "classes": "Filter/Filter_Border_Default Filter/Filter_Container"
+          },
+          "text": "",
+          "textStyle": {
+            "classes": "GreyColor"
+          }
+        },
+        "type": "ia.input.button"
+      }
+    ],
+    "custom": {
+      "_devClean": false,
+      "_devPulse": false,
+      "_isDev": false
+    },
+    "meta": {
+      "name": "root"
+    },
+    "propConfig": {
+      "custom._devClean": {
+        "onChange": {
+          "enabled": null,
+          "script": "\t\n\temvProgram \u003d self.getChild(\"emvProgram\")\n\temvActivityRange \u003d self.getChild(\"emvActivityRange\")\n\temvReferralStatus \u003d self.getChild(\"emvReferralStatus\")\n\temvSearch \u003d self.getChild(\"emvSearch\")\n\t\n\tif self.custom._devClean:\n\t\tself.custom._devClean \u003d False"
+        }
+      },
+      "custom._devPulse": {
+        "onChange": {
+          "enabled": null,
+          "script": "\t\n\temvProgram \u003d self.getChild(\"emvProgram\")\n\temvActivityRange \u003d self.getChild(\"emvActivityRange\")\n\temvReferralStatus \u003d self.getChild(\"emvReferralStatus\")\n\temvSearch \u003d self.getChild(\"emvSearch\")\n\tif self.custom._isDev:\n\t\tif currentValue.value is True:\n\t\t\tself.setPropsDropdowns()\n\t\telse:\n\t\t\temvProgram.props.params.options \u003d []\n\t\t\temvReferralStatus.props.params.options \u003d []\n\t\t\temvActivityRange.props.params.options \u003d []\n\t\n\temvProgram.props.params.actionPerformedPulse \u003d False\n\temvReferralStatus.props.params.actionPerformedPulse \u003d False\n\temvActivityRange.props.params.actionPerformedPulse \u003d False\n\t\n\temvSearch.props.params.keyUpPulse \u003d False"
+        }
+      }
+    },
+    "props": {
+      "style": {
+        "classes": "Filter/Header_Text"
+      }
+    },
+    "scripts": {
+      "customMethods": [
+        {
+          "name": "setPropsDropdowns",
+          "params": [],
+          "script": "\temvProgram \u003d self.getChild(\"emvProgram\")\n\temvReferralStatus \u003d self.getChild(\"emvReferralStatus\")\n\temvActivityRange \u003d self.getChild(\"emvActivityRange\")\t\n\t\n\temvActivityRange.setOptions()\n\temvReferralStatus.setOptions()\n\temvProgram.setOptions()"
+        },
+        {
+          "name": "sendMsgCondition",
+          "params": [
+            "payload\u003dNone"
+          ],
+          "script": "\temvProgram \u003d self.getChild(\"emvProgram\")\n\temvActivityRange \u003d self.getChild(\"emvActivityRange\")\n\temvReferralStatus \u003d self.getChild(\"emvReferralStatus\")\n\temvSearch \u003d self.getChild(\"emvSearch\")\n\n\tif payload is None:\n\t\tpayload \u003d {}\n\t\tpayload[\u0027provider_id\u0027] \u003d self.view.params.providerId\n\t\tpayload[\u0027program_id\u0027] \u003d emvProgram.props.params.selection\n\t\tpayload[\u0027referral_status_id\u0027] \u003d emvReferralStatus.props.params.selection\n\t\tpayload[\u0027activity_start\u0027] \u003d emvActivityRange.props.params.selection\n\t\tpayload[\u0027search_text\u0027] \u003d emvSearch.props.params.searchText\n\n\t\n\tsystem.perspective.print((\u0027send msg ...\u0027)) #,payload )) \n\t\n\tsystem.perspective.sendMessage(\u0027mhByCondition_ProvReff\u0027, payload \u003d payload)"
+        }
+      ],
+      "extensionFunctions": null,
+      "messageHandlers": []
+    },
+    "type": "ia.container.flex"
+  }
+}
