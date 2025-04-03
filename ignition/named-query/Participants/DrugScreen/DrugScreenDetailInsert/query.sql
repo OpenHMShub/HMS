@@ -1,0 +1,30 @@
+INSERT INTO	participant.DrugScreenLog
+	(
+	employeeId,
+	participantId,
+	drugScreenTypeId,
+	providerId,
+	passed,
+	score,
+	gradeLevel,
+	comments,
+	timeCreated,
+	TestDate,
+	drugscreenreasonid,
+	userName
+	)
+VALUES
+	(
+	:employee_id,
+	:participant_id,
+	:drug_screen_type_id,
+	:provider_id,
+	:passed,
+	:score,
+	:grade_level,
+	:comments,
+	:time_created,
+	:test_date,
+	:test_reason_id,
+	:user_name 
+	)
