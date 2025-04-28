@@ -27,7 +27,7 @@ This project is part of the broader OpenHMSHub platform and relies on the shared
 [ERD](https://github.com/OpenHMSHub/Documentation/wiki/Entity-Relationship-Diagrams)
 
 ## Requirements
-`Ignition 8.1.45 or later`
+`Ignition 8.1.47 or later`
 
 SQL Server with [Discovery_Schema.sql](https://github.com/OpenHMSHub/Documentation/blob/main/Discovery_Schema.sql) and [Discovery_Master_Data.sql](https://github.com/OpenHMSHub/Documentation/blob/main/Discovery_Master_Data.sql) loaded
 
