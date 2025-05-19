@@ -1,5 +1,5 @@
 import traceback
-project = 'RITI'
+project = 'HMS'
 
 def autoEnroll(participantId):
 	logger = system.util.getLogger("Participants.autoEnroll()")
