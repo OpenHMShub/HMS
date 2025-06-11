@@ -1,0 +1,1 @@
+select * from calendar.eventInstances INNER JOIN calendar.eventInstanceStaff ON calendar.eventInstances.instanceID = calendar.eventInstanceStaff.instanceID where parentEventID = :eventID and staffID = :staffID

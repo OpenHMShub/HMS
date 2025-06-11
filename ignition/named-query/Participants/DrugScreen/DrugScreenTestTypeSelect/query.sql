@@ -1,0 +1,1 @@
+SELECT id,drugScreenTypeName FROM participant.DrugScreenType

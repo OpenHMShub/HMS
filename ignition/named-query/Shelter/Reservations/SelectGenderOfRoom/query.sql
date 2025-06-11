@@ -1,0 +1,1 @@
+SELECT gender FROM lodging.Room where id = :roomId

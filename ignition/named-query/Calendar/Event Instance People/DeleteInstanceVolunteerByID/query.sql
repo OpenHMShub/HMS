@@ -1,0 +1,1 @@
+delete from calendar.eventInstanceVolunteers where instanceID = :instanceID and volunteerID = :volunteerID

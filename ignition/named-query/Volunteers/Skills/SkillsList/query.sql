@@ -1,0 +1,1 @@
+SELECT Distinct skillName FROM staff.Skills where skillName is not null

@@ -1,0 +1,1 @@
+select distinct id,firstName,lastName,role from calendar.Attendees where staff = :id or volunteer = :id or facilitator = :id

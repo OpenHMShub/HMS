@@ -1,0 +1,1 @@
+SELECT name as 'Name', short_name as 'Short Name', address_line_1 as 'Address 1', address_line_2 as 'Address 2', city as 'City', state as 'State', zip as 'Zip', phone_1 as 'Phone', fax_1 as 'Fax', num_beds_male as 'Num Male Beds', num_beds_female as 'Num Female Beds', dow_avail as 'DOW Available', weeks_of_month_avail as 'Weeks of Month Available' from employers

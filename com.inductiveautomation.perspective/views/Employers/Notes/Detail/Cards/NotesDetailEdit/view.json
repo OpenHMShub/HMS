@@ -289,24 +289,24 @@
         {
           "name": "insertNoteDb",
           "params": [],
-          "script": "\tquery \u003d \"\"\"\nINSERT INTO [organization].[EmployerNotes]\n\t([employerId]\n\t,[note]\n\t,[timeCreated]\n\t,[userName])\n VALUES\n\t(?,?,?,?)\n\"\"\"\n\n\temvRow1 \u003d self.getChild(\"EmbeddedView_Row1\")\n\t\n\temployerId \u003d self.view.params.employerId\n\tnote \u003d emvRow1.props.params.note\n\ttimeCreated \u003d system.date.now()\n\tuserName \u003d self.session.props.auth.user.userName\n\t\n\targs \u003d [employerId, note, timeCreated, userName]\n\tnoteId \u003d system.db.runPrepUpdate(query, args, \u0027RITIOps\u0027)\n\t\n\treturn noteId"
+          "script": "\tquery \u003d \"\"\"\nINSERT INTO [organization].[EmployerNotes]\n\t([employerId]\n\t,[note]\n\t,[timeCreated]\n\t,[userName])\n VALUES\n\t(?,?,?,?)\n\"\"\"\n\n\temvRow1 \u003d self.getChild(\"EmbeddedView_Row1\")\n\t\n\temployerId \u003d self.view.params.employerId\n\tnote \u003d emvRow1.props.params.note\n\ttimeCreated \u003d system.date.now()\n\tuserName \u003d self.session.props.auth.user.userName\n\t\n\targs \u003d [employerId, note, timeCreated, userName]\n\tnoteId \u003d system.db.runPrepUpdate(query, args, \u0027HMSOps\u0027)\n\t\n\treturn noteId"
         },
         {
           "name": "updateNoteDb",
           "params": [],
-          "script": "\n\tquery \u003d \"\"\"\nUPDATE [organization].[EmployerNotes]\nSET \n\t [note] \u003d ?\n\t,[userName] \u003d ?\nWHERE [id] \u003d ?\n\t\"\"\"\n\t\n\temvRow1 \u003d self.getChild(\"EmbeddedView_Row1\")\n\tnote \u003d emvRow1.props.params.note\n\tuserName \u003d self.session.props.auth.user.userName\n\tnoteId \u003d self.view.params.noteId\n\t\n\targs \u003d [note, userName, noteId]\n\n\tsystem.db.runPrepUpdate(query, args, \u0027RITIOps\u0027)\n\t\n\treturn noteId"
+          "script": "\n\tquery \u003d \"\"\"\nUPDATE [organization].[EmployerNotes]\nSET \n\t [note] \u003d ?\n\t,[userName] \u003d ?\nWHERE [id] \u003d ?\n\t\"\"\"\n\t\n\temvRow1 \u003d self.getChild(\"EmbeddedView_Row1\")\n\tnote \u003d emvRow1.props.params.note\n\tuserName \u003d self.session.props.auth.user.userName\n\tnoteId \u003d self.view.params.noteId\n\t\n\targs \u003d [note, userName, noteId]\n\n\tsystem.db.runPrepUpdate(query, args, \u0027HMSOps\u0027)\n\t\n\treturn noteId"
         },
         {
           "name": "setNoteDb",
           "params": [
             "noteId"
           ],
-          "script": "\temvRow1 \u003d self.getChild(\"EmbeddedView_Row1\")\n\n\tif isinstance(noteId, (int, long)) and noteId \u003e\u003d 0:\n\t\t\n\t\tquery \u003d \"\"\"\n\t\t\tSELECT\t\n\t\t\t\t [id]\n\t\t\t\t,[note]\n\t\t\tFROM [organization].[EmployerNotes]\n\t\t\tWHERE [id] \u003d ?\"\"\"\n\t\t\t\t\n\t\tresult \u003d system.db.runPrepQuery(query, [noteId], \u0027RITIOps\u0027)\n\n\t\temvRow1.props.params.note \u003d result.getValueAt(0, \u0027note\u0027)\n\t\tself.view.custom.toUpdateDelete \u003d True\n\telse:\n\t\temvRow1.props.params.note \u003d \u0027\u0027\n\t\tself.view.custom.toUpdateDelete \u003d False\n\t\t"
+          "script": "\temvRow1 \u003d self.getChild(\"EmbeddedView_Row1\")\n\n\tif isinstance(noteId, (int, long)) and noteId \u003e\u003d 0:\n\t\t\n\t\tquery \u003d \"\"\"\n\t\t\tSELECT\t\n\t\t\t\t [id]\n\t\t\t\t,[note]\n\t\t\tFROM [organization].[EmployerNotes]\n\t\t\tWHERE [id] \u003d ?\"\"\"\n\t\t\t\t\n\t\tresult \u003d system.db.runPrepQuery(query, [noteId], \u0027HMSOps\u0027)\n\n\t\temvRow1.props.params.note \u003d result.getValueAt(0, \u0027note\u0027)\n\t\tself.view.custom.toUpdateDelete \u003d True\n\telse:\n\t\temvRow1.props.params.note \u003d \u0027\u0027\n\t\tself.view.custom.toUpdateDelete \u003d False\n\t\t"
         },
         {
           "name": "deleteNoteDb",
           "params": [],
-          "script": "\tquery \u003d \"\"\"\nDELETE FROM [organization].[EmployerNotes]\n\t  WHERE [id] \u003d ?\n\"\"\"\n\tnoteId \u003d self.view.params.noteId\n\targs \u003d [noteId]\n\tnoteId \u003d system.db.runPrepUpdate(query, args, \u0027RITIOps\u0027)\n\t"
+          "script": "\tquery \u003d \"\"\"\nDELETE FROM [organization].[EmployerNotes]\n\t  WHERE [id] \u003d ?\n\"\"\"\n\tnoteId \u003d self.view.params.noteId\n\targs \u003d [noteId]\n\tnoteId \u003d system.db.runPrepUpdate(query, args, \u0027HMSOps\u0027)\n\t"
         },
         {
           "name": "getValidationMessage",

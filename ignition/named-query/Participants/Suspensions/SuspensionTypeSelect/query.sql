@@ -1,0 +1,1 @@
+SELECT id,suspensionTypeName FROM  participant.SuspensionType 

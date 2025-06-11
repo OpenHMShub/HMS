@@ -1,0 +1,1 @@
+select isHandicapAccess from lodging.room where id =  :RoomID 

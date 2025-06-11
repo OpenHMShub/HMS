@@ -1,0 +1,1 @@
+select bedName, id as BedId from lodging.bed where roomId =  :roomID 

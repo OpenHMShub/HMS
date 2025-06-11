@@ -1,0 +1,1 @@
+select * from calendar.eventInstances INNER JOIN calendar.CalendarEvents on calendar.eventInstances.parentEventID = calendar.CalendarEvents.eventID WHERE calendar.CalendarEvents.category like :category and calendar.CalendarEvents.deleted = 0

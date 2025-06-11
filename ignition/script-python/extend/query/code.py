@@ -67,8 +67,8 @@ def getPrepQueryArgs(queryCore, wherePlus=None, orderby=None, useCnd=True):
 		
 	Example arguments:
 		queryCore = 'SELECT [Room].[id] AS roomId, [Room].[roomName] AS Room 
-						FROM [RITIOps].[lodging].[Room] 
-						INNER JOIN [RITIOps].[lodging].[Facility] 
+						FROM [HMSOps].[lodging].[Room] 
+						INNER JOIN [HMSOps].[lodging].[Facility] 
 						ON [Room].[facilityId] = [Facility].[id] 
 						WHERE ([Room].[timeRetired] IS NULL)' 
 						
@@ -78,8 +78,8 @@ def getPrepQueryArgs(queryCore, wherePlus=None, orderby=None, useCnd=True):
 		
 	Example returns:
 		query = 'SELECT [Room].[id] AS roomId, [Room].[roomName] AS Room 
-				FROM [RITIOps].[lodging].[Room] 
-				INNER JOIN [RITIOps].[lodging].[Facility] 
+				FROM [HMSOps].[lodging].[Room] 
+				INNER JOIN [HMSOps].[lodging].[Facility] 
 				ON [Room].[facilityId] = [Facility].[id] 
 				WHERE ([Room].[timeRetired] IS NULL) AND ([Facility].[id] = ?) 
 				ORDER BY [roomName]'

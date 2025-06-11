@@ -1,0 +1,1 @@
+select bedName from lodging.bed where id = :BedId 

@@ -1,0 +1,1 @@
+select facilityName from lodging.facility where id =  :FacID 

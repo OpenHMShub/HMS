@@ -1,0 +1,28 @@
+INSERT INTO	organization.ApplicantStatus 
+	(
+	employerId,
+	participantID,
+	"position", 
+	appliedDate,
+	interviewedDate,
+	hiredDate,
+	hiredState,
+	appliedComment,  
+    interviewedComment,
+    hiredComment,
+    timeCreated
+	)
+VALUES
+	(
+ 	:employer_id,
+	:participant_id,
+	:position, 
+	:applied_date,
+	:interviewed_date,
+	:hired_date,
+	:hired_state,
+	:applied_comment,  
+    :interviewed_comment,
+    :hired_comment,
+    :time_created 
+	)

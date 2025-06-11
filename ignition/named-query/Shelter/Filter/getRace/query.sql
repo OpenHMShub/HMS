@@ -1,0 +1,1 @@
+SELECT raceName FROM humans.Race WHERE raceName IS NOT NULL ORDER BY raceName

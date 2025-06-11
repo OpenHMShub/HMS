@@ -7,7 +7,7 @@ def bedQry (bedId):
 	SELECT [bedId]
 	    ,[participantId]
 	    ,[reservationStart] as dateStart
-	FROM [RitiOps].[lodging].[Reservation]  
+	FROM [HMSOps].[lodging].[Reservation]  
 	WHERE ([Reservation].[timeRetired] IS NULL
 	    AND [Reservation].[reservationStart] IS NOT NULL    
 	    AND [Reservation].[reservationStart] <= @OneDay
@@ -19,7 +19,7 @@ def bedQry (bedId):
 	SELECT [bedId]
 	    ,[participantId]
 	    ,[eventStart] as dateStart
-	FROM [RitiOps].[lodging].[BedLog]  
+	FROM [HMSOps].[lodging].[BedLog]  
 	WHERE ([eventStart] IS NOT NULL    
 	    AND [eventStart] <= @OneDay
 	    AND ISNULL([eventEnd],@OneDay) >= @OneDay
@@ -41,14 +41,14 @@ def bedQry (bedId):
 	    ,ISNULL(TRY_CONVERT(int, SUBSTRING([bedName], PATINDEX('%[0-9]%', [bedName]), LEN([bedName]))),-1) bedNameNo 
 	    ,CONCAT_WS(' ',[Human].[firstName],[Human].[middleName],[Human].[lastName]) AS participantName
 	FROM ro
-	INNER JOIN [RITIOps].[participant].[Participant] ON [Participant].[id] = ro.[participantId] 
-	INNER JOIN [RITIOps].[humans].[Human] ON [Participant].[humanId] = [Human].[id] 
-	INNER JOIN  [RitiOps].[lodging].[Bed] ON ro.[bedId] = [Bed].[id] 
-	INNER JOIN [RitiOps].[lodging].[Room] ON [Bed].[roomId] = [Room].[id]
-	INNER JOIN [RitiOps].[lodging].[Facility] ON [Room].[facilityId] = [Facility].[id]
+	INNER JOIN [HMSOps].[participant].[Participant] ON [Participant].[id] = ro.[participantId] 
+	INNER JOIN [HMSOps].[humans].[Human] ON [Participant].[humanId] = [Human].[id] 
+	INNER JOIN  [HMSOps].[lodging].[Bed] ON ro.[bedId] = [Bed].[id] 
+	INNER JOIN [HMSOps].[lodging].[Room] ON [Bed].[roomId] = [Room].[id]
+	INNER JOIN [HMSOps].[lodging].[Facility] ON [Room].[facilityId] = [Facility].[id]
 	"""
 
 	dateIn = system.date.now()
-	result = system.db.runPrepQuery(query, [dateIn, bedId], 'RITIOps')
+	result = system.db.runPrepQuery(query, [dateIn, bedId], 'HMSOps')
 
 	return result

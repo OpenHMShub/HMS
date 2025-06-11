@@ -434,7 +434,7 @@
                 {
                   "name": "setOptions",
                   "params": [],
-                  "script": "\t\n\tquery \u003d \"\"\"\nSELECT [id]\n  ,[name]\nFROM participant.EventCategories\nORDER BY [name]\n\t\"\"\"\n\t\n\tresult \u003d system.db.runPrepQuery(query,[],\u0027RITIOps\u0027)\n\t\n\t# Version 1 set options as list of dictionaries\n\tself.props.params.options \u003d [ dict(value \u003d x[0],label \u003d x[1]) for x in result]\n\t\n"
+                  "script": "\t\n\tquery \u003d \"\"\"\nSELECT [id]\n  ,[name]\nFROM participant.EventCategories\nORDER BY [name]\n\t\"\"\"\n\t\n\tresult \u003d system.db.runPrepQuery(query,[],\u0027HMSOps\u0027)\n\t\n\t# Version 1 set options as list of dictionaries\n\tself.props.params.options \u003d [ dict(value \u003d x[0],label \u003d x[1]) for x in result]\n\t\n"
                 }
               ],
               "extensionFunctions": null,
@@ -1407,7 +1407,7 @@
                 {
                   "name": "setOptions",
                   "params": [],
-                  "script": "\t\n\tquery \u003d \"\"\"\n\tSELECT \n\t\t [name] AS [value]\n\t\t,[name] AS [label]\n\tFROM participant.Events\n\tGROUP BY [name]\n\tORDER BY [name] \n\t\"\"\"\n\t\t\n\tresult \u003d system.db.runPrepQuery(query,[],\u0027RITIOps\u0027)\n\t\t\n\t# Version 1 set options as list of dictionaries\n\tself.props.params.options \u003d [ dict(value \u003d x[0],label \u003d x[1]) for x in result]\n\t\n"
+                  "script": "\t\n\tquery \u003d \"\"\"\n\tSELECT \n\t\t [name] AS [value]\n\t\t,[name] AS [label]\n\tFROM participant.Events\n\tGROUP BY [name]\n\tORDER BY [name] \n\t\"\"\"\n\t\t\n\tresult \u003d system.db.runPrepQuery(query,[],\u0027HMSOps\u0027)\n\t\t\n\t# Version 1 set options as list of dictionaries\n\tself.props.params.options \u003d [ dict(value \u003d x[0],label \u003d x[1]) for x in result]\n\t\n"
                 }
               ],
               "extensionFunctions": null,
@@ -4896,7 +4896,7 @@
                 {
                   "name": "setOptions",
                   "params": [],
-                  "script": "\t\n\tquery \u003d \"\"\"\n\t\tSELECT f.humanId as id, f.name FROM(\n\t\tSELECT \n\t\t\ts.humanId, \n\t\t\tconcat(h.firstName,\n\t\t\t\tCASE when (h.middleName IS NULL or h.middleName\u003d\u0027\u0027) then \u0027\u0027 else \u0027 \u0027 end,\n\t\t\t\th.middleName,\n\t\t\t\tCASE when (h.lastName IS NULL or h.lastName\u003d\u0027\u0027) then \u0027\u0027 else \u0027 \u0027 end,\n\t\t\t\th.lastName\n\t\t\t) as name\n\t\tFROM \n\t\t\tstaff.Employee s\n\t\tLEFT JOIN\n\t\t\thumans.Human h ON s.humanId \u003d h.id\n\t\t--WHERE \n\t\t--\ts.isFacilitator \u003d 1\n\t\tUNION\n\t\tSELECT \n\t\t\tv.humanId, \n\t\t\tconcat(h.firstName,\n\t\t\t\tCASE when (h.middleName IS NULL or h.middleName\u003d\u0027\u0027) then \u0027\u0027 else \u0027 \u0027 end,\n\t\t\t\th.middleName,\n\t\t\t\tCASE when (h.lastName IS NULL or h.lastName\u003d\u0027\u0027) then \u0027\u0027 else \u0027 \u0027 end,\n\t\t\t\th.lastName\n\t\t\t) as name\n\t\tFROM \n\t\t\t[staff].[Volunteer] v\n\t\tLEFT JOIN\n\t\t\thumans.Human h ON v.humanId \u003d h.id\n\t\t) f\n\t\torder by f.name asc\n\t\"\"\"\n\t\t\n\tresult \u003d system.db.runPrepQuery(query,[],\u0027RITIOps\u0027)\n\t\t\n\t# Version 1 set options as list of dictionaries\n\tself.props.params.options \u003d [ dict(value \u003d x[0],label \u003d x[1]) for x in result]\n\t\n"
+                  "script": "\t\n\tquery \u003d \"\"\"\n\t\tSELECT f.humanId as id, f.name FROM(\n\t\tSELECT \n\t\t\ts.humanId, \n\t\t\tconcat(h.firstName,\n\t\t\t\tCASE when (h.middleName IS NULL or h.middleName\u003d\u0027\u0027) then \u0027\u0027 else \u0027 \u0027 end,\n\t\t\t\th.middleName,\n\t\t\t\tCASE when (h.lastName IS NULL or h.lastName\u003d\u0027\u0027) then \u0027\u0027 else \u0027 \u0027 end,\n\t\t\t\th.lastName\n\t\t\t) as name\n\t\tFROM \n\t\t\tstaff.Employee s\n\t\tLEFT JOIN\n\t\t\thumans.Human h ON s.humanId \u003d h.id\n\t\t--WHERE \n\t\t--\ts.isFacilitator \u003d 1\n\t\tUNION\n\t\tSELECT \n\t\t\tv.humanId, \n\t\t\tconcat(h.firstName,\n\t\t\t\tCASE when (h.middleName IS NULL or h.middleName\u003d\u0027\u0027) then \u0027\u0027 else \u0027 \u0027 end,\n\t\t\t\th.middleName,\n\t\t\t\tCASE when (h.lastName IS NULL or h.lastName\u003d\u0027\u0027) then \u0027\u0027 else \u0027 \u0027 end,\n\t\t\t\th.lastName\n\t\t\t) as name\n\t\tFROM \n\t\t\t[staff].[Volunteer] v\n\t\tLEFT JOIN\n\t\t\thumans.Human h ON v.humanId \u003d h.id\n\t\t) f\n\t\torder by f.name asc\n\t\"\"\"\n\t\t\n\tresult \u003d system.db.runPrepQuery(query,[],\u0027HMSOps\u0027)\n\t\t\n\t# Version 1 set options as list of dictionaries\n\tself.props.params.options \u003d [ dict(value \u003d x[0],label \u003d x[1]) for x in result]\n\t\n"
                 }
               ],
               "extensionFunctions": null,
@@ -5022,7 +5022,7 @@
                 {
                   "name": "setOptions",
                   "params": [],
-                  "script": "\t\n\tquery \u003d \"\"\"\n\tSELECT \n\t\t [id] AS [value]\n\t\t,[name] AS [label]\n\tFROM participant.EventLocations\n\n\t\"\"\"\n\t\t\n\tresult \u003d system.db.runPrepQuery(query,[],\u0027RITIOps\u0027)\n\t\t\n\t# Version 1 set options as list of dictionaries\n\tself.props.params.options \u003d [ dict(value \u003d x[0],label \u003d x[1]) for x in result]\n\t\n"
+                  "script": "\t\n\tquery \u003d \"\"\"\n\tSELECT \n\t\t [id] AS [value]\n\t\t,[name] AS [label]\n\tFROM participant.EventLocations\n\n\t\"\"\"\n\t\t\n\tresult \u003d system.db.runPrepQuery(query,[],\u0027HMSOps\u0027)\n\t\t\n\t# Version 1 set options as list of dictionaries\n\tself.props.params.options \u003d [ dict(value \u003d x[0],label \u003d x[1]) for x in result]\n\t\n"
                 }
               ],
               "extensionFunctions": null,
@@ -5079,7 +5079,7 @@
                 {
                   "name": "setOptions",
                   "params": [],
-                  "script": "\t\n\tquery \u003d \"\"\"\n\tSELECT \n\t\t [id] AS [value]\n\t\t,[name] AS [label]\n\tFROM participant.EventAttendeeCategories\n\n\t\"\"\"\n\t\t\n\tresult \u003d system.db.runPrepQuery(query,[],\u0027RITIOps\u0027)\n\t\t\n\t# Version 1 set options as list of dictionaries\n\tself.props.params.options \u003d [ dict(value \u003d x[0],label \u003d x[1]) for x in result]\n\t\n"
+                  "script": "\t\n\tquery \u003d \"\"\"\n\tSELECT \n\t\t [id] AS [value]\n\t\t,[name] AS [label]\n\tFROM participant.EventAttendeeCategories\n\n\t\"\"\"\n\t\t\n\tresult \u003d system.db.runPrepQuery(query,[],\u0027HMSOps\u0027)\n\t\t\n\t# Version 1 set options as list of dictionaries\n\tself.props.params.options \u003d [ dict(value \u003d x[0],label \u003d x[1]) for x in result]\n\t\n"
                 }
               ],
               "extensionFunctions": null,
@@ -5168,7 +5168,7 @@
                 {
                   "name": "setOptions",
                   "params": [],
-                  "script": "\t\n\tquery \u003d \"\"\"\n\tSELECT distinct \n\t\t [points] AS [value]\n\t\t,[points] AS [label]\n\tFROM participant.Events\n\tWHERE [points] is not NULL\n\t\"\"\"\n\t\t\n\tresult \u003d system.db.runPrepQuery(query,[],\u0027RITIOps\u0027)\n\t\t\n\t# Version 1 set options as list of dictionaries\n\tself.props.params.options \u003d [ dict(value \u003d x[0],label \u003d x[1]) for x in result]\n\t\n"
+                  "script": "\t\n\tquery \u003d \"\"\"\n\tSELECT distinct \n\t\t [points] AS [value]\n\t\t,[points] AS [label]\n\tFROM participant.Events\n\tWHERE [points] is not NULL\n\t\"\"\"\n\t\t\n\tresult \u003d system.db.runPrepQuery(query,[],\u0027HMSOps\u0027)\n\t\t\n\t# Version 1 set options as list of dictionaries\n\tself.props.params.options \u003d [ dict(value \u003d x[0],label \u003d x[1]) for x in result]\n\t\n"
                 }
               ],
               "extensionFunctions": null,

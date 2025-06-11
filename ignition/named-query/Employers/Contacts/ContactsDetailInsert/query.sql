@@ -1,0 +1,20 @@
+INSERT INTO	organization.EmployerContacts
+	(
+	employerId,
+	firstName,
+	lastName,
+	phone,
+	email, 
+    timeCreated,
+    username 
+	)
+VALUES
+	(
+ 	:employer_id,
+    :FirstName,
+    :LastName,
+    :Phone,
+ 	:Email, 
+    :time_created,
+    :user_name
+	)

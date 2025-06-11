@@ -1,0 +1,1 @@
+SELECT distinct [City] from  organization.EmployerNew

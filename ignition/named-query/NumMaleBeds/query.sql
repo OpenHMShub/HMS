@@ -1,0 +1,1 @@
+SELECT short_name, num_beds_male from Employers

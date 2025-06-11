@@ -1,0 +1,1 @@
+SELECT distinct [Status] from  organization.EmployerNew

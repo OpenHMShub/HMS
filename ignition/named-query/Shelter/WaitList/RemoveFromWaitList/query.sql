@@ -1,0 +1,1 @@
+UPDATE shelter.WaitList SET dateremoved = GETDATE() WHERE wlid = :wlid

@@ -1,0 +1,1 @@
+Select * from calendar.eventInstances where parentEventID = :eventID

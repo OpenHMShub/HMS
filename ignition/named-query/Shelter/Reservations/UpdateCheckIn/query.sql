@@ -1,0 +1,1 @@
+UPDATE lodging.bedLog set bedId = :bedId where id = :id

@@ -1,0 +1,20 @@
+INSERT INTO	organization.ProviderContacts
+	(
+	providerId,
+	firstName,
+	lastName,
+	phone,
+	email, 
+    timeCreated,
+    userName 
+	)
+VALUES
+	(
+ 	:provider_id,
+    :FirstName,
+    :LastName,
+    :Phone,
+ 	:Email, 
+    :time_created,
+    :user_name
+	)

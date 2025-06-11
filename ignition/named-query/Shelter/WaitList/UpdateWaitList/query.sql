@@ -1,0 +1,1 @@
+UPDATE shelter.waitlist SET dateadded = :dateadded, details = :details, programid = :programid, participantid = :participantid WHERE wlid = :wlid

@@ -1,0 +1,1 @@
+SELECT startDate, endDate, venue, room, instanceID FROM calendar.eventInstances WHERE parentEventID = :eventID

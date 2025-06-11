@@ -1,0 +1,1 @@
+SELECT genderName FROM humans.Gender WHERE genderName IS NOT NULL ORDER BY genderName

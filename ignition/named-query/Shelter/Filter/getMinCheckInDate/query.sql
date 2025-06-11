@@ -1,0 +1,1 @@
+SELECT MIN(eventStart) FROM lodging.Bedlog

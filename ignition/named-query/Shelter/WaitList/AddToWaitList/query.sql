@@ -1,0 +1,1 @@
+INSERT INTO shelter.WaitList (participantid, WaitListProgramId, details, dateadded) VALUES (:participantid, :programid, :notes, :dateadded)

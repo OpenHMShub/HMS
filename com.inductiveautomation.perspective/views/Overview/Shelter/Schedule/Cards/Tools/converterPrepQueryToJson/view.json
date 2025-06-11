@@ -23,7 +23,7 @@
           "style": {
             "color": "#000000"
           },
-          "text": "SELECT  [lodging].[Bed].[id] AS [bedId] \n\t, [lodging].[Bed].[bedName] AS [Bed] \n\tFROM [RITIOps].[lodging].[Bed] \n\tWHERE  [lodging].[Bed].[timeRetired] IS NULL \n\t"
+          "text": "SELECT  [lodging].[Bed].[id] AS [bedId] \n\t, [lodging].[Bed].[bedName] AS [Bed] \n\tFROM [HMSOps].[lodging].[Bed] \n\tWHERE  [lodging].[Bed].[timeRetired] IS NULL \n\t"
         },
         "type": "ia.input.text-area"
       },
@@ -50,7 +50,7 @@
             "backgroundColor": "#000000",
             "color": "#FFFFFF"
           },
-          "text": "{\"select\":[{\"column\":\"[lodging].[Bed].[id]\",\"alias\":\"bedId\"},{\"column\":\"[lodging].[Bed].[bedName]\",\"alias\":\"Bed\"}],\"from\":\"[RITIOps].[lodging].[Bed]\",\"where\":\"[lodging].[Bed].[timeRetired] IS NULL\"}"
+          "text": "{\"select\":[{\"column\":\"[lodging].[Bed].[id]\",\"alias\":\"bedId\"},{\"column\":\"[lodging].[Bed].[bedName]\",\"alias\":\"Bed\"}],\"from\":\"[HMSOps].[lodging].[Bed]\",\"where\":\"[lodging].[Bed].[timeRetired] IS NULL\"}"
         },
         "type": "ia.input.text-area"
       },
@@ -59,7 +59,7 @@
           "component": {
             "onActionPerformed": {
               "config": {
-                "script": "\texampleSqlQuery \u003d \"\"\"SELECT  [lodging].[Bed].[id] AS [bedId] \n\t, [lodging].[Bed].[bedName] AS [Bed] \n\tFROM [RITIOps].[lodging].[Bed] \n\tWHERE  [lodging].[Bed].[timeRetired] IS NULL \n\t\"\"\" \n\t\n\troot \u003d self.parent\n\ttxaQuery \u003d self.getSibling(\"txaQuery\")\n\ttxaJsonQuery \u003d self.getSibling(\"txaJsonQuery\")\n\tif not(txaQuery.props.text):\n\t\ttxaQuery.props.text \u003d exampleSqlQuery\n\t\n\tquery \u003d txaQuery.props.text\n\ttry:\n\t\tjsonQuery \u003d root.prepQueryToJson(query)\n\texcept:\n\t\tfrom traceback import format_exc\n\t\ttxaJsonQuery.props.text \u003d format_exc()\n\ttxaJsonQuery.props.text \u003d jsonQuery"
+                "script": "\texampleSqlQuery \u003d \"\"\"SELECT  [lodging].[Bed].[id] AS [bedId] \n\t, [lodging].[Bed].[bedName] AS [Bed] \n\tFROM [HMSOps].[lodging].[Bed] \n\tWHERE  [lodging].[Bed].[timeRetired] IS NULL \n\t\"\"\" \n\t\n\troot \u003d self.parent\n\ttxaQuery \u003d self.getSibling(\"txaQuery\")\n\ttxaJsonQuery \u003d self.getSibling(\"txaJsonQuery\")\n\tif not(txaQuery.props.text):\n\t\ttxaQuery.props.text \u003d exampleSqlQuery\n\t\n\tquery \u003d txaQuery.props.text\n\ttry:\n\t\tjsonQuery \u003d root.prepQueryToJson(query)\n\texcept:\n\t\tfrom traceback import format_exc\n\t\ttxaJsonQuery.props.text \u003d format_exc()\n\ttxaJsonQuery.props.text \u003d jsonQuery"
               },
               "scope": "G",
               "type": "script"
@@ -88,7 +88,7 @@
           "component": {
             "onActionPerformed": {
               "config": {
-                "script": "\troot \u003d self.parent\n\ttxaJsonQuery \u003d self.getSibling(\"txaJsonQuery\")\n\ttxaJsonWherePlus \u003d self.getSibling(\"txaJsonWherePlus\")\n\ttxaJsonQueryPreety \u003d self.getSibling(\"txaJsonQueryPreety\")\n\ttxaQueryArgs \u003d self.getSibling(\"txaQueryArgs\")\n\ttxaError \u003d self.getSibling(\"txaError\")\n\ttblA \u003d self.getSibling(\"tblA\")\n\t\n\ttxaError.props.text \u003d \u0027\u0027\n\t\n\tjsonQuery \u003d txaJsonQuery.props.text \n\t\n\tif jsonQuery is None:\n\t\traise ValueError(\u0027JsonQuery is null!\u0027)\n\t\t\n\tjsonWherePlus \u003d txaJsonWherePlus.props.text\n\t\n\tfrom jsonizer.convert import toPrepQuery\n\n\tquery , args \u003d toPrepQuery(jsonQuery, jsonWherePlus \u003d jsonWherePlus, top \u003d 8, offset \u003d 0, orderby \u003d \"[lodging].[Bed].[id]\")\n\ttxaQueryArgs.props.text \u003d \u0027query , args:\\n{} , {}\u0027.format(query , args)\n\t\n\ttry:\n\t\t\n\t\ttblA.props.data \u003d system.db.runPrepQuery(query, args, \u0027RITIOps\u0027)\n\n\texcept:\n\t\timport sys\n\t\tfrom java.lang import Exception\n\t\texceptionType, exception, stacktrace \u003d sys.exc_info()\n\t\tif exceptionType \u003d\u003d Exception:\n\t\t\texception \u003d exception.getCause()\t\t\n\t\t\n\t\tfrom traceback import format_exc\n\t\ttxaError.props.text +\u003d \u0027\\nFailed exec \\n{} \\n{}\u0027.format(str(exception), format_exc())\n\t\t\n\t"
+                "script": "\troot \u003d self.parent\n\ttxaJsonQuery \u003d self.getSibling(\"txaJsonQuery\")\n\ttxaJsonWherePlus \u003d self.getSibling(\"txaJsonWherePlus\")\n\ttxaJsonQueryPreety \u003d self.getSibling(\"txaJsonQueryPreety\")\n\ttxaQueryArgs \u003d self.getSibling(\"txaQueryArgs\")\n\ttxaError \u003d self.getSibling(\"txaError\")\n\ttblA \u003d self.getSibling(\"tblA\")\n\t\n\ttxaError.props.text \u003d \u0027\u0027\n\t\n\tjsonQuery \u003d txaJsonQuery.props.text \n\t\n\tif jsonQuery is None:\n\t\traise ValueError(\u0027JsonQuery is null!\u0027)\n\t\t\n\tjsonWherePlus \u003d txaJsonWherePlus.props.text\n\t\n\tfrom jsonizer.convert import toPrepQuery\n\n\tquery , args \u003d toPrepQuery(jsonQuery, jsonWherePlus \u003d jsonWherePlus, top \u003d 8, offset \u003d 0, orderby \u003d \"[lodging].[Bed].[id]\")\n\ttxaQueryArgs.props.text \u003d \u0027query , args:\\n{} , {}\u0027.format(query , args)\n\t\n\ttry:\n\t\t\n\t\ttblA.props.data \u003d system.db.runPrepQuery(query, args, \u0027HMSOps\u0027)\n\n\texcept:\n\t\timport sys\n\t\tfrom java.lang import Exception\n\t\texceptionType, exception, stacktrace \u003d sys.exc_info()\n\t\tif exceptionType \u003d\u003d Exception:\n\t\t\texception \u003d exception.getCause()\t\t\n\t\t\n\t\tfrom traceback import format_exc\n\t\ttxaError.props.text +\u003d \u0027\\nFailed exec \\n{} \\n{}\u0027.format(str(exception), format_exc())\n\t\t\n\t"
               },
               "scope": "G",
               "type": "script"
@@ -212,7 +212,7 @@
             "fontFamily": "inherit",
             "fontSize": 10
           },
-          "text": "{\n    \"select\": [\n        {\n            \"column\": \"[lodging].[Bed].[id]\", \n            \"alias\": \"bedId\"\n        }, \n        {\n            \"column\": \"[lodging].[Bed].[bedName]\", \n            \"alias\": \"Bed\"\n        }\n    ], \n    \"from\": \"[RITIOps].[lodging].[Bed]\", \n    \"where\": \"[lodging].[Bed].[timeRetired] IS NULL\"\n}"
+          "text": "{\n    \"select\": [\n        {\n            \"column\": \"[lodging].[Bed].[id]\", \n            \"alias\": \"bedId\"\n        }, \n        {\n            \"column\": \"[lodging].[Bed].[bedName]\", \n            \"alias\": \"Bed\"\n        }\n    ], \n    \"from\": \"[HMSOps].[lodging].[Bed]\", \n    \"where\": \"[lodging].[Bed].[timeRetired] IS NULL\"\n}"
         },
         "type": "ia.input.text-area"
       },
@@ -260,7 +260,7 @@
             "fontFamily": "inherit",
             "fontSize": 12
           },
-          "text": "query , args:\nSELECT [lodging].[Bed].[id] AS [bedId], [lodging].[Bed].[bedName] AS [Bed] FROM [RITIOps].[lodging].[Bed]  WHERE ([lodging].[Bed].[timeRetired] IS NULL) AND ([lodging].[Bed].[roomId] \u003d ?) ORDER BY [lodging].[Bed].[id] OFFSET 0 ROWS FETCH NEXT 8 ROWS ONLY , [45]"
+          "text": "query , args:\nSELECT [lodging].[Bed].[id] AS [bedId], [lodging].[Bed].[bedName] AS [Bed] FROM [HMSOps].[lodging].[Bed]  WHERE ([lodging].[Bed].[timeRetired] IS NULL) AND ([lodging].[Bed].[roomId] \u003d ?) ORDER BY [lodging].[Bed].[id] OFFSET 0 ROWS FETCH NEXT 8 ROWS ONLY , [45]"
         },
         "type": "ia.input.text-area"
       },
@@ -843,6 +843,7 @@
           "script": "\t\n\t\n\tlstCnd \u003d [x.strip() for x in wherePlus.split(\u0027 AND \u0027)]\n\t\n\tlstOpArg \u003d [(x.strip()).split(\u0027] \u0027)[1] for x in lstCnd]\n\t\n\tsystem.perspective.print(lstCnd)\n\tsystem.perspective.print(lstOpArg)\n\t\n\t\n\tauxList \u003d []\n\ti\u003d 0\n\tfor x in lstOpArg:\n\t\tauxDict \u003d {}\n\t\t#get string reverse\n\t\txRev \u003d x[::-1]\n\t\t\n\t\t\n\t\tif xRev[0] \u003d\u003d \u0027\"\u0027:\n\t\t\tfirstQuoteFromBack \u003d (xRev[1:]).find(\u0027\"\u0027)\n\t\t\tstrArgRev \u003d xRev[1:firstQuoteFromBack + 1]\n\t\t\tstrArg \u003d strArgRev[::-1]\n\t\t\t\n\t\t\ttry:\n\t\t\t\tsystem.date.parse(strArg,\u0027yyyy-MM-dd HH:mm:ss\u0027) \n\t\t\t\tauxDict[\u0027arg\u0027] \u003d strArg\n\t\t\t\tauxDict[\u0027type\u0027] \u003d \u0027datetime\u0027\n\t\t\texcept:\n\t\t\t\tauxDict[\u0027arg\u0027] \u003d strArg\n\t\t\t\n\t\t\ttoDel \u003d len(strArg) + 2\n\t\t\tauxDict[\u0027cnd\u0027] \u003d lstCnd[i][:-toDel] + \u0027?\u0027\n\t\t\t\n\t\t\tsystem.perspective.print(auxDict)\n\t\telse:\n\t\t\tfirstBlankFromBack \u003d xRev.find(\u0027 \u0027)\n\t\t\tstrArgRev \u003d xRev[:firstBlankFromBack]\n\t\t\tstrArg \u003d strArgRev[::-1]\t\n\t\t\ttoDel \u003d len(strArg)\t\n\t\t\tauxDict[\u0027cnd\u0027] \u003d lstCnd[i][:-toDel] + \u0027?\u0027\n\t\t\t\n\t\t\tif strArg \u003d\u003d \u0027true\u0027:\n\t\t\t\targ \u003d True\n\t\t\telif strArg \u003d\u003d \u0027false\u0027:\n\t\t\t\targ \u003d False\n\t\t\telif strArg \u003d\u003d \u0027null\u0027:\n\t\t\t\targ \u003d None\n\t\t\telse:\n\t\t\t\ttry:\n\t\t\t\t\targ \u003d int(strArg)\n\t\t\t\texcept:\n\t\t\t\t\ttry:\n\t\t\t\t\t\targ \u003d long(strArg)\n\t\t\t\t\texcept:\t\t\t\t\n\t\t\t\t\t\ttry:\n\t\t\t\t\t\t\targ \u003d float(strArg)\n\t\t\t\t\t\texcept:\t\t\t\t\n\t\t\t\t\t\t\traise ValueError(\"Unknown arg type!\")\n\t\t\tauxDict[\u0027arg\u0027] \u003d arg\n\t\tauxList.append(auxDict)\n\t\n\t\tsystem.perspective.print(auxDict)\t\t\n\t\ti +\u003d 1\t\n\t\t\n\tsystem.perspective.print(auxList)\n\t\t\t\n\t\t\n\n\treturn system.util.jsonEncode(auxList)\n\t\n\t\n\t #[\u0027[dbo].[Order Details].[Quantity] \u003c 15\u0027, \u0027[dbo].[Orders].[EmployeeID] \u003d 4\u0027, \u0027[dbo].[Orders].[OrderDate] \u003c \"1996-07-18 23:00:00\"\u0027]\n\t#[[\u0027[dbo].[Order Details].[Quantity\u0027, \u0027\u003c 15\u0027], [\u0027[dbo].[Orders].[EmployeeID\u0027, \u0027\u003d 4\u0027], [\u0027[dbo].[Orders].[OrderDate\u0027, \u0027\u003c \"1996-07-18 23:00:00\"\u0027]]\n\n\t"
         }
       ],
+      "extensionFunctions": null,
       "messageHandlers": []
     },
     "type": "ia.container.coord"

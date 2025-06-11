@@ -540,7 +540,7 @@
               "params": [
                 "payload"
               ],
-              "script": "\timport extend.query\n\t\n\tdeclaration, queryCte, query, orderBy, fetchOffset \u003d self.getQuery()\n\n\targs \u003d []\t\n\n\t###############################################\n\n\tprovider_name\u003d payload.get(\u0027provider_name\u0027)\n\targs +\u003d [provider_name]\n\n\t###############################################\n\n\tquery \u003d \u0027{} {} {} {}\u0027.format(declaration, queryCte, query, orderBy)\n\tresult \u003d system.db.runPrepQuery(query, args, \u0027RITIOps\u0027)\t\n\tresultRowCount \u003d result.rowCount\n\t\n\tsystem.perspective.print((\u0027Exec: args\u0027,args)) \n\n\treturn result, resultRowCount\n"
+              "script": "\timport extend.query\n\t\n\tdeclaration, queryCte, query, orderBy, fetchOffset \u003d self.getQuery()\n\n\targs \u003d []\t\n\n\t###############################################\n\n\tprovider_name\u003d payload.get(\u0027provider_name\u0027)\n\targs +\u003d [provider_name]\n\n\t###############################################\n\n\tquery \u003d \u0027{} {} {} {}\u0027.format(declaration, queryCte, query, orderBy)\n\tresult \u003d system.db.runPrepQuery(query, args, \u0027HMSOps\u0027)\t\n\tresultRowCount \u003d result.rowCount\n\t\n\tsystem.perspective.print((\u0027Exec: args\u0027,args)) \n\n\treturn result, resultRowCount\n"
             },
             {
               "name": "getPropsColumns",
@@ -572,7 +572,7 @@
             {
               "name": "getQuery",
               "params": [],
-              "script": "\tdeclaration \u003d \t\"\"\"\nDECLARE \n\t @provider_name NVARCHAR(max) \u003d ?\n\t\"\"\"\n\t\n\tqueryCte \u003d \"\"\"\n\n\"\"\"\n\n\tquery \u003d \"\"\"\nSELECT \n\t [Provider].[id]\n\t,[Provider].[providerName]\n\t,[Provider].[timeRetired]\n\t,[Provider].[street]\nFROM [RITIOps].[organization].[Provider]\n\tLEFT JOIN [organization].[ProviderType] ON [Provider].[providerTypeId] \u003d [ProviderType].[id]\nWHERE [ProviderType].[providerTypeName] in (\u0027Community Partner\u0027, \u0027Medical Facility\u0027, \u0027Law Enforcement\u0027)\t\n\tAND ISNULL(@provider_name,\u0027\u0027) !\u003d \u0027\u0027\n\tAND [Provider].[providerName] LIKE CONCAT(\u0027%\u0027,@provider_name,\u0027%\u0027)\n\t\"\"\"\n\torderBy \u003d \"\"\"\nORDER BY [Provider].[providerName]\n\t\"\"\"\n\n\tfetchOffset \u003d \"\"\"\nOFFSET ? ROWS \nFETCH NEXT ? ROWS ONLY;  \n\t\"\"\"\t\n\treturn declaration, queryCte, query, orderBy, fetchOffset\n\n\t\t"
+              "script": "\tdeclaration \u003d \t\"\"\"\nDECLARE \n\t @provider_name NVARCHAR(max) \u003d ?\n\t\"\"\"\n\t\n\tqueryCte \u003d \"\"\"\n\n\"\"\"\n\n\tquery \u003d \"\"\"\nSELECT \n\t [Provider].[id]\n\t,[Provider].[providerName]\n\t,[Provider].[timeRetired]\n\t,[Provider].[street]\nFROM [HMSOps].[organization].[Provider]\n\tLEFT JOIN [organization].[ProviderType] ON [Provider].[providerTypeId] \u003d [ProviderType].[id]\nWHERE [ProviderType].[providerTypeName] in (\u0027Community Partner\u0027, \u0027Medical Facility\u0027, \u0027Law Enforcement\u0027)\t\n\tAND ISNULL(@provider_name,\u0027\u0027) !\u003d \u0027\u0027\n\tAND [Provider].[providerName] LIKE CONCAT(\u0027%\u0027,@provider_name,\u0027%\u0027)\n\t\"\"\"\n\torderBy \u003d \"\"\"\nORDER BY [Provider].[providerName]\n\t\"\"\"\n\n\tfetchOffset \u003d \"\"\"\nOFFSET ? ROWS \nFETCH NEXT ? ROWS ONLY;  \n\t\"\"\"\t\n\treturn declaration, queryCte, query, orderBy, fetchOffset\n\n\t\t"
             },
             {
               "name": "sendMessageToKpis",

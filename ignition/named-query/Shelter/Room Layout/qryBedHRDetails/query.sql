@@ -1,0 +1,1 @@
+select id as BedID_1,'H' as HVPos, 'R' as RLPos, 0 as Bunk from lodging.bed where roomId =  :roomID 

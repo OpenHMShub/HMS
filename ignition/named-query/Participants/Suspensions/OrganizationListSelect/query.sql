@@ -1,0 +1,1 @@
+SELECT id,orgName  FROM  organization.Organization 

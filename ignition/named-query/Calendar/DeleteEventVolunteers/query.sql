@@ -1,0 +1,1 @@
+DELETE FROM calendar.eventVolunteers WHERE eventID = :eventID

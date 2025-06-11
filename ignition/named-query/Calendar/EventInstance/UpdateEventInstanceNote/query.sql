@@ -1,0 +1,1 @@
+update calendar.eventInstances SET note = :note where instanceID = :instanceID

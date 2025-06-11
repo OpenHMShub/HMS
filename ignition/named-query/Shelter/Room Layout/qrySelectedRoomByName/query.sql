@@ -1,0 +1,1 @@
+select ID from lodging.room where roomName =  :selectedTab 

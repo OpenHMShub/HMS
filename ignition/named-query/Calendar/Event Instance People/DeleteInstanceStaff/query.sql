@@ -1,0 +1,1 @@
+delete from calendar.eventInstanceStaff where instanceID = :instanceID

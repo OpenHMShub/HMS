@@ -1,0 +1,1 @@
+delete from calendar.eventInstanceTask where instanceID = :instanceID
