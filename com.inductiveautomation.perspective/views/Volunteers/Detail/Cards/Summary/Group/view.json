@@ -1,0 +1,227 @@
+{
+  "custom": {
+    "sql_data": [
+      {
+        "timeCreated": "2025-09-12 08:46:57",
+        "timeRetired": null,
+        "volunteerGroupDescription": "Volunteers helping organize and run events",
+        "volunteerGroupName": "Event Support"
+      }
+    ]
+  },
+  "params": {
+    "trackId": 50
+  },
+  "propConfig": {
+    "custom.sql_data": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "volunteerID": "{view.params.trackId}"
+          },
+          "polling": {
+            "enabled": true,
+            "rate": "3"
+          },
+          "queryPath": "Volunteers/Summary/GetGroupForVolunteer_DetailSummary",
+          "returnFormat": "json"
+        },
+        "transforms": [
+          {
+            "code": "\treturn value",
+            "type": "script"
+          }
+        ],
+        "type": "query"
+      },
+      "persistent": true
+    },
+    "params.trackId": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 250,
+      "width": 300
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "NoGroupMessage"
+        },
+        "position": {
+          "basis": "32px",
+          "grow": 1
+        },
+        "propConfig": {
+          "position.display": {
+            "binding": {
+              "config": {
+                "expression": "if(isNull({view.custom.sql_data[0]}),true,false)"
+              },
+              "type": "expr"
+            }
+          }
+        },
+        "props": {
+          "alignVertical": "top",
+          "style": {
+            "classes": "Text/About_info"
+          },
+          "text": "The volunteer is not part of any group"
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "meta": {
+          "name": "firstNameEmbeddedView"
+        },
+        "position": {
+          "shrink": 0
+        },
+        "propConfig": {
+          "position.display": {
+            "binding": {
+              "config": {
+                "expression": "if(isNull({view.custom.sql_data[0]}),false,true)"
+              },
+              "type": "expr"
+            }
+          },
+          "props.params.Info": {
+            "binding": {
+              "config": {
+                "expression": "if(isNull({view.custom.sql_data[0].volunteerGroupName}),\"No group name\",{view.custom.sql_data[0].volunteerGroupName})"
+              },
+              "type": "expr"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "Description": "Group name"
+          },
+          "path": "Volunteers/Detail/Cards/Personal/AboutLabel",
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "firstNameEmbeddedView_0"
+        },
+        "position": {
+          "shrink": 0
+        },
+        "propConfig": {
+          "position.display": {
+            "binding": {
+              "config": {
+                "expression": "if(isNull({view.custom.sql_data[0]}),false,true)"
+              },
+              "type": "expr"
+            }
+          },
+          "props.params.Info": {
+            "binding": {
+              "config": {
+                "expression": "if(isNull({view.custom.sql_data[0].timeCreated}),\"No сreated date\",{view.custom.sql_data[0].timeCreated})"
+              },
+              "type": "expr"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "Description": "Time Created"
+          },
+          "path": "Volunteers/Detail/Cards/Personal/AboutLabel",
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "firstNameEmbeddedView_1"
+        },
+        "position": {
+          "shrink": 0
+        },
+        "propConfig": {
+          "position.display": {
+            "binding": {
+              "config": {
+                "expression": "if(isNull({view.custom.sql_data[0]}),false,true)"
+              },
+              "type": "expr"
+            }
+          },
+          "props.params.Info": {
+            "binding": {
+              "config": {
+                "expression": "if(isNull({view.custom.sql_data[0].timeRetired}),\"No retired date\",{view.custom.sql_data[0].timeRetired})"
+              },
+              "type": "expr"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "Description": "Time Retired"
+          },
+          "path": "Volunteers/Detail/Cards/Personal/AboutLabel",
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "firstNameEmbeddedView_2"
+        },
+        "position": {
+          "shrink": 0
+        },
+        "propConfig": {
+          "position.display": {
+            "binding": {
+              "config": {
+                "expression": "if(isNull({view.custom.sql_data[0]}),false,true)"
+              },
+              "type": "expr"
+            }
+          },
+          "props.params.Info": {
+            "binding": {
+              "config": {
+                "expression": "if(isNull({view.custom.sql_data[0].volunteerGroupDescription}),\"No group description\",{view.custom.sql_data[0].volunteerGroupDescription})"
+              },
+              "type": "expr"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "Description": "Group Description"
+          },
+          "path": "Volunteers/Detail/Cards/Personal/AboutLabel",
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column",
+      "style": {
+        "classes": "Background/Default"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

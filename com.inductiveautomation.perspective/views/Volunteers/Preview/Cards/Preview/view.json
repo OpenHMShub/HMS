@@ -1,7 +1,7 @@
 {
   "custom": {},
   "params": {
-    "trackID": 1
+    "trackID": 0
   },
   "propConfig": {
     "params.trackID": {
@@ -32,10 +32,10 @@
               "type": "expr"
             }
           },
-          "props.params.volunteerId": {
+          "props.params.trackId": {
             "binding": {
               "config": {
-                "path": "parent.custom.volunteer.volunteerId"
+                "path": "parent.custom.volunteer.id"
               },
               "type": "property"
             }
@@ -58,7 +58,7 @@
           "props.text": {
             "binding": {
               "config": {
-                "expression": "concat(if(isNull({parent.custom.volunteer.dob}), \"Unknown\",yearsBetween({parent.custom.volunteer.dob},now(0))),\u0027 - \u0027,if(isNull({parent.custom.volunteer.gender}), \"Unknown\",{parent.custom.volunteer.gender}),\u0027 - \u0027,numberFormat({parent.custom.volunteer.hours},\u0027#0\u0027),\u0027 hours\u0027)"
+                "expression": "concat(if(isNull({parent.custom.volunteer.dob}), \"Unknown\",yearsBetween({parent.custom.volunteer.dob},now(0))),\u0027 - \u0027,if(isNull({parent.custom.volunteer.genderName}), \"Unknown\",{parent.custom.volunteer.genderName}),\u0027 - \u0027,numberFormat({parent.custom.volunteer.hours},\u0027#0\u0027),\u0027 hours\u0027)"
               },
               "type": "expr"
             }
@@ -105,7 +105,7 @@
           "position.basis": {
             "binding": {
               "config": {
-                "expression": "if({this.props.params.More}, \u0027218px\u0027, \u0027118px\u0027)"
+                "expression": "if({this.props.params.groupNull}, \u002740px\u0027, if({this.props.params.More}, \u0027318px\u0027, \u0027128px\u0027))               "
               },
               "type": "expr"
             }
@@ -121,7 +121,8 @@
         },
         "props": {
           "params": {
-            "More": false
+            "More": false,
+            "groupNull": true
           },
           "path": "Volunteers/Preview/Cards/Groups"
         },
@@ -159,7 +160,7 @@
           "props.params.Info": {
             "binding": {
               "config": {
-                "expression": "if(isnull({parent.custom.lastAssignment.title}),\"Unknown\",concat({parent.custom.lastAssignment.title},\" - \",{parent.custom.lastAssignment.venue}, \" - \", {parent.custom.lastAssignment.room}))"
+                "expression": "if(isnull({parent.custom.lastAssignment.title}),\"Unknown\",concat({parent.custom.lastAssignment.title},\" - \",{parent.custom.lastAssignment.venue}))"
               },
               "type": "expr"
             }
@@ -211,6 +212,7 @@
           "name": "Availability Header"
         },
         "position": {
+          "display": false,
           "shrink": 0
         },
         "props": {
@@ -232,6 +234,7 @@
           "name": "AvailabilityEmbeddedView"
         },
         "position": {
+          "display": false,
           "shrink": 0
         },
         "propConfig": {
@@ -660,12 +663,12 @@
             "parameters": {
               "volunteerId": "{view.params.trackID}"
             },
-            "queryPath": "Volunteers/Details/VolunteerDetail",
+            "queryPath": "Volunteers/Details/PersonalInfo",
             "returnFormat": "json"
           },
           "transforms": [
             {
-              "code": "\tif len(value) \u003c 1:\n\t\treturn {}\n\telse:\n\t\tvalue \u003d value[0]\n\treturn value",
+              "code": "\tdef safe_get(obj, attr, default\u003d\"Not collected\"):\n\t    value \u003d getattr(obj, attr, None)\n\t    if value is None or value \u003d\u003d \"\" or value \u003d\u003d \" \":\n\t        return default\n\t    return value\n\t\n\tif len(value) \u003c 1:\n\t\treturn {}\n\telse:\n\t\tdata \u003d value[0]\n\t\tpersonalInformation \u003d {\n\t\t    \"id\": safe_get(data, \"id\"),  \n\t\t    \"firstName\": safe_get(data, \"firstName\"),\n\t\t    \"middleName\": safe_get(data, \"middleName\"),\n\t\t    \"lastName\": safe_get(data, \"lastName\"),\n\t\t    \"genderName\": safe_get(data, \"genderName\"),\n\t\t    \"dob\": safe_get(data, \"dob\"),\n\t\t    \"age\": safe_get(data, \"age\"),\n\t\t    \"phone\": safe_get(data, \"phone\"),\n\t\t    \"email\": safe_get(data, \"email\"),\n\t\t    \"employer\": safe_get(data, \"employer\"),\n\t\t    \"school\": safe_get(data, \"school\"),\n\t\t    \"street\": safe_get(data, \"street\"),\n\t\t    \"city\": safe_get(data, \"city\"),\n\t\t    \"state\": safe_get(data, \"state\"),\n\t\t    \"zipCode\": safe_get(data, \"zipCode\"),  \n\t\t    \"congregation\": safe_get(data, \"congregation\"),\n\t\t    \"hours\": safe_get(data, \"hours\"),\n\t\t    \"volunteerGroupName\": safe_get(data, \"volunteerGroupName\")\n\t\t}\n\n\treturn personalInformation",
               "type": "script"
             }
           ],

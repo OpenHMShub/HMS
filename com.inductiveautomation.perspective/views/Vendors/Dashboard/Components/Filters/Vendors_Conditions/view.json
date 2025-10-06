@@ -82,64 +82,8 @@
             "multiSelect": false,
             "options": [
               {
-                "label": "Access / Doors",
-                "value": 12
-              },
-              {
-                "label": "Electrical / Lighting",
-                "value": 10
-              },
-              {
-                "label": "Furniture",
-                "value": 3
-              },
-              {
-                "label": "HVAC",
-                "value": 6
-              },
-              {
-                "label": "Internet / Cable",
-                "value": 11
-              },
-              {
-                "label": "Kitchen",
-                "value": 5
-              },
-              {
-                "label": "Landscaping",
-                "value": 15
-              },
-              {
-                "label": "Life \u0026 Safety",
+                "label": "Airport",
                 "value": 1
-              },
-              {
-                "label": "Other",
-                "value": 8
-              },
-              {
-                "label": "Pest Control",
-                "value": 4
-              },
-              {
-                "label": "Phones",
-                "value": 2
-              },
-              {
-                "label": "Plumbing",
-                "value": 9
-              },
-              {
-                "label": "Security / Cameras",
-                "value": 13
-              },
-              {
-                "label": "Sound System",
-                "value": 14
-              },
-              {
-                "label": "Washer / Dryers",
-                "value": 7
               }
             ],
             "placeholder": "All Business Description",
@@ -165,6 +109,17 @@
         "type": "ia.display.view"
       },
       {
+        "events": {
+          "dom": {
+            "onClick": {
+              "config": {
+                "script": "\tself.setOptions()"
+              },
+              "scope": "G",
+              "type": "script"
+            }
+          }
+        },
         "meta": {
           "name": "emvCity"
         },
@@ -176,40 +131,31 @@
             "actionPerformedPulse": false,
             "clear": false,
             "multiSelect": false,
-            "options": [
-              {
-                "label": "Brentwood",
-                "value": "Brentwood"
-              },
-              {
-                "label": "Cordova",
-                "value": "Cordova"
-              },
-              {
-                "label": "Hendersonville",
-                "value": "Hendersonville"
-              },
-              {
-                "label": "Knoxville",
-                "value": "Knoxville"
-              },
-              {
-                "label": "Mount Juliet",
-                "value": "Mount Juliet"
-              },
-              {
-                "label": "Murfreesboro",
-                "value": "Murfreesboro"
-              },
-              {
-                "label": "Nash",
-                "value": "Nash"
-              },
-              {
-                "label": "Nashville",
-                "value": "Nashville"
-              }
-            ],
+            "options": {
+              "$": [
+                "ds",
+                192,
+                1756982388086
+              ],
+              "$columns": [
+                {
+                  "data": [
+                    "Chicago",
+                    "Los Angeles"
+                  ],
+                  "name": "CityName",
+                  "type": "String"
+                },
+                {
+                  "data": [
+                    "Chicago",
+                    "Los Angeles"
+                  ],
+                  "name": "CityDuplicate",
+                  "type": "String"
+                }
+              ]
+            },
             "placeholder": "All Cities",
             "selection": null
           },
@@ -223,7 +169,7 @@
             {
               "name": "setOptions",
               "params": [],
-              "script": "\tcities \u003d [\n\t\"Brentwood\"\n\t,\"Cordova\"\n\t,\"Hendersonville\"\n\t,\"Knoxville\"\n\t,\"Mount Juliet\"\n\t,\"Murfreesboro\"\n\t,\"Nash\"\n\t,\"Nashville\"\n]\n\t\n\t# Version 1 set options as list of dictionaries\n\tself.props.params.options \u003d [ dict(value \u003d x, label \u003d x) for x in cities]\n\n\t"
+              "script": "\tquery \u003d \"\"\"\nSELECT DISTINCT city AS CityName, city AS CityDuplicate\nFROM [organization].[Vendor]\nORDER BY city;\n\"\"\"\n\tself.props.params.options \u003d system.db.runPrepQuery(query,[],\u0027HMSOps\u0027)\n\t\n\t# Version 1 set options as list of dictionaries\n\t\u0027\u0027\u0027\n\tcities \u003d [\n\t\"Brentwood\"\n\t,\"Cordova\"\n\t,\"Hendersonville\"\n\t,\"Knoxville\"\n\t,\"Mount Juliet\"\n\t,\"Murfreesboro\"\n\t,\"Nash\"\n\t,\"Nashville\"\n]\n\n\tself.props.params.options \u003d [ dict(value \u003d x, label \u003d x) for x in cities]\n\t\u0027\u0027\u0027\n\n\t"
             }
           ],
           "extensionFunctions": null,

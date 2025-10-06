@@ -7,7 +7,7 @@ SELECT
 	'VolunteerAdded' as CardType,
 	V.timeCreated as Date
 FROM staff.Volunteer V
-Where V.id = @volunteerId
+Where V.humanId = @volunteerId
 union
 SELECT
 	VN.id AS ID,

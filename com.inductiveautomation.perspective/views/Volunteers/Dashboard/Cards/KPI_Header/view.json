@@ -1,12 +1,12 @@
 {
   "custom": {},
   "params": {
-    "CalenderBreezeId": null,
+    "CalenderId": 0,
     "DaysToAdd": 365,
     "EventName": null
   },
   "propConfig": {
-    "params.CalenderBreezeId": {
+    "params.CalenderId": {
       "onChange": {
         "enabled": null,
         "script": "\tself.getChild(\"root\").getChild(\"KPI4\").refreshBinding(\"props.params.Value\")"
@@ -51,7 +51,7 @@
         "props": {
           "params": {
             "Title": "Total Services Hours",
-            "Value": 2.0166666666666666
+            "Value": 2.016666667
           },
           "path": "Volunteers/Dashboard/Cards/KPI/Metric_Flex",
           "style": {
@@ -165,7 +165,7 @@
               },
               "transforms": [
                 {
-                  "code": "#\tfEventDate \u003d system.date.format(system.date.now(), \"yyyy-MM-dd\")\n#\tfEndDate \u003d system.date.format(system.date.addMonths(system.date.now(), 1), \"yyyy-MM-dd\")\n\tfEventDate \u003d system.date.format(system.date.addDays(system.date.now(), -self.view.params.DaysToAdd), \"yyyy-MM-dd\")\n\tfEndDate \u003d system.date.format(system.date.now(), \"yyyy-MM-dd\")\n\teventData \u003d Integrations.breeze.api.GETTER.events(params\u003d {\"startDate\":fEventDate, \"endDate\":fEndDate})[\"Data\"]\n\tsystem.perspective.print(eventData)\n\t# filter data by calender and eventName filter\n\tcalender \u003d self.view.params.CalenderBreezeId #67528\n\tEventname \u003d self.view.params.EventName  #\u0027Hope U Activity (Monopoly)\u0027\n\tNewDataSet \u003d []\n\tif eventData !\u003d None:\n\t\tfor i in range(0,len(eventData)):\n\t\t\tcategoryId \u003d eventData[i][\u0027category_id\u0027]\n\t\t\tname \u003d eventData[i][\u0027name\u0027]\n\t\t\tif (calender !\u003d None and calender !\u003d \u0027\u0027) and (Eventname \u003d\u003d None or Eventname \u003d\u003d \u0027\u0027):\n\t\t\t\tif calender \u003d\u003d int(categoryId):\n\t\t\t\t\tNewDataSet.append(eventData[i])\n\t\t\telif (Eventname !\u003d None and Eventname !\u003d \u0027\u0027) and (calender \u003d\u003d None or calender \u003d\u003d \u0027\u0027):\n\t\t\t\tif Eventname in name:\n\t\t\t\t\tNewDataSet.append(eventData[i])\n\t\t\telif (Eventname !\u003d None and Eventname !\u003d \u0027\u0027) and (calender !\u003d None and calender !\u003d \u0027\u0027):\n\t\t\t\tif Eventname in name and calender \u003d\u003d int(categoryId):\n\t\t\t\t\tNewDataSet.append(eventData[i])\n\t\t\telse:\n\t\t\t\tNewDataSet.append(eventData[i])\n\tsystem.perspective.print(NewDataSet)\n\treturn len(NewDataSet)\n#\treturn len(eventData)\n\t#return len(Integrations.breeze.api.GETTER.events(params\u003d {\"startDate\":fEventDate, \"endDate\":fEndDate})[\"Data\"])",
+                  "code": "#\tfEventDate \u003d system.date.format(system.date.now(), \"yyyy-MM-dd\")\n#\tfEndDate \u003d system.date.format(system.date.addMonths(system.date.now(), 1), \"yyyy-MM-dd\")\n\tfEventDate \u003d system.date.format(system.date.addDays(system.date.now(), -self.view.params.DaysToAdd), \"yyyy-MM-dd\")\n\tfEndDate \u003d system.date.format(system.date.now(), \"yyyy-MM-dd\")\n\t\n\tquery \u003d \"\"\"\n\t\t\tSELECT \n\t\t\t\tcalendarId as category_id,\n\t\t\t\tname\n\t\t\tFROM calendar.CalendarEvents\n\t\t\tWHERE \n\t\t\t\tstartDate \u003e ? and\n\t\t\t\tendDate \u003c ?\n\t\t\t\"\"\"\n\targs \u003d [fEventDate,fEndDate]\n\teventData \u003d system.db.runPrepQuery(query, args)\n\t\n\tsystem.perspective.print(eventData)\n\t# filter data by calender and eventName filter\n\t\n\tcalender \u003d self.view.params.CalenderId\n\tEventname \u003d self.view.params.EventName\n\t\n\tNewDataSet \u003d []\n\tif eventData !\u003d None:\n\t\tfor i in range(0,len(eventData)):\n\t\t\tcategoryId \u003d eventData[i][\u0027category_id\u0027]\n\t\t\tname \u003d eventData[i][\u0027name\u0027]\n\t\t\tif (calender !\u003d None and calender !\u003d \u0027\u0027) and (Eventname \u003d\u003d None or Eventname \u003d\u003d \u0027\u0027):\n\t\t\t\tif calender \u003d\u003d int(categoryId):\n\t\t\t\t\tNewDataSet.append(eventData[i])\n\t\t\telif (Eventname !\u003d None and Eventname !\u003d \u0027\u0027) and (calender \u003d\u003d None or calender \u003d\u003d \u0027\u0027):\n\t\t\t\tif Eventname in name:\n\t\t\t\t\tNewDataSet.append(eventData[i])\n\t\t\telif (Eventname !\u003d None and Eventname !\u003d \u0027\u0027) and (calender !\u003d None and calender !\u003d \u0027\u0027):\n\t\t\t\tif Eventname in name and calender \u003d\u003d int(categoryId):\n\t\t\t\t\tNewDataSet.append(eventData[i])\n\t\t\telse:\n\t\t\t\tNewDataSet.append(eventData[i])\n\tsystem.perspective.print(NewDataSet)\n\treturn len(NewDataSet)\n#\treturn len(eventData)\n\t#return len(Integrations.breeze.api.GETTER.events(params\u003d {\"startDate\":fEventDate, \"endDate\":fEndDate})[\"Data\"])",
                   "type": "script"
                 }
               ],

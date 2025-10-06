@@ -42,7 +42,8 @@ FROM [participant].[Dashboard]
 LEFT JOIN [participant].[CurrentReservations] ON [participant].[Dashboard].[ID] = [participant].[CurrentReservations].[participant_id]
 
 WHERE
- 	[participant].[Dashboard].[LastAction] between @activity_start and @activity_end AND
+ 	--[participant].[Dashboard].[LastAction] between @activity_start and @activity_end AND
+ 	[participant].[Dashboard].[LastAction] > @activity_start AND
  	{programId} AND
  	{genderid} AND
  	{raceid} AND

@@ -10,7 +10,7 @@ SELECT [id]
       ,[dayCensus]
       ,[showers]
       ,[laundry]
-      ,[mailCheckRITI]
+      ,[mailCheckHMS] as "mailCheckRITI"
       ,[morningNews]
       ,[noOfClasses]
       ,[classAttendance]

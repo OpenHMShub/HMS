@@ -1,7 +1,7 @@
 {
   "custom": {},
   "params": {
-    "trackID": 2121
+    "trackID": -1
   },
   "propConfig": {
     "params.trackID": {
@@ -65,7 +65,7 @@
             "binding": {
               "config": {
                 "bidirectional": true,
-                "path": "parent.custom.application.availability"
+                "path": "parent.custom.availabilityData"
               },
               "type": "property"
             }
@@ -73,7 +73,7 @@
           "props.params.events": {
             "binding": {
               "config": {
-                "path": "parent.custom.application.events"
+                "path": "parent.custom.events"
               },
               "type": "property"
             }
@@ -81,7 +81,7 @@
           "props.params.skills": {
             "binding": {
               "config": {
-                "path": "parent.custom.application.skills"
+                "path": "parent.custom.skills"
               },
               "type": "property"
             }
@@ -147,11 +147,42 @@
               "config": {
                 "path": "parent.custom.application.references"
               },
+              "enabled": false,
               "type": "property"
             }
           }
         },
         "props": {
+          "params": {
+            "references": {
+              "first": {
+                "altPhone": "",
+                "city": "",
+                "firstName": "",
+                "lastName": "",
+                "phone": "",
+                "preferredComm": null,
+                "relationship": null,
+                "state": null,
+                "street1": "",
+                "street2": "",
+                "zip": ""
+              },
+              "second": {
+                "altPhone": "",
+                "city": "",
+                "firstName": "",
+                "lastName": "",
+                "phone": "",
+                "preferredComm": null,
+                "relationship": null,
+                "state": null,
+                "street1": "",
+                "street2": "",
+                "zip": ""
+              }
+            }
+          },
           "path": "Volunteers/Detail/Cards/Application/Rows/References",
           "style": {
             "backgroundColor": "#D5D5D5",
@@ -175,11 +206,19 @@
               "config": {
                 "path": "parent.custom.application.questions"
               },
+              "enabled": false,
               "type": "property"
             }
           }
         },
         "props": {
+          "params": {
+            "questions": {
+              "moreAboutYou": "",
+              "otherThings": "",
+              "whyVolunteer": ""
+            }
+          },
           "path": "Volunteers/Detail/Cards/Application/Rows/Questions",
           "style": {
             "backgroundColor": "#D5D5D5",
@@ -206,7 +245,61 @@
           },
           "transforms": [
             {
-              "code": "\tif len(value) \u003e 0:\n\t\tvalue \u003d system.util.jsonDecode(value[0][\"application\"])\n\treturn value",
+              "code": "\tdef safe_get(obj, attr, default\u003d\"Not collected\"):\n\t    value \u003d getattr(obj, attr, None)\n\t    if value is None or value \u003d\u003d \"\" or value \u003d\u003d \" \":\n\t        return default\n\t    return value\n\t\n\tif len(value) \u003e 0:\n\t\tdata \u003d value[0]\n\t\temergencyContactName \u003d data.emergencyContactName.split() if data.emergencyContactName else []\n\telse:\n\t\tdata \u003d {}\n\t\temergencyContactName \u003d []\n\t\n\tapplication \u003d {\n\t    \"personalInformation\": {\n\t\t\t\"firstName\": safe_get(data, \"firstName\"),\n\t\t    \"lastName\": safe_get(data, \"lastName\"),\n\t\t    \"altPhone\": safe_get(data, \"altPhone\"),\n\t\t    \"city\": safe_get(data, \"city\"),\n\t\t    \"congregation\": safe_get(data, \"congregation\"),\n\t\t    \"email\": safe_get(data, \"email\"),\n\t\t    \"gender\": safe_get(data, \"gender\"),\n\t\t    \"phone\": safe_get(data, \"phone\"),\n\t\t    \"school\": safe_get(data, \"school\"),\n\t\t    \"state\": safe_get(data, \"state\"),\n\t\t    \"street1\": safe_get(data, \"street\"),\n\t\t    \"suffix\": safe_get(data, \"suffix\"),\n\t\t    \"zip\": safe_get(data, \"zipCode\"),\n\t\t    \"dob\": safe_get(data, \"dob\"),\n\t\t    ######\n\t        \"employeer\": safe_get(data, \"employeer\"),\n\t        \"newsletter\": safe_get(data, \"newsletter\"),\n\t        \"preferredComm\": safe_get(data, \"preferredComm\"),\n\t        \"recruitmentAppeals\": safe_get(data, \"recruitmentAppeals\"),\n\t        \"street2\": safe_get(data, \"street2\"),\n\t    },\n\t    \"emergencyContact\" : {\n\t\t    \"firstName\": emergencyContactName[0] if len(emergencyContactName) \u003e 0 else \"Not collected\",\n\t\t    \"lastName\": emergencyContactName[1] if len(emergencyContactName) \u003e 1 else \"Not collected\",\n\t\t    \"phone\": safe_get(data, \"emergencyContactPhone\"),\n\t\t    \"email\": safe_get(data, \"emergencyContactEmail\"),\n\t\t    \"relationship\": safe_get(data, \"emergencyContactTypeId\")\n\t\t}\n\t}\n\t\n\treturn application",
+              "type": "script"
+            }
+          ],
+          "type": "query"
+        }
+      },
+      "custom.availabilityData": {
+        "binding": {
+          "config": {
+            "parameters": {
+              "volunteerId": "{view.params.trackID}"
+            },
+            "queryPath": "Volunteers/Details/VolunteerProfile",
+            "returnFormat": "json"
+          },
+          "transforms": [
+            {
+              "code": "\tdef normalize_value(value, default\u003d\"\"):\n\t    if value is None:\n\t        return default\n\t    return value\n\t    \n\tprofile \u003d {}\n\tif len(value) \u003e 0:\n\t\tdata \u003d value[0]\n\t\tif data[\"profile\"]:\n\t\t\tprofile \u003d system.util.jsonDecode(data[\"profile\"])\n\t\n\tprofile_cleaned \u003d {\n        \"availability_upto_type\": normalize_value(profile.get(\"availability_upto_type\") if profile else None),\n        \"availability_upto_hours\": normalize_value(profile.get(\"availability_upto_hours\") if profile else None),\n        \"availability_seasonal_availability_type\": normalize_value(profile.get(\"availability_seasonal_availability_type\") if profile else None),\n        \"availability_daily_evening\": normalize_value(profile.get(\"availability_daily_evening\") if profile else None),\n        \"availability_seasonal_start_date\": normalize_value(profile.get(\"availability_seasonal_start_date\") if profile else None),\n        \"availability_daily_afternoon\": normalize_value(profile.get(\"availability_daily_afternoon\") if profile else None),\n        \"availability_daily_morning\": normalize_value(profile.get(\"availability_daily_morning\") if profile else None),\n        \"availability_seasonal_end_date\": normalize_value(profile.get(\"availability_seasonal_end_date\") if profile else None),\n        \"availability_weekly_selection\": normalize_value(profile.get(\"availability_weekly_selection\") if profile else None)\n    }\n\n\treturn profile_cleaned",
+              "type": "script"
+            }
+          ],
+          "type": "query"
+        }
+      },
+      "custom.events": {
+        "binding": {
+          "config": {
+            "parameters": {
+              "volunteerId": "{view.params.trackID}"
+            },
+            "queryPath": "Volunteers/Volunteers/VolunteerProfileEvents",
+            "returnFormat": "json"
+          },
+          "transforms": [
+            {
+              "code": "\tvals \u003d []\n\tfor row in value:\n\t\tvals.append(row[\"eventId\"])\n\treturn vals",
+              "type": "script"
+            }
+          ],
+          "type": "query"
+        }
+      },
+      "custom.skills": {
+        "binding": {
+          "config": {
+            "parameters": {
+              "volunteerId": "{view.params.trackID}"
+            },
+            "queryPath": "Volunteers/Details/VolunteerSkills",
+            "returnFormat": "json"
+          },
+          "transforms": [
+            {
+              "code": "\tselection \u003d []\n\tfor row in value:\n\t\tselection.append(row[\"skillId\"])\n\treturn selection",
               "type": "script"
             }
           ],

@@ -16,7 +16,7 @@ SELECT -1 as id
       ,sum([dayCensus])/count([dayCensus]) as 'dayCensus'
       ,sum([showers])/count([showers]) as 'showers'
       ,sum([laundry])/count([laundry]) as 'laundry'
-      ,sum([mailCheckRITI])/count([mailCheckRITI]) as 'mailCheckRITI'
+      ,sum([mailCheckHMS])/count([mailCheckHMS]) as 'mailCheckRITI'
       ,sum([morningNews])/count([morningNews]) as 'morningNews'
       ,sum([noOfClasses])/count([noOfClasses]) as 'noOfClasses'
       ,sum([classAttendance])/count([classAttendance]) as 'classAttendance'
@@ -54,7 +54,7 @@ SELECT -1 as id
       ,sum([dayCensus]) as 'dayCensus'
       ,sum([showers]) as 'showers'
       ,sum([laundry]) as 'laundry'
-      ,sum([mailCheckRITI]) as 'mailCheckRITI'
+      ,sum([mailCheckHMS]) as 'mailCheckRITI'
       ,sum([morningNews]) as 'morningNews'
       ,sum([noOfClasses]) as 'noOfClasses'
       ,sum([classAttendance]) as 'classAttendance'
@@ -92,7 +92,7 @@ SELECT -1 as id
       ,sum([dayCensus]) as 'dayCensus'
       ,sum([showers]) as 'showers'
       ,sum([laundry]) as 'laundry'
-      ,sum([mailCheckRITI]) as 'mailCheckRITI'
+      ,sum([mailCheckHMS]) as 'mailCheckRITI'
       ,sum([morningNews]) as 'morningNews'
       ,sum([noOfClasses]) as 'noOfClasses'
       ,sum([classAttendance]) as 'classAttendance'
@@ -131,7 +131,7 @@ SELECT -1 as id
       ,sum([dayCensus]) as 'dayCensus'
       ,sum([showers]) as 'showers'
       ,sum([laundry]) as 'laundry'
-      ,sum([mailCheckRITI]) as 'mailCheckRITI'
+      ,sum([mailCheckHMS]) as 'mailCheckRITI'
       ,sum([morningNews]) as 'morningNews'
       ,sum([noOfClasses]) as 'noOfClasses'
       ,sum([classAttendance]) as 'classAttendance'
@@ -169,7 +169,7 @@ SELECT [id]
       ,[dayCensus]
       ,[showers]
       ,[laundry]
-      ,[mailCheckRITI]
+      ,[mailCheckHMS] as "mailCheckRITI"
       ,[morningNews]
       ,[noOfClasses]
       ,[classAttendance]

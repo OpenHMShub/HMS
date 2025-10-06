@@ -1,4 +1,57 @@
 SELECT 
+    G.volunteerGroupName AS "Name",
+    G.volunteerGroupDescription AS "description",
+    (
+        SELECT COUNT(*) 
+        FROM [staff].[Volunteer] MV
+        WHERE MV.volunteerGroupId = V.volunteerGroupId
+    ) AS "MemberCount",
+    
+    ISNULL((
+        SELECT ISNULL(SUM(DATEDIFF(hour, I.startDate, I.endDate)), 0)
+        FROM calendar.eventInstanceVolunteers IV
+        LEFT JOIN calendar.eventInstances I 
+            ON I.instanceID = IV.instanceID
+        JOIN [staff].[Volunteer] TV 
+            ON IV.volunteerID = TV.humanId
+        WHERE I.startDate < GETDATE()
+        GROUP BY TV.volunteerGroupId
+        HAVING TV.volunteerGroupId = V.volunteerGroupId
+    ), 0) AS "TotalHours",
+
+    ISNULL((
+        SELECT ISNULL(SUM(DATEDIFF(hour, I.startDate, I.endDate)), 0)
+        FROM calendar.eventInstanceVolunteers IV
+        LEFT JOIN calendar.eventInstances I 
+            ON I.instanceID = IV.instanceID
+        JOIN [staff].[Volunteer] TV 
+            ON IV.volunteerID = TV.humanId
+        WHERE I.startDate >= DATEFROMPARTS(YEAR(GETDATE()), 1, 1)
+          AND I.startDate < GETDATE()
+        GROUP BY TV.volunteerGroupId
+        HAVING TV.volunteerGroupId = V.volunteerGroupId
+    ), 0) AS "YTDHours",
+
+    ISNULL((
+        SELECT ISNULL(SUM(DATEDIFF(hour, I.startDate, I.endDate)), 0)
+        FROM calendar.eventInstanceVolunteers IV
+        LEFT JOIN calendar.eventInstances I 
+            ON I.instanceID = IV.instanceID
+        JOIN [staff].[Volunteer] TV 
+            ON IV.volunteerID = TV.humanId
+        WHERE I.startDate >= DATEFROMPARTS(YEAR(GETDATE()), MONTH(GETDATE()), 1)
+          AND I.startDate < GETDATE()
+        GROUP BY TV.volunteerGroupId
+        HAVING TV.volunteerGroupId = V.volunteerGroupId
+    ), 0) AS "MTDHours"
+
+FROM [staff].[VolunteerGroup] G
+JOIN [staff].[Volunteer] V 
+    ON V.volunteerGroupId = G.id
+   AND V.humanId = :volunteerID;
+   
+
+/*SELECT 
 	G.id,
 	G.volunteerGroupName as "Name", 
 	Count(staff.Volunteer.volunteerGroupId) as "MemberCount",
@@ -31,4 +84,4 @@ SELECT
 FROM staff.volunteerGroup G
 Left join staff.Volunteer on G.id = staff.Volunteer.volunteerGroupId
 Group by G.volunteerGroupName, G.id, G.timeCreated, G.volunteerGroupDescription
-Having G.id = :groupId
+Having G.id = : groupId*/

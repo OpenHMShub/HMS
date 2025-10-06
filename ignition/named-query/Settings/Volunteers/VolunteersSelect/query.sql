@@ -1,7 +1,8 @@
 /*---Settings/Volunteers/VolunteersSelect---*/
 
 SELECT 
-	'' as 'options',
+	--'' as 'options',
+	h.ID as 'options',
 	v.ID as 'volunteerId',
 	h.ID as 'humanId',
 	h.breezeId as 'humanBreezeId',

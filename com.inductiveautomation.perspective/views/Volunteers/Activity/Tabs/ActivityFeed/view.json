@@ -12,7 +12,7 @@
     }
   },
   "params": {
-    "trackID": 80
+    "trackID": 0
   },
   "propConfig": {
     "params.trackID": {
@@ -79,6 +79,48 @@
         "type": "ia.display.flex-repeater"
       }
     ],
+    "custom": {
+      "filteredInstances_old": [
+        {
+          "CardType": "Header",
+          "Date": 1759276799996,
+          "ID": 0,
+          "Size": ""
+        },
+        {
+          "CardType": "Note",
+          "Date": 1757679956126,
+          "ID": 2,
+          "Size": ""
+        },
+        {
+          "CardType": "EventCompleted",
+          "Date": 1757494800000,
+          "ID": 1,
+          "Size": ""
+        }
+      ],
+      "instances_old": [
+        {
+          "CardType": "Header",
+          "Date": 1759276799996,
+          "ID": 0,
+          "Size": ""
+        },
+        {
+          "CardType": "Note",
+          "Date": 1757679956126,
+          "ID": 2,
+          "Size": ""
+        },
+        {
+          "CardType": "EventCompleted",
+          "Date": 1757494800000,
+          "ID": 1,
+          "Size": ""
+        }
+      ]
+    },
     "meta": {
       "name": "root"
     },
@@ -88,6 +130,21 @@
           "config": {
             "path": "./EmbeddedView.props.params.selection"
           },
+          "transforms": [
+            {
+              "code": "\tfilteredInstances \u003d []\n\tinstances \u003d self.custom.instances\n\t\n\tif value is not None and len(value) \u003e 0:\n\t\tfor instance in instances:\n\t\t\tif instance[\"CardType\"] in value:\n\t\t\t\tfilteredInstances.append(instance)\n\telse:\n\t\tfilteredInstances \u003d instances\n\t\n\treturn filteredInstances",
+              "type": "script"
+            }
+          ],
+          "type": "property"
+        }
+      },
+      "custom.filteredInstances_old": {
+        "binding": {
+          "config": {
+            "path": "./EmbeddedView.props.params.selection"
+          },
+          "enabled": false,
           "transforms": [
             {
               "code": "\tfilteredInstances \u003d []\n\tinstances \u003d self.custom.instances\n\tif value is not None and len(value) \u003e 0:\n\t\tfor instance in instances:\n\t\t\tif instance[\"CardType\"] in value:\n\t\t\t\tfilteredInstances.append(instance)\n\telse:\n\t\tfilteredInstances \u003d instances\n\treturn filteredInstances",
@@ -106,6 +163,29 @@
             "queryPath": "Volunteers/Details/ActivityFeedQuery",
             "returnFormat": "dataset"
           },
+          "transforms": [
+            {
+              "code": "\timport traceback\n\ttry:\n\t\t#table_data is the data object to return\n\t\tinstances \u003d []\n\t\t#Iterate over the results of the query\n\t\tfor row in range(value.getRowCount()):\n\t\t\tobject \u003d {}\n\n\t\t\t#object[\u0027instanceStyle\u0027] \u003d {\"classes\":\"\"}\n\t\t\t#object[\u0027instancePosition\u0027] \u003d {\"grow\":0, \"shrink\":1,\"basis\":\"50px\"}\n\t\t\tobject[\u0027ID\u0027] \u003d value.getValueAt(row, \"ID\")\n\t\t\tobject[\u0027CardType\u0027] \u003d value.getValueAt(row, \"CardType\")\n\t\t\tobject[\u0027Date\u0027] \u003d system.date.toMillis(value.getValueAt(row, \"Date\"))\n\t\t\tobject[\u0027Size\u0027] \u003d \"\"\n\t\t\tinstances.append(object)\n\t\t\n\t\treturn instances\n\texcept:\n\t\tlogger \u003d system.util.getLogger(\"Volunteers ActivityFeed FlexRepeater_Activity.props.instances\")\n\t\tmsg \u003d traceback.format_exc()\n\t\tlogger.error(msg)",
+              "type": "script"
+            }
+          ],
+          "type": "query"
+        },
+        "onChange": {
+          "enabled": null,
+          "script": "\tself.refreshBinding(\u0027custom.filteredInstances\u0027)\n\t"
+        }
+      },
+      "custom.instances_old": {
+        "binding": {
+          "config": {
+            "parameters": {
+              "volunteerId": "{view.params.trackID}"
+            },
+            "queryPath": "Volunteers/Details/ActivityFeedQuery",
+            "returnFormat": "dataset"
+          },
+          "enabled": false,
           "transforms": [
             {
               "code": "\timport traceback\n\ttry:\n\t\t#table_data is the data object to return\n\t\tinstances \u003d []\n\t\t#Iterate over the results of the query\n\t\tfor row in range(value.getRowCount()):\n\t\t\tobject \u003d {}\n\n\t\t\t#object[\u0027instanceStyle\u0027] \u003d {\"classes\":\"\"}\n\t\t\t#object[\u0027instancePosition\u0027] \u003d {\"grow\":0, \"shrink\":1,\"basis\":\"50px\"}\n\t\t\tobject[\u0027ID\u0027] \u003d value.getValueAt(row, \"ID\")\n\t\t\tobject[\u0027CardType\u0027] \u003d value.getValueAt(row, \"CardType\")\n\t\t\tobject[\u0027Date\u0027] \u003d system.date.toMillis(value.getValueAt(row, \"Date\"))\n\t\t\tobject[\u0027Size\u0027] \u003d \"\"\n\t\t\tinstances.append(object)\n\t\treturn instances\n\texcept:\n\t\tlogger \u003d system.util.getLogger(\"Volunteers ActivityFeed FlexRepeater_Activity.props.instances\")\n\t\tmsg \u003d traceback.format_exc()\n\t\tlogger.error(msg)",

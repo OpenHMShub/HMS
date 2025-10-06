@@ -1,33 +1,32 @@
 {
   "custom": {
     "group": {
-      "MTDHours": 20,
+      "MTDHours": 6,
       "MemberCount": 3,
-      "Name": "Preds Prospects",
-      "TotalHours": 120,
-      "YTDHours": 40,
-      "description": null,
-      "id": 1,
-      "timeCreated": 1605233861470
+      "Name": "Event Support",
+      "TotalHours": 6,
+      "YTDHours": 6,
+      "description": "Volunteers helping organize and run events"
     }
   },
   "params": {
     "More": false,
-    "trackID": 1
+    "groupNull": false,
+    "trackID": 50
   },
   "propConfig": {
     "custom.group": {
       "binding": {
         "config": {
           "parameters": {
-            "groupId": "{view.params.trackID}"
+            "volunteerID": "{view.params.trackID}"
           },
           "queryPath": "Volunteers/Group/groupDetail",
           "returnFormat": "json"
         },
         "transforms": [
           {
-            "code": "\tif not value:\n\t\tvalue \u003d {}\n\telse:\n\t\tvalue \u003d value[0]\n\treturn value",
+            "code": "\tif value:\n\t\tdata \u003d value[0]\n\t\tgroup \u003d {\n\t\t    \"MTDHours\": data.MTDHours,\n\t\t    \"MemberCount\": data.MemberCount,\n\t\t    \"Name\": data.Name,\n\t\t    \"TotalHours\": data.TotalHours,\n\t\t    \"YTDHours\": data.YTDHours,\n\t\t    \"description\": data.description\n\t\t}\n\t\treturn group\n\telse:\n\t\treturn None",
             "type": "script"
           }
         ],
@@ -39,6 +38,16 @@
       "paramDirection": "output",
       "persistent": true
     },
+    "params.groupNull": {
+      "binding": {
+        "config": {
+          "expression": "isNull({view.custom.group})"
+        },
+        "type": "expr"
+      },
+      "paramDirection": "output",
+      "persistent": true
+    },
     "params.trackID": {
       "paramDirection": "input",
       "persistent": true
@@ -46,7 +55,7 @@
   },
   "props": {
     "defaultSize": {
-      "height": 118,
+      "height": 128,
       "width": 600
     }
   },
@@ -54,14 +63,49 @@
     "children": [
       {
         "meta": {
-          "name": "Label_0"
+          "name": "NoGroupMessage"
         },
         "position": {
           "basis": "32px",
+          "grow": 1
+        },
+        "propConfig": {
+          "position.display": {
+            "binding": {
+              "config": {
+                "expression": "if(isNull({view.custom.group}),true,false)"
+              },
+              "type": "expr"
+            }
+          }
+        },
+        "props": {
+          "alignVertical": "top",
+          "style": {
+            "classes": "Text/About_info"
+          },
+          "text": "The volunteer is not part of any group"
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "meta": {
+          "name": "EmbeddedView"
+        },
+        "position": {
+          "basis": "45px",
           "shrink": 0
         },
         "propConfig": {
-          "props.text": {
+          "position.display": {
+            "binding": {
+              "config": {
+                "expression": "if(isNull({view.custom.group}),false,true)"
+              },
+              "type": "expr"
+            }
+          },
+          "props.params.Info": {
             "binding": {
               "config": {
                 "expression": "if(isnull({view.custom.group.Name}),\"NONE\", {view.custom.group.Name})"
@@ -71,24 +115,32 @@
           }
         },
         "props": {
-          "style": {
-            "classes": "Text/About_description",
-            "paddingLeft": "20px"
-          }
+          "params": {
+            "Description": "Group name\n"
+          },
+          "path": "Volunteers/Detail/Cards/Personal/AboutLabel",
+          "useDefaultViewHeight": true
         },
-        "type": "ia.display.label"
+        "type": "ia.display.view"
       },
       {
         "meta": {
-          "name": "Label_1"
+          "name": "EmbeddedView_0"
         },
         "position": {
-          "basis": "44px",
-          "grow": 1,
+          "basis": "45px",
           "shrink": 0
         },
         "propConfig": {
-          "props.text": {
+          "position.display": {
+            "binding": {
+              "config": {
+                "expression": "if(isNull({view.custom.group}),false,true)"
+              },
+              "type": "expr"
+            }
+          },
+          "props.params.Info": {
             "binding": {
               "config": {
                 "expression": "if(isnull({view.custom.group.description}),\"NONE\", {view.custom.group.description})"
@@ -98,15 +150,161 @@
           }
         },
         "props": {
-          "alignVertical": "top",
-          "style": {
-            "classes": "Text/About_info",
-            "overflow": "hidden",
-            "overflowWrap": "break-word",
-            "paddingLeft": "20px",
-            "paddingTop": "5px",
-            "textOverflow": "ellipsis"
+          "params": {
+            "Description": "Group description"
+          },
+          "path": "Volunteers/Detail/Cards/Personal/AboutLabel",
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "EmbeddedView_1"
+        },
+        "position": {
+          "basis": "45px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "position.display": {
+            "binding": {
+              "config": {
+                "expression": "if({view.params.groupNull},False,if({view.params.More},True, False)) "
+              },
+              "type": "expr"
+            }
+          },
+          "props.params.Info": {
+            "binding": {
+              "config": {
+                "expression": "if(isnull({view.custom.group.MemberCount}),\"NONE\", {view.custom.group.MemberCount})"
+              },
+              "type": "expr"
+            }
           }
+        },
+        "props": {
+          "params": {
+            "Description": "Group members"
+          },
+          "path": "Volunteers/Detail/Cards/Personal/AboutLabel",
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "EmbeddedView_2"
+        },
+        "position": {
+          "basis": "45px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "position.display": {
+            "binding": {
+              "config": {
+                "expression": "if({view.params.groupNull},False,if({view.params.More},True, False)) "
+              },
+              "type": "expr"
+            }
+          },
+          "props.params.Info": {
+            "binding": {
+              "config": {
+                "expression": "if(isnull({view.custom.group.TotalHours}),\"NONE\", {view.custom.group.TotalHours})"
+              },
+              "type": "expr"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "Description": "Total hours spent volunteering"
+          },
+          "path": "Volunteers/Detail/Cards/Personal/AboutLabel",
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "EmbeddedView_3"
+        },
+        "position": {
+          "basis": "45px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "position.display": {
+            "binding": {
+              "config": {
+                "expression": "if({view.params.groupNull},False,if({view.params.More},True, False)) "
+              },
+              "type": "expr"
+            }
+          },
+          "props.params.Info": {
+            "binding": {
+              "config": {
+                "expression": "if(isnull({view.custom.group.YTDHours}),\"NONE\", {view.custom.group.YTDHours})"
+              },
+              "type": "expr"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "Description": "Hours spent volunteering in the last year"
+          },
+          "path": "Volunteers/Detail/Cards/Personal/AboutLabel",
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "EmbeddedView_4"
+        },
+        "position": {
+          "basis": "45px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "position.display": {
+            "binding": {
+              "config": {
+                "expression": "if({view.params.groupNull},False,if({view.params.More},True, False)) "
+              },
+              "type": "expr"
+            }
+          },
+          "props.params.Info": {
+            "binding": {
+              "config": {
+                "expression": "if(isnull({view.custom.group.MTDHours}),\"NONE\", {view.custom.group.MTDHours})"
+              },
+              "type": "expr"
+            }
+          }
+        },
+        "props": {
+          "params": {
+            "Description": "Hours spent volunteering in the last month"
+          },
+          "path": "Volunteers/Detail/Cards/Personal/AboutLabel",
+          "useDefaultViewHeight": true
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "meta": {
+          "name": "Label_0"
+        },
+        "position": {
+          "basis": "0px",
+          "grow": 1
         },
         "type": "ia.display.label"
       },
@@ -130,6 +328,14 @@
           "shrink": 0
         },
         "propConfig": {
+          "position.display": {
+            "binding": {
+              "config": {
+                "expression": "if(isNull({view.custom.group}),false,true)"
+              },
+              "type": "expr"
+            }
+          },
           "props.text": {
             "binding": {
               "config": {

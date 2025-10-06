@@ -44,23 +44,9 @@
     }
   },
   "params": {
-    "availability_seasonal_availability_type": 2,
-    "availability_seasonal_end_date": {
-      "$": [
-        "ts",
-        0,
-        1625421719031
-      ],
-      "$ts": 1618333200000
-    },
-    "availability_seasonal_start_date": {
-      "$": [
-        "ts",
-        0,
-        1625421687581
-      ],
-      "$ts": 1618333200000
-    },
+    "availability_seasonal_availability_type": "",
+    "availability_seasonal_end_date": "",
+    "availability_seasonal_start_date": "",
     "availability_upto_hours": "",
     "availability_upto_type": "",
     "availability_weekly_selection": ""
@@ -157,6 +143,10 @@
                     "path": "view.params.availability_seasonal_availability_type"
                   },
                   "type": "property"
+                },
+                "onChange": {
+                  "enabled": null,
+                  "script": "\tif self.props.params.selection \u003d\u003d 1:\n\t\tself.view.params.availability_seasonal_start_date \u003d \u0027\u0027\n\t\tself.view.params.availability_seasonal_end_date \u003d \u0027\u0027\n\t\tself.view.params.availability_weekly_selection \u003d \u0027\u0027 "
                 }
               }
             },
@@ -357,9 +347,15 @@
           "position.display": {
             "binding": {
               "config": {
-                "expression": "{../FlexContainer_0/Embed_Availability_Type.props.params.selection}\u003e1"
+                "path": "../FlexContainer_0/Embed_Availability_Type.props.params.selection"
               },
-              "type": "expr"
+              "transforms": [
+                {
+                  "code": "\tif value \u003d\u003d 1:\n\t\treturn False\n\treturn True",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
             }
           }
         },

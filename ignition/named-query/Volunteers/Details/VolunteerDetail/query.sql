@@ -8,7 +8,7 @@ H.dob,
 H.id, 
 V.id as "volunteerId",
 --H.gender,
-H.congregation,
+H.congregationId,
 H.school,
 H.employer,
 H.street,
@@ -21,10 +21,10 @@ isNull((
 	left join calendar.eventInstances I on I.instanceID = IV.instanceID
 	WHERE I.startDate < GETDATE()
 	GROUP BY IV.volunteerID
-	HAVING IV.volunteerID = V.id
+	HAVING IV.volunteerID = :volunteerId
 ),0) as "hours",
 G.volunteerGroupName
 FROM staff.Volunteer V
 Inner join humans.Human H on V.humanId = H.id
 left join staff.VolunteerGroup G on G.id = V.volunteerGroupId
-WHERE V.id = :volunteerId;
+WHERE V.humanId = :volunteerId;
